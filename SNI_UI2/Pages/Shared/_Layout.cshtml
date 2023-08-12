@@ -1,0 +1,93 @@
+﻿@using API.Controllers
+<!DOCTYPE html>
+<html lang="en">
+@{
+    string identify = Context.Session.GetString("seassonKey");
+}
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] HELPDESK</title>
+    <link rel="stylesheet" href="~/css/AdminTemplate.css" />
+    <script type="module">
+        import { WSecurity } from "../WDevCore/WModules/WSecurity.js";
+        const logout = () => {
+            WSecurity.LogOut();
+        }
+        window.addEventListener("load", () => {
+            //active nav
+            if (location.href.includes("PerfilView")) {
+                PerfilView.className = "active";
+            } else if (location.href.includes("Solicitudes")) {
+                Solicitudes.className = "active";
+            } else if (location.href.includes("Proyectos")) {
+                Proyectos.className = "active";
+            } else if (location.href.includes("Transaction_Valoraciones_View")) {
+                Transaction_Valoraciones_View.className = "active";
+            } else {
+                Home.className = "active";
+            }
+            //logOut
+            btnLogOut.onclick = logout;
+        })
+    </script>
+</head>
+
+<body id="AdminTemplate">
+    <aside id="Aside">
+        <nav>
+            <div class="logo-container">
+                <img src="">
+            </div>
+            <h3>TRANSACCIONES</h3>
+            <a class="" id="Home" href="/">HOME</a>
+            <a class="" id="Solicitudes" href="~/Perfil/Solicitudes">Solicitudes</a>
+            <a class="" id="Proyectos" href="~/Perfil/Proyectos">Tikets</a>
+            <a class="" id="PerfilView" href="~/Perfil/PerfilView">Perfil</a>
+        </nav>
+    </aside>
+
+    <header id="Header" class="admin-header">
+        <div class="title-container">
+            <label for="" class="title">HELPDESK</label>
+            <label for="" class="sub-title">Sistema de ayuda</label>
+        </div>
+
+        @if (SecurityController.IsAdmin(identify))
+        {
+            <a href="~/Admin/Index">Admin Panel</a>
+        }
+        <a href="#" id="btnLogOut">Cerrar Sesión</a>
+    </header>
+    <div class="background"></div>
+
+    <div id="MainContainer">
+        <main role="main" id="Main">
+            @RenderBody()
+        </main>
+    </div>
+    @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        if (sessionStorage.getItem("menu_active") == null) {
+            sessionStorage.setItem("menu_active", "PrestamosClientesMenu")
+        }
+        const changeActive = (target) => {
+            if (target.className.includes("active-title")) {
+                target.className = target.className.replace("active-title", "")
+                sessionStorage.removeItem("menu_active")
+            }
+            else {
+                target.className = target.className + ' active-title';
+                sessionStorage.setItem("menu_active", target.id);
+            }
+        }
+        const menuActive = document.querySelector("#" + sessionStorage.getItem("menu_active"));
+        if (menuActive) {
+            changeActive(menuActive)
+        }
+
+    </script>
+</body>
+
+</html>

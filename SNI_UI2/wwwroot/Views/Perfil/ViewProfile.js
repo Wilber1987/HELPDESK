@@ -20,7 +20,7 @@ window.onload = OnLoad;
 class PerfilClass extends HTMLElement {
     constructor() {
         super();
-        this.Id_Investigador = 1;
+        this.Id_Perfil = 1;
         this.id = "PerfilClass";
         this.className = "PerfilClass DivContainer";
         this.append(this.WStyle,StylesControlsV2.cloneNode(true));
@@ -44,7 +44,7 @@ class PerfilClass extends HTMLElement {
                 name: "Datos Generales",
                 action: async (ev) => {
                     this.response = await WAjaxTools.PostRequest("../../api/Profile/TakeProfile",
-                        { Id_Investigador: this.Id_Investigador }
+                        { Id_Perfil: this.Id_Perfil }
                     );
                     this.response.Id_Idiomas = this.response.Tbl_IdiomasInv?.map(i => i.Idioma)
                     this.TabManager.NavigateFunction("Tab-Generales",

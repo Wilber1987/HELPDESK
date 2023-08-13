@@ -11,36 +11,36 @@ using API.Controllers;
 
 namespace CAPA_NEGOCIO.MAPEO
 {
-    public class ProyectoTableActividades : EntityClass
+    public class CaseTable_Case : EntityClass
     {
         [PrimaryKey(Identity = true)]
-        public int? IdActividad { get; set; }
+        public int? Id_Case { get; set; }
         public string? Titulo { get; set; }
         public string? Descripcion { get; set; }
-        public int? Id_Investigador { get; set; }
+        public int? Id_Perfil { get; set; }
         public string? Estado { get; set; }
         public int? Id_Dependencia { get; set; }
         public DateTime? Fecha_Inicial { get; set; }
         public DateTime? Fecha_Final { get; set; }
-        public int? Id_Proyecto { get; set; }
-        [ManyToOne(TableName = "Tbl_Profile", KeyColumn = "Id_Investigador", ForeignKeyColumn = "Id_Investigador")]
+        public int? Id_Servicio { get; set; }
+        [ManyToOne(TableName = "Tbl_Profile", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
         public Tbl_Profile? Tbl_Profile { get; set; }
-        [ManyToOne(TableName = "ProyectoCatDependencias", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
-        public ProyectoCatDependencias? ProyectoCatDependencias { get; set; }
-        [ManyToOne(TableName = "Tbl_Proyectos", KeyColumn = "Id_Proyecto", ForeignKeyColumn = "Id_Proyecto")]
-        public Tbl_Proyectos? Tbl_Proyectos { get; set; }
-        [OneToMany(TableName = "ProyectoTableTareas", KeyColumn = "IdActividad", ForeignKeyColumn = "IdActividad")]
-        public List<ProyectoTableTareas>? ProyectoTableTareas { get; set; }
+        [ManyToOne(TableName = "Cat_Dependencias", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
+        public Cat_Dependencias? Cat_Dependencias { get; set; }
+        [ManyToOne(TableName = "Tbl_Servicios", KeyColumn = "Id_Servicio", ForeignKeyColumn = "Id_Servicio")]
+        public Tbl_Servicios? Tbl_Servicios { get; set; }
+        [OneToMany(TableName = "CaseTable_Tareas", KeyColumn = "Id_Case", ForeignKeyColumn = "Id_Case")]
+        public List<CaseTable_Tareas>? CaseTable_Tareas { get; set; }
         public bool SaveActividades(string identity)
         {
-            this.Id_Investigador = AuthNetCore.User(identity).UserId;
+            this.Id_Perfil = AuthNetCore.User(identity).UserId;
             if (this.CheckCanSaveAct())
             {
                 this.Estado = "Activa";
-                this.IdActividad = (Int32?)SqlADOConexion.SQLM?.InsertObject(this);
-                foreach (ProyectoTableTareas obj in this.ProyectoTableTareas ?? new List<ProyectoTableTareas>())
+                this.Id_Case = (Int32?)SqlADOConexion.SQLM?.InsertObject(this);
+                foreach (CaseTable_Tareas obj in this.CaseTable_Tareas ?? new List<CaseTable_Tareas>())
                 {
-                    obj.IdActividad = this.IdActividad;
+                    obj.Id_Case = this.Id_Case;
                     obj.Save();
                 }
                 return true;
@@ -49,10 +49,12 @@ namespace CAPA_NEGOCIO.MAPEO
         }
         public bool CheckCanSaveAct()
         {
-            ProyectoTableDependencias_Usuarios DU = new ProyectoTableDependencias_Usuarios();
-            DU.Id_Investigador = this.Id_Investigador;
-            DU.Id_Dependencia = this.Id_Dependencia;
-            if (DU.Get_WhereIN<ProyectoTableDependencias_Usuarios>("Id_Cargo", new string[] { "1", "2" }).Count == 0)
+            CaseTable_Dependencias_Usuarios DU = new()
+            {
+                Id_Perfil = this.Id_Perfil,
+                Id_Dependencia = this.Id_Dependencia
+            };
+            if (DU.Get_WhereIN<CaseTable_Dependencias_Usuarios>("Id_Cargo", new string[] { "1", "2" }).Count == 0)
             {
                 return false;
             }
@@ -60,181 +62,208 @@ namespace CAPA_NEGOCIO.MAPEO
         }
         public bool SolicitarActividades(string identity)
         {
-            this.Id_Investigador = AuthNetCore.User(identity).UserId;
-            this.Estado = "Pendiente";
-            this.IdActividad = (Int32?)SqlADOConexion.SQLM?.InsertObject(this);
-            foreach (ProyectoTableTareas obj in this.ProyectoTableTareas ?? new List<ProyectoTableTareas>())
+            this.Id_Perfil = AuthNetCore.User(identity).UserId;
+            this.Estado = Case_Estate.Pendiente.ToString();
+            this.Id_Case = (Int32?)SqlADOConexion.SQLM?.InsertObject(this);
+            foreach (CaseTable_Tareas obj in this.CaseTable_Tareas ?? new List<CaseTable_Tareas>())
             {
-                obj.IdActividad = this.IdActividad;
+                obj.Id_Case = this.Id_Case;
                 obj.Save();
             }
             return true;
         }
-        public ProyectoTableActividades GetActividad()
+        public CaseTable_Case GetActividad()
         {
-            this.ProyectoTableTareas = (new ProyectoTableTareas()).Get<ProyectoTableTareas>("IdActividad = " + this.IdActividad.ToString());
-            foreach (ProyectoTableTareas tarea in this.ProyectoTableTareas ?? new List<ProyectoTableTareas>())
+            this.CaseTable_Tareas = new CaseTable_Tareas().Get<CaseTable_Tareas>("Id_Case = " + this.Id_Case.ToString());
+            foreach (CaseTable_Tareas tarea in this.CaseTable_Tareas ?? new List<CaseTable_Tareas>())
             {
-                tarea.ProyectoTableCalendario = (new ProyectoTableCalendario()).Get<ProyectoTableCalendario>("IdTarea = " + tarea.IdTarea.ToString());
+                tarea.CaseTable_Calendario = new CaseTable_Calendario().Get<CaseTable_Calendario>("Id_Tarea = " + tarea.Id_Tarea.ToString());
             }
             return this;
         }
-        public List<ProyectoTableActividades> GetOwActivities(string identity)
+        public List<CaseTable_Case> GetOwCase(string identity)
         {
-            return new ProyectoTableActividades()
+            return new CaseTable_Case()
             {
-                Id_Investigador = AuthNetCore.User(identity).UserId
-            }.Get<ProyectoTableActividades>();
+                Id_Perfil = AuthNetCore.User(identity).UserId
+            }.Get<CaseTable_Case>();
+        }
+
+        public List<CaseTable_Case> GetOwSolicitudes(string? identity, Case_Estate case_Estate)
+        {
+            return new CaseTable_Case()
+            {
+                Id_Perfil = AuthNetCore.User(identity).UserId,
+                Estado = case_Estate.ToString()
+            }.Get<CaseTable_Case>();
+        }
+
+        public List<CaseTable_Case> GetSolicitudesPendientesAprobar(string? identity, Case_Estate case_Estate)
+        {
+            if (AuthNetCore.HavePermission(PermissionsEnum.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identity))
+            {
+                return new CaseTable_Case()
+                {
+                    Estado = case_Estate.ToString()
+                }.Get_WhereIN<CaseTable_Case>("Id_Dependencia",
+               new CaseTable_Dependencias_Usuarios() { Id_Perfil = AuthNetCore.User(identity).UserId }
+               .Get<CaseTable_Dependencias_Usuarios>().Select(p => p.Id_Dependencia.ToString()).ToArray());
+            }
+            throw new Exception("no tienes permisos para aprobar casos");
         }
     }
 
-    public class ProyectoCatCargosDependencias : EntityClass
+    public enum Case_Estate
+    {
+        Pendiente, Solicitado, Activo, Finalizado, Espera
+    }
+
+    public class Cat_Cargos_Dependencias : EntityClass
     {
         [PrimaryKey(Identity = true)]
         public int? Id_Cargo { get; set; }
         public string? Descripcion { get; set; }
-        [OneToMany(TableName = "ProyectoTableDependencias_Usuarios", KeyColumn = "Id_Cargo", ForeignKeyColumn = "Id_Cargo")]
-        public List<ProyectoTableDependencias_Usuarios>? ProyectoTableDependencias_Usuarios { get; set; }
+        [OneToMany(TableName = "CaseTable_Dependencias_Usuarios", KeyColumn = "Id_Cargo", ForeignKeyColumn = "Id_Cargo")]
+        public List<CaseTable_Dependencias_Usuarios>? CaseTable_Dependencias_Usuarios { get; set; }
     }
-    public class ProyectoCatDependencias : EntityClass
+    public class Cat_Dependencias : EntityClass
     {
         [PrimaryKey(Identity = true)]
         public int? Id_Dependencia { get; set; }
         public string? Descripcion { get; set; }
         public int? Id_Dependencia_Padre { get; set; }
         public int? Id_Institucion { get; set; }
-        [ManyToOne(TableName = "ProyectoCatDependencias", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia_Padre")]
-        public ProyectoCatDependencias? ProyectoCatDependencia { get; set; }
-        [ManyToOne(TableName = "Cat_instituciones", KeyColumn = "Id_Institucion", ForeignKeyColumn = "Id_Institucion")]
-        public Cat_instituciones? Cat_instituciones { get; set; }
-        [OneToMany(TableName = "ProyectoCatDependencias", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia_Padre")]
-        public List<ProyectoCatDependencias>? ProyectoCatDependencias_Hijas { get; set; }
-        [OneToMany(TableName = "ProyectoTableActividades", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
-        public List<ProyectoTableActividades>? ProyectoTableActividades { get; set; }
-        [OneToMany(TableName = "ProyectoTableAgenda", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
-        public List<ProyectoTableAgenda>? ProyectoTableAgenda { get; set; }
-        [OneToMany(TableName = "ProyectoTableDependencias_Usuarios", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
-        public List<ProyectoTableDependencias_Usuarios>? ProyectoTableDependencias_Usuarios { get; set; }
-        public List<ProyectoCatDependencias> GetOwDependencies(string identity)
+        [ManyToOne(TableName = "Cat_Dependencias", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia_Padre")]
+        public Cat_Dependencias? Cat_Dependencia { get; set; }
+        [OneToMany(TableName = "Cat_Dependencias", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia_Padre")]
+        public List<Cat_Dependencias>? Cat_Dependencias_Hijas { get; set; }
+        [OneToMany(TableName = "CaseTable_Case", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
+        public List<CaseTable_Case>? CaseTable_Case { get; set; }
+        [OneToMany(TableName = "CaseTable_Agenda", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
+        public List<CaseTable_Agenda>? CaseTable_Agenda { get; set; }
+        [OneToMany(TableName = "CaseTable_Dependencias_Usuarios", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
+        public List<CaseTable_Dependencias_Usuarios>? CaseTable_Dependencias_Usuarios { get; set; }
+        public List<Cat_Dependencias> GetOwDependencies(string identity)
         {
-            ProyectoTableDependencias_Usuarios Inst = new ProyectoTableDependencias_Usuarios() {
-                Id_Investigador = AuthNetCore.User(identity).UserId,
+            CaseTable_Dependencias_Usuarios Inst = new CaseTable_Dependencias_Usuarios()
+            {
+                Id_Perfil = AuthNetCore.User(identity).UserId,
                 Id_Cargo = 2
             };
-            return new ProyectoCatDependencias().Get_WhereIN<ProyectoCatDependencias>(
-                "Id_Dependencia", Inst.Get<ProyectoTableDependencias_Usuarios>().Select(p => p.Id_Dependencia.ToString()).ToArray()
+            return new Cat_Dependencias().Get_WhereIN<Cat_Dependencias>(
+                "Id_Dependencia", Inst.Get<CaseTable_Dependencias_Usuarios>().Select(p => p.Id_Dependencia.ToString()).ToArray()
             );
         }
     }
-    public class ProyectoCatTipoParticipaciones : EntityClass
+    public class Cat_Tipo_Participaciones : EntityClass
     {
         [PrimaryKey(Identity = true)]
-        public int? IdTipoParticipacion { get; set; }
+        public int? Id_Tipo_Participacion { get; set; }
         public string? Descripcion { get; set; }
-        [OneToMany(TableName = "ProyectoTableParticipantes", KeyColumn = "IdTipoParticipacion", ForeignKeyColumn = "IdTipoParticipacion")]
-        public List<ProyectoTableParticipantes>? ProyectoTableParticipantes { get; set; }
+        [OneToMany(TableName = "CaseTable_Participantes", KeyColumn = "Id_Tipo_Participacion", ForeignKeyColumn = "Id_Tipo_Participacion")]
+        public List<CaseTable_Participantes>? CaseTable_Participantes { get; set; }
     }
-    public class ProyectoTableAgenda : EntityClass
+    public class CaseTable_Agenda : EntityClass
     {
         [PrimaryKey(Identity = true)]
         public int? IdAgenda { get; set; }
-        public int? Id_Investigador { get; set; }
+        public int? Id_Perfil { get; set; }
         public int? Id_Dependencia { get; set; }
         public string? Dia { get; set; }
         public string? Hora_Inicial { get; set; }
         public string? Hora_Final { get; set; }
         public DateTime? Fecha_Caducidad { get; set; }
-        [ManyToOne(TableName = "Tbl_Profile", KeyColumn = "Id_Investigador", ForeignKeyColumn = "Id_Investigador")]
+        [ManyToOne(TableName = "Tbl_Profile", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
         public Tbl_Profile? Tbl_Profile { get; set; }
-        [ManyToOne(TableName = "ProyectoCatDependencias", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
-        public ProyectoCatDependencias? ProyectoCatDependencias { get; set; }
+        [ManyToOne(TableName = "Cat_Dependencias", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
+        public Cat_Dependencias? Cat_Dependencias { get; set; }
     }
-    public class ProyectoTableDependencias_Usuarios : EntityClass
+    public class CaseTable_Dependencias_Usuarios : EntityClass
     {
         [PrimaryKey(Identity = false)]
-        public int? Id_Investigador { get; set; }
+        public int? Id_Perfil { get; set; }
         [PrimaryKey(Identity = false)]
         public int? Id_Dependencia { get; set; }
         public int? Id_Cargo { get; set; }
-        [ManyToOne(TableName = "Tbl_Profile", KeyColumn = "Id_Investigador", ForeignKeyColumn = "Id_Investigador")]
+        [ManyToOne(TableName = "Tbl_Profile", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
         public Tbl_Profile? Tbl_Profile { get; set; }
-        [ManyToOne(TableName = "ProyectoCatDependencias", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
-        public ProyectoCatDependencias? ProyectoCatDependencias { get; set; }
-        [ManyToOne(TableName = "ProyectoCatCargosDependencias", KeyColumn = "Id_Cargo", ForeignKeyColumn = "Id_Cargo")]
-        public ProyectoCatCargosDependencias? ProyectoCatCargosDependencias { get; set; }
+        [ManyToOne(TableName = "Cat_Dependencias", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
+        public Cat_Dependencias? Cat_Dependencias { get; set; }
+        [ManyToOne(TableName = "Cat_Cargos_Dependencias", KeyColumn = "Id_Cargo", ForeignKeyColumn = "Id_Cargo")]
+        public Cat_Cargos_Dependencias? Cat_Cargos_Dependencias { get; set; }
     }
-    public class ProyectoTableEvidencias : EntityClass
+    public class CaseTable_Evidencias : EntityClass
     {
         [PrimaryKey(Identity = true)]
         public int? IdEvidencia { get; set; }
         public int? IdTipo { get; set; }
         public string? Data { get; set; }
-        public int? IdTarea { get; set; }
-        [ManyToOne(TableName = "ProyectoTableTareas", KeyColumn = "IdTarea", ForeignKeyColumn = "IdTarea")]
-        public ProyectoTableTareas? ProyectoTableTareas { get; set; }
-        [ManyToOne(TableName = "CatalogoTipoEvidencia", KeyColumn = "IdTipo", ForeignKeyColumn = "IdTipo")]
-        public CatalogoTipoEvidencia? CatalogoTipoEvidencia { get; set; }
+        public int? Id_Tarea { get; set; }
+        [ManyToOne(TableName = "CaseTable_Tareas", KeyColumn = "Id_Tarea", ForeignKeyColumn = "Id_Tarea")]
+        public CaseTable_Tareas? CaseTable_Tareas { get; set; }
+        [ManyToOne(TableName = "Cat_Tipo_Evidencia", KeyColumn = "IdTipo", ForeignKeyColumn = "IdTipo")]
+        public Cat_Tipo_Evidencia? Cat_Tipo_Evidencia { get; set; }
 
     }
 
-    public class ProyectoTableCalendario : EntityClass
+    public class CaseTable_Calendario : EntityClass
     {
         [PrimaryKey(Identity = true)]
         public int? IdCalendario { get; set; }
-        public int? IdTarea { get; set; }
+        public int? Id_Tarea { get; set; }
         public int? Id_Dependencia { get; set; }
         public string? Estado { get; set; }
         public DateTime? Fecha_Inicial { get; set; }
         public DateTime? Fecha_Final { get; set; }
-        [ManyToOne(TableName = "ProyectoTableTareas", KeyColumn = "IdTarea", ForeignKeyColumn = "IdTarea")]
-        public ProyectoTableTareas? ProyectoTableTareas { get; set; }
-        [ManyToOne(TableName = "ProyectoCatDependencias", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
-        public ProyectoCatDependencias? ProyectoCatDependencias { get; set; }
+        [ManyToOne(TableName = "CaseTable_Tareas", KeyColumn = "Id_Tarea", ForeignKeyColumn = "Id_Tarea")]
+        public CaseTable_Tareas? CaseTable_Tareas { get; set; }
+        [ManyToOne(TableName = "Cat_Dependencias", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
+        public Cat_Dependencias? Cat_Dependencias { get; set; }
 
     }
-    public class ProyectoTableTareas : EntityClass
+    public class CaseTable_Tareas : EntityClass
     {
         [PrimaryKey(Identity = true)]
-        public int? IdTarea { get; set; }
+        public int? Id_Tarea { get; set; }
         public string? Titulo { get; set; }
-        public int? IdTareaPadre { get; set; }
-        public int? IdActividad { get; set; }
+        public int? Id_TareaPadre { get; set; }
+        public int? Id_Case { get; set; }
         public string? Descripcion { get; set; }
         public string? Estado { get; set; }
-        [ManyToOne(TableName = "ProyectoTableTareas", KeyColumn = "IdTarea", ForeignKeyColumn = "IdTareaPadre")]
-        public ProyectoTableTareas? ProyectoTableTarea { get; set; }
-        [ManyToOne(TableName = "ProyectoTableActividades", KeyColumn = "IdActividad", ForeignKeyColumn = "IdActividad")]
-        public ProyectoTableActividades? ProyectoTableActividades { get; set; }
-        [OneToMany(TableName = "ProyectoTableCalendario", KeyColumn = "IdTarea", ForeignKeyColumn = "IdTarea")]
-        public List<ProyectoTableCalendario>? ProyectoTableCalendario { get; set; }
-        [OneToMany(TableName = "ProyectoTableEvidencias", KeyColumn = "IdTarea", ForeignKeyColumn = "IdTarea")]
-        public List<ProyectoTableEvidencias>? ProyectoTableEvidencias { get; set; }
-        [OneToMany(TableName = "ProyectoTableParticipantes", KeyColumn = "IdTarea", ForeignKeyColumn = "IdTarea")]
-        public List<ProyectoTableParticipantes>? ProyectoTableParticipantes { get; set; }
-        [OneToMany(TableName = "ProyectoTableTareas", KeyColumn = "IdTarea", ForeignKeyColumn = "IdTareaPadre")]
-        public List<ProyectoTableTareas>? ProyectoTableTareasHijas { get; set; }
-        public List<ProyectoTableTareas> GetOwParticipations(string identity)
+        [ManyToOne(TableName = "CaseTable_Tareas", KeyColumn = "Id_Tarea", ForeignKeyColumn = "Id_TareaPadre")]
+        public CaseTable_Tareas? CaseTable_Tarea { get; set; }
+        [ManyToOne(TableName = "CaseTable_Case", KeyColumn = "Id_Case", ForeignKeyColumn = "Id_Case")]
+        public CaseTable_Case? CaseTable_Case { get; set; }
+        [OneToMany(TableName = "CaseTable_Calendario", KeyColumn = "Id_Tarea", ForeignKeyColumn = "Id_Tarea")]
+        public List<CaseTable_Calendario>? CaseTable_Calendario { get; set; }
+        [OneToMany(TableName = "CaseTable_Evidencias", KeyColumn = "Id_Tarea", ForeignKeyColumn = "Id_Tarea")]
+        public List<CaseTable_Evidencias>? CaseTable_Evidencias { get; set; }
+        [OneToMany(TableName = "CaseTable_Participantes", KeyColumn = "Id_Tarea", ForeignKeyColumn = "Id_Tarea")]
+        public List<CaseTable_Participantes>? CaseTable_Participantes { get; set; }
+        [OneToMany(TableName = "CaseTable_Tareas", KeyColumn = "Id_Tarea", ForeignKeyColumn = "Id_TareaPadre")]
+        public List<CaseTable_Tareas>? CaseTable_TareasHijas { get; set; }
+        public List<CaseTable_Tareas> GetOwParticipations(string identity)
         {
-            ProyectoTableParticipantes Inst = new ProyectoTableParticipantes();
-            Inst.Id_Investigador = AuthNetCore.User(identity).UserId;
-            return new ProyectoTableTareas().Get_WhereIN<ProyectoTableTareas>(
-                "IdTarea", Inst.Get<ProyectoTableParticipantes>().Select(p => p.IdTarea.ToString()).ToArray()
+            CaseTable_Participantes Inst = new CaseTable_Participantes();
+            Inst.Id_Perfil = AuthNetCore.User(identity).UserId;
+            return new CaseTable_Tareas().Get_WhereIN<CaseTable_Tareas>(
+                "Id_Tarea", Inst.Get<CaseTable_Participantes>().Select(p => p.Id_Tarea.ToString()).ToArray()
             );
         }
 
     }
-    public class ProyectoTableParticipantes : EntityClass
+    public class CaseTable_Participantes : EntityClass
     {
         [PrimaryKey(Identity = false)]
-        public int? Id_Investigador { get; set; }
+        public int? Id_Perfil { get; set; }
         [PrimaryKey(Identity = false)]
-        public int? IdTarea { get; set; }
-        public int? IdTipoParticipacion { get; set; }
-        [ManyToOne(TableName = "Tbl_Profile", KeyColumn = "Id_Investigador", ForeignKeyColumn = "Id_Investigador")]
+        public int? Id_Tarea { get; set; }
+        public int? Id_Tipo_Participacion { get; set; }
+        [ManyToOne(TableName = "Tbl_Profile", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
         public Tbl_Profile? Tbl_Profile { get; set; }
-        [ManyToOne(TableName = "ProyectoTableTareas", KeyColumn = "IdTarea", ForeignKeyColumn = "IdTarea")]
-        public ProyectoTableTareas? ProyectoTableTareas { get; set; }
-        [ManyToOne(TableName = "ProyectoCatTipoParticipaciones", KeyColumn = "IdTipoParticipacion", ForeignKeyColumn = "IdTipoParticipacion")]
-        public ProyectoCatTipoParticipaciones? ProyectoCatTipoParticipaciones { get; set; }
+        [ManyToOne(TableName = "CaseTable_Tareas", KeyColumn = "Id_Tarea", ForeignKeyColumn = "Id_Tarea")]
+        public CaseTable_Tareas? CaseTable_Tareas { get; set; }
+        [ManyToOne(TableName = "Cat_Tipo_Participaciones", KeyColumn = "Id_Tipo_Participacion", ForeignKeyColumn = "Id_Tipo_Participacion")]
+        public Cat_Tipo_Participaciones? Cat_Tipo_Participaciones { get; set; }
     }
 }

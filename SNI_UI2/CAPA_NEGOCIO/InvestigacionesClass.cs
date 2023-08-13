@@ -8,7 +8,7 @@ namespace CAPA_NEGOCIO
     public class InvestigacionesClass
     {
         public int? Id_Investigacion { get; set; }
-        public int? Id_Investigador { get; set; }
+        public int? Id_Perfil { get; set; }
         public string? Foto { get; set; }
         //public string? Photo { get; set; }
         public string? Nombres { get; set; }

@@ -1,5 +1,5 @@
 //@ts-check
-import { ProyectoTableAgenda, ProyectoTableCalendario, ProyectoTableTareas } from '../../../Model/ProyectDataBaseModel.js';
+import { CaseTable_Agenda, CaseTable_Calendario, CaseTable_Tareas } from '../../../Model/ProyectDataBaseModel.js';
 import { StyleScrolls, StylesControlsV2, StylesControlsV3 } from "../../../WDevCore/StyleModules/WStyleComponents.js";
 import { WModalForm } from '../../../WDevCore/WComponents/WModalForm.js';
 import { ComponentsManager, WRender } from '../../../WDevCore/WModules/WComponentsTools.js';
@@ -8,13 +8,13 @@ import { css } from '../../../WDevCore/WModules/WStyledRender.js';
 class TaskManagers extends HTMLElement {
     /**
      * 
-     * @param {Array<ProyectoTableTareas>} Tasks 
-     * @param {ProyectoTableTareas} Model 
+     * @param {Array<CaseTable_Tareas>} Tasks 
+     * @param {CaseTable_Tareas} Model 
      */
     constructor(Tasks, Model) {
         super();
         this.Tasks = Tasks;
-        this.TaskModel = Model ?? new ProyectoTableTareas();
+        this.TaskModel = Model ?? new CaseTable_Tareas();
         this.attachShadow({ mode: 'open' });
         this.shadowRoot?.append(this.WStyle,
             StyleScrolls.cloneNode(true),
@@ -90,15 +90,15 @@ class TaskManagers extends HTMLElement {
             draggable: true,
             // @ts-ignore
             task: task,
-            id: "task" + task.IdTarea,
+            id: "task" + task.Id_Tarea,
             ondragstart: (ev) => {
                 ev.dataTransfer.setData("text", ev.target.id);
             }, children: [
                 { tagName: "label", class: "task-title", innerText: task.Titulo },
-                { tagName: "label", class: "task-detail", innerText: task.ProyectoTableActividades?.Titulo },
+                { tagName: "label", class: "task-detail", innerText: task.CaseTable_Case?.Titulo },
                 //{ tagName: "p", class: "p-title", innerText: task.Descripcion },
                 {
-                    class: "p-participantes", children: task.ProyectoTableParticipantes?.map(I => ({
+                    class: "p-participantes", children: task.CaseTable_Participantes?.map(I => ({
                         tagName: 'img', className: "img-participantes",
                         src: "/Media/Image/" + I.Tbl_Profile?.Foto
                     }))
@@ -116,28 +116,28 @@ class TaskManagers extends HTMLElement {
     }
     /**
     * 
-    * @param {ProyectoTableTareas} task 
+    * @param {CaseTable_Tareas} task 
     */
     taskEdit = async (task) => {
         const CalendarModel = {
             type: 'CALENDAR',
-            ModelObject: () => new ProyectoTableCalendario(),
+            ModelObject: () => new CaseTable_Calendario(),
             require: false,
             CalendarFunction: async () => {
                 return {
-                    Agenda: await new ProyectoTableAgenda({
+                    Agenda: await new CaseTable_Agenda({
                         // @ts-ignore
-                        Id_Dependencia: task?.ProyectoTableActividades?.Id_Dependencia
+                        Id_Dependencia: task?.CaseTable_Case?.Id_Dependencia
                     }).Get(),
-                    Calendario: await new ProyectoTableCalendario({
+                    Calendario: await new CaseTable_Calendario({
                         // @ts-ignore
-                        Id_Dependencia: task?.ProyectoTableActividades?.Id_Dependencia
+                        Id_Dependencia: task?.CaseTable_Case?.Id_Dependencia
                     }).Get()
                 }
             }
         }
         // @ts-ignore
-        this.TaskModel.ProyectoTableCalendario = CalendarModel;
+        this.TaskModel.CaseTable_Calendario = CalendarModel;
         this.shadowRoot?.append(new WModalForm({
             EditObject: task,
             AutoSave: true,
@@ -146,12 +146,12 @@ class TaskManagers extends HTMLElement {
     }
     /**
     * 
-    * @param {ProyectoTableTareas} task 
+    * @param {CaseTable_Tareas} task 
     */
     taskDetail = async (task) => { }
     /**
      * 
-     * @param {ProyectoTableTareas} task 
+     * @param {CaseTable_Tareas} task 
      * @param {String} state 
      */
     cardDrop = (task, state) => {

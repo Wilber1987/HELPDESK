@@ -1,5 +1,5 @@
 
-import { ProyectoCatDependencias, ProyectoTableActividades, ProyectoTableAgenda, ProyectoTableCalendario, ProyectoTableEvidencias, ProyectoTableParticipantes, ProyectoTableTareas } from '../../../Model/ProyectDataBaseModel.js';
+import { Cat_Dependencias, CaseTable_Case, CaseTable_Agenda, CaseTable_Calendario, CaseTable_Evidencias, CaseTable_Participantes, CaseTable_Tareas } from '../../../Model/ProyectDataBaseModel.js';
 import { ViewCalendarioByDependencia } from '../../../Model/DBOViewModel.js';
 import { StylesControlsV2, StylesControlsV3 } from "../../../WDevCore/StyleModules/WStyleComponents.js";
 import { WAppNavigator } from '../../../WDevCore/WComponents/WAppNavigator.js';
@@ -43,8 +43,8 @@ class MainProyect extends HTMLElement {
             {
                 name: "Datos Generales",
                 action: async (ev) => {
-                    const dataset = await new ProyectoTableActividades().Get();
-                    const dependencias = await new ProyectoCatDependencias().Get();
+                    const dataset = await new CaseTable_Case().Get();
+                    const dependencias = await new Cat_Dependencias().Get();
                     this.TabManager.NavigateFunction("Tab-Generales",
                         new MainProyects(dataset, dependencias));
                 }
@@ -54,8 +54,6 @@ class MainProyect extends HTMLElement {
                 name: "Tareas", action: async (ev) => { this.NavChargeTasks(); }
             }, {
                 name: "Mis Tareas", action: async (ev) => { this.NavChargeOWTasks(); }
-            }, {
-                name: "Investigaciones", action: async (ev) => { this.NavInvestigaciones("Tab-Investigaciones"); }
             }]
     });
     connectedCallback() { }
@@ -63,24 +61,24 @@ class MainProyect extends HTMLElement {
         this.append(this.OptionContainer, this.TabContainer);
     }
     NavChargeActividades = async () => {
-        const dataset = await new ProyectoTableActividades().GetOwActivities();
-        const dependencias = await new ProyectoCatDependencias().GetOwDependencies();
+        const dataset = await new CaseTable_Case().GetOwCase();
+        const dependencias = await new Cat_Dependencias().GetOwDependencies();
         this.TabManager.NavigateFunction("Tab-OwActividades",
             new MainProyects(dataset, dependencias));
     }
     NavChargeTasks = async () => {
-        const tasks = await new ProyectoTableTareas().Get();
+        const tasks = await new CaseTable_Tareas().Get();
         this.TabManager.NavigateFunction("Tab-Tasks-Manager", this.ChargeTasks(tasks));
     }
     NavChargeOWTasks = async () => {
-        const tasks = await new ProyectoTableTareas().GetOwParticipations();
+        const tasks = await new CaseTable_Tareas().GetOwParticipations();
         this.TabManager.NavigateFunction("Tab-OWTasks-Manager", this.ChargeTasks(tasks));
     }
     ChargeTasks(tasks) {
         const tasksManager = new TaskManagers(tasks);
         const filterOptions = new WFilterOptions({
             Dataset: tasks,
-            ModelObject: new ProyectoTableTareas(),
+            ModelObject: new CaseTable_Tareas(),
             //DisplayFilts: [],
             FilterFunction: (DFilt) => {
                 tasksManager.DrawTaskManagers(DFilt);
@@ -122,8 +120,8 @@ customElements.define('w-proyect-class', MainProyect);
 class MainProyects extends HTMLElement {
     /**
      * 
-     * @param {Array<ProyectoTableActividades>} Dataset 
-     * @param {Array<ProyectoCatDependencias>} Dependencias 
+     * @param {Array<CaseTable_Case>} Dataset 
+     * @param {Array<Cat_Dependencias>} Dependencias 
      */
     constructor(Dataset, Dependencias) {
         super();
@@ -151,7 +149,7 @@ class MainProyects extends HTMLElement {
     dashBoardView = async () => {
 
         const datasetMap = this.Dataset.map(x => {
-            x.Dependencia = x.ProyectoCatDependencias.Descripcion;
+            x.Dependencia = x.Cat_Dependencias.Descripcion;
             x.val = 1;
             return x;
         });
@@ -176,8 +174,8 @@ class MainProyects extends HTMLElement {
     }
     actividadesManager = async () => {
         const datasetMap = this.Dataset.map(actividad => {
-            actividad.Dependencia = actividad.ProyectoCatDependencias.Descripcion;
-            actividad.Progreso = actividad.ProyectoTableTareas?.filter(tarea => tarea.Estado?.includes("Finalizada")).length;
+            actividad.Dependencia = actividad.Cat_Dependencias.Descripcion;
+            actividad.Progreso = actividad.CaseTable_Tareas?.filter(tarea => tarea.Estado?.includes("Finalizado")).length;
             return this.actividadElement(actividad);
         });
         this.TabManager.NavigateFunction("Tab-Actividades-Manager",
@@ -197,7 +195,7 @@ class MainProyects extends HTMLElement {
                     ]
                 },
                 { tagName: 'h4', innerText: "Progreso" },
-                ControlBuilder.BuildProgressBar(actividad.Progreso, actividad.ProyectoTableTareas?.length),
+                ControlBuilder.BuildProgressBar(actividad.Progreso, actividad.CaseTable_Tareas?.length),
                 {
                     className: "options", children: [
                         { tagName: 'button', className: 'Btn-Mini', innerText: "Detalle", onclick: async () => await this.actividadDetail(actividad) },
@@ -214,17 +212,17 @@ class MainProyects extends HTMLElement {
             ]
         })
     }
-    actividadDetail = async (actividad = (new ProyectoTableActividades())) => {
+    actividadDetail = async (actividad = (new CaseTable_Case())) => {
         const actividadDetailView = WRender.Create({ className: "", children: [this.actividadElementDetail(actividad)] });
-        const tareasActividad = await new ProyectoTableTareas({ IdActividad: actividad.IdActividad }).Get();
-        const taskModel = new ProyectoTableTareas({
-            IdActividad: { type: 'number', hidden: true, value: actividad.IdActividad },
-            ProyectoTableTarea: { type: 'WSelect', Dataset: tareasActividad, ModelObject: () => new ProyectoTableTareas() },
-            ProyectoTableCalendario: {
+        const tareasActividad = await new CaseTable_Tareas({ Id_Case: actividad.Id_Case }).Get();
+        const taskModel = new CaseTable_Tareas({
+            Id_Case: { type: 'number', hidden: true, value: actividad.Id_Case },
+            CaseTable_Tarea: { type: 'WSelect', Dataset: tareasActividad, ModelObject: () => new CaseTable_Tareas() },
+            CaseTable_Calendario: {
                 type: 'CALENDAR', CalendarFunction: async () => {
                     return {
-                        Agenda: await new ProyectoTableAgenda({ Id_Dependencia: actividad.ProyectoCatDependencias.Id_Dependencia }).Get(),
-                        Calendario: await new ViewCalendarioByDependencia({ Id_Dependencia: actividad.ProyectoCatDependencias.Id_Dependencia }).Get()
+                        Agenda: await new CaseTable_Agenda({ Id_Dependencia: actividad.Cat_Dependencias.Id_Dependencia }).Get(),
+                        Calendario: await new ViewCalendarioByDependencia({ Id_Dependencia: actividad.Cat_Dependencias.Id_Dependencia }).Get()
                     }
                 }, require: false, hiddenInTable: true
             }
@@ -232,23 +230,23 @@ class MainProyects extends HTMLElement {
         const tasktable = new WTableComponent({
             Dataset: tareasActividad,
             ModelObject: taskModel, Options: {
-                Add: true, UrlAdd: "../api/ApiEntityDBO/saveProyectoTableTareas",
-                Edit: true, UrlUpdate: "../api/ApiEntityDBO/updateProyectoTableTareas",
-                Search: true, UrlSearch: "../api/ApiEntityDBO/getProyectoTableTareas",
+                Add: true, UrlAdd: "../api/ApiEntityDBO/saveCaseTable_Tareas",
+                Edit: true, UrlUpdate: "../api/ApiEntityDBO/updateCaseTable_Tareas",
+                Search: true, UrlSearch: "../api/ApiEntityDBO/getCaseTable_Tareas",
                 UserActions: [{
                     name: "Nueva Evidencia", action: (Tarea) => {
                         actividadDetailView.append(new WModalForm({
-                            ModelObject: new ProyectoTableEvidencias({ IdTarea: Tarea.IdTarea }),
+                            ModelObject: new CaseTable_Evidencias({ Id_Tarea: Tarea.Id_Tarea }),
                             StyleForm: "columnX1"
                         }))
                     }
                 }, {
                     name: "Ver Evidencias", action: async (Tarea) => {
-                        const response = await new ProyectoTableEvidencias({ IdTarea: Tarea.IdTarea }).Get();
+                        const response = await new CaseTable_Evidencias({ Id_Tarea: Tarea.Id_Tarea }).Get();
                         actividadDetailView.append(new WModalForm({
                             ObjectModal: new DocumentViewer({
                                 Dataset: response.map((e, index) => ({
-                                    TypeDocuement: e.CatalogoTipoEvidencia?.Descripcion,
+                                    TypeDocuement: e.Cat_Tipo_Evidencia?.Descripcion,
                                     Description: e.Descripcion ?? "document " + (index + 1),
                                     Document: e.Data
                                 }))
@@ -270,16 +268,16 @@ class MainProyects extends HTMLElement {
             ]
         });
         actividadDetailView.append(taskNav, taskContainer)
-        this.TabManager.NavigateFunction("Tab-Actividades-Viewer" + actividad.IdActividad, actividadDetailView);
+        this.TabManager.NavigateFunction("Tab-Actividades-Viewer" + actividad.Id_Case, actividadDetailView);
     }
     dependenciasViewer = async () => {
         const dependenciasDetailView = WRender.Create({ className: "", children: [] });
-        //const tareasActividad = await new ProyectoCatDependencias().Get();
+        //const tareasActividad = await new Cat_Dependencias().Get();
         dependenciasDetailView.append(new WTableComponent({
-            ModelObject: new ProyectoCatDependencias({}), Options: {
-                Add: true, UrlAdd: "../api/ApiEntityDBO/saveProyectoCatDependencias",
-                Edit: true, UrlUpdate: "../api/ApiEntityDBO/updateProyectoCatDependencias",
-                Search: true, UrlSearch: "../api/ApiEntityDBO/getProyectoCatDependencias",
+            ModelObject: new Cat_Dependencias({}), Options: {
+                Add: true, UrlAdd: "../api/ApiEntityDBO/saveCat_Dependencias",
+                Edit: true, UrlUpdate: "../api/ApiEntityDBO/updateCat_Dependencias",
+                Search: true, UrlSearch: "../api/ApiEntityDBO/getCat_Dependencias",
                 UserActions: []
             }
         }))
@@ -288,24 +286,24 @@ class MainProyects extends HTMLElement {
     nuevaActividad = async () => {
         const ModelCalendar = {
             type: 'CALENDAR',
-            ModelObject: () => new ProyectoTableCalendario(),
+            ModelObject: () => new CaseTable_Calendario(),
             require: false,
             CalendarFunction: async () => {
                 return {
-                    Agenda: await new ProyectoTableAgenda({ Id_Dependencia: form.FormObject.ProyectoCatDependencias?.Id_Dependencia }).Get(),
-                    Calendario: await new ProyectoTableCalendario({ Id_Dependencia: form.FormObject.ProyectoCatDependencias?.Id_Dependencia }).Get()
+                    Agenda: await new CaseTable_Agenda({ Id_Dependencia: form.FormObject.Cat_Dependencias?.Id_Dependencia }).Get(),
+                    Calendario: await new CaseTable_Calendario({ Id_Dependencia: form.FormObject.Cat_Dependencias?.Id_Dependencia }).Get()
                 }
             }
         }
 
         const form = new WForm({
-            ModelObject: new ProyectoTableActividades({
-                ProyectoTableTareas: {
+            ModelObject: new CaseTable_Case({
+                CaseTable_Tareas: {
                     type: 'MasterDetail',
-                    ModelObject: () => new ProyectoTableTareas({ ProyectoTableCalendario: ModelCalendar })
+                    ModelObject: () => new CaseTable_Tareas({ CaseTable_Calendario: ModelCalendar })
                 },
-                ProyectoCatDependencias: {
-                    type: "WSELECT", ModelObject: new ProyectoCatDependencias(),
+                Cat_Dependencias: {
+                    type: "WSELECT", ModelObject: new Cat_Dependencias(),
                     Dataset: this.Dependencias
                 }
             })

@@ -5,7 +5,7 @@ class Tbl_Profile {
 			this[prop] = props[prop];
 		}
 	}
-	Id_Investigador = { type: "number", primary: true };
+	Id_Perfil = { type: "number", primary: true };
 	Nombres = { type: "text" };
 	Apellidos = { type: "text" };
 	FechaNac = { type: "date" };
@@ -20,126 +20,104 @@ class Tbl_Profile {
 }
 export { Tbl_Profile }
 
-class Cat_Tipo_Proyecto {
+class Cat_Tipo_Servicio {
 	constructor(props) {
 		for (const prop in props) {
 			this[prop] = props[prop];
 		}
 	}
-	Id_Tipo_Proyecto = { type: "number", primary: true };
-	Descripcion_Tipo_Proyecto = { type: "text" };
-	Estado_Tipo_Proyecto = { type: "text" };
+	Id_Tipo_Servicio = { type: "number", primary: true };
+	Descripcion = { type: "text" };
+	Estado = { type: "text" };
 	Icon = { type: "IMAGE" };
 }
-export { Cat_Tipo_Proyecto }
-class Tbl_Proyectos {
+export { Cat_Tipo_Servicio }
+class Tbl_Servicios {
 	constructor(props) {
 		for (const prop in props) {
 			this[prop] = props[prop];
 		}
 	}
-	Id_Proyecto = { type: "number", primary: true };
+	Id_Servicio = { type: "number", primary: true };
 	Nombre_Proyecto = { type: "text" };
-	DescripcionProyecto = { type: "text" };
-	Id_Tipo_Proyecto = { type: "number" };
+	Descripcion_Servicio = { type: "text" };
+	Id_Tipo_Servicio = { type: "number" };
 	Visibilidad = { type: "text" };
-	Estado_Proyecto = { type: "text" };
+	Estado = { type: "text" };
 	Fecha_Inicio = { type: "date" };
 	Fecha_Finalizacion = { type: "date" };
 }
-export { Tbl_Proyectos }
-class Cat_Cargo_Proyecto {
+export { Tbl_Servicios }
+
+
+class ViewParticipantesServicios {
 	constructor(props) {
 		for (const prop in props) {
 			this[prop] = props[prop];
 		}
 	}
-	Id_Cargo_Proyecto = { type: "number", primary: true };
-	Descripcion = { type: "text", hiddenInTable: true };
-	Estado = { type: "Select", Dataset: ["Activo", "Inactivo"] };
-}
-export { Cat_Cargo_Proyecto }
-class Tbl_Participantes_Proyectos {
-	constructor(props) {
-		for (const prop in props) {
-			this[prop] = props[prop];
-		}
-	}
-	Id_Proyecto = { type: "number", primary: true };
-	Id_Investigador = { type: "number", hidden: true };
-	Id_Cargo_Proyecto = { type: "number" };
+	Id_Perfil = { type: "number", primary: true };
+	Id_Servicio = { type: "number" };
 	Fecha_Ingreso = { type: "date" };
 	Estado_Participante = { type: "text" };
-}
-export { Tbl_Participantes_Proyectos }
-class ViewParticipantesProyectos {
-	constructor(props) {
-		for (const prop in props) {
-			this[prop] = props[prop];
-		}
-	}
-	Id_Investigador = { type: "number", primary: true };
-	Id_Proyecto = { type: "number" };
-	Fecha_Ingreso = { type: "date" };
-	Estado_Participante = { type: "text" };
-	DescripcionProyecto = { type: "text" };
+	Descripcion_Servicio = { type: "text" };
 	Fecha_Inicio = { type: "date" };
 	Fecha_Finalizacion = { type: "date" };
 	Visibilidad = { type: "text" };
 	Cargo = { type: "text" };
-	Descripcion_Tipo_Proyecto = { type: "text" };
-	Estado_Tipo_Proyecto = { type: "text" };
+	Descripcion = { type: "text" };
+	Estado = { type: "text" };
 	Nombre_Proyecto = { type: "text" };
-	Estado_Proyecto = { type: "text" };
+	Estado = { type: "text" };
 }
-export { ViewParticipantesProyectos }
+export { ViewParticipantesServicios }
 
-class ProyectoTableActividades {
+class CaseTable_Case {
 	constructor(props) {
 		for (const prop in props) {
 			this[prop] = props[prop];
 		}
 	}
-	IdActividad = { type: "number", primary: true };
+	Id_Case = { type: "number", primary: true };
 	Titulo = { type: "text" };
 	Descripcion = { type: "text", hiddenInTable: true };
-	Id_Investigador = { type: "number", hidden: true };
+	Id_Perfil = { type: "number", hidden: true };
 	Estado = { type: "Select", Dataset: ["Activo", "Inactivo"] };
 	Id_Dependencia = { type: "number" };
 	Fecha_Inicial = { type: "date" };
 	Fecha_Final = { type: "date" };
-	Id_Proyecto = { type: "number" };
+	Id_Servicio = { type: "number" };
 }
-export { ProyectoTableActividades }
+export { CaseTable_Case }
 
-class ProyectoTableCalendario {
+class CaseTable_Calendario {
 	constructor(props) {
 		for (const prop in props) {
 			this[prop] = props[prop];
 		}
 	}
 	IdCalendario = { type: "number", primary: true };
-	IdTarea = { type: "number" };
+	Id_Tarea = { type: "number" };
 	Estado = { type: "Select", Dataset: ["Activo", "Inactivo"] };
 	Fecha_Inicial = { type: "date" };
 	Fecha_Final = { type: "date" };
 }
-export { ProyectoTableCalendario }
+export { CaseTable_Calendario }
 
-class ProyectoTableTareas {
+class CaseTable_Tareas {
 	constructor(props) {
 		for (const prop in props) {
 			this[prop] = props[prop];
 		}
 	}
-	IdTarea = { type: "number", primary: true };
+	Id_Tarea = { type: "number", primary: true };
 	Titulo = { type: "text" };
-	IdTareaPadre = { type: "number" };
-	IdActividad = { type: "number" };
+	Id_TareaPadre = { type: "number" };
+	Id_Case = { type: "number" };
 	Descripcion = { type: "text", hiddenInTable: true };
 	Estado = { type: "Select", Dataset: ["Activo", "Inactivo"] };
 }
-export { ProyectoTableTareas }
+export { CaseTable_Tareas }
 
 class ViewCalendarioByDependencia {
 	constructor(props) {
@@ -148,26 +126,26 @@ class ViewCalendarioByDependencia {
 		}
 	}
 	Id_Dependencia = { type: "number", primary: true };
-	IdActividad = { type: "number" };
-	IdTareaPadre = { type: "number" };
+	Id_Case = { type: "number" };
+	Id_TareaPadre = { type: "number" };
 	Fecha_Inicial = { type: "date" };
 	Fecha_Final = { type: "date" };
 	Estado = { type: "Select", Dataset: ["Activo", "Inactivo"] };
 	IdCalendario = { type: "number" };
-	IdTarea = { type: "number" };
+	Id_Tarea = { type: "number" };
 }
 export { ViewCalendarioByDependencia }
-class ProyectoTableParticipantes {
+class CaseTable_Participantes {
 	constructor(props) {
 		for (const prop in props) {
 			this[prop] = props[prop];
 		}
 	}
-	Id_Investigador = { type: "number", primary: true };
-	IdTarea = { type: "number" };
-	IdTipoParticipacion = { type: "number" };
+	Id_Perfil = { type: "number", primary: true };
+	Id_Tarea = { type: "number" };
+	Id_Tipo_Participacion = { type: "number" };
 }
-export { ProyectoTableParticipantes }
+export { CaseTable_Participantes }
 
 class ViewActividadesParticipantes {
 	constructor(props) {
@@ -175,7 +153,7 @@ class ViewActividadesParticipantes {
 			this[prop] = props[prop];
 		}
 	}
-	IdActividad = { type: "number", primary: true };
+	Id_Case = { type: "number", primary: true };
 	Titulo = { type: "text" };
 	Descripcion = { type: "text", hiddenInTable: true };
 	Estado = { type: "Select", Dataset: ["Activo", "Inactivo"] };
@@ -183,7 +161,7 @@ class ViewActividadesParticipantes {
 }
 export { ViewActividadesParticipantes }
 
-class ProyectoCatCargosDependencias {
+class Cat_Cargos_Dependencias {
 	constructor(props) {
 		for (const prop in props) {
 			this[prop] = props[prop];
@@ -192,48 +170,48 @@ class ProyectoCatCargosDependencias {
 	IdCargo = { type: "number", primary: true };
 	Descripcion = { type: "text", hiddenInTable: true };
 }
-export { ProyectoCatCargosDependencias }
+export { Cat_Cargos_Dependencias }
 
-class ProyectoCatTipoParticipaciones {
+class Cat_Tipo_Participaciones {
 	constructor(props) {
 		for (const prop in props) {
 			this[prop] = props[prop];
 		}
 	}
-	IdTipoParticipacion = { type: "number", primary: true };
+	Id_Tipo_Participacion = { type: "number", primary: true };
 	Descripcion = { type: "text", hiddenInTable: true };
 }
-export { ProyectoCatTipoParticipaciones }
+export { Cat_Tipo_Participaciones }
 
-class ProyectoTableAgenda {
+class CaseTable_Agenda {
 	constructor(props) {
 		for (const prop in props) {
 			this[prop] = props[prop];
 		}
 	}
 	IdAgenda = { type: "number", primary: true };
-	Id_Investigador = { type: "number", hidden: true };
+	Id_Perfil = { type: "number", hidden: true };
 	Id_Dependencia = { type: "number" };
 	Dia = { type: "text" };
 	Hora_Inicial = { type: "text" };
 	Hora_Final = { type: "text" };
 	Fecha_Caducidad = { type: "date" };
 }
-export { ProyectoTableAgenda }
+export { CaseTable_Agenda }
 
-class ProyectoTableDependencias_Usuarios {
+class CaseTable_Dependencias_Usuarios {
 	constructor(props) {
 		for (const prop in props) {
 			this[prop] = props[prop];
 		}
 	}
-	Id_Investigador = { type: "number", hidden: true };
+	Id_Perfil = { type: "number", hidden: true };
 	Id_Dependencia = { type: "number" };
 	Id_Cargo = { type: "number" };
 }
-export { ProyectoTableDependencias_Usuarios }
+export { CaseTable_Dependencias_Usuarios }
 
-class ProyectoTableEvidencias {
+class CaseTable_Evidencias {
 	constructor(props) {
 		for (const prop in props) {
 			this[prop] = props[prop];
@@ -242,9 +220,9 @@ class ProyectoTableEvidencias {
 	IdEvidencia = { type: "number", primary: true };
 	IdTipo = { type: "number" };
 	Data = { type: "text" };
-	IdTarea = { type: "number" };
+	Id_Tarea = { type: "number" };
 }
-export { ProyectoTableEvidencias }
+export { CaseTable_Evidencias }
 class Cat_Cargos {
 	constructor(props) {
 		for (const prop in props) {

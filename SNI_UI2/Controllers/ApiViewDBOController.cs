@@ -10,11 +10,11 @@ namespace API.Controllers {
    public class  ApiViewDBOController : ControllerBase {
        //ViewInvestigacionesDisciplinas
        
-       //ViewParticipantesProyectos
+       //ViewParticipantesServicios
        [HttpPost]
        [AuthController]
-       public List<ViewParticipantesProyectos> getViewParticipantesProyectos(ViewParticipantesProyectos Inst) {
-           return Inst.Get<ViewParticipantesProyectos>();
+       public List<ViewParticipantesServicios> getViewParticipantesServicios(ViewParticipantesServicios Inst) {
+           return Inst.Get<ViewParticipantesServicios>();
        }
        //ViewCalendarioByDependencia
        [HttpPost]

@@ -2,9 +2,9 @@ import { EntityClass } from "../WDevCore/WModules/EntityClass.js";
 import { WAjaxTools } from "../WDevCore/WModules/WComponentsTools.js";
 
 
-class CatalogoTipoEvidencia extends EntityClass {
+class Cat_Tipo_Evidencia extends EntityClass {
     constructor(props) {
-        super(props, 'EntityDBO');
+        super(props, 'EntityHelpdesk');
         for (const prop in props) {
             this[prop] = props[prop];
         }
@@ -13,56 +13,31 @@ class CatalogoTipoEvidencia extends EntityClass {
     Descripcion = { type: 'text' };
     Estado = { type: "Select", Dataset: ["Activo", "Inactivo"] };
 }
-export { CatalogoTipoEvidencia }
+export { Cat_Tipo_Evidencia }
 
-class ProyectoTableEvidencias extends EntityClass {
+class CaseTable_Evidencias extends EntityClass {
     constructor(props) {
-        super(props, 'EntityDBO');
+        super(props, 'EntityHelpdesk');
         for (const prop in props) {
             this[prop] = props[prop];
         }
     }
     IdEvidencia = { type: 'number', primary: true };
-    CatalogoTipoEvidencia = { type: 'WSelect', ModelObject: () => new CatalogoTipoEvidencia() };
+    Cat_Tipo_Evidencia = { type: 'WSelect', ModelObject: () => new Cat_Tipo_Evidencia() };
     Data = { type: 'file' };
 
 }
-export { ProyectoTableEvidencias }
-class Cat_Tipo_Asociacion {
-	constructor(props) {
-		for (const prop in props) {
-			this[prop] = props[prop];
-		}
-	}
-	Id_Tipo_Asociacion = { type: "number", primary: true };
-	Descripcion = { type: "text", hiddenInTable: true };
-	Estado = { type: "Select", Dataset: ["Activo", "Inactivo"] };
-}
-export { Cat_Tipo_Asociacion }
+export { CaseTable_Evidencias }
 
-class Cat_instituciones extends EntityClass {
-    constructor(props) {
-        super(props, 'EntityDBO');
-        for (const prop in props) {
-            this[prop] = props[prop];
-        }
-    }
-    Id_Institucion = { type: 'number', primary: true };
-    Nombre = { type: 'text' };
-    Direccion = { type: 'text' };
-    Estado = { type: "Select", Dataset: ["Activo", "Inactivo"] };
-    Logo = { type: 'img' };
-    ProyectoCatDependencias = { type: 'MasterDetail', ModelObject: () => new ProyectoCatDependencias() };
-}
-export { Cat_instituciones }
+
 class Tbl_Profile extends EntityClass {
     constructor(props) {
-        super(props, 'EntityDBO');
+        super(props, 'EntityHelpdesk');
         for (const prop in props) {
             this[prop] = props[prop];
         }
     }
-    Id_Investigador = { type: 'number', primary: true };
+    Id_Perfil = { type: 'number', primary: true };
     Nombres = { type: 'text' };
     Apellidos = { type: 'text' };
     FechaNac = { type: 'date' };
@@ -75,86 +50,95 @@ class Tbl_Profile extends EntityClass {
 }
 export { Tbl_Profile }
 
-class Cat_Tipo_Proyecto extends EntityClass {
+class Cat_Tipo_Servicio extends EntityClass {
     constructor(props) {
-        super(props, 'EntityDBO');
+        super(props, 'EntityHelpdesk');
         for (const prop in props) {
             this[prop] = props[prop];
         }
     }
-    Id_Tipo_Proyecto = { type: 'number', primary: true };
-    Descripcion_Tipo_Proyecto = { type: 'text' };
-    Estado_Tipo_Proyecto = { type: 'text' };
+    Id_Tipo_Servicio = { type: 'number', primary: true };
+    Descripcion = { type: 'text' };
+    Estado = { type: 'text' };
     Icon = { type: 'img' };
-    Tbl_Proyectos = { type: 'MasterDetail', ModelObject: () => new Tbl_Proyectos() };
+    Tbl_Servicios = { type: 'MasterDetail', ModelObject: () => new Tbl_Servicios() };
 }
-export { Cat_Tipo_Proyecto }
-class Tbl_Proyectos extends EntityClass {
+export { Cat_Tipo_Servicio }
+class Tbl_Servicios extends EntityClass {
     constructor(props) {
-        super(props, 'EntityDBO');
+        super(props, 'EntityHelpdesk');
         for (const prop in props) {
             this[prop] = props[prop];
         }
     }
-    Id_Proyecto = { type: 'number', primary: true };
+    Id_Servicio = { type: 'number', primary: true };
     Nombre_Proyecto = { type: 'text' };
-    DescripcionProyecto = { type: 'text' };
+    Descripcion_Servicio = { type: 'text' };
     Visibilidad = { type: 'text' };
-    Estado_Proyecto = { type: 'text' };
+    Estado = { type: 'text' };
     Fecha_Inicio = { type: 'date' };
     Fecha_Finalizacion = { type: 'date' };
-    ProyectoTableActividades = { type: 'MasterDetail', ModelObject: () => new ProyectoTableActividades() };
-    Tbl_Participantes_Proyectos = { type: 'MasterDetail', ModelObject: () => new Tbl_Participantes_Proyectos() };
+    CaseTable_Case = { type: 'MasterDetail', ModelObject: () => new CaseTable_Case() };
 }
-export { Tbl_Proyectos }
-class Cat_Cargo_Proyecto extends EntityClass {
-    constructor(props) {
-        super(props, 'EntityDBO');
-        for (const prop in props) {
-            this[prop] = props[prop];
-        }
-    }
-    Id_Cargo_Proyecto = { type: 'number', primary: true };
-    Descripcion = { type: 'text', hiddenInTable: true };
-    Estado = { type: "Select", Dataset: ["Activo", "Inactivo"] };
-    Tbl_Participantes_Proyectos = { type: 'MasterDetail', ModelObject: () => new Tbl_Participantes_Proyectos() };
-}
-export { Cat_Cargo_Proyecto }
-class Tbl_Participantes_Proyectos extends EntityClass {
-    constructor(props) {
-        super(props, 'EntityDBO');
-        for (const prop in props) {
-            this[prop] = props[prop];
-        }
-    }
-    Fecha_Ingreso = { type: 'date' };
-    Estado_Participante = { type: 'text' };
-}
-export { Tbl_Participantes_Proyectos }
+export { Tbl_Servicios }
 
-class ProyectoTableActividades extends EntityClass {
+class CaseTable_Case extends EntityClass {
     constructor(props) {
-        super(props, 'EntityDBO');
+        super(props, 'EntityHelpdesk');
         for (const prop in props) {
             this[prop] = props[prop];
         }
     }
-    IdActividad = { type: 'number', primary: true };
+    Id_Case = { type: 'number', primary: true };
     Titulo = { type: 'text' };
     Descripcion = { type: 'text', hiddenInTable: true };
-    Estado = { type: "Select", Dataset: ["Activo", "Inactivo", "En Proceso", "Pendientes", "Finalizada"] };
+    Estado = { type: "Select", Dataset: ["Activo", "Inactivo", "Proceso", "Pendientes", "Finalizado"] };
     Fecha_Inicial = { type: 'date' };
     Fecha_Final = { type: 'date' };
-    ProyectoCatDependencias = { type: 'WSelect', ModelObject: () => new ProyectoCatDependencias() };
-    ProyectoTableTareas = { type: 'MasterDetail', ModelObject: () => new ProyectoTableTareas() };
-    GetOwActivities = async () => {
-        return await this.GetData("Proyect/GetOwActivities");
+    Cat_Dependencias = { type: 'WSelect', ModelObject: () => new Cat_Dependencias() };
+    CaseTable_Tareas = { type: 'MasterDetail', ModelObject: () => new CaseTable_Tareas() };
+    Tbl_Servicios = { type: 'WSelect', ModelObject: () => new Tbl_Servicios() };
+    /**
+     * @returns {Array<CaseTable_Case>}
+     */
+    GetOwCase = async () => {
+        return await this.GetData("Proyect/GetOwCase");
+    }
+    /**
+     * @returns {Array<CaseTable_Case>}
+     */
+    GetOwSolicitudesPendientesAprobar = async () => {
+        return await this.GetData("Proyect/GetOwSolicitudesPendientesAprobar");
+    }
+    /**
+     * @returns {Array<CaseTable_Case>}
+    */
+    GetOwSolicitudesPendientes = async () => {
+        return await this.GetData("Proyect/GetOwSolicitudesPendientes");
+    }
+    /**
+     * @returns {Array<CaseTable_Case>}
+     */
+    GetOwSolicitudesProceso = async () => {
+        return await this.GetData("Proyect/GetOwSolicitudesProceso");
+    }
+    /**
+     * @returns {Array<CaseTable_Case>}
+     */
+    GetOwSolicitudesEspera = async () => {
+        return await this.GetData("Proyect/GetOwSolicitudesEspera");
+    }
+    /**
+     * @returns {Array<CaseTable_Case>}
+     */
+    GetSolicitudesPendientesAprobar = async () => {
+        return await this.GetData("Proyect/GetSolicitudesPendientesAprobar");
     }
 }
-export { ProyectoTableActividades }
-class ProyectoTableCalendario extends EntityClass {
+export { CaseTable_Case }
+class CaseTable_Calendario extends EntityClass {
     constructor(props) {
-        super(props, 'EntityDBO');
+        super(props, 'EntityHelpdesk');
         for (const prop in props) {
             this[prop] = props[prop];
         }
@@ -165,26 +149,26 @@ class ProyectoTableCalendario extends EntityClass {
     Fecha_Inicial = { type: 'date' };
     Fecha_Final = { type: 'date' };
 }
-export { ProyectoTableCalendario }
-class ProyectoTableTareas extends EntityClass {
+export { CaseTable_Calendario }
+class CaseTable_Tareas extends EntityClass {
     constructor(props) {
-        super(props, 'EntityDBO');
+        super(props, 'EntityHelpdesk');
         for (const prop in props) {
             this[prop] = props[prop];
         }
     }
     IdTarea = { type: 'number', primary: true };
     Titulo = { type: 'text' };
-    IdActividad = { type: 'number', hidden: true, value: undefined };
+    Id_Case = { type: 'number', hidden: true, value: undefined };
     Descripcion = { type: 'text', hiddenInTable: true };
-    ProyectoTableTarea = { type: 'WSelect', ModelObject: () => new ProyectoTableTareas() };
-    //ProyectoTableTareasHijas = { type: 'MULTISELECT', ModelObject: () => new ProyectoTableTareas() };
-    Estado = { type: "Select", Dataset: ["Activo", "En Proceso", "En Espera", "Finalizada", "Inactivo"] };
-    ProyectoTableParticipantes = { type: 'MasterDetail', ModelObject: () => new ProyectoTableParticipantes() };
-    //ProyectoTableEvidencias = { type: 'MasterDetail', require: false, ModelObject: () => new ProyectoTableEvidencias() };
-    ProyectoTableCalendario = {
+    CaseTable_Tarea = { type: 'WSelect', ModelObject: () => new CaseTable_Tareas() };
+    //CaseTable_TareasHijas = { type: 'MULTISELECT', ModelObject: () => new CaseTable_Tareas() };
+    Estado = { type: "Select", Dataset: ["Activo", "Proceso", "Espera", "Finalizado", "Inactivo"] };
+    CaseTable_Participantes = { type: 'MasterDetail', ModelObject: () => new CaseTable_Participantes() };
+    //CaseTable_Evidencias = { type: 'MasterDetail', require: false, ModelObject: () => new CaseTable_Evidencias() };
+    CaseTable_Calendario = {
         type: 'CALENDAR',
-        ModelObject: () => new ProyectoTableCalendario(),
+        ModelObject: () => new CaseTable_Calendario(),
         require: false,
         hiddenInTable: true,
         CalendarFunction: () => { }
@@ -193,64 +177,63 @@ class ProyectoTableTareas extends EntityClass {
         return await this.GetData("Proyect/GetOwParticipations");
     }
 }
-export { ProyectoTableTareas }
-class ProyectoTableParticipantes extends EntityClass {
+export { CaseTable_Tareas }
+class CaseTable_Participantes extends EntityClass {
     constructor(props) {
-        super(props, 'EntityDBO');
+        super(props, 'EntityHelpdesk');
         for (const prop in props) {
             this[prop] = props[prop];
         }
     }
     Tbl_Profile = { type: 'WSelect', ModelObject: () => new Tbl_Profile() }
-    ProyectoCatTipoParticipaciones = { type: 'WSelect', ModelObject: () => new ProyectoCatTipoParticipaciones() }    
+    Cat_Tipo_Participaciones = { type: 'WSelect', ModelObject: () => new Cat_Tipo_Participaciones() }
 }
-export { ProyectoTableParticipantes }
-class ProyectoCatCargosDependencias extends EntityClass {
+export { CaseTable_Participantes }
+class Cat_Cargos_Dependencias extends EntityClass {
     constructor(props) {
-        super(props, 'EntityDBO');
+        super(props, 'EntityHelpdesk');
         for (const prop in props) {
             this[prop] = props[prop];
         }
     }
     IdCargo = { type: 'number', primary: true };
     Descripcion = { type: 'text' };
-    ProyectoTableDependencias_Usuarios = { type: 'MasterDetail', ModelObject: () => new ProyectoTableDependencias_Usuarios() };
+    CaseTable_Dependencias_Usuarios = { type: 'MasterDetail', ModelObject: () => new CaseTable_Dependencias_Usuarios() };
 }
-export { ProyectoCatCargosDependencias }
-class ProyectoCatDependencias extends EntityClass {
+export { Cat_Cargos_Dependencias }
+class Cat_Dependencias extends EntityClass {
     constructor(props) {
-        super(props, 'EntityDBO');
+        super(props, 'EntityHelpdesk');
         for (const prop in props) {
             this[prop] = props[prop];
         }
     }
     Id_Dependencia = { type: 'number', primary: true };
     Descripcion = { type: 'text' };
-    ProyectoCatDependencia = { type: 'WSelect', ModelObject: () => new ProyectoCatDependencias(), require: false };
-    Cat_instituciones = { type: 'WSelect', ModelObject: () => new Cat_instituciones() };
-    ProyectoCatDependencias_Hijas = { type: 'Multiselect', ModelObject: () => new ProyectoCatDependencias(), require: false };
-    ProyectoTableAgenda = { type: 'MasterDetail', ModelObject: () => new ProyectoTableAgenda(), require: false };
-    ProyectoTableDependencias_Usuarios = { type: 'MasterDetail', ModelObject: () => new ProyectoTableDependencias_Usuarios(), require: false };
+    Cat_Dependencia = { type: 'WSelect', ModelObject: () => new Cat_Dependencias(), require: false };
+    Cat_Dependencias_Hijas = { type: 'Multiselect', ModelObject: () => new Cat_Dependencias(), require: false };
+    CaseTable_Agenda = { type: 'MasterDetail', ModelObject: () => new CaseTable_Agenda(), require: false };
+    CaseTable_Dependencias_Usuarios = { type: 'MasterDetail', ModelObject: () => new CaseTable_Dependencias_Usuarios(), require: false };
     GetOwDependencies = async () => {
         return await this.GetData("Proyect/GetOwDependencies");
     }
 }
-export { ProyectoCatDependencias }
-class ProyectoCatTipoParticipaciones extends EntityClass {
+export { Cat_Dependencias }
+class Cat_Tipo_Participaciones extends EntityClass {
     constructor(props) {
-        super(props, 'EntityDBO');
+        super(props, 'EntityHelpdesk');
         for (const prop in props) {
             this[prop] = props[prop];
         }
     }
-    IdTipoParticipacion = { type: 'number', primary: true };
-    Descripcion = { type: 'text', hiddenInTable: true };
-    ProyectoTableParticipantes = { type: 'MasterDetail', ModelObject: () => new ProyectoTableParticipantes() };
+    Id_Tipo_Participacion = { type: 'number', primary: true };
+    Descripcion = { type: 'text'};
+    CaseTable_Participantes = { type: 'MasterDetail', ModelObject: () => new CaseTable_Participantes() };
 }
-export { ProyectoCatTipoParticipaciones }
-class ProyectoTableAgenda extends EntityClass {
+export { Cat_Tipo_Participaciones }
+class CaseTable_Agenda extends EntityClass {
     constructor(props) {
-        super(props, 'EntityDBO');
+        super(props, 'EntityHelpdesk');
         for (const prop in props) {
             this[prop] = props[prop];
         }
@@ -262,15 +245,28 @@ class ProyectoTableAgenda extends EntityClass {
     Hora_Final = { type: 'HORA' };
     Fecha_Caducidad = { type: 'date' };
 }
-export { ProyectoTableAgenda }
-class ProyectoTableDependencias_Usuarios extends EntityClass {
+export { CaseTable_Agenda }
+class CaseTable_Dependencias_Usuarios extends EntityClass {
     constructor(props) {
-        super(props, 'EntityDBO');
+        super(props, 'EntityHelpdesk');
         for (const prop in props) {
             this[prop] = props[prop];
         }
     }
     Tbl_Profile = { type: 'WSelect', ModelObject: () => new Tbl_Profile() }
-    ProyectoCatCargosDependencias = { type: 'WSelect', ModelObject: () => new ProyectoCatCargosDependencias() }
+    Cat_Cargos_Dependencias = { type: 'WSelect', ModelObject: () => new Cat_Cargos_Dependencias() }
 }
-export { ProyectoTableDependencias_Usuarios }
+export { CaseTable_Dependencias_Usuarios }
+
+class Cat_Paises extends EntityClass {
+    constructor(props) {
+        super(props, 'EntityHelpdesk');
+        for (const prop in props) {
+            this[prop] = props[prop];
+        }
+    }
+    Id_Pais = { type: 'number', primary: true };
+    Estado = { type: "Select", Dataset: ["Activo", "Inactivo"] };
+    Descripcion = { type: 'text' };
+}
+export { Cat_Paises }

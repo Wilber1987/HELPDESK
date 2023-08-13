@@ -22,10 +22,6 @@
 {
     <script src="~/Admin/AdminInvestigadores.js" type="module"></script>
 }
-@if (SecurityController.HavePermission(PermissionsEnum.ADMINISTRAR_INVESTIGACIONES.ToString(), HttpContext.Session.GetString("seassonKey")))
-{
-    <script src="~/Admin/AdminInvestigaciones.js" type="module"></script>
-}
 @if (SecurityController.HavePermission(PermissionsEnum.ADMINISTRAR_USUARIOS.ToString(), HttpContext.Session.GetString("seassonKey")))
 {
     <script src="~/Admin/AdminSecurity.js" type="module"></script>

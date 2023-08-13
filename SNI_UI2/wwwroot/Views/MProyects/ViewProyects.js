@@ -1,11 +1,7 @@
-import { WRender, WArrayF, ComponentsManager, WAjaxTools, GenerateColor } from '../../WDevCore/WModules/WComponentsTools.js';
-import { WCssClass } from '../../WDevCore/WModules/WStyledRender.js';
 import "../../WDevCore/WComponents/WTableComponent.js";
-import { WArticlesComponent } from "../../WDevCore/WComponents/WArticlesComponent.js";
-import { AsideV1 } from "../../AppComponents/AsideV1.js";
-import { WCard } from '../../WDevCore/WComponents/WCardCarousel.js';
+import { ComponentsManager, WAjaxTools, WRender } from '../../WDevCore/WModules/WComponentsTools.js';
+import { WCssClass } from '../../WDevCore/WModules/WStyledRender.js';
 import { ProyectDetailViewer } from './ProyectDetailViewer.js';
-import { ActionFunction, ModalComp } from '../Home.js';
 
 const DOMManager = new ComponentsManager();
 class ViewProyects extends HTMLElement {
@@ -17,13 +13,13 @@ class ViewProyects extends HTMLElement {
         this.TabContainer = WRender.createElement({ type: 'div', props: { id: 'TabContainer', class: 'TabContainer' } });
         this.TipoProyecto.forEach(element => {
             this.ComponentTab.Elements.push({
-                name: element.Descripcion_Tipo_Proyecto, url: "#", icon: element.icon,
+                name: element.Descripcion, url: "#", icon: element.icon,
                 action: async (ev) => {
                     const response = await WAjaxTools.PostRequest("../../api/Proyect/TakeProyects", {
-                        Id_Tipo_Proyecto: element.Id_Tipo_Proyecto
+                        Id_Tipo_Servicio: element.Id_Tipo_Servicio
                     });
                     DOMManager.NavigateFunction(
-                        "Tab-" + element.Descripcion_Tipo_Proyecto,
+                        "Tab-" + element.Descripcion,
                         new ViewProyectsTab(element, response), "TabContainer"
                     );
                 }
@@ -106,14 +102,14 @@ class ViewProyectsTab extends HTMLElement {
         this.append(WRender.Create({
             tagName: 'w-articles',
             //ArticleHeader : ["nombre_Proyecto"],
-            ArticleBody: ["Nombre_Proyecto", "DescripcionProyecto"],
+            ArticleBody: ["Nombre_Proyecto", "Descripcion_Servicio"],
             Dataset: Dataset, 
             Options: {
                 Search: true,
                 ApiUrlSearch: "api/Investigaciones/TakeInvestigaciones",
                 UserActions: [{
                     name: "Detalles", action: async (Article) => {
-                        this.LoadProyect(Article.Id_Proyecto);
+                        this.LoadProyect(Article.Id_Servicio);
                     }
                 }]
             }
@@ -121,14 +117,14 @@ class ViewProyectsTab extends HTMLElement {
     }
     connectedCallback() { this.DraViewProyectsTab(); }
     DraViewProyectsTab = async () => { }
-    LoadProyect = async (Id_Proyecto) => {
+    LoadProyect = async (Id_Servicio) => {
         const response = await WAjaxTools.PostRequest("../../api/Proyect/TakeProyect",
-            { Id_Proyecto: Id_Proyecto }
+            { Id_Servicio: Id_Servicio }
         );
         const ProyectMap = WRender.Create({});
         const BodyComponents = new ProyectDetailViewer(response, DOMManager);
         //this.appendChild(WRender.createElement(ModalComp(BodyComponents, ProyectMap)));
-        DOMManager.NavigateFunction("proyecto"+Id_Proyecto, BodyComponents)
+        DOMManager.NavigateFunction("proyecto"+Id_Servicio, BodyComponents)
     }
     Style = {
         type: "w-style",
@@ -152,6 +148,6 @@ class ViewProyectsTab extends HTMLElement {
     };
 }
 customElements.define('w-tab-proy', ViewProyectsTab);
-export { ViewProyectsTab }
+export { ViewProyectsTab };
+export { ViewProyects };
 customElements.define('w-view-proyect', ViewProyects);
-export { ViewProyects }

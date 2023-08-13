@@ -11,9 +11,9 @@ namespace CAPA_NEGOCIO.Views
     {
         public int? Id_Dependencia { get; set; }
         public int? IdCalendario { get; set; }
-        public int? IdActividad { get; set; }
-        public int? IdTarea { get; set; }
-        public int? IdTareaPadre { get; set; }
+        public int? Id_Case { get; set; }
+        public int? Id_Tarea { get; set; }
+        public int? Id_TareaPadre { get; set; }
         public string? Estado { get; set; }
         public DateTime? Fecha_Inicial { get; set; }
         public DateTime? Fecha_Final { get; set; }

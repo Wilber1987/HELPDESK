@@ -35,7 +35,7 @@ class ViewActivityComponent extends HTMLElement {
         //         ModelObject: tareaModel,
         //         SaveFunction: async (Object, Reservaciones = []) => {
         //             Object.Calendarios = ReservaComp.Reservaciones;
-        //             Object.IdActividad = this.Dataset.IdActividad;
+        //             Object.Id_Case = this.Dataset.Id_Case;
         //             const FunctionName = this.TypeReserva == "New" ? "" : "SaveActividad";
         //             Object.Evidencias = Object.Evidencias.map(e => ({IdTipo: 1, Data: e}));
         //             const response = await WAjaxTools.PostRequest( "../../api/Calendar/SaveTarea", Object);
@@ -114,14 +114,14 @@ class ViewActivityComponent extends HTMLElement {
                             title: "Agregar Evidencias",
                             StyleForm: "columnX1",
                             ModelObject: {
-                                IdTarea_hidden: tarea.IdTarea,
+                                Id_Tarea_hidden: tarea.Id_Tarea,
                                 Evidencias: { type: "IMAGES" },
                             }, SaveFunction: async (Object) => {
                                 const DataPost = {
-                                    IdTarea: Object.OdTarea,
+                                    Id_Tarea: Object.OdTarea,
                                     Evidencias: Object.Evidencias.map(x => {
                                         if (typeof x === "string") {
-                                            return { IdTarea: Object.IdTarea, Data: x };
+                                            return { Id_Tarea: Object.Id_Tarea, Data: x };
                                         }
                                         return x;
                                     })
@@ -135,7 +135,7 @@ class ViewActivityComponent extends HTMLElement {
                         this.append(modal);
                     }
                 }, {
-                    tagName: 'button', className: 'Btn-Mini', innerText: 'Marcar Finalizada',
+                    tagName: 'button', className: 'Btn-Mini', innerText: 'Marcar Finalizado',
                     onclick: async () => {
                     }
                 },

@@ -13,7 +13,7 @@ namespace API.Controllers
         //Save
         public object? SaveProfile(Tbl_Profile Inst)
         {
-            Inst.Id_Investigador = AuthNetCore.User(HttpContext.Session.GetString("seassonKey")).UserId;
+            Inst.Id_Perfil = AuthNetCore.User(HttpContext.Session.GetString("seassonKey")).UserId;
             return Inst.SaveProfile();
         }
         [HttpPost]
@@ -21,7 +21,7 @@ namespace API.Controllers
         //Save
         public object? TakeProfile(Tbl_Profile Inst)
         {
-            Inst.Id_Investigador = AuthNetCore.User(HttpContext.Session.GetString("seassonKey")).UserId;
+            Inst.Id_Perfil = AuthNetCore.User(HttpContext.Session.GetString("seassonKey")).UserId;
             return Inst.TakeProfile();
         }
 
@@ -32,7 +32,7 @@ namespace API.Controllers
         {
             Tbl_Profile Inst = new()
             {
-                Id_Investigador = AuthNetCore.User(HttpContext.Session.GetString("seassonKey")).UserId
+                Id_Perfil = AuthNetCore.User(HttpContext.Session.GetString("seassonKey")).UserId
             };
             return Inst.TakeProfile();
         }

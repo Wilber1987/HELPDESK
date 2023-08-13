@@ -19,8 +19,10 @@
             //active nav
             if (location.href.includes("PerfilView")) {
                 PerfilView.className = "active";
-            } else if (location.href.includes("Solicitudes")) {
-                Solicitudes.className = "active";
+            } else if (location.href.includes("SolicitudesRealizadas")) {
+                SolicitudesRealizadas.className = "active";
+            } else if (location.href.includes("SolicitudesPendientes")) {
+                SolicitudesPendientes.className = "active";
             } else if (location.href.includes("Proyectos")) {
                 Proyectos.className = "active";
             } else if (location.href.includes("Transaction_Valoraciones_View")) {
@@ -38,11 +40,12 @@
     <aside id="Aside">
         <nav>
             <div class="logo-container">
-                <img src="">
+                <img src="~/Media/Image/logo.png"/>
             </div>
             <h3>TRANSACCIONES</h3>
             <a class="" id="Home" href="/">HOME</a>
-            <a class="" id="Solicitudes" href="~/Perfil/Solicitudes">Solicitudes</a>
+            <a class="" id="SolicitudesRealizadas" href="~/Perfil/SolicitudesRealizadas">Solicitudes Realizadas</a>
+            <a class="" id="SolicitudesPendientes" href="~/Perfil/SolicitudesPendientes">Solicitudes Pendientes</a>
             <a class="" id="Proyectos" href="~/Perfil/Proyectos">Tikets</a>
             <a class="" id="PerfilView" href="~/Perfil/PerfilView">Perfil</a>
         </nav>

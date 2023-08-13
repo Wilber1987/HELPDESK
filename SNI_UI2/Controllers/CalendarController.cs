@@ -13,11 +13,11 @@ namespace API.Controllers
         public Object TakeData()
         {
             List<object> data = new List<object>();
-            ProyectoCatDependencias Dep = new ProyectoCatDependencias();
-            data.Add(Dep.Get<ProyectoCatDependencias>());
+            Cat_Dependencias Dep = new Cat_Dependencias();
+            data.Add(Dep.Get<Cat_Dependencias>());
             Tbl_Profile Users = new Tbl_Profile();
             data.Add(Users.Get<Tbl_Profile>());
-            Users.Id_Investigador = AuthNetCore.User(HttpContext.Session.GetString("seassonKey")).UserId;
+            Users.Id_Perfil = AuthNetCore.User(HttpContext.Session.GetString("seassonKey")).UserId;
             data.Add(Users.TakeDepCoordinaciones());
             return data;
         }
@@ -28,35 +28,35 @@ namespace API.Controllers
             cal.TakeCalendario();
             return cal;
         }
-        public Object TakeActividades(ProyectoTableActividades Inst)
+        public Object TakeActividades(CaseTable_Case Inst)
         {            
-            return Inst.Get<ProyectoTableActividades>();
+            return Inst.Get<CaseTable_Case>();
         }
-        public Object TakeActividad(ProyectoTableActividades Inst)
+        public Object TakeActividad(CaseTable_Case Inst)
         {
             return Inst.GetActividad();
         }
-        public Object SaveActividad(ProyectoTableActividades Act)
+        public Object SaveActividad(CaseTable_Case Act)
         {            
             return true;
         }
-        public Object? SaveTarea(ProyectoTableTareas Act)
+        public Object? SaveTarea(CaseTable_Tareas Act)
         {
             return Act.Save();
         }
-        public Object SolicitarActividad(ProyectoTableActividades Act)
+        public Object SolicitarActividad(CaseTable_Case Act)
         {
             return Act.SolicitarActividades(HttpContext.Session.GetString("seassonKey"));
         }
         //Agenda por usuario
-        public Object AgendaUsuarioDependencia(ProyectoCatDependencias Act)
+        public Object AgendaUsuarioDependencia(Cat_Dependencias Act)
         {
-            ProyectoTableAgenda ag = new ProyectoTableAgenda();
+            CaseTable_Agenda ag = new CaseTable_Agenda();
             ag.Id_Dependencia = Act.Id_Dependencia;
-            ag.Id_Investigador = AuthNetCore.User(HttpContext.Session.GetString("seassonKey")).UserId;
-            return ag.Get<ProyectoTableAgenda>();
+            ag.Id_Perfil = AuthNetCore.User(HttpContext.Session.GetString("seassonKey")).UserId;
+            return ag.Get<CaseTable_Agenda>();
         }
-        public Object? SaveAgendaUsuarioDependencia(ProyectoTableAgenda Act)
+        public Object? SaveAgendaUsuarioDependencia(CaseTable_Agenda Act)
         {
             if (Act.IdAgenda != null)
             {
@@ -75,14 +75,14 @@ namespace API.Controllers
 
         public void TakeAgenda()
         {
-            ProyectoTableAgenda ag = new ProyectoTableAgenda();
+            CaseTable_Agenda ag = new CaseTable_Agenda();
             ag.Id_Dependencia = this.Id_Dependencia;
-            this.Agenda = ag.Get<ProyectoTableAgenda>();
+            this.Agenda = ag.Get<CaseTable_Agenda>();
         }
         public void TakeActividades()
         {
-            ProyectoTableActividades ag = new ProyectoTableActividades();
-            this.Actividades = ag.Get<ProyectoTableActividades>();
+            CaseTable_Case ag = new CaseTable_Case();
+            this.Actividades = ag.Get<CaseTable_Case>();
         }
         public void TakeCalendario()
         {

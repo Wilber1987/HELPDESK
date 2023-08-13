@@ -15,7 +15,7 @@ class WProfileInvestigador extends HTMLElement {
             picture: response.Foto,
             subtitulo: "",
             descripcion: response.NombreInstitucion,
-            id_Investigador: response.Id_Investigador
+            Id_Perfil: response.Id_Perfil
         }, 2);
         this.Options = Options;
         this.response = response;
@@ -100,14 +100,14 @@ class WProfileInvestigador extends HTMLElement {
                 name: "Proyectos", url: "#",
                 action: async (ev) => {
                     this.TabManager.NavigateFunction("Tab-Proyectos", new ProfileTab(
-                        this.response.Tbl_Proyectos?.map(c => {
+                        this.response.Tbl_Servicios?.map(c => {
                             return {
                                 Nombre_Proyecto: c.Proyecto.Nombre_Proyecto,
                                 Cargo: c.Cargo.Descripcion,
-                                Estado_Proyecto: c.Proyecto.Estado_Proyecto
+                                Estado: c.Proyecto.Estado
                             }
                         }),
-                        ["Nombre_Proyecto", "Cargo", "Estado_Proyecto"], "Proyectos",
+                        ["Nombre_Proyecto", "Cargo", "Estado"], "Proyectos",
                         this.Options.DOMManager
                     ), "TabContainer");
                 }
@@ -204,7 +204,7 @@ class ProfileTab extends HTMLElement {
                 idAction = "Id_Investigacion";
                 break;
             case "Proyectos":
-                idAction = "Id_Proyecto";
+                idAction = "Id_Servicio";
                 break;
             case "Colaboraciones":
                 idAction = "Id_Investigacion";
@@ -231,7 +231,7 @@ class ProfileTab extends HTMLElement {
                             case "Id_Investigacion":
                                 ChargeInvestigacion(element, DOMManager)
                                 break;
-                            case "Id_Proyecto":
+                            case "Id_Servicio":
                                 break;
                         }                       
                     }

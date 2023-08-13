@@ -58,7 +58,7 @@ class HomeView extends HTMLElement {
                 }, {
                     name: "Ejecutadas", url: "#",
                     action: async (ev) => {
-                        const DataPost = { estado: "Finalizada" };
+                        const DataPost = { estado: "Finalizado" };
                         this.NavActividad("Tab-Ejecutadas", DataPost);
                     }
                 }

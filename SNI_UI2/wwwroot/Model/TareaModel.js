@@ -1,7 +1,7 @@
 class TareaModel {
     constructor(Config){
-        this.IdTareaPadre = Config.Tareas.map(x => {
-            return { id: x.IdTarea, desc: x.Titulo };
+        this.Id_TareaPadre = Config.Tareas.map(x => {
+            return { id: x.Id_Tarea, desc: x.Titulo };
         });
         this.Participantes.Dataset = Config.Participantes.map(x => {
             x.id_ = x.IdUsuario;
@@ -12,8 +12,8 @@ class TareaModel {
     }
     Titulo = "";
     Descripcion = "";
-    Estado = ["Activa", "Finalizada"];
-    IdTareaPadre = [];
+    Estado = ["Activa", "Finalizado"];
+    Id_TareaPadre = [];
     Participantes = {
         type: "MULTISELECT", Dataset: []
     };

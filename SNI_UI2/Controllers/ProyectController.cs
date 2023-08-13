@@ -6,32 +6,58 @@ namespace API.Controllers
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class ProyectController : ControllerBase
-    {        
+    {
         [HttpPost]
-        public object TakeProyect(Tbl_Proyectos Inst)
+        public object TakeProyect(Tbl_Servicios Inst)
         {
-            return Inst.Get<Tbl_Proyectos>();
+            return Inst.Get<Tbl_Servicios>();
         }
-        public object TakeProyects(Tbl_Proyectos Inst)
+        public object TakeProyects(Tbl_Servicios Inst)
         {
-            return Inst.Get<Tbl_Proyectos>();
+            return Inst.Get<Tbl_Servicios>();
         }
-        public object TakeTypeProyects(Cat_Tipo_Proyecto Inst)
+        public object TakeTypeProyects(Cat_Tipo_Servicio Inst)
         {
-            return Inst.Get<Cat_Tipo_Proyecto>();
+            return Inst.Get<Cat_Tipo_Servicio>();
         }
-        public List<ProyectoTableTareas> GetOwParticipations()
-        {           
-            return new ProyectoTableTareas().GetOwParticipations(HttpContext.Session.GetString("seassonKey"));
-        }     
-        public List<ProyectoTableActividades> GetOwActivities()
-        {            
-            return new ProyectoTableActividades().GetOwActivities(HttpContext.Session.GetString("seassonKey"));
+        public List<CaseTable_Tareas> GetOwParticipations()
+        {
+            return new CaseTable_Tareas().GetOwParticipations(HttpContext.Session.GetString("seassonKey"));
         }
-        public List<ProyectoCatDependencias> GetOwDependencies()
-        {            
-            return new ProyectoCatDependencias().GetOwDependencies(HttpContext.Session.GetString("seassonKey"));
+        public List<CaseTable_Case> GetOwCase()
+        {
+            return new CaseTable_Case().GetOwCase(HttpContext.Session.GetString("seassonKey"));
+        }
+        public List<Cat_Dependencias> GetOwDependencies()
+        {
+            return new Cat_Dependencias().GetOwDependencies(HttpContext.Session.GetString("seassonKey"));
+        }
+        //Pendiente, Solicitado, Activo, Finalizado, Espera
+        public List<CaseTable_Case> GetOwSolicitudesPendientesAprobar()
+        {
+            return new CaseTable_Case()
+            .GetOwSolicitudes(HttpContext.Session.GetString("seassonKey"), Case_Estate.Solicitado);
         }
 
+        public List<CaseTable_Case> GetOwSolicitudesPendientes()
+        {
+            return new CaseTable_Case()
+            .GetOwSolicitudes(HttpContext.Session.GetString("seassonKey"), Case_Estate.Pendiente);
+        }
+        public List<CaseTable_Case> GetSolicitudesPendientesAprobar()
+        {
+            return new CaseTable_Case()
+            .GetSolicitudesPendientesAprobar(HttpContext.Session.GetString("seassonKey"), Case_Estate.Solicitado);
+        }
+        public List<CaseTable_Case> GetOwSolicitudesProceso()
+        {
+            return new CaseTable_Case()
+            .GetOwSolicitudes(HttpContext.Session.GetString("seassonKey"), Case_Estate.Activo);
+        }
+        public List<CaseTable_Case> GetOwSolicitudesEspera()
+        {
+            return new CaseTable_Case()
+            .GetOwSolicitudes(HttpContext.Session.GetString("seassonKey"), Case_Estate.Espera);
+        }
     }
 }

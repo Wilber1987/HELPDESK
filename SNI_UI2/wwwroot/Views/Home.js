@@ -1,11 +1,6 @@
 import { ComponentsManager, WAjaxTools, WRender, WArrayF } from "../WDevCore/WModules/WComponentsTools.js";
 import { WCssClass } from "../WDevCore/WModules/WStyledRender.js";
-import { WArticlesComponent } from "../WDevCore/WComponents/WArticlesComponent.js";
-import { WCard } from "../WDevCore/WComponents/WCardCarousel.js";
-import { InvestigacionViewer } from "./MInvestigaciones/InvestigacionViewer.js";
 import { WModalForm } from "../WDevCore/WComponents/WModalForm.js";
-import { WProfileInvestigador } from "./Perfil/ProfileViewer.js";
-import { InvestigacionesViewer } from "./MInvestigaciones/InvestigacionesViewer.js";
 import { WDetailObject } from "../WDevCore/WComponents/WDetailObject.js";
 import { Tbl_Profile } from "../Model/ProyectDataBaseModel.js";
 
@@ -26,21 +21,7 @@ class HomeClass extends HTMLElement {
         }
         this.DrawComponent();
     }
-    DrawComponent = async () => {
-        this.DOMManager.NavigateFunction("InvestigacionesViewer", new InvestigacionesViewer({
-            id: "Artcles",
-            ArticleHeader: ["Foto", "Nombres", "Apellidos", "Fecha_ejecucion"],
-            ArticleBody: ["Titulo", "Investigador", "Resumen"],
-            Dataset: this.response, Options: {
-                Search: true,
-                ApiUrlSearch: "api/Investigaciones/TakeInvestigaciones",
-                UserActions: [{
-                    name: "Leer...", action: async (Investigacion) => {
-                        await ChargeInvestigacion(Investigacion, this.DOMManager);
-                    }
-                }]
-            }
-        }));
+    DrawComponent = async () => {        
     }
     Style = {
         type: "w-style",
@@ -88,9 +69,9 @@ class HomeClass extends HTMLElement {
     };
 }
 customElements.define("app-home", HomeClass);
-const ActionFunction = async (Id_Investigador, DOMManager) => {
+const ActionFunction = async (Id_Perfil, DOMManager) => {
     const response = await WAjaxTools.PostRequest("../api/Investigaciones/TakeProfile",
-        { Id_Investigador: Id_Investigador }
+        { Id_Perfil: Id_Perfil }
     );
     console.log(response);
     const divRedes = WRender.createElement({ type: 'div', props: { id: '', class: 'divRedes' } });
@@ -116,7 +97,7 @@ const ActionFunction = async (Id_Investigador, DOMManager) => {
         ImageUrlPath: "/Media/Image",
         DOMManager: DOMManager
     }); // new WProfileInvestigador(response, { DOMManager: DOMManager });
-    DOMManager.NavigateFunction("Investigador" + Id_Investigador, BodyComponents);
+    DOMManager.NavigateFunction("Investigador" + Id_Perfil, BodyComponents);
 }
 
 function ModalComp(BodyComponents, dataResume) {

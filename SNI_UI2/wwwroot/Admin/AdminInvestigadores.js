@@ -107,7 +107,7 @@ function ElementTab(TabName = "Tab", DOMManager, Options) {
                                 const response = await WAjaxTools.PostRequest("../../api/Investigaciones/TakeProfile",
                                     Postulante
                                 );
-                                DOMManager.NavigateFunction("Revizar_" + Postulante.Id_Investigador,
+                                DOMManager.NavigateFunction("Revizar_" + Postulante.Id_Perfil,
                                     new RevizarComponent(response, Options));
                             }
                         }

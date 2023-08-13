@@ -35,36 +35,17 @@ class ProyectDetailViewer extends HTMLElement {
                     type: 'div', props: { id: '', class: 'DetailsDiv' }, children: [
                         WRender.CreateStringNode(`<h3 class="headerTitle">Proyecto ${this.response.Nombre_Proyecto}</h3>`),
                         WRender.CreateStringNode("<h4>Descripción del Proyecto <hr></h4>"),
-                        this.response.DescripcionProyecto,
-                        WRender.CreateStringNode(`<label class="labelDetail">Tipo de Proyecto: ${this.response.Descripcion_Tipo_Proyecto}</label>`),
-                        WRender.CreateStringNode(`<label class="labelDetail">Estado: ${this.response.Estado_Proyecto}</label>`),
-                        WRender.CreateStringNode(`<label class="labelDetail">Fecha de Inicio: ${this.response.Fecha_Inicio}</label>`),
-                        WRender.CreateStringNode("<h4>Instituciones<hr></h4>"),
-                        WRender.CreateStringNode(`<div class="InstitucionesContainer">${
-                            this.response.Tbl_Instituciones_Asociadas?.map(x=>{
-                                return `<div class="InstitucionDiv">
-                                    <img src="/Media/Instituciones/${x.Cat_instituciones?.Logo}"/>
-                                    <label>${x.Cat_instituciones?.Nombre}</label>
-                                    <label>${x.Cat_Tipo_Asociacion.Descripcion}</label>
-                                </div>`;
-                            }).join('')
-                        }</div>`)
+                        this.response.Descripcion_Servicio,
+                        WRender.CreateStringNode(`<label class="labelDetail">Tipo de Proyecto: ${this.response.Descripcion}</label>`),
+                        WRender.CreateStringNode(`<label class="labelDetail">Estado: ${this.response.Estado}</label>`),
+                        WRender.CreateStringNode(`<label class="labelDetail">Fecha de Inicio: ${this.response.Fecha_Inicio}</label>`)             
                     ]
                 }
             ]
         });
         this.ProyectContainer.append(WRender.createElement(Detaills));
-        this.ProyectContainer.append(WRender.CreateStringNode("<h4>Participantes<hr></h4>"));
-        console.log(this.response.Tbl_Participantes_Proyectos);
-        this.response.Tbl_Participantes_Proyectos?.forEach(element => {
-            element.titulo = `${element.Tbl_Profile.Nombres} ${element.Tbl_Profile.Apellidos}`;
-            element.picture = "/Media/Image/" + element.Tbl_Profile.Foto;
-            element.subtitulo = element.Cat_Cargo_Proyecto.Descripcion;
-            element.descripcion = "";
-        });
-        const Colaboradores = new WCardCarousel(this.response.Tbl_Participantes_Proyectos);
         Colaboradores.ActionFunction = (Object) => {
-            ActionFunction(Object.Id_Investigador, this.DOMManager);
+            ActionFunction(Object.Id_Perfil, this.DOMManager);
         }
         this.ProyectContainer.append(WRender.createElement(Colaboradores));
     }

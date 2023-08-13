@@ -1,28 +1,28 @@
 import { EntityClass } from "../WDevCore/WModules/EntityClass.js";
 import { WAjaxTools } from "../WDevCore/WModules/WComponentsTools.js";
 
-class ViewParticipantesProyectos extends EntityClass {
+class ViewParticipantesServicios extends EntityClass {
    constructor(props) {
        super(props, 'ViewDBO');
        for (const prop in props) {
            this[prop] = props[prop];
        }
    }
-   Id_Investigador = { type: 'number' };
-   Id_Proyecto = { type: 'number' };
+   Id_Perfil = { type: 'number' };
+   Id_Servicio = { type: 'number' };
    Fecha_Ingreso = { type: 'date' };
    Estado_Participante = { type: 'text' };
-   DescripcionProyecto = { type: 'text' };
+   Descripcion_Servicio = { type: 'text' };
    Fecha_Inicio = { type: 'date' };
    Fecha_Finalizacion = { type: 'date' };
    Visibilidad = { type: 'text' };
    Cargo = { type: 'text' };
-   Descripcion_Tipo_Proyecto = { type: 'text' };
-   Estado_Tipo_Proyecto = { type: 'text' };
+   Descripcion = { type: 'text' };
+   Estado = { type: 'text' };
    Nombre_Proyecto = { type: 'text' };
-   Estado_Proyecto = { type: 'text' };
+   Estado = { type: 'text' };
 }
-export { ViewParticipantesProyectos }
+export { ViewParticipantesServicios }
 
 class ViewCalendarioByDependencia extends EntityClass {
    constructor(props) {
@@ -31,13 +31,13 @@ class ViewCalendarioByDependencia extends EntityClass {
            this[prop] = props[prop];
        }
    }
-   IdActividad = { type: 'number' };
-   IdTareaPadre = { type: 'number' };
+   Id_Case = { type: 'number' };
+   Id_TareaPadre = { type: 'number' };
    Fecha_Inicial = { type: 'date' };
    Fecha_Final = { type: 'date' };
    Estado = { type: 'text' };
    IdCalendario = { type: 'number' };
-   IdTarea = { type: 'number' };
+   Id_Tarea = { type: 'number' };
    Id_Dependencia = { type: 'number' };
 }
 export { ViewCalendarioByDependencia }
@@ -48,10 +48,10 @@ class ViewActividadesParticipantes extends EntityClass {
            this[prop] = props[prop];
        }
    }
-   IdActividad = { type: 'number' };
+   Id_Case = { type: 'number' };
    Titulo = { type: 'text' };
    Descripcion = { type: 'text' };
    Estado = { type: 'text' };
-   Id_Investigador = { type: 'number' };
+   Id_Perfil = { type: 'number' };
 }
 export { ViewActividadesParticipantes }

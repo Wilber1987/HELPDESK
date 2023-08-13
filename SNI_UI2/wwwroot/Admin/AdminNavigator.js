@@ -1,77 +1,61 @@
-import { Cat_Cargo_Proyecto, Cat_Localidad, Cat_Tipo_Proyecto } from "../Model/ModelDatabase.js";
-import { Cat_Tipo_Asociacion, Cat_instituciones } from "../Model/ProyectDataBaseModel.js";
+import { Cat_Tipo_Servicio } from "../Model/ModelDatabase.js";
+import { Cat_Cargos_Dependencias, Cat_Dependencias, Cat_Paises, Cat_Tipo_Evidencia, Cat_Tipo_Participaciones, Tbl_Servicios } from "../Model/ProyectDataBaseModel.js";
 import { StylesControlsV2 } from "../WDevCore/StyleModules/WStyleComponents.js";
 import { WAppNavigator } from "../WDevCore/WComponents/WAppNavigator.js";
+import { WFilterOptions } from "../WDevCore/WComponents/WFilterControls.js";
 import { WTableComponent } from "../WDevCore/WComponents/WTableComponent.js";
 import { ComponentsManager, WAjaxTools, WRender } from '../WDevCore/WModules/WComponentsTools.js';
+import { WOrtograficValidation } from "../WDevCore/WModules/WOrtograficValidation.js";
 window.addEventListener("load", async () => {
     setTimeout(async () => {
         const DOMManager = new ComponentsManager({ MainContainer: Main });
         Main.append(WRender.createElement(StylesControlsV2));
-        const Paises = await WAjaxTools.PostRequest("../api/Admin/TakeCat_Paises", {});
-        const tipoLocalidad = await WAjaxTools.PostRequest("../api/Admin/TakeCat_TipoLocalidad", {});
-        const localidadPadre = await WAjaxTools.PostRequest("../api/Admin/TakeCat_Localidad", {});
-        const ModelLocalidad = new Cat_Localidad({
-            Id_Pais: { type: "SELECT", Dataset: Paises.map(x => ({ id: x.Id_Pais, desc: x.Descripcion })) },
-            Id_Tipo_Localidad: { type: "SELECT", Dataset: tipoLocalidad.map(x => ({ id: x.Id_Tipo_Localidad, desc: x.Nombre_TipoLocalidad })) },
-            Id_LocalidadPadre: { type: "SELECT", Dataset: localidadPadre.map(x => ({ id: x.Id_Localidad, desc: x.Nombre_Localidad })) }
-        });
+
         Aside.append(WRender.Create({ tagName: "h3", innerText: "Mantenimiento de Catalogos" }));
         Aside.append(new WAppNavigator({
-           
             Direction: "column",
             Elements: [{
-                name: "Mantenimiento General", SubNav: {
+                name: WOrtograficValidation.es("Mantenimiento de Catalogos"), SubNav: {
                     Elements: [
-                        ElementTab("Instituciones", DOMManager, new Cat_instituciones()),
-                    ]
-                }
-            }, {
-                name: "Mantenimiento de Proyecto", SubNav: {
-                    Elements: [
-                        ElementTab("Cargo de Proyectos", DOMManager, new Cat_Cargo_Proyecto()),
-                        ElementTab("Tipo de Asociación", DOMManager, new Cat_Tipo_Asociacion()),
-                        ElementTab("Tipo de Proyecto", DOMManager, new Cat_Tipo_Proyecto())
+                        ElementTab(DOMManager, new Cat_Tipo_Servicio()),
+                        ElementTab(DOMManager, new Tbl_Servicios()),
+                        ElementTab(DOMManager, new Cat_Cargos_Dependencias()),
+                        ElementTab(DOMManager, new Cat_Dependencias()),
+                        ElementTab(DOMManager, new Cat_Tipo_Evidencia()),
+                        ElementTab(DOMManager, new Cat_Tipo_Participaciones()),
+                        ElementTab(DOMManager, new Cat_Paises())
                     ]
                 }
             }]
         }));
     }, 100);
 });
-function ElementTab(TabName = "Tab", DOMManager, Model) {
+function ElementTab(DOMManager, Model) {
     return {
-        name: TabName, url: "#",
+        name: WOrtograficValidation.es(Model.constructor.name), url: "#",
         action: async (ev) => {
-            const response = await WAjaxTools.PostRequest("../api/Admin/Take" + Model.constructor.name, {});
-            DOMManager.NavigateFunction(Model.constructor.name, new WTableComponent({
+            const response = await WAjaxTools.PostRequest("../api/ApiEntityHelpdesk/get" + Model.constructor.name, {});
+            const Table = new WTableComponent({
                 Dataset: response,
                 ModelObject: Model,
                 Options: {
-                    Add: true, UrlAdd: "../api/Admin/Save" + Model.constructor.name,
-                    Edit: true, UrlUpdate: "../api/Admin/Update" + Model.constructor.name,
-                    Search: true, UrlSearch: "../api/Admin/Take" + Model.constructor.name,
+                    Add: true, UrlAdd: "../api/ApiEntityHelpdesk/save" + Model.constructor.name,
+                    Edit: true, UrlUpdate: "../api/ApiEntityHelpdesk/update" + Model.constructor.name,
+                    // Search: true, UrlSearch: "../api/ApiEntityHelpdesk/get" + Model.constructor.name,
                 }
-            }));
+            });
+            const FilterOptions = new WFilterOptions({
+                Dataset: response,
+                ModelObject: Model,
+                Display: true,
+                FilterFunction: (DFilt) => {
+                    Table?.DrawTable(DFilt);
+                }
+            });
+            DOMManager.NavigateFunction(Model.constructor.name, [WRender.Create({
+                tagName: "h2",
+                innerText: WOrtograficValidation.es(Model.constructor.name)
+            }), FilterOptions, Table]);
         }
     };
 }
-
-/**  
-ElementTab("Idiomas", DOMManager, new Cat_Idiomas()),
-                    ElementTab("Instituciones", DOMManager, new Cat_instituciones()),
-                    ElementTab("Cargos", DOMManager, new Cat_Cargos()),
-                    ElementTab("Cargo de Proyectos", DOMManager, new Cat_Cargo_Proyecto()),
-                    ElementTab("Paises", DOMManager, new Cat_Paises()),
-                    ElementTab("Localidad", DOMManager, new Cat_Localidad()),
-                    ElementTab("Tipo de Asociación", DOMManager, new Cat_Tipo_Asociacion()),
-                    ElementTab("Tipo de Colaborador", DOMManager, new Cat_Tipo_Colaborador()),
-                    ElementTab("Tipo de Evento", DOMManager, new Cat_Tipo_Evento()),
-                    ElementTab("Tipo de Investigación", DOMManager, new Cat_Tipo_Investigacion()),
-                    ElementTab("Tipo de Proyecto", DOMManager, new Cat_Tipo_Proyecto()),
-                    ElementTab("Tipo de Estudio", DOMManager, new Cat_TipoEstudio()),
-                    ElementTab("Tipo de Grupo", DOMManager, new Cat_TipoGrupo()),
-                    ElementTab("Tipo Localidad", DOMManager, new Cat_TipoLocalidad()),
-                    ElementTab("Tipo de Miembro", DOMManager, new Cat_TipoMiembro()),
-                    ElementTab("Disciplinas", DOMManager, new Cat_Disciplinas()),
-                    ElementTab("Redes Sociales", DOMManager, new CatRedesSociales()),
-                    ElementTab("Tipo de Distinciones", DOMManager, new CatTipoDistincion()), */

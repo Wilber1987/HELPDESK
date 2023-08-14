@@ -141,6 +141,13 @@ namespace CAPA_NEGOCIO.Security
             }
             return Security_Users_List;
         }
+
+        internal bool IsAdmin()
+        {
+            return Security_Users_Roles?.Find(r => r.Security_Role?.Security_Permissions_Roles?.Find(p =>
+             p.Security_Permissions.Descripcion.Equals(PermissionsEnum.ADMIN_ACCESS.ToString())
+            ) != null) != null;
+        }
     }
     public class Security_Permissions : EntityClass
     {
@@ -167,7 +174,7 @@ namespace CAPA_NEGOCIO.Security
         public int? Id_User { get; set; }
         public string? Estado { get; set; }
         [ManyToOne(TableName = "Security_Role", KeyColumn = "Id_Role", ForeignKeyColumn = "Id_Role")]
-        public Security_Roles? Security_Role { get; set; }      
+        public Security_Roles? Security_Role { get; set; }
 
     }
 }

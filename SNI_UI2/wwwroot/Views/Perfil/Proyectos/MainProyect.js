@@ -38,7 +38,7 @@ class MainProyect extends HTMLElement {
         //NavStyle: "tab",
         Direction: "column",
         Inicialize: true,
-       
+
         Elements: [
             {
                 name: "Datos Generales",
@@ -140,7 +140,10 @@ class MainProyects extends HTMLElement {
         this.OptionContainer.append(WRender.Create({ tagName: 'input', type: 'button', className: 'Block-Alert', value: 'Actividades', onclick: this.actividadesManager }))
         //this.OptionContainer.append(WRender.Create({ tagName: 'input', type: 'button', className: 'Block-Secundary', value: 'Dependencias', onclick: this.dependenciasViewer }))
         if (this.Dependencias.length != 0) {
-            this.OptionContainer.append(WRender.Create({ tagName: 'input', type: 'button', className: 'Block-Success', value: 'Nueva Actividad', onclick: this.nuevaActividad }))
+            this.OptionContainer.append(WRender.Create({
+                tagName: 'input', type: 'button', className: 'Block-Success',
+                value: 'Nueva Actividad', onclick: this.CaseForm
+            }))
         }
         this.shadowRoot.append(this.OptionContainer, this.TabContainer);
         //this.dashBoardView();
@@ -283,33 +286,9 @@ class MainProyects extends HTMLElement {
         }))
         this.TabManager.NavigateFunction("Tab-Dependencias-Viewer", dependenciasDetailView);
     }
-    nuevaActividad = async () => {
-        const ModelCalendar = {
-            type: 'CALENDAR',
-            ModelObject: () => new CaseTable_Calendario(),
-            require: false,
-            CalendarFunction: async () => {
-                return {
-                    Agenda: await new CaseTable_Agenda({ Id_Dependencia: form.FormObject.Cat_Dependencias?.Id_Dependencia }).Get(),
-                    Calendario: await new CaseTable_Calendario({ Id_Dependencia: form.FormObject.Cat_Dependencias?.Id_Dependencia }).Get()
-                }
-            }
-        }
-
-        const form = new WForm({
-            ModelObject: new CaseTable_Case({
-                CaseTable_Tareas: {
-                    type: 'MasterDetail',
-                    ModelObject: () => new CaseTable_Tareas({ CaseTable_Calendario: ModelCalendar })
-                },
-                Cat_Dependencias: {
-                    type: "WSELECT", ModelObject: new Cat_Dependencias(),
-                    Dataset: this.Dependencias
-                }
-            })
-        })
-        this.TabManager.NavigateFunction("Tab-nuevaActividadView",
-            WRender.Create({ className: "nuevaActividadView", children: [form] }));
+    CaseForm = async () => {
+        this.TabManager.NavigateFunction("Tab-CaseFormView",
+            WRender.Create({ className: "CaseFormView", children: [CaseForm(undefined, this.Dependencias)] }));
     }
 
 
@@ -348,3 +327,43 @@ class MainProyects extends HTMLElement {
 }
 customElements.define('w-main-proyects', MainProyects);
 export { MainProyects };
+/**
+ * @param {CaseTable_Case} [entity] 
+ * @param {Array<Cat_Dependencias>} [dependencias] 
+ * @param {Function} [action] 
+ * @returns {WForm}
+ */
+const CaseForm = (entity, dependencias, action) => {
+    const ModelCalendar = {
+        type: 'CALENDAR',
+        ModelObject: () => new CaseTable_Calendario(),
+        require: false,
+        CalendarFunction: async () => {
+            return {
+                Agenda: await new CaseTable_Agenda({ Id_Dependencia: form.FormObject.Cat_Dependencias?.Id_Dependencia }).Get(),
+                Calendario: await new CaseTable_Calendario({ Id_Dependencia: form.FormObject.Cat_Dependencias?.Id_Dependencia }).Get()
+            }
+        }
+    }
+
+    const form = new WForm({
+        EditObject: entity,
+        SaveFunction: action,
+        ModelObject: new CaseTable_Case({
+            CaseTable_Tareas: {
+                type: 'MasterDetail',
+                ModelObject: () => new CaseTable_Tareas({ CaseTable_Calendario: ModelCalendar })
+            }, Cat_Dependencias: {
+                type: "WSELECT", ModelObject: new Cat_Dependencias(),
+                Dataset: dependencias,
+                action: (caso) => {
+                    caso.CaseTable_Tareas
+                        .forEach(caseTable_Tarea => caseTable_Tarea.CaseTable_Calendario = []);
+                        form.DrawComponent();
+                }
+            }
+        })
+    })
+    return form;
+}
+export { CaseForm }

@@ -1,12 +1,14 @@
 
-import { CaseTable_Case, Cat_Dependencias } from '../../Model/ProyectDataBaseModel.js';
+import { CaseTable_Case, CaseTable_Coments, Cat_Dependencias } from '../../Model/ProyectDataBaseModel.js';
 import { StylesControlsV2, StylesControlsV3 } from "../../WDevCore/StyleModules/WStyleComponents.js";
-import { WForm } from "../../WDevCore/WComponents/WForm.js";
+import { ModalMessege, ModalVericateAction, WForm } from "../../WDevCore/WComponents/WForm.js";
 import { WPaginatorViewer } from '../../WDevCore/WComponents/WPaginatorViewer.js';
 import { ComponentsManager, WRender } from '../../WDevCore/WModules/WComponentsTools.js';
 import { css } from '../../WDevCore/WModules/WStyledRender.js';
 import { WFilterOptions } from "../../WDevCore/WComponents/WFilterControls.js";
 import { WTableComponent } from '../../WDevCore/WComponents/WTableComponent.js';
+import { WModalForm } from '../../WDevCore/WComponents/WModalForm.js';
+import { CaseForm } from '../Perfil/Proyectos/MainProyect.js';
 
 const OnLoad = async () => {
     const Solicitudes = await new CaseTable_Case().GetSolicitudesPendientesAprobar();
@@ -42,28 +44,59 @@ class SolicitudesPendientesView extends HTMLElement {
     }
     connectedCallback() { }
     DrawSolicitudesPendientesView = async () => {
-        //this.OptionContainer.append(WRender.Create({ tagName: 'input', type: 'button', className: 'Block-Basic', value: 'Estadística', onclick: this.dashBoardView }))
         this.OptionContainer.append(WRender.Create({ tagName: 'input', type: 'button', className: 'Block-Alert', value: 'Casos Pendientes de Aprobación', onclick: this.actividadesManager }))
         this.OptionContainer.append(WRender.Create({ tagName: 'input', type: 'button', className: 'Block-Success', value: 'Nuevo Caso', onclick: this.nuevoCaso }))
-
         this.shadowRoot.append(this.OptionContainer, this.TabContainer);
-        //this.dashBoardView();
         this.actividadesManager();
     }
 
     actividadesManager = async () => {
-        const paginator = new WTableComponent({
+        this.mainTable = new WTableComponent({
             Dataset: this.Dataset,
-            ModelObject: this.ModelObject, userStyles: [StylesControlsV2]
-            , Options: {
+            AddItemsFromApi: false,
+            ModelObject: this.ModelObject, userStyles: [StylesControlsV2], Options: {
                 UserActions: [
                     {
-                        name: "Aprobar", action: async () => {
-
+                        name: "Aprobar", action: async (/**@type {CaseTable_Case}*/element) => {
+                            const dependencias = await new Cat_Dependencias().GetOwDependencies();
+                            const modal = new WModalForm({
+                                ObjectModal: CaseForm(element, dependencias, async (table_case) => {
+                                    this.parentNode.append(ModalVericateAction(async ()=> {
+                                        if (table_case.Estado == "Activo") {
+                                            this.parentNode.shadowRoot.append(ModalMessege("Solicitud aprobada"));
+                                            this.update();
+                                        } else {
+                                            this.shadowRoot.append(ModalMessege("Error"));
+                                        }
+                                        modal.close();
+                                    }, "Esta seguro que desea aprobar esta solicitud"))
+                                })
+                            });
+                            this.shadowRoot.append(modal);
                         }
                     }, {
-                        name: "Rechazar", action: async () => {
-
+                        name: "Rechazar", action: async (/**@type {CaseTable_Case}*/element) => {
+                            this.shadowRoot.append(new WModalForm({
+                                title: "Escriba la razón por la cual se está rechazando la solicitud",
+                                EditObject: {
+                                    Id_Case: element.Id_Case,
+                                },
+                                ModelObject: new CaseTable_Coments(),
+                                ObjectOptions: {
+                                    SaveFunction: async (comentario) => {
+                                        element.CaseTable_Coments = [comentario];
+                                        const modalV = ModalVericateAction(async () => {
+                                            const response = await element.RechazarSolicitud();
+                                            if (response.status == 200) {
+                                                this.shadowRoot.append(ModalMessege("Solicitud rechazada"));
+                                                this.update();
+                                            }
+                                            //modalV.close();
+                                        }, "Esta seguro que desea rechazar está solicitud")
+                                        this.shadowRoot.append(modalV);
+                                    }
+                                }
+                            }))
                         }
                     }
                 ]
@@ -74,11 +107,11 @@ class SolicitudesPendientesView extends HTMLElement {
             ModelObject: this.ModelObject,
             Display: true,
             FilterFunction: (DFilt) => {
-                this.paginator?.Draw(DFilt);
+                this.mainTable?.DrawTable(DFilt);
             }
         });
         this.TabManager.NavigateFunction("Tab-Actividades-Manager",
-            WRender.Create({ className: "actividadesView", children: [this.FilterOptions, paginator] }));
+            WRender.Create({ className: "actividadesView", children: [this.FilterOptions, this.mainTable] }));
     }
 
     nuevoCaso = async () => {
@@ -87,6 +120,10 @@ class SolicitudesPendientesView extends HTMLElement {
         })
         this.TabManager.NavigateFunction("Tab-nuevoCasoView",
             WRender.Create({ className: "nuevoCasoView", children: [form] }));
+    }
+    update = async () => {
+        const Solicitudes = await new CaseTable_Case().GetSolicitudesPendientesAprobar();
+        this.mainTable?.DrawTable(Solicitudes);
     }
 
 

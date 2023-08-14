@@ -1,4 +1,5 @@
-﻿using CAPA_NEGOCIO.MAPEO;
+﻿using CAPA_DATOS;
+using CAPA_NEGOCIO.MAPEO;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -58,6 +59,10 @@ namespace API.Controllers
         {
             return new CaseTable_Case()
             .GetOwSolicitudes(HttpContext.Session.GetString("seassonKey"), Case_Estate.Espera);
+        }
+        public object RechazarSolicitud(CaseTable_Case caseTable_Case)
+        {
+            return caseTable_Case.RechazarSolicitud();            
         }
     }
 }

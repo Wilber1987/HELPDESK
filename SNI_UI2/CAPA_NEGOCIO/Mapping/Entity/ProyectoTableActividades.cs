@@ -31,6 +31,10 @@ namespace CAPA_NEGOCIO.MAPEO
         public Tbl_Servicios? Tbl_Servicios { get; set; }
         [OneToMany(TableName = "CaseTable_Tareas", KeyColumn = "Id_Case", ForeignKeyColumn = "Id_Case")]
         public List<CaseTable_Tareas>? CaseTable_Tareas { get; set; }
+
+        [OneToMany(TableName = "CaseTable_Coments", KeyColumn = "Id_Case", ForeignKeyColumn = "Id_Case")]
+        public List<CaseTable_Coments>? CaseTable_Coments { get; set; }
+
         public bool SaveActividades(string identity)
         {
             this.Id_Perfil = AuthNetCore.User(identity).UserId;
@@ -111,11 +115,30 @@ namespace CAPA_NEGOCIO.MAPEO
             }
             throw new Exception("no tienes permisos para aprobar casos");
         }
+
+        internal object RechazarSolicitud()
+        {
+            Estado = Case_Estate.Rechazado.ToString();
+            return Update() ?? new ResponseService()
+            {
+                status = 500,
+                message = "error desconocido"
+            };
+        }
+    }
+
+    public class CaseTable_Coments: EntityClass
+    {
+        public int? Id_Comentario { get; set; }
+        public string? Estado { get; set; }
+        public string? Body { get; set; }
+        public int? Id_Case { get; set; }
+        public DateTime? Fecha { get; set; }
     }
 
     public enum Case_Estate
     {
-        Pendiente, Solicitado, Activo, Finalizado, Espera
+        Pendiente, Solicitado, Activo, Finalizado, Espera, Rechazado
     }
 
     public class Cat_Cargos_Dependencias : EntityClass
@@ -145,6 +168,10 @@ namespace CAPA_NEGOCIO.MAPEO
         public List<CaseTable_Dependencias_Usuarios>? CaseTable_Dependencias_Usuarios { get; set; }
         public List<Cat_Dependencias> GetOwDependencies(string identity)
         {
+            if (AuthNetCore.User(identity).isAdmin)
+            {
+                return new Cat_Dependencias().Get<Cat_Dependencias>();
+            }
             CaseTable_Dependencias_Usuarios Inst = new CaseTable_Dependencias_Usuarios()
             {
                 Id_Perfil = AuthNetCore.User(identity).UserId,

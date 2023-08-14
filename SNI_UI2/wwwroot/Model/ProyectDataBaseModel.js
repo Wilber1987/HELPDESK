@@ -90,14 +90,17 @@ class CaseTable_Case extends EntityClass {
         }
     }
     Id_Case = { type: 'number', primary: true };
+    
     Titulo = { type: 'text' };
-    Descripcion = { type: 'text', hiddenInTable: true };
-    Estado = { type: "Select", Dataset: ["Activo", "Inactivo", "Proceso", "Pendientes", "Finalizado"] };
+    Tbl_Servicios = { type: 'WSelect', ModelObject: () => new Tbl_Servicios() };    
     Fecha_Inicial = { type: 'date' };
-    Fecha_Final = { type: 'date' };
+
     Cat_Dependencias = { type: 'WSelect', ModelObject: () => new Cat_Dependencias() };
+    Estado = { type: "Select", Dataset: ["Activo", "Espera", "Pendiente", "Finalizado"] };    
+    Fecha_Final = { type: 'date' };
+
+    Descripcion = { type: 'textarea', hiddenInTable: true, hiddenInFilter: true };
     CaseTable_Tareas = { type: 'MasterDetail', ModelObject: () => new CaseTable_Tareas() };
-    Tbl_Servicios = { type: 'WSelect', ModelObject: () => new Tbl_Servicios() };
     /**
      * @returns {Array<CaseTable_Case>}
      */
@@ -134,8 +137,23 @@ class CaseTable_Case extends EntityClass {
     GetSolicitudesPendientesAprobar = async () => {
         return await this.GetData("Proyect/GetSolicitudesPendientesAprobar");
     }
+    /**
+     * @returns {Object}
+     */
+    RechazarSolicitud = async () => {
+        return await this.GetData("Proyect/RechazarSolicitud");
+    }
 }
 export { CaseTable_Case }
+class CaseTable_Coments extends EntityClass {
+    Id_Comentario = { type: "number", primary: true };
+    Estado = { type: "text", hidden: true };
+    Body = { type: "textarea", label: "Mensaje" };
+    Id_Case = { type: "text", hidden: true };
+}
+
+
+export { CaseTable_Coments }
 class CaseTable_Calendario extends EntityClass {
     constructor(props) {
         super(props, 'EntityHelpdesk');
@@ -161,7 +179,10 @@ class CaseTable_Tareas extends EntityClass {
     Titulo = { type: 'text' };
     Id_Case = { type: 'number', hidden: true, value: undefined };
     Descripcion = { type: 'text', hiddenInTable: true };
-    CaseTable_Tarea = { type: 'WSelect', ModelObject: () => new CaseTable_Tareas() };
+    CaseTable_Tarea = {
+        type: 'WSelect', label: "Tarea principal", SelfChargeDataset: "CaseTable_Tareas",
+        ModelObject: () => new CaseTable_Tareas(), require: false
+    };
     //CaseTable_TareasHijas = { type: 'MULTISELECT', ModelObject: () => new CaseTable_Tareas() };
     Estado = { type: "Select", Dataset: ["Activo", "Proceso", "Espera", "Finalizado", "Inactivo"] };
     CaseTable_Participantes = { type: 'MasterDetail', ModelObject: () => new CaseTable_Participantes() };
@@ -227,7 +248,7 @@ class Cat_Tipo_Participaciones extends EntityClass {
         }
     }
     Id_Tipo_Participacion = { type: 'number', primary: true };
-    Descripcion = { type: 'text'};
+    Descripcion = { type: 'text' };
     CaseTable_Participantes = { type: 'MasterDetail', ModelObject: () => new CaseTable_Participantes() };
 }
 export { Cat_Tipo_Participaciones }

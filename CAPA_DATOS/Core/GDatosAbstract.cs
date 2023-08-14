@@ -204,7 +204,7 @@ namespace CAPA_DATOS
                         var FK = entity.GetType().GetProperty(ForeignKeyColumn.Name);
                         var keyVal = atributeValue?.GetType()?.GetProperty(KeyColumn?.Name)?.GetValue(atributeValue);
                         if (keyVal != null)
-                        {                            
+                        {
                             FK?.SetValue(entity, keyVal);
                         }
                     }
@@ -237,54 +237,27 @@ namespace CAPA_DATOS
             SetManyToOnePropiertys(entity, manyToOneProps);
             string strQuery = BuildUpdateQueryByObject(entity, IdObject);
 
-            var methods = entity.GetType().GetMethods();
-            var method = methods.FirstOrDefault(mi => mi.Name == "Find" && mi.GetParameters().Count() == 0);
-            if (method != null)
+            List<PropertyInfo> oneToManyPropiertys = entityProps.Where(p =>
+                Attribute.GetCustomAttribute(p, typeof(OneToMany)) != null).ToList();
+            foreach (var oneToManyProp in oneToManyPropiertys)
             {
-                List<PropertyInfo> oneToManyPropiertys = entityProps.Where(p =>
-                    Attribute.GetCustomAttribute(p, typeof(OneToMany)) != null).ToList();
-                object? tempEntity = method?.GetGenericMethodDefinition()?.MakeGenericMethod(entity?.GetType())
-                    .Invoke(entity, new object[] { });
-                foreach (var oneToManyProp in oneToManyPropiertys)
+                string? atributeName = oneToManyProp.Name;
+                var atributeValue = oneToManyProp.GetValue(entity);
+                if (atributeValue != null)
                 {
-                    string? atributeName = oneToManyProp.Name;
-                    var atributeValue = oneToManyProp.GetValue(entity);
-                    if (atributeValue != null)
+                    List<PropertyInfo> atributeValueManyToOneProps =
+                        atributeValue.GetType().GetProperties().Where(p =>
+                        Attribute.GetCustomAttribute(p, typeof(ManyToOne)) != null).ToList();
+                    SetManyToOnePropiertys(atributeValue, atributeValueManyToOneProps);
+                    OneToMany? oneToMany = (OneToMany?)Attribute.GetCustomAttribute(oneToManyProp, typeof(OneToMany));
+                    foreach (var value in (IEnumerable)atributeValue)
                     {
-                        List<PropertyInfo> atributeValueManyToOneProps = atributeValue.GetType().GetProperties().Where(p => Attribute.GetCustomAttribute(p, typeof(ManyToOne)) != null).ToList();
-                        SetManyToOnePropiertys(atributeValue, atributeValueManyToOneProps);
-                        OneToMany? oneToMany = (OneToMany?)Attribute.GetCustomAttribute(oneToManyProp, typeof(OneToMany));
-                        if (tempEntity != null && oneToManyProp.GetValue(tempEntity) != null)
+                        PropertyInfo? KeyColumn = value.GetType().GetProperty(oneToMany?.KeyColumn);
+                        PropertyInfo? ForeignKeyColumn = value.GetType().GetProperty(oneToMany?.ForeignKeyColumn);
+                        if (ForeignKeyColumn != null)
                         {
-                            var tempAtributeValue = oneToManyProp.GetValue(tempEntity);
-                            if (tempAtributeValue != null)
-                            {
-                                foreach (var valueT in ((IEnumerable)tempAtributeValue))
-                                {
-                                    bool exists = false;
-                                    foreach (var valueE in ((IEnumerable)atributeValue))
-                                    {
-                                        if (JsonCompare(valueT, valueE))
-                                        {
-                                            exists = true;
-                                        }
-                                    }
-                                    if (!exists)
-                                    {
-                                        Delete(valueT);
-                                    }
-                                }
-                            }
-                        }
-                        foreach (var value in ((IEnumerable)atributeValue))
-                        {
-                            PropertyInfo? KeyColumn = value.GetType().GetProperty(oneToMany?.KeyColumn);
-                            PropertyInfo? ForeignKeyColumn = value.GetType().GetProperty(oneToMany?.ForeignKeyColumn);
-                            if (ForeignKeyColumn != null)
-                            {
-                                var primaryKeyValue = entity?.GetType()?.GetProperty(KeyColumn?.Name)?.GetValue(entity);
-                                InsertRelationatedObject(primaryKeyValue, value, ForeignKeyColumn);
-                            }
+                            var primaryKeyValue = entity?.GetType()?.GetProperty(KeyColumn?.Name)?.GetValue(entity);
+                            InsertRelationatedObject(primaryKeyValue, value, ForeignKeyColumn);
                         }
                     }
                 }
@@ -292,7 +265,6 @@ namespace CAPA_DATOS
 
             ExcuteSqlQuery(strQuery);
             return entity;
-
         }
         public object UpdateObject(Object Inst, string IdObject)
         {
@@ -329,8 +301,6 @@ namespace CAPA_DATOS
                 throw;
             }
         }
-
-
 
         public T? TakeObject<T>(Object Inst, string CondSQL = "")
         {

@@ -78,6 +78,7 @@ namespace API.Controllers
                     password = "PROTECTED",
                     status = 200,
                     success = true,
+                    isAdmin = security_User.IsAdmin(),
                     message = "Inicio de sesión exitoso."
                 };
             }
@@ -167,6 +168,7 @@ namespace API.Controllers
         public string? password { get; set; }
         public string? message { get; set; }
         public bool? success { get; set; }
+        public bool isAdmin { get; set; }
         public Security_Users? UserData { get; set; }
     }
 }

@@ -1,5 +1,5 @@
 
-import { Cat_Dependencias, CaseTable_Case, CaseTable_Agenda, CaseTable_Calendario, CaseTable_Evidencias, CaseTable_Participantes, CaseTable_Tareas } from '../../../Model/ProyectDataBaseModel.js';
+import { Cat_Dependencias, CaseTable_Case, CaseTable_Agenda, CaseTable_Calendario, CaseTable_Evidencias, CaseTable_Participantes, CaseTable_Tareas, CaseTable_Coments } from '../../../Model/ProyectDataBaseModel.js';
 import { ViewCalendarioByDependencia } from '../../../Model/DBOViewModel.js';
 import { StylesControlsV2, StylesControlsV3 } from "../../../WDevCore/StyleModules/WStyleComponents.js";
 import { WAppNavigator } from '../../../WDevCore/WComponents/WAppNavigator.js';
@@ -14,6 +14,8 @@ import { ComponentsManager, WArrayF, WRender } from '../../../WDevCore/WModules/
 import { ControlBuilder } from '../../../WDevCore/WModules/WControlBuilder.js';
 import { WCssClass, WStyledRender, css } from '../../../WDevCore/WModules/WStyledRender.js';
 import { TaskManagers } from './TaskManager.js';
+import { WCommentsComponent } from '../../../WDevCore/WComponents/WCommentsComponent.js';
+import { WSecurity } from '../../../WDevCore/WModules/WSecurity.js';
 
 const OnLoad = async () => {
     Aside.append(WRender.Create({ tagName: "h3", innerText: "Administración de Actividades" }));
@@ -190,6 +192,11 @@ class MainProyects extends HTMLElement {
             className: "actividad", object: actividad, children: [
                 { tagName: 'h4', innerText: actividad.Descripcion },
                 {
+                    className: "options", children: [
+                        { tagName: 'button', className: 'Btn-Mini', innerText: "Detalle", onclick: async () => await this.actividadDetail(actividad) },
+                        { tagName: 'button', className: 'Btn-Mini', innerText: 'Informe', onclick: this.action }
+                    ]
+                },{
                     className: "propiedades", children: [
                         { tagName: 'label', innerText: "Estado: " + actividad.Estado },
                         { tagName: 'label', innerText: "Dependencia: " + actividad.Dependencia },
@@ -198,25 +205,19 @@ class MainProyects extends HTMLElement {
                     ]
                 },
                 { tagName: 'h4', innerText: "Progreso" },
-                ControlBuilder.BuildProgressBar(actividad.Progreso, actividad.CaseTable_Tareas?.length),
-                {
-                    className: "options", children: [
-                        { tagName: 'button', className: 'Btn-Mini', innerText: "Detalle", onclick: async () => await this.actividadDetail(actividad) },
-                        { tagName: 'button', className: 'Btn-Mini', innerText: 'Informe', onclick: this.action }
-                    ]
-                },
+                ControlBuilder.BuildProgressBar(actividad.Progreso, actividad.CaseTable_Tareas?.length)               
             ]
         })
     }
-    actividadElementDetail = (actividad) => {
+    actividadElementDetail = (actividad) => {        
         return WRender.Create({
             className: "actividadDetail", object: actividad, children: [
                 this.actividadElement(actividad)
             ]
         })
     }
-    actividadDetail = async (actividad = (new CaseTable_Case())) => {
-        const actividadDetailView = WRender.Create({ className: "", children: [this.actividadElementDetail(actividad)] });
+    actividadDetail = async (actividad = (new CaseTable_Case())) => {    
+        const actividadDetailView = WRender.Create({ className: "actividadDetailView", children: [this.actividadElementDetail(actividad)] });
         const tareasActividad = await new CaseTable_Tareas({ Id_Case: actividad.Id_Case }).Get();
         const taskModel = new CaseTable_Tareas({
             Id_Case: { type: 'number', hidden: true, value: actividad.Id_Case },
@@ -270,7 +271,18 @@ class MainProyects extends HTMLElement {
                 { name: "Nueva Tarea", action: async (ev) => { this.shadowRoot.append(new WModalForm({ ModelObject: taskModel, title: "Nueva Tarea" })) } }
             ]
         });
-        actividadDetailView.append(taskNav, taskContainer)
+        const commentsDataset = await new CaseTable_Coments({ Id_Case: actividad.Id_Case}).Get();
+        const commentsContainer = new WCommentsComponent({
+            Dataset: commentsDataset,
+            ModelObject: new CaseTable_Coments(),
+            User: WSecurity.UserData,
+            UserIdProp: "Id_User",
+            CommentsIdentify: actividad.Id_Case,
+            UrlSearch: "../api/ApiEntityHelpdesk/getCaseTable_Coments",
+            UrlAdd: "../api/ApiEntityHelpdesk/saveCaseTable_Coments"
+        });
+       
+        actividadDetailView.append(commentsContainer, taskNav, taskContainer)
         this.TabManager.NavigateFunction("Tab-Actividades-Viewer" + actividad.Id_Case, actividadDetailView);
     }
     dependenciasViewer = async () => {
@@ -301,6 +313,14 @@ class MainProyects extends HTMLElement {
         .OptionContainer {
             margin: 0 0 20px 0;
         }
+        .actividadDetailView {
+            display: grid;
+            grid-template-columns: calc(100% - 420px) 400px;
+            gap: 0px 20px;
+        }
+        w-coment-component {
+            grid-row: span 3;
+        }
         .dashBoardView w-colum-chart { 
             grid-column: span 2;
         }
@@ -310,18 +330,24 @@ class MainProyects extends HTMLElement {
             margin-bottom: 10px;           
             color: #0a2542;
             border-radius: 15px;
+            display: grid;
+            grid-template-columns: calc(100% - 100px) 100px;
         }
         .actividad h4 {
             margin: 5px 0px;
+            font-size: 13px;
          }
         .actividad .propiedades {
-            font-size: 14px;
+            font-size: 12px;
             display: flex;
-            gap: 20px;
+            gap: 10px;
         }
         .actividad .options {
             display: flex;
-            justify-content: flex-end;            
+            flex-direction: column;
+            gap: 10;
+            grid-row: span 4; 
+            justify-content: space-around           
         }
     `
 }
@@ -359,7 +385,7 @@ const CaseForm = (entity, dependencias, action) => {
                 action: (caso) => {
                     caso.CaseTable_Tareas
                         .forEach(caseTable_Tarea => caseTable_Tarea.CaseTable_Calendario = []);
-                        form.DrawComponent();
+                    form.DrawComponent();
                 }
             }
         })

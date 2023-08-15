@@ -129,10 +129,12 @@ namespace CAPA_NEGOCIO.MAPEO
 
     public class CaseTable_Coments: EntityClass
     {
+        [PrimaryKey(Identity = true)]
         public int? Id_Comentario { get; set; }
         public string? Estado { get; set; }
         public string? Body { get; set; }
         public int? Id_Case { get; set; }
+        public int? Id_User { get; set; }
         public DateTime? Fecha { get; set; }
     }
 

@@ -11,6 +11,25 @@ namespace API.Controllers
     [ApiController]
     public class ApiEntityHelpdeskController : ControllerBase
     {
+        [HttpPost]
+        [AuthController]
+        public List<CaseTable_Coments> getCaseTable_Coments(CaseTable_Coments Inst)
+        {
+            return Inst.Get<CaseTable_Coments>();
+        }
+        [HttpPost]
+        [AuthController]
+        public object? saveCaseTable_Coments(CaseTable_Coments inst)
+        {
+            inst.Fecha = DateTime.Now;
+            return inst.Save();
+        }
+        [HttpPost]
+        [AuthController]
+        public object? updateCaseTable_Coments(CaseTable_Coments inst)
+        {
+            return inst.Update();
+        }
         //Cat_Tipo_Evento
 
         [HttpPost]

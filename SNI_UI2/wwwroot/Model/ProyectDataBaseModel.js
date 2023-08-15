@@ -146,6 +146,12 @@ class CaseTable_Case extends EntityClass {
 }
 export { CaseTable_Case }
 class CaseTable_Coments extends EntityClass {
+    constructor(props) {
+        super(props, 'EntityHelpdesk');
+        for (const prop in props) {
+            this[prop] = props[prop];
+        }
+    }
     Id_Comentario = { type: "number", primary: true };
     Estado = { type: "text", hidden: true };
     Body = { type: "textarea", label: "Mensaje" };

@@ -172,9 +172,8 @@ class TaskManagers extends HTMLElement {
             display: grid;
             overflow-x: auto;
             overflow-y: hidden;
-            padding: 20px;
-            gap: 20px;
-            height: 540px;
+            padding: 10px;
+            gap: 10px;
             width: fit-content;
             max-width: calc(100% - 50px);
         } 

@@ -113,7 +113,7 @@ class WAjaxTools {
         } else {
             try {
                 response = await response.json(response);
-                //localStorage.setItem(Url, JSON.stringify(response));
+                localStorage.setItem(Url, JSON.stringify(response));
                 return response;
             } catch (error) {
                 console.log(error);

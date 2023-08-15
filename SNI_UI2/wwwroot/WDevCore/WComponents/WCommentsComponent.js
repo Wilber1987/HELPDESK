@@ -6,7 +6,6 @@ import { css } from "../WModules/WStyledRender.js";
 class WCommentsComponent extends HTMLElement {
     constructor(props) {
         super();
-        console.log(props);
         this.Dataset = props.Dataset ?? [];
         this.ModelObject = props.ModelObject;
 
@@ -14,7 +13,6 @@ class WCommentsComponent extends HTMLElement {
         this.UrlAdd = props.UrlAdd;
         this.User = props.User;
         this.CommentsIdentify = props.CommentsIdentify;
-        console.log(this.User);
         this.attachShadow({ mode: 'open' });
         this.CommentsContainer = WRender.Create({ className: "CommentsContainer" })
         this.MessageInput = WRender.Create({ tagName: 'textarea' });
@@ -64,12 +62,11 @@ class WCommentsComponent extends HTMLElement {
         this.CommentsContainer.innerHTML = "";
         console.log(this.Dataset);
         this.Dataset.forEach(comment => {
-            console.log("teest");
-            //insertBefore(LastCard, slider.firstChild)
             this.CommentsContainer.insertBefore(WRender.Create({
                 tagName: "div",
                 className: comment.Id_User == this.User.UserId ? "commentSelf" : "comment",
                 children: [
+                    { tagName: "label", className: "nickname", innerHTML: comment.NickName },
                     { tagName: "p", innerHTML: comment.Body },
                     { tagName: "label", innerHTML: comment.Fecha.toDateFormatEs() }
                 ]
@@ -113,6 +110,17 @@ class WCommentsComponent extends HTMLElement {
             background-color: #5995fd;
             color: #ffffff;
             float: right;
+        }        
+        .comment label, .commentSelf label {
+            display: block;
+            text-align: right;
+        }
+        p {
+            margin: 5px 0px;
+        }
+        label.nickname {
+            font-weight: bold;
+            text-align: left;
         }
        
     `

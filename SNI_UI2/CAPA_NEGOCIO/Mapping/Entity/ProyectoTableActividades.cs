@@ -132,9 +132,11 @@ namespace CAPA_NEGOCIO.MAPEO
         [PrimaryKey(Identity = true)]
         public int? Id_Comentario { get; set; }
         public string? Estado { get; set; }
+        public string? NickName { get; set; }
         public string? Body { get; set; }
         public int? Id_Case { get; set; }
         public int? Id_User { get; set; }
+        
         public DateTime? Fecha { get; set; }
     }
 

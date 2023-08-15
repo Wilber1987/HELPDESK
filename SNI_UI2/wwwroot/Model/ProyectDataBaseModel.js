@@ -90,13 +90,13 @@ class CaseTable_Case extends EntityClass {
         }
     }
     Id_Case = { type: 'number', primary: true };
-    
+
     Titulo = { type: 'text' };
-    Tbl_Servicios = { type: 'WSelect', ModelObject: () => new Tbl_Servicios() };    
+    Tbl_Servicios = { type: 'WSelect', ModelObject: () => new Tbl_Servicios() };
     Fecha_Inicial = { type: 'date' };
 
     Cat_Dependencias = { type: 'WSelect', ModelObject: () => new Cat_Dependencias() };
-    Estado = { type: "Select", Dataset: ["Activo", "Espera", "Pendiente", "Finalizado"] };    
+    Estado = { type: "Select", Dataset: ["Activo", "Espera", "Pendiente", "Finalizado"] };
     Fecha_Final = { type: 'date' };
 
     Descripcion = { type: 'textarea', hiddenInTable: true, hiddenInFilter: true };
@@ -154,6 +154,7 @@ class CaseTable_Coments extends EntityClass {
     }
     Id_Comentario = { type: "number", primary: true };
     Estado = { type: "text", hidden: true };
+    NickName = { type: "text", hidden: true };
     Body = { type: "textarea", label: "Mensaje" };
     Id_Case = { type: "text", hidden: true };
 }
@@ -190,7 +191,7 @@ class CaseTable_Tareas extends EntityClass {
         ModelObject: () => new CaseTable_Tareas(), require: false
     };
     //CaseTable_TareasHijas = { type: 'MULTISELECT', ModelObject: () => new CaseTable_Tareas() };
-    Estado = { type: "Select", Dataset: ["Activo", "Proceso", "Espera", "Finalizado", "Inactivo"] };
+    Estado = { type: "Select", Dataset: ["Activo", "Proceso", "Finalizado", "Espera", "Inactivo"] };
     CaseTable_Participantes = { type: 'MasterDetail', ModelObject: () => new CaseTable_Participantes() };
     //CaseTable_Evidencias = { type: 'MasterDetail', require: false, ModelObject: () => new CaseTable_Evidencias() };
     CaseTable_Calendario = {

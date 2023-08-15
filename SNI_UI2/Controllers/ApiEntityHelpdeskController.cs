@@ -21,7 +21,10 @@ namespace API.Controllers
         [AuthController]
         public object? saveCaseTable_Coments(CaseTable_Coments inst)
         {
+            string identity = HttpContext.Session.GetString("seassonKey");
             inst.Fecha = DateTime.Now;
+            inst.Id_User = AuthNetCore.User(identity).UserId;
+            inst.NickName = AuthNetCore.User(identity).UserData?.Nombres;
             return inst.Save();
         }
         [HttpPost]
@@ -185,8 +188,8 @@ namespace API.Controllers
             return inst.Update();
         }
         //Cat_TipoLocalidad
-      
-       
+
+
         //Tbl_Profile
         [HttpPost]
         [AuthController]
@@ -205,7 +208,7 @@ namespace API.Controllers
         public object? updateTbl_Profile(Tbl_Profile inst)
         {
             return inst.Update();
-        }     
+        }
 
         //Cat_Tipo_Servicio
         [HttpPost]
@@ -245,7 +248,7 @@ namespace API.Controllers
         {
             return inst.Update();
         }
-       
+
         //CaseTable_Case
         [HttpPost]
         [AuthController]

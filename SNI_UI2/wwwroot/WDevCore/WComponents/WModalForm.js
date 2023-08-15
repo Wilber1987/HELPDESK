@@ -29,7 +29,7 @@ class WModalForm extends HTMLElement {
             this.DivColumns = this.Config.DivColumns = "calc(30%) calc(30%) calc(30%)";
         } else {
             this.WidthContainer = "60%";
-            this.DivColumns = this.Config.DivColumns = "calc(50%) calc(50%)";
+            this.DivColumns = this.Config.DivColumns = "calc(50% - 10px) calc(50% - 10px)";
         }
     }
     attributeChangedCallBack() {

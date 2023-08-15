@@ -196,7 +196,7 @@ class MainProyects extends HTMLElement {
                         { tagName: 'button', className: 'Btn-Mini', innerText: "Detalle", onclick: async () => await this.actividadDetail(actividad) },
                         { tagName: 'button', className: 'Btn-Mini', innerText: 'Informe', onclick: this.action }
                     ]
-                },{
+                }, {
                     className: "propiedades", children: [
                         { tagName: 'label', innerText: "Estado: " + actividad.Estado },
                         { tagName: 'label', innerText: "Dependencia: " + actividad.Dependencia },
@@ -205,18 +205,19 @@ class MainProyects extends HTMLElement {
                     ]
                 },
                 { tagName: 'h4', innerText: "Progreso" },
-                ControlBuilder.BuildProgressBar(actividad.Progreso, actividad.CaseTable_Tareas?.length)               
+                ControlBuilder.BuildProgressBar(actividad.Progreso,
+                    actividad.CaseTable_Tareas?.filter(tarea => !tarea.Estado?.includes("Inactivo"))?.length)
             ]
         })
     }
-    actividadElementDetail = (actividad) => {        
+    actividadElementDetail = (actividad) => {
         return WRender.Create({
             className: "actividadDetail", object: actividad, children: [
                 this.actividadElement(actividad)
             ]
         })
     }
-    actividadDetail = async (actividad = (new CaseTable_Case())) => {    
+    actividadDetail = async (actividad = (new CaseTable_Case())) => {
         const actividadDetailView = WRender.Create({ className: "actividadDetailView", children: [this.actividadElementDetail(actividad)] });
         const tareasActividad = await new CaseTable_Tareas({ Id_Case: actividad.Id_Case }).Get();
         const taskModel = new CaseTable_Tareas({
@@ -234,9 +235,9 @@ class MainProyects extends HTMLElement {
         const tasktable = new WTableComponent({
             Dataset: tareasActividad,
             ModelObject: taskModel, Options: {
-                Add: true, UrlAdd: "../api/ApiEntityDBO/saveCaseTable_Tareas",
-                Edit: true, UrlUpdate: "../api/ApiEntityDBO/updateCaseTable_Tareas",
-                Search: true, UrlSearch: "../api/ApiEntityDBO/getCaseTable_Tareas",
+                //Add: true, UrlAdd: "../api/ApiEntityDBO/saveCaseTable_Tareas",
+                //Edit: true, UrlUpdate: "../api/ApiEntityDBO/updateCaseTable_Tareas",
+                //Search: true, UrlSearch: "../api/ApiEntityDBO/getCaseTable_Tareas",
                 UserActions: [{
                     name: "Nueva Evidencia", action: (Tarea) => {
                         actividadDetailView.append(new WModalForm({
@@ -271,7 +272,7 @@ class MainProyects extends HTMLElement {
                 { name: "Nueva Tarea", action: async (ev) => { this.shadowRoot.append(new WModalForm({ ModelObject: taskModel, title: "Nueva Tarea" })) } }
             ]
         });
-        const commentsDataset = await new CaseTable_Coments({ Id_Case: actividad.Id_Case}).Get();
+        const commentsDataset = await new CaseTable_Coments({ Id_Case: actividad.Id_Case }).Get();
         const commentsContainer = new WCommentsComponent({
             Dataset: commentsDataset,
             ModelObject: new CaseTable_Coments(),
@@ -281,7 +282,7 @@ class MainProyects extends HTMLElement {
             UrlSearch: "../api/ApiEntityHelpdesk/getCaseTable_Coments",
             UrlAdd: "../api/ApiEntityHelpdesk/saveCaseTable_Coments"
         });
-       
+
         actividadDetailView.append(commentsContainer, taskNav, taskContainer)
         this.TabManager.NavigateFunction("Tab-Actividades-Viewer" + actividad.Id_Case, actividadDetailView);
     }

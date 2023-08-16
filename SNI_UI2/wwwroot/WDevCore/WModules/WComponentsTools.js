@@ -894,6 +894,15 @@ String.prototype.toDateFormatEs = function () {
         + ' de ' + fecha.getUTCFullYear();
 };
 
+String.prototype.getMonthFormatEs = function () {
+    if (this == null || this == undefined || this == "") return "";
+    const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+    const dias_semana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    const fecha = new Date(this);
+    return  meses[fecha.getMonth()];
+};
+
+
 
 
 String.prototype.toDateTimeFormatEs = function () {

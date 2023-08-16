@@ -1,6 +1,7 @@
 //@ts-check
 import { CaseTable_Agenda, CaseTable_Calendario, CaseTable_Tareas } from '../../../Model/ProyectDataBaseModel.js';
 import { StyleScrolls, StylesControlsV2, StylesControlsV3 } from "../../../WDevCore/StyleModules/WStyleComponents.js";
+import { WDetailObject } from '../../../WDevCore/WComponents/WDetailObject.js';
 import { WModalForm } from '../../../WDevCore/WComponents/WModalForm.js';
 import { ComponentsManager, WRender } from '../../../WDevCore/WModules/WComponentsTools.js';
 import { css } from '../../../WDevCore/WModules/WStyledRender.js';
@@ -10,10 +11,12 @@ class TaskManagers extends HTMLElement {
      * 
      * @param {Array<CaseTable_Tareas>} Tasks 
      * @param {CaseTable_Tareas} Model 
+     * @param {Object} [Config] 
      */
-    constructor(Tasks, Model) {
+    constructor(Tasks, Model, Config) {
         super();
         this.Tasks = Tasks;
+        this.Config = Config;
         this.TaskModel = Model ?? new CaseTable_Tareas();
         this.attachShadow({ mode: 'open' });
         this.shadowRoot?.append(this.WStyle,
@@ -94,7 +97,7 @@ class TaskManagers extends HTMLElement {
             ondragstart: (ev) => {
                 ev.dataTransfer.setData("text", ev.target.id);
             }, children: [
-                { tagName: "label", class: "task-title", innerText: task.Titulo },
+                { tagName: "label", class: "task-title", innerText: task.Titulo + " #" + task.Id_Tarea },
                 { tagName: "label", class: "task-detail", innerText: task.CaseTable_Case?.Titulo },
                 //{ tagName: "p", class: "p-title", innerText: task.Descripcion },
                 {
@@ -140,6 +143,7 @@ class TaskManagers extends HTMLElement {
         this.TaskModel.CaseTable_Calendario = CalendarModel;
         this.shadowRoot?.append(new WModalForm({
             EditObject: task,
+            ImageUrlPath: this.Config.ImageUrlPath,
             AutoSave: true,
             ModelObject: this.TaskModel
         }))
@@ -148,7 +152,17 @@ class TaskManagers extends HTMLElement {
     * 
     * @param {CaseTable_Tareas} task 
     */
-    taskDetail = async (task) => { }
+    taskDetail = async (task) => {
+        this.shadowRoot?.append(new WModalForm({
+            title: "Detalle",
+            ImageUrlPath: this.Config.ImageUrlPath,
+            ObjectModal: new WDetailObject({
+                ObjectDetail: task,
+                ImageUrlPath: this.Config.ImageUrlPath,
+                ModelObject: new CaseTable_Tareas()
+            }),
+        }));
+    }
     /**
      * 
      * @param {CaseTable_Tareas} task 

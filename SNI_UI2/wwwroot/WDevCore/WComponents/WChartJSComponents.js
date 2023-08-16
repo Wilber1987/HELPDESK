@@ -181,7 +181,7 @@ class ColumChart extends HTMLElement {
         if (this.ChartInstance.TypeChart == "Line") {
             WRender.SetStyle(Bars, {
                 margin: "0px 10px",
-                //opacity: 0
+                opacity: 0
             });
         }
         return Bars;
@@ -547,10 +547,10 @@ const WChartStyle = (ChartInstance) => {
                 }), new WCssClass(".SectionBars", {
                     "display": " flex",
                     "align-items": " flex-end",
-                    "overflow-y": " hidden",
+                    //"overflow-y": " hidden",
                     "position": " relative",
                     "overflow-x": " scroll",
-                    //padding: 10,
+                    "padding-top": 5,
                     "padding-left": 40,
                     "min-height": 150,
                     //margin: "0px auto"

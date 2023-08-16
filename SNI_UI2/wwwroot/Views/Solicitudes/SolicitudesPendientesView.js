@@ -8,7 +8,7 @@ import { css } from '../../WDevCore/WModules/WStyledRender.js';
 import { WFilterOptions } from "../../WDevCore/WComponents/WFilterControls.js";
 import { WTableComponent } from '../../WDevCore/WComponents/WTableComponent.js';
 import { WModalForm } from '../../WDevCore/WComponents/WModalForm.js';
-import { CaseForm } from '../Perfil/Proyectos/MainProyect.js';
+import { CaseForm } from '../Perfil/Proyectos/CaseManagerComponent.js';
 
 const OnLoad = async () => {
     const Solicitudes = await new CaseTable_Case().GetSolicitudesPendientesAprobar();

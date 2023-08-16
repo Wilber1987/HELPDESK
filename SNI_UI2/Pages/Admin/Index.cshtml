@@ -18,9 +18,9 @@
     import { WAppNavigator } from "../WDevCore/WComponents/WAppNavigator.js";  
     AdminTemplate.append(WRender.createElement(StyleScrolls));
 </script>
-@if (SecurityController.HavePermission(PermissionsEnum.ADMINISTRAR_POSTULANTES.ToString(), HttpContext.Session.GetString("seassonKey")))
+@if (SecurityController.HavePermission(PermissionsEnum.ADMIN_ACCESS.ToString(), HttpContext.Session.GetString("seassonKey")))
 {
-    <script src="~/Admin/AdminInvestigadores.js" type="module"></script>
+    <script src="~/Admin/CaseManagerView.js" type="module"></script>
 }
 @if (SecurityController.HavePermission(PermissionsEnum.ADMINISTRAR_USUARIOS.ToString(), HttpContext.Session.GetString("seassonKey")))
 {

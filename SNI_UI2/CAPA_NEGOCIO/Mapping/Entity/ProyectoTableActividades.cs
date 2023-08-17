@@ -259,7 +259,9 @@ namespace CAPA_NEGOCIO.MAPEO
         public string? Titulo { get; set; }
         public int? Id_TareaPadre { get; set; }
         public int? Id_Case { get; set; }
-        public string? Descripcion { get; set; }
+        public string? Descripcion { get; set; }        
+        public DateTime? Fecha_Inicio { get; set; }        
+        public DateTime? Fecha_Finalizacion { get; set; }
         public string? Estado { get; set; }
         [ManyToOne(TableName = "CaseTable_Tareas", KeyColumn = "Id_Tarea", ForeignKeyColumn = "Id_TareaPadre")]
         public CaseTable_Tareas? CaseTable_Tarea { get; set; }
@@ -282,6 +284,23 @@ namespace CAPA_NEGOCIO.MAPEO
             );
         }
 
+        public object? UpdateTarea()
+        {
+            //"Activo", "Proceso", "Finalizado", "Espera", "Inactivo"
+            if (Estado == "Proceso" && Fecha_Inicio == null)
+            {
+                Fecha_Inicio = DateTime.Now;
+            }
+            if (Estado == "Finalizado")
+            {
+                if ( Fecha_Inicio == null)
+                {
+                     Fecha_Inicio = DateTime.Now;
+                }                
+                Fecha_Finalizacion = DateTime.Now;
+            }
+            return Update();
+        }
     }
     public class CaseTable_Participantes : EntityClass
     {

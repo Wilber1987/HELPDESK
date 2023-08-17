@@ -87,7 +87,7 @@ class CaseDashboardComponent extends HTMLElement {
     WStyle = css`
         .dashBoardView{
             display: grid;
-            grid-template-columns: 38% 38% 23%;  
+            grid-template-columns: 37% 37% 23%;  
             grid-gap: 20px          
         }
         .dashBoardView #ColumnCasosPorDependencia { 

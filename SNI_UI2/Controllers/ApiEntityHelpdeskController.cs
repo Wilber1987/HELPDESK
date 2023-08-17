@@ -306,7 +306,7 @@ namespace API.Controllers
         [AuthController]
         public object? updateCaseTable_Tareas(CaseTable_Tareas inst)
         {
-            return inst.Update();
+            return inst.UpdateTarea();
         }
         //CaseTable_Participantes
         [HttpPost]

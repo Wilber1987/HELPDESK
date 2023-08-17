@@ -4,7 +4,7 @@ import { Cat_Dependencias, CaseTable_Case, CaseTable_Agenda, CaseTable_Calendari
 import { ViewCalendarioByDependencia } from '../../../Model/DBOViewModel.js';
 import { StylesControlsV2, StylesControlsV3 } from "../../../WDevCore/StyleModules/WStyleComponents.js";
 import { WAppNavigator } from '../../../WDevCore/WComponents/WAppNavigator.js';
-import { ColumChart, RadialChart } from '../../../WDevCore/WComponents/WChartJSComponents.js';
+import { ColumChart, GanttChart, RadialChart } from '../../../WDevCore/WComponents/WChartJSComponents.js';
 import { DocumentViewer } from '../../../WDevCore/WComponents/WDocumentViewer.js';
 import { WFilterOptions } from '../../../WDevCore/WComponents/WFilterControls.js';
 import { WForm } from "../../../WDevCore/WComponents/WForm.js";
@@ -135,6 +135,7 @@ class CaseManagerComponent extends HTMLElement {
             }
         })
         const taskContainer = WRender.Create({ className: "" });
+        const ganttChart = new GanttChart({ Dataset: tareasActividad, EvalValue: "date" });
         const tabManager = new ComponentsManager({ MainContainer: taskContainer });
         const taskNav = new WAppNavigator({
             //NavStyle: "tab",
@@ -147,6 +148,7 @@ class CaseManagerComponent extends HTMLElement {
                                 taskModel, { ImageUrlPath: "/Media/Image/" }))
                     }
                 },
+                { name: "Vista de progreso", action: async (ev) => { tabManager.NavigateFunction("ganttChart", ganttChart) } },
                 { name: "Vista de detalles", action: async (ev) => { tabManager.NavigateFunction("taskTable", tasktable) } },
                 { name: "Nueva Tarea", action: async (ev) => { this.shadowRoot.append(new WModalForm({ ModelObject: taskModel, title: "Nueva Tarea" })) } }
             ]
@@ -169,7 +171,7 @@ class CaseManagerComponent extends HTMLElement {
         const dependenciasDetailView = WRender.Create({ className: "", children: [] });
         //const tareasActividad = await new Cat_Dependencias().Get();
         dependenciasDetailView.append(new WTableComponent({
-            ModelObject: new Cat_Dependencias({}),           
+            ModelObject: new Cat_Dependencias({}),
             Options: {
                 Add: true, UrlAdd: "../api/ApiEntityDBO/saveCat_Dependencias",
                 Edit: true, UrlUpdate: "../api/ApiEntityDBO/updateCat_Dependencias",

@@ -61,9 +61,10 @@ class SolicitudesPendientesView extends HTMLElement {
                             const dependencias = await new Cat_Dependencias().GetOwDependencies();
                             const modal = new WModalForm({
                                 ObjectModal: CaseForm(element, dependencias, async (table_case) => {
-                                    this.parentNode.append(ModalVericateAction(async ()=> {
-                                        if (table_case.Estado == "Activo") {
-                                            this.parentNode.shadowRoot.append(ModalMessege("Solicitud aprobada"));
+                                    this.shadowRoot.append(ModalVericateAction(async ()=> {
+                                        const response = await table_case.Update();
+                                        if (response.status == 200) {
+                                            this.shadowRoot.append(ModalMessege("Solicitud aprobada"));
                                             this.update();
                                         } else {
                                             this.shadowRoot.append(ModalMessege("Error"));

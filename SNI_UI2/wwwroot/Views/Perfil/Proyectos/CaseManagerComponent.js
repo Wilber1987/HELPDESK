@@ -199,6 +199,7 @@ class CaseManagerComponent extends HTMLElement {
         .actividadDetailView {
             display: grid;
             grid-template-columns: calc(100% - 420px) 400px;
+            grid-template-rows: 150px 40px auto;
             gap: 0px 20px;
         }
         w-coment-component {

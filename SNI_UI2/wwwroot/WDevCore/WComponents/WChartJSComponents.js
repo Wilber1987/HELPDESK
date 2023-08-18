@@ -780,8 +780,14 @@ class GanttChart extends HTMLElement {
         this.EvalValue = this.Config.EvalValue ?? null;
         this.AttNameEval = this.Config.AttNameEval ?? null;
         this.TimeLine = WRender.Create({ className: "TimeLine" });
-        this.ChartContainer = WRender.Create({ className: "ChartContainer" });
-        this.shadowRoot.append(this.CustomStyle, this.TimeLine, this.ChartContainer);
+        this.TaskContainer = WRender.Create({ className: "TaskContainer" });
+        this.ChartContainer = WRender.Create({ className: "ChartContainer", children: [this.TimeLine, this.TaskContainer] });
+        this.shadowRoot.append(this.CustomStyle, this.ChartContainer);
+        WRender.SetStyle(this, {
+            overflowX: "auto",
+            overflowY: "auto",
+            width: "100%",
+        })
         this.DrawComponent();
 
     }
@@ -795,15 +801,24 @@ class GanttChart extends HTMLElement {
         const formateadorFecha = new Intl.DateTimeFormat('es-MX', { dateStyle: 'medium', });
 
         for (let i = inicio; i <= fin; i = new Date(i.getTime() + INTERVALO)) {
-            console.log(formateadorFecha.format(i));
-            this.TimeLine.append(WRender.Create({ id: i, innerText: formateadorFecha.format(i) }))
+            //console.log(formateadorFecha.format(i));
+            this.TimeLine.append(WRender.Create({
+                id: i.toLocaleDateString(),
+                class: "TimeLineBlock",
+                innerText: formateadorFecha.format(i)
+            }))
         }
-        this.EvalArray?.forEach(evalValue => {
-
-        });
-        this.ChartContainer.innerHTML = "";
+        this.TaskContainer.innerHTML = "";
         this.Dataset.forEach(task => {
-            this.ChartContainer.append(WRender.crea)
+            const taskDiv = WRender.Create({
+                name: new Date(task.Fecha_Inicial).toLocaleDateString().toString()
+                    + "-" + new Date(task.Fecha_Finalizacion).toLocaleDateString().toString(),
+                innerText: task.Titulo + " #" + task.Id_Tarea
+            })
+            console.log(task);
+            console.log(new Date(task.Fecha_Inicial).toLocaleDateString().toString()
+            + "-" + new Date(task.Fecha_Inicial).toLocaleDateString().toString());
+            this.TaskContainer.append(taskDiv)
         });
 
     }
@@ -880,30 +895,36 @@ class GanttChart extends HTMLElement {
 
         /* CHART-VALUES
         –––––––––––––––––––––––––––––––––––––––––––––––––– */
-            .chart-wrapper .chart-values {
+        .ChartContainer {
+            width: 100%;
+            overflow: auto;
+        }
+        .TimeLine {
             position: relative;
             display: flex;
             margin-bottom: 20px;
             font-weight: bold;
             font-size: 1.2rem;
         }
+        
 
-        .chart-wrapper .chart-values li {
+        .TimeLineBlock {
             flex: 1;
             min-width: 80px;
             text-align: center;
         }
 
-        .chart-wrapper .chart-values li:not(:last-child) {
+        .TimeLineBlock:not(:last-child) {
             position: relative;
         }
 
-        .chart-wrapper .chart-values li:not(:last-child)::before {
-        content: '';
+        .TimeLineBlock:not(:last-child)::before {
+            content: '';
             position: absolute;
             right: 0;
             height: 510px;
-            border-right: 1px solid var(--divider);
+            border-right: 1px solid lightgrey;
+            width: 1px;
         }
 
 
@@ -911,7 +932,7 @@ class GanttChart extends HTMLElement {
         –––––––––––––––––––––––––––––––––––––––––––––––––– */
         .chart-wrapper .chart-bars li {
             position: relative;
-            color: var(--white);
+            color: #fff;
             margin-bottom: 15px;
             font-size: 16px;
             border-radius: 20px;

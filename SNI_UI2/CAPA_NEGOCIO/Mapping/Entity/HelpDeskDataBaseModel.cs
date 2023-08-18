@@ -49,7 +49,7 @@ namespace CAPA_NEGOCIO.MAPEO
         public Security_Users? Security_Users { get; set; }
         [ManyToOne(TableName = "Cat_Paises", KeyColumn = "Id_Pais", ForeignKeyColumn = "Id_Pais_Origen")]
         public Cat_Paises? Cat_Paises { get; set; }       
-        [OneToMany(TableName = "CaseTable_Case", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
+        //[OneToMany(TableName = "CaseTable_Case", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
         public List<CaseTable_Case>? CaseTable_Case { get; set; }
         [OneToMany(TableName = "CaseTable_Agenda", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
         public List<CaseTable_Agenda>? CaseTable_Agenda { get; set; }

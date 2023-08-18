@@ -610,7 +610,7 @@ class WArrayF {
         return DataArraySR;
     }
     static MaxValue(Data, MaxParam) {
-        var Maxvalue = 0;
+        var Maxvalue = Data[0][MaxParam];
         for (let index = 0; index < Data.length; index++) {
             if (parseInt(Data[index][MaxParam]) > Maxvalue) {
                 Maxvalue = Data[index][MaxParam];
@@ -622,6 +622,24 @@ class WArrayF {
         var MinValue = Data[0][MaxParam];
         for (let index = 0; index < Data.length; index++) {
             if (parseInt(Data[index][MaxParam]) < MinValue) {
+                MinValue = Data[index][MaxParam];
+            }
+        }
+        return MinValue;
+    }
+    static MaxDateValue(Data, MaxParam) {
+        var Maxvalue = new Date(Data[0][MaxParam]);
+        for (let index = 0; index < Data.length; index++) {
+            if (new Date((Data[index][MaxParam]) > Maxvalue)) {
+                Maxvalue = Data[index][MaxParam];
+            }
+        }
+        return Maxvalue;
+    }
+    static MinDateValue(Data, MaxParam) {
+        var MinValue = new Date(Data[0][MaxParam]);
+        for (let index = 0; index < Data.length; index++) {
+            if (new Date(Data[index][MaxParam]) < MinValue) {
                 MinValue = Data[index][MaxParam];
             }
         }

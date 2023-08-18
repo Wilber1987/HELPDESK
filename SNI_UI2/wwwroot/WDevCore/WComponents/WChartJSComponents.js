@@ -791,11 +791,18 @@ class GanttChart extends HTMLElement {
         this.DrawComponent();
 
     }
-    connectedCallback() { }
+    connectedCallback() { 
+        this.Animate();
+    }
     DrawComponent = async () => {
         this.TimeLine.innerHTML = "";
-        const inicio = new Date("2021-01-01T00:00:00");
-        const fin = new Date("2021-12-31T00:00:00");
+      console.log(this.Dataset)
+        const min = WArrayF.MinDateValue(this.Dataset, "Fecha_Inicio");
+        const max = WArrayF.MaxDateValue(this.Dataset, "Fecha_Finalizacion");
+        console.log(min);
+        console.log(max);        
+        const inicio = new Date(min);
+        const fin = new Date(max);
         const UN_DIA_EN_MILISEGUNDOS = 1000 * 60 * 60 * 24;
         const INTERVALO = UN_DIA_EN_MILISEGUNDOS //* 7; // Cada semana
         const formateadorFecha = new Intl.DateTimeFormat('es-MX', { dateStyle: 'medium', });
@@ -811,51 +818,54 @@ class GanttChart extends HTMLElement {
         this.TaskContainer.innerHTML = "";
         this.Dataset.forEach(task => {
             const taskDiv = WRender.Create({
-                name: new Date(task.Fecha_Inicial).toLocaleDateString().toString()
-                    + "-" + new Date(task.Fecha_Finalizacion).toLocaleDateString().toString(),
+                className: "taskBlock",
+                name: new Date(task.Fecha_Inicio).toLocaleDateString()
+                    + "-" + new Date(task.Fecha_Finalizacion).toLocaleDateString(),
                 innerText: task.Titulo + " #" + task.Id_Tarea
             })
-            console.log(task);
-            console.log(new Date(task.Fecha_Inicial).toLocaleDateString().toString()
-            + "-" + new Date(task.Fecha_Inicial).toLocaleDateString().toString());
             this.TaskContainer.append(taskDiv)
         });
 
     }
     Animate = () => {
-        const days = document.querySelectorAll(".chart-values li");
-        const task = document.querySelectorAll(".chart-bars li");
+        const days = this.TimeLine.querySelectorAll(".TimeLineBlock");
+        const task = this.TaskContainer.querySelectorAll(".taskBlock");
         const daysArray = [...days];
+        console.log(daysArray);
         task.forEach(el => {
-            const duration = el.dataset.duration.split("-");
+            //const duration = el.dataset.duration.split("-");
+            const duration = el.name.split("-");
             const startDay = duration[0];
             const endDay = duration[1];
             let left = 0,
                 width = 0;
 
             if (startDay.endsWith("½")) {
-                const filteredArray = daysArray.filter(day => day.textContent == startDay.slice(0, -1));
+                const filteredArray = daysArray.filter(day => day.id == startDay.slice(0, -1));
                 left = filteredArray[0].offsetLeft + filteredArray[0].offsetWidth / 2;
             } else {
-                const filteredArray = daysArray.filter(day => day.textContent == startDay);
+                const filteredArray = daysArray.filter(day => day.id == startDay);
+                console.log(filteredArray);
+                console.log(startDay);
                 left = filteredArray[0].offsetLeft;
             }
 
             if (endDay.endsWith("½")) {
-                const filteredArray = daysArray.filter(day => day.textContent == endDay.slice(0, -1));
+                const filteredArray = daysArray.filter(day => day.id == endDay.slice(0, -1));
                 width = filteredArray[0].offsetLeft + filteredArray[0].offsetWidth / 2 - left;
             } else {
-                const filteredArray = daysArray.filter(day => day.textContent == endDay);
+                const filteredArray = daysArray.filter(day => day.id == endDay);
+                console.log(endDay);
                 width = filteredArray[0].offsetLeft + filteredArray[0].offsetWidth - left;
             }
 
             // apply css
             el.style.left = `${left}px`;
             el.style.width = `${width}px`;
-            if (e.type == "load") {
-                el.style.backgroundColor = el.dataset.color;
+            //if (e.type == "load") {
+                el.style.backgroundColor = GenerateColor();
                 el.style.opacity = 1;
-            }
+            //}
         });
     }
     CustomStyle = css`
@@ -930,7 +940,7 @@ class GanttChart extends HTMLElement {
 
         /* CHART-BARS
         –––––––––––––––––––––––––––––––––––––––––––––––––– */
-        .chart-wrapper .chart-bars li {
+        .taskBlock {
             position: relative;
             color: #fff;
             margin-bottom: 15px;
@@ -943,7 +953,7 @@ class GanttChart extends HTMLElement {
         }
 
         @media screen and (max-width: 600px) {
-            .chart-wrapper .chart-bars li {
+            .taskBlock {
                 padding: 10px;
             }
         }

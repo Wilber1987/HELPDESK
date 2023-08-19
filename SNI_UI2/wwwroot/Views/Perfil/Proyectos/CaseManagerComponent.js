@@ -145,7 +145,17 @@ class CaseManagerComponent extends HTMLElement {
                     name: "Vista de panel", action: async (ev) => {
                         tabManager.NavigateFunction("taskPanel",
                             new TaskManagers(tareasActividad,
-                                taskModel, { ImageUrlPath: "/Media/Image/" }))
+                                taskModel, {
+                                    ImageUrlPath: "/Media/Image/", action: async (task) => {
+                                        const find = actividad.CaseTable_Tareas.find(t => t.Id_Tarea == task.Id_Tarea);
+                                        for (const prop in task) {
+                                            find[prop] = task[prop]
+                                        }
+                                        actividad.Progreso = actividad.CaseTable_Tareas?.filter(tarea => tarea.Estado?.includes("Finalizado")).length;
+                                        actividadDetailView.querySelector(".actividadDetail").innerHTML = "";
+                                        actividadDetailView.querySelector(".actividadDetail").append(this.actividadElementDetail(actividad));
+                                    }
+                            }))
                     }
                 },
                 { name: "Vista de progreso", action: async (ev) => { tabManager.NavigateFunction("ganttChart", ganttChart) } },
@@ -199,7 +209,7 @@ class CaseManagerComponent extends HTMLElement {
         .actividadDetailView {
             display: grid;
             grid-template-columns: calc(100% - 420px) 400px;
-            grid-template-rows: 150px 40px auto;
+            grid-template-rows: 150px 50px auto;
             gap: 0px 20px;
         }
         w-coment-component {

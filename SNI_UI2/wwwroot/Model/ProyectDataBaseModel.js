@@ -182,7 +182,7 @@ class CaseTable_Tareas extends EntityClass {
             this[prop] = props[prop];
         }
     }
-    IdTarea = { type: 'number', primary: true };
+    Id_Tarea = { type: 'number', primary: true };
     Titulo = { type: 'text' };
     Id_Case = { type: 'number', hidden: true, value: undefined };
     Descripcion = { type: 'text', hiddenInTable: true };

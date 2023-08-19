@@ -97,7 +97,7 @@ namespace CAPA_DATOS
                         case "datetime":
                         case "date":
                             ColumnNames = ColumnNames + AtributeName.ToString() + ",";
-                            Values = Values + "'" + ((DateTime)AtributeValue).ToString("yyyy/MM/dd HH:mm:ss") + "',";
+                            Values = Values + "CONVERT(DATETIME,'" + ((DateTime)AtributeValue).ToString("yyyyMMdd HH:mm:ss") + "'),";
                             break;
                     }
                 }
@@ -303,7 +303,7 @@ namespace CAPA_DATOS
                     break;
                 case "datetime":
                 case "date":
-                    Values = Values + AtributeName + "= '" + ((DateTime)AtributeValue).ToString("yyyy/MM/dd") + "',";
+                    Values = Values + AtributeName + "=  CONVERT(DATETIME,'" + ((DateTime)AtributeValue).ToString("yyyyMMdd HH:mm:ss") + "'),";
                     break;
             }
 

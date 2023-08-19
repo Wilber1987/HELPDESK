@@ -168,10 +168,13 @@ class TaskManagers extends HTMLElement {
      * @param {CaseTable_Tareas} task 
      * @param {String} state 
      */
-    cardDrop = (task, state) => {
+    cardDrop = async (task, state) => {
         // @ts-ignore
         task.Estado = state;
-        task.Update();
+        const response = await task.Update();
+        if (response.status == 200) {
+            this.Config.action(task);
+        }
     }
     WStyle = css`
         .dashBoardView{

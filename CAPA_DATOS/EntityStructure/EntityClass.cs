@@ -102,7 +102,7 @@ namespace CAPA_DATOS
                 else return new ResponseService()
                 {
                     status = 500,
-                    message = "Error al actualizar: no se encuentra el registro " + this.GetType().Name
+                    message = "Error al actualizar: no se encuentra el registro " + this.GetType().Name                   
                 };
             }
             catch (Exception e)

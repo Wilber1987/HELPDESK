@@ -152,4 +152,14 @@ namespace CAPA_NEGOCIO.MAPEO
         [ManyToOne(TableName = "Cat_Tipo_Servicio", KeyColumn = "Id_Tipo_Servicio", ForeignKeyColumn = "Id_Tipo_Servicio")]
         public Cat_Tipo_Servicio? Cat_Tipo_Servicio { get; set; }       
     } 
+
+    public class CaseTable_VinculateCase : EntityClass
+    {
+        [PrimaryKey(Identity = true)]
+        public int? Id_Vinculate { get; set; }
+        public string? Descripcion { get; set; }
+        public DateTime? Fecha { get; set; }
+        [OneToMany(TableName = "CaseTable_Case", KeyColumn = "Id_Vinculate", ForeignKeyColumn = "Id_Vinculate")]
+        public List<CaseTable_Case>? Casos_Vinculados { get; set; }
+    }
 }

@@ -298,3 +298,29 @@ class Cat_Paises extends EntityClass {
     Descripcion = { type: 'text' };
 }
 export { Cat_Paises }
+
+class CaseTable_VinculateCase extends EntityClass {
+    constructor(props) {
+        super(props, 'EntityHelpdesk');
+        for (const prop in props) {
+            this[prop] = props[prop];
+        }
+    }
+    Id_Vinculate = { type: 'number', primary: true };
+    Descripcion = { type: 'text' };
+    //Fecha = { type: 'dated' };
+
+
+    Casos_Vinculados = {
+        type: 'MasterDetail', ModelObject: () => new CaseTable_Case(),
+        require: false
+    };
+    
+    VincularCaso = async () => {
+        return await this.GetData("Proyect/VincularCaso");
+    }
+    DesvincularCaso = async () => {
+        return await this.GetData("Proyect/DesvincularCaso");
+    }
+}
+export { CaseTable_VinculateCase }

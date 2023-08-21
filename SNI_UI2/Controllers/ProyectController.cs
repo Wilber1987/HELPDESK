@@ -64,5 +64,16 @@ namespace API.Controllers
         {
             return caseTable_Case.RechazarSolicitud();            
         }
+
+        //CASOS VINCULADOS      
+        public object VincularCaso(CaseTable_VinculateCase inst)
+        {
+            return inst.Save();
+        }
+         public object DesvincularCaso(CaseTable_VinculateCase inst)
+        {
+            return inst.Save();            
+        }
+
     }
 }

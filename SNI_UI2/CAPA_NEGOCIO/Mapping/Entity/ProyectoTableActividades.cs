@@ -23,6 +23,8 @@ namespace CAPA_NEGOCIO.MAPEO
         public DateTime? Fecha_Inicial { get; set; }
         public DateTime? Fecha_Final { get; set; }
         public int? Id_Servicio { get; set; }
+        public int? Id_Vinculate { get; set; }
+
         [ManyToOne(TableName = "Tbl_Profile", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
         public Tbl_Profile? Tbl_Profile { get; set; }
         [ManyToOne(TableName = "Cat_Dependencias", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]

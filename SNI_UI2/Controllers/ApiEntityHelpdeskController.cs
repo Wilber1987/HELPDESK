@@ -328,6 +328,24 @@ namespace API.Controllers
             return inst.Update();
         }
         //Cat_Cargos
+        [HttpPost]
+        [AuthController]
+        public List<CaseTable_VinculateCase> getCaseTable_VinculateCase(CaseTable_VinculateCase inst)
+        {
+            return inst.Get<CaseTable_VinculateCase>();
+        }
+          [HttpPost]
+        [AuthController]
+        public object? saveCaseTable_VinculateCase(CaseTable_VinculateCase inst)
+        {
+            return inst.Save();
+        }
+        [HttpPost]
+        [AuthController]
+        public object? updateCaseTable_VinculateCase(CaseTable_VinculateCase inst)
+        {
+            return inst.Update();
+        }
 
     }
 }

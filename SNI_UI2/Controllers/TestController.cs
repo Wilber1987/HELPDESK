@@ -10,7 +10,7 @@ namespace API.Controllers
     {
         [HttpGet]
         public object getMailData(){
-            return new POPServices().getData();
+            return new IMAPServices().getData();
         }
         [HttpGet]
         public object getMailData2(){

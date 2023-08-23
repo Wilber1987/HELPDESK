@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using API.Controllers;
-
+using AE.Net.Mail;
 
 namespace CAPA_NEGOCIO.MAPEO
 {
@@ -37,6 +37,28 @@ namespace CAPA_NEGOCIO.MAPEO
         [OneToMany(TableName = "CaseTable_Coments", KeyColumn = "Id_Case", ForeignKeyColumn = "Id_Case")]
         public List<CaseTable_Coments>? CaseTable_Coments { get; set; }
 
+        public bool CreateAutomaticCase(MailMessage mail)
+        {
+            try
+            {
+                BeginGlobalTransaction();
+                Titulo = mail.Subject +  "-" + mail.Uid;
+                Descripcion = mail.Body;
+                Estado = Case_Estate.Pendiente.ToString();
+                Fecha_Inicial = mail.Date;
+                Save();
+                new CaseTable_Mails(mail).Save();
+                CommitGlobalTransaction();
+                return true;
+            }
+            catch (System.Exception)
+            {
+                Console.Write("error al guardar");
+                RollBackGlobalTransaction();
+                throw;
+            }
+
+        }
         public bool SaveActividades(string identity)
         {
             this.Id_Perfil = AuthNetCore.User(identity).UserId;
@@ -127,9 +149,10 @@ namespace CAPA_NEGOCIO.MAPEO
                 message = "error desconocido"
             };
         }
+
     }
 
-    public class CaseTable_Coments: EntityClass
+    public class CaseTable_Coments : EntityClass
     {
         [PrimaryKey(Identity = true)]
         public int? Id_Comentario { get; set; }
@@ -138,7 +161,7 @@ namespace CAPA_NEGOCIO.MAPEO
         public string? Body { get; set; }
         public int? Id_Case { get; set; }
         public int? Id_User { get; set; }
-        
+
         public DateTime? Fecha { get; set; }
     }
 
@@ -147,6 +170,42 @@ namespace CAPA_NEGOCIO.MAPEO
         Pendiente, Solicitado, Activo, Finalizado, Espera, Rechazado
     }
 
+    public class CaseTable_Mails : EntityClass
+    {
+        public CaseTable_Mails() { }
+        public CaseTable_Mails(MailMessage mail)
+        {
+            Subject = mail.Subject;
+            MessageID = mail.MessageID;
+            Sender = mail.Sender?.Address;
+            From = mail.From?.Address;
+            ReplyTo = mail.ReplyTo?.Select(r => r.Address).ToList();
+            Bcc = mail.Bcc?.Select(r => r.Address).ToList();
+            Cc = mail.Cc?.Select(r => r.Address).ToList();
+            To = mail.To?.Select(r => r.Address).ToList();
+            Date = mail.Date;
+            Uid = mail.Uid;
+            Flags = Flags?.ToString();
+
+        }
+        public string? Subject { get; set; }
+        public string? MessageID { get; set; }
+        public string? Sender { get; set; }
+        public string? From { get; set; }
+        [JsonProp]
+        public ICollection<String>? ReplyTo { get; set; }
+        [JsonProp]
+        public ICollection<String>? Bcc { get; set; }
+        [JsonProp]
+        public ICollection<String>? Cc { get; set; }
+        [JsonProp]
+        public ICollection<String>? To { get; set; }
+        //public int? Size { get; set; }
+        public String? Flags { get; set; }
+        //public string[] RawFlags { get; set; }
+        public DateTime? Date { get; set; }
+        public string? Uid { get; set; }
+    }
     public class Cat_Cargos_Dependencias : EntityClass
     {
         [PrimaryKey(Identity = true)]
@@ -239,6 +298,7 @@ namespace CAPA_NEGOCIO.MAPEO
 
     }
 
+
     public class CaseTable_Calendario : EntityClass
     {
         [PrimaryKey(Identity = true)]
@@ -261,8 +321,8 @@ namespace CAPA_NEGOCIO.MAPEO
         public string? Titulo { get; set; }
         public int? Id_TareaPadre { get; set; }
         public int? Id_Case { get; set; }
-        public string? Descripcion { get; set; }        
-        public DateTime? Fecha_Inicio { get; set; }        
+        public string? Descripcion { get; set; }
+        public DateTime? Fecha_Inicio { get; set; }
         public DateTime? Fecha_Finalizacion { get; set; }
         public string? Estado { get; set; }
         [ManyToOne(TableName = "CaseTable_Tareas", KeyColumn = "Id_Tarea", ForeignKeyColumn = "Id_TareaPadre")]
@@ -295,10 +355,10 @@ namespace CAPA_NEGOCIO.MAPEO
             }
             if (Estado == "Finalizado")
             {
-                if ( Fecha_Inicio == null)
+                if (Fecha_Inicio == null)
                 {
-                     Fecha_Inicio = DateTime.Now;
-                }                
+                    Fecha_Inicio = DateTime.Now;
+                }
                 Fecha_Finalizacion = DateTime.Now;
             }
             return Update();

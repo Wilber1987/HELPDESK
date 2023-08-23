@@ -15,6 +15,10 @@ namespace CAPA_NEGOCIO.Services
         //const string PASSWORD = "%3e2w1qazsX";
         const string HOST = "outlook.office365.com";
         const int PORT = 993;
+        public ImapClient GetClient()
+        {
+            return new ImapClient(HOST, USERNAME, PASSWORD, AuthMethods.Login, PORT, true);
+        }
         // public static Pop3Client GetExchangeEWSClient()
         // {
         //     const string HOST = "outlook.office365.com";
@@ -53,7 +57,7 @@ namespace CAPA_NEGOCIO.Services
                 foreach (var mail in MailMessage)
                 {
                     mails.Add(mail);
-                    ids.Add(mail.Uid + " - " + mail.Subject + " - " +mail.Body);
+                    ids.Add(mail.Uid + " - " + mail.Subject + " - " + mail.Body);
                     imap.MoveMessage(mail.Uid, "READY");
                 }
                 imap.Expunge();
@@ -80,5 +84,32 @@ namespace CAPA_NEGOCIO.Services
             // }
             return ids;
         }
+        public object GetData2()
+        {
+            // Datos de la cuenta de correo
+            string server = "outlook.office365.com";
+            int port = 993; // Puerto seguro IMAPS
+            string username = "amejia@ximtechnology.onmicrosoft.com";
+            string password = "%3e2w1qazsX";
+
+            using (var client = new MailKit.Net.Imap.ImapClient())
+            {
+                // Configurar la conexión
+                client.Connect(server, port, MailKit.Security.SecureSocketOptions.StartTls);
+
+                // Autenticación
+                client.Authenticate(username, password);
+                
+
+                // Realizar acciones con el cliente IMAP
+                // Por ejemplo, puedes listar carpetas, leer correos, etc.
+
+                // Desconectar
+                client.Disconnect(true);
+            }
+            return true;
+        }
     }
+
+
 }

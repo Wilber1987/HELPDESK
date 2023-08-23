@@ -1,3 +1,4 @@
+using BackgroundJob.Cron.Jobs;
 using CAPA_DATOS;
 SqlADOConexion.IniciarConexion();
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +14,12 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(40);
 });
 
+builder.Services.AddCronJob<MySchedulerJob>(options => 
+{
+    // Corre cada minuto
+    options.CronExpression = "* * * * *";
+    options.TimeZone = TimeZoneInfo.Local;
+});
 
 
 var app = builder.Build();

@@ -10,7 +10,7 @@ namespace API.Controllers
     {
         [HttpGet]
         public object getMailData(){
-            return new IMAPServices().getData();
+            return new IMAPServices().GetData2();
         }
         [HttpGet]
         public object getMailData2(){

@@ -2,6 +2,7 @@
 using System.Data.SqlClient;
 using System.Reflection;
 using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace CAPA_DATOS
 {
@@ -74,7 +75,16 @@ namespace CAPA_DATOS
                         case "varchar":
                         case "char":
                             ColumnNames = ColumnNames + AtributeName.ToString() + ",";
-                            Values = Values + "'" + AtributeValue.ToString() + "',";
+                            JsonProp? json = (JsonProp?)Attribute.GetCustomAttribute(oProperty, typeof(JsonProp));
+                            if (json != null)
+                            {
+                                Values = Values + "'" + JsonConvert.SerializeObject(AtributeValue.ToString()) + "',";
+                            }
+                            else
+                            {
+                                Values = Values + "'" + AtributeValue.ToString() + "',";
+                            }
+
                             break;
                         case "int":
                         case "float":

@@ -78,7 +78,7 @@ namespace CAPA_DATOS
                             JsonProp? json = (JsonProp?)Attribute.GetCustomAttribute(oProperty, typeof(JsonProp));
                             if (json != null)
                             {
-                                Values = Values + "'" + JsonConvert.SerializeObject(AtributeValue.ToString()) + "',";
+                                Values = Values + "'" + JsonConvert.SerializeObject(AtributeValue) + "',";
                             }
                             else
                             {
@@ -138,7 +138,7 @@ namespace CAPA_DATOS
                 {
                     if (IdObject != AtributeName)
                     {
-                        Values = BuildSetsForUpdate(Values, AtributeName, AtributeValue, EntityProp);
+                        Values = BuildSetsForUpdate(Values, AtributeName, AtributeValue, EntityProp, oProperty);
                     }
                     else WhereConstruction(ref Conditions, ref index, AtributeName, AtributeValue);
                 }
@@ -167,7 +167,7 @@ namespace CAPA_DATOS
                 {
                     if ((from O in WhereProps where O == AtributeName select O).ToList().Count == 0)
                     {
-                        Values = BuildSetsForUpdate(Values, AtributeName, AtributeValue, EntityProp);
+                        Values = BuildSetsForUpdate(Values, AtributeName, AtributeValue, EntityProp, oProperty);
                     }
                     else WhereConstruction(ref Conditions, ref index, AtributeName, AtributeValue);
                 }
@@ -287,14 +287,23 @@ namespace CAPA_DATOS
             }
             return queryString;
         }
-        private static string BuildSetsForUpdate(string Values, string AtributeName, object AtributeValue, EntityProps EntityProp)
+        private static string BuildSetsForUpdate(string Values, string AtributeName,
+        object AtributeValue, EntityProps EntityProp, PropertyInfo oProperty)
         {
             switch (EntityProp.DATA_TYPE)
             {
                 case "nvarchar":
                 case "varchar":
                 case "char":
-                    Values = Values + AtributeName + "= '" + AtributeValue.ToString() + "',";
+                    JsonProp? json = (JsonProp?)Attribute.GetCustomAttribute(oProperty, typeof(JsonProp));
+                    if (json != null)
+                    {
+                        Values = Values + AtributeName + "= '" + JsonConvert.SerializeObject(AtributeValue) + "',";
+                    }
+                    else
+                    {
+                        Values = Values + AtributeName + "= '" + AtributeValue.ToString() + "',";
+                    }
                     break;
                 case "int":
                 case "float":

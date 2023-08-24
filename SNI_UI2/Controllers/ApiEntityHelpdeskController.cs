@@ -13,23 +13,20 @@ namespace API.Controllers
     {
         [HttpPost]
         [AuthController]
-        public List<CaseTable_Coments> getCaseTable_Coments(CaseTable_Coments Inst)
+        public List<CaseTable_Comments> getCaseTable_Comments(CaseTable_Comments Inst)
         {
-            return Inst.Get<CaseTable_Coments>();
+            return Inst.Get<CaseTable_Comments>();
         }
         [HttpPost]
         [AuthController]
-        public object? saveCaseTable_Coments(CaseTable_Coments inst)
+        public object? saveCaseTable_Comments(CaseTable_Comments inst)
         {
-            string identity = HttpContext.Session.GetString("seassonKey");
-            inst.Fecha = DateTime.Now;
-            inst.Id_User = AuthNetCore.User(identity).UserId;
-            inst.NickName = AuthNetCore.User(identity).UserData?.Nombres;
-            return inst.Save();
+                      
+            return inst.SaveComment(HttpContext.Session.GetString("seassonKey"));
         }
         [HttpPost]
         [AuthController]
-        public object? updateCaseTable_Coments(CaseTable_Coments inst)
+        public object? updateCaseTable_Comments(CaseTable_Comments inst)
         {
             return inst.Update();
         }

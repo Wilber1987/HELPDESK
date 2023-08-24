@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using API.Controllers;
 using AE.Net.Mail;
+using System.Text.Json.Serialization;
 
 namespace CAPA_NEGOCIO.MAPEO
 {
@@ -34,20 +35,45 @@ namespace CAPA_NEGOCIO.MAPEO
         [OneToMany(TableName = "CaseTable_Tareas", KeyColumn = "Id_Case", ForeignKeyColumn = "Id_Case")]
         public List<CaseTable_Tareas>? CaseTable_Tareas { get; set; }
 
-        [OneToMany(TableName = "CaseTable_Coments", KeyColumn = "Id_Case", ForeignKeyColumn = "Id_Case")]
-        public List<CaseTable_Coments>? CaseTable_Coments { get; set; }
+        [OneToMany(TableName = "CaseTable_Comments", KeyColumn = "Id_Case", ForeignKeyColumn = "Id_Case")]
+        public List<CaseTable_Comments>? CaseTable_Comments { get; set; }
 
         public bool CreateAutomaticCase(MailMessage mail)
         {
             try
             {
                 BeginGlobalTransaction();
-                Titulo = mail.Subject +  "-" + mail.Uid;
-                Descripcion = mail.Body;
-                Estado = Case_Estate.Pendiente.ToString();
-                Fecha_Inicial = mail.Date;
-                Save();
-                new CaseTable_Mails(mail).Save();
+
+                if (mail.Subject.Contains("RE:"))
+                {
+                    char[] MyChar = { 'R', 'E', ':', ' ' };
+                    CaseTable_Case? findCase = new CaseTable_Case()
+                    { Titulo = mail.Subject.TrimStart(MyChar) }.Find<CaseTable_Case>();
+                    if (findCase != null)
+                    {
+                        new CaseTable_Mails(mail) { Id_Case = findCase.Id_Case }.Save();
+                        new CaseTable_Comments()
+                        {
+                            Id_Case = findCase.Id_Case,
+                            Body = mail.Body,
+                            NickName = $"{mail.From.DisplayName} ({mail.From.Address})",
+                            Fecha = mail.Date,
+                            Estado = CommetsState.Pendiente.ToString(),
+                            Mail = mail.From.Address
+                        }.Save();
+                    }
+                }
+                else
+                {
+                    Titulo = mail.Subject;
+                    Descripcion = mail.Body;
+                    Estado = Case_Estate.Pendiente.ToString();
+                    Fecha_Inicial = mail.Date;
+                    Save();
+                    new CaseTable_Mails(mail) { Id_Case = this.Id_Case }.Save();
+                }
+
+
                 CommitGlobalTransaction();
                 return true;
             }
@@ -152,17 +178,56 @@ namespace CAPA_NEGOCIO.MAPEO
 
     }
 
-    public class CaseTable_Coments : EntityClass
+    public enum CommetsState
+    {
+        Leido, Pendiente
+    }
+
+    public class CaseTable_Comments : EntityClass
     {
         [PrimaryKey(Identity = true)]
         public int? Id_Comentario { get; set; }
         public string? Estado { get; set; }
         public string? NickName { get; set; }
+        public string? Mail { get; set; }
         public string? Body { get; set; }
         public int? Id_Case { get; set; }
         public int? Id_User { get; set; }
-
         public DateTime? Fecha { get; set; }
+
+        public object? SaveComment(string identity)
+        {
+            try
+            {
+                BeginGlobalTransaction();
+                UserModel user = AuthNetCore.User(identity);
+                Fecha = DateTime.Now;
+                Id_User = user.UserId;
+                NickName = user.UserData?.Nombres;
+                Mail = user.mail;
+
+                CaseTable_Case? caseTable_Case = new CaseTable_Case() { Id_Case = Id_Case }.Find<CaseTable_Case>();
+                List<String?>? toMails = caseTable_Case?.CaseTable_Comments.Select(c => c.Mail).ToList().Distinct().ToList();
+                new CaseTable_Mails()
+                {
+                    Id_Case = caseTable_Case?.Id_Case,
+                    Subject = $"RE: " + caseTable_Case?.Titulo,
+                    Body = Body,
+                    From = user.mail,
+                    Estado = MailState.PENDIENTE.ToString(),
+                    To = toMails.Where(m => m != null && m != user.mail).ToList()
+                }.Save();
+                Save();
+                CommitGlobalTransaction();
+                return this;
+            }
+            catch (System.Exception)
+            {
+                RollBackGlobalTransaction();
+                throw;
+            }
+
+        }
     }
 
     public enum Case_Estate
@@ -185,12 +250,17 @@ namespace CAPA_NEGOCIO.MAPEO
             To = mail.To?.Select(r => r.Address).ToList();
             Date = mail.Date;
             Uid = mail.Uid;
+            Body = mail.Body;
             Flags = Flags?.ToString();
-
         }
+        [PrimaryKey(Identity = true)]
+        public int? Id_Mail { get; set; }
         public string? Subject { get; set; }
+        public int? Id_Case { get; set; }
         public string? MessageID { get; set; }
+        public string? Estado { get; set; }
         public string? Sender { get; set; }
+        public string? Body { get; set; }
         public string? From { get; set; }
         [JsonProp]
         public ICollection<String>? ReplyTo { get; set; }
@@ -205,6 +275,13 @@ namespace CAPA_NEGOCIO.MAPEO
         //public string[] RawFlags { get; set; }
         public DateTime? Date { get; set; }
         public string? Uid { get; set; }
+        // [OneToOne(TableName = "CaseTable_Comments", KeyColumn = "Id_Mail", ForeignKeyColumn = "Id_Mail")]
+        // public CaseTable_Comments? CaseTable_Comments  { get; set; }
+    }
+
+    public enum MailState
+    {
+        ENVIADO, PENDIENTE
     }
     public class Cat_Cargos_Dependencias : EntityClass
     {

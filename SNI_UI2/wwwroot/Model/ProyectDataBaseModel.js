@@ -145,7 +145,7 @@ class CaseTable_Case extends EntityClass {
     }
 }
 export { CaseTable_Case }
-class CaseTable_Coments extends EntityClass {
+class CaseTable_Comments extends EntityClass {
     constructor(props) {
         super(props, 'EntityHelpdesk');
         for (const prop in props) {
@@ -160,7 +160,7 @@ class CaseTable_Coments extends EntityClass {
 }
 
 
-export { CaseTable_Coments }
+export { CaseTable_Comments }
 class CaseTable_Calendario extends EntityClass {
     constructor(props) {
         super(props, 'EntityHelpdesk');

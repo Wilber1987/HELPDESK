@@ -1,6 +1,6 @@
 
 
-import { Cat_Dependencias, CaseTable_Case, CaseTable_Agenda, CaseTable_Calendario, CaseTable_Evidencias, CaseTable_Participantes, CaseTable_Tareas, CaseTable_Coments } from '../../../Model/ProyectDataBaseModel.js';
+import { Cat_Dependencias, CaseTable_Case, CaseTable_Agenda, CaseTable_Calendario, CaseTable_Evidencias, CaseTable_Participantes, CaseTable_Tareas, CaseTable_Comments } from '../../../Model/ProyectDataBaseModel.js';
 import { ViewCalendarioByDependencia } from '../../../Model/DBOViewModel.js';
 import { StylesControlsV2, StylesControlsV3 } from "../../../WDevCore/StyleModules/WStyleComponents.js";
 import { WAppNavigator } from '../../../WDevCore/WComponents/WAppNavigator.js';
@@ -52,7 +52,7 @@ class CaseManagerComponent extends HTMLElement {
     }
     actividadesManager = async () => {
         const datasetMap = this.Dataset.map(actividad => {
-            actividad.Dependencia = actividad.Cat_Dependencias.Descripcion;
+            actividad.Dependencia = actividad.Cat_Dependencias?.Descripcion;
             actividad.Progreso = actividad.CaseTable_Tareas?.filter(tarea => tarea.Estado?.includes("Finalizado")).length;
             return this.actividadElement(actividad);
         });
@@ -63,7 +63,7 @@ class CaseManagerComponent extends HTMLElement {
     actividadElement = (actividad) => {
         return WRender.Create({
             className: "actividad", object: actividad, children: [
-                { tagName: 'h4', innerText: actividad.Descripcion },
+                { tagName: 'h4', innerText: actividad.Titulo },
                 {
                     className: "options", children: [
                         { tagName: 'button', className: 'Btn-Mini', innerText: "Detalle", onclick: async () => await this.actividadDetail(actividad) },
@@ -135,7 +135,7 @@ class CaseManagerComponent extends HTMLElement {
             }
         })
         const taskContainer = WRender.Create({ className: "" });
-        const ganttChart = new GanttChart({ Dataset: tareasActividad, EvalValue: "date" });
+        const ganttChart = new GanttChart({ Dataset: tareasActividad ?? [], EvalValue: "date" });
         const tabManager = new ComponentsManager({ MainContainer: taskContainer });
         const taskNav = new WAppNavigator({
             //NavStyle: "tab",
@@ -163,15 +163,15 @@ class CaseManagerComponent extends HTMLElement {
                 { name: "Nueva Tarea", action: async (ev) => { this.shadowRoot.append(new WModalForm({ ModelObject: taskModel, title: "Nueva Tarea" })) } }
             ]
         });
-        const commentsDataset = await new CaseTable_Coments({ Id_Case: actividad.Id_Case }).Get();
+        const commentsDataset = await new CaseTable_Comments({ Id_Case: actividad.Id_Case }).Get();
         const commentsContainer = new WCommentsComponent({
             Dataset: commentsDataset,
-            ModelObject: new CaseTable_Coments(),
+            ModelObject: new CaseTable_Comments(),
             User: WSecurity.UserData,
             UserIdProp: "Id_User",
             CommentsIdentify: actividad.Id_Case,
-            UrlSearch: "../api/ApiEntityHelpdesk/getCaseTable_Coments",
-            UrlAdd: "../api/ApiEntityHelpdesk/saveCaseTable_Coments"
+            UrlSearch: "../api/ApiEntityHelpdesk/getCaseTable_Comments",
+            UrlAdd: "../api/ApiEntityHelpdesk/saveCaseTable_Comments"
         });
 
         actividadDetailView.append(commentsContainer, taskNav, taskContainer)

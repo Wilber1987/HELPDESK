@@ -1,5 +1,5 @@
 
-import { CaseTable_Case, CaseTable_Coments, Cat_Dependencias } from '../../Model/ProyectDataBaseModel.js';
+import { CaseTable_Case, CaseTable_Comments, Cat_Dependencias } from '../../Model/ProyectDataBaseModel.js';
 import { StylesControlsV2, StylesControlsV3 } from "../../WDevCore/StyleModules/WStyleComponents.js";
 import { ModalMessege, ModalVericateAction, WForm } from "../../WDevCore/WComponents/WForm.js";
 import { WPaginatorViewer } from '../../WDevCore/WComponents/WPaginatorViewer.js';
@@ -82,10 +82,10 @@ class SolicitudesPendientesView extends HTMLElement {
                                 EditObject: {
                                     Id_Case: element.Id_Case,
                                 },
-                                ModelObject: new CaseTable_Coments(),
+                                ModelObject: new CaseTable_Comments(),
                                 ObjectOptions: {
                                     SaveFunction: async (comentario) => {
-                                        element.CaseTable_Coments = [comentario];
+                                        element.CaseTable_Comments = [comentario];
                                         const modalV = ModalVericateAction(async () => {
                                             const response = await element.RechazarSolicitud();
                                             if (response.status == 200) {

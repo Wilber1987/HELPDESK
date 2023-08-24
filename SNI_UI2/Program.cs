@@ -14,7 +14,14 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(40);
 });
 
-builder.Services.AddCronJob<MySchedulerJob>(options => 
+builder.Services.AddCronJob<CreateAutomaticsCaseSchedulerJob>(options => 
+{
+    // Corre cada minuto
+    options.CronExpression = "* * * * *";
+    options.TimeZone = TimeZoneInfo.Local;
+});
+
+builder.Services.AddCronJob<SendMailNotificationsSchedulerJob>(options => 
 {
     // Corre cada minuto
     options.CronExpression = "* * * * *";

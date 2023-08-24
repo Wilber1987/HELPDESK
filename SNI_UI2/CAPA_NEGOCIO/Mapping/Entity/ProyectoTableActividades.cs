@@ -18,6 +18,7 @@ namespace CAPA_NEGOCIO.MAPEO
         public int? Id_Case { get; set; }
         public string? Titulo { get; set; }
         public string? Descripcion { get; set; }
+        public string? Mail { get; set; }
         public int? Id_Perfil { get; set; }
         public string? Estado { get; set; }
         public int? Id_Dependencia { get; set; }
@@ -44,11 +45,13 @@ namespace CAPA_NEGOCIO.MAPEO
             {
                 BeginGlobalTransaction();
 
-                if (mail.Subject.Contains("RE:"))
+                if (mail.Subject.ToUpper().Contains("RE:"))
                 {
                     char[] MyChar = { 'R', 'E', ':', ' ' };
                     CaseTable_Case? findCase = new CaseTable_Case()
-                    { Titulo = mail.Subject.TrimStart(MyChar) }.Find<CaseTable_Case>();
+                    {
+                        Titulo = mail.Subject.ToUpper().TrimStart(MyChar)
+                    }.Find<CaseTable_Case>();
                     if (findCase != null)
                     {
                         new CaseTable_Mails(mail) { Id_Case = findCase.Id_Case }.Save();
@@ -65,10 +68,11 @@ namespace CAPA_NEGOCIO.MAPEO
                 }
                 else
                 {
-                    Titulo = mail.Subject;
+                    Titulo = mail.Subject.ToUpper();
                     Descripcion = mail.Body;
                     Estado = Case_Estate.Pendiente.ToString();
                     Fecha_Inicial = mail.Date;
+                    Mail = mail.From.Address;
                     Save();
                     new CaseTable_Mails(mail) { Id_Case = this.Id_Case }.Save();
                 }
@@ -205,19 +209,25 @@ namespace CAPA_NEGOCIO.MAPEO
                 Id_User = user.UserId;
                 NickName = user.UserData?.Nombres;
                 Mail = user.mail;
-
+                Save();
+                List<String?>? toMails = new List<string?>();
                 CaseTable_Case? caseTable_Case = new CaseTable_Case() { Id_Case = Id_Case }.Find<CaseTable_Case>();
-                List<String?>? toMails = caseTable_Case?.CaseTable_Comments.Select(c => c.Mail).ToList().Distinct().ToList();
+                if (caseTable_Case?.CaseTable_Comments != null)
+                {
+                    toMails.AddRange(caseTable_Case?.CaseTable_Comments?.Select(c => c.Mail).ToList());
+                }
+                toMails.Add(caseTable_Case?.Mail);
                 new CaseTable_Mails()
                 {
                     Id_Case = caseTable_Case?.Id_Case,
-                    Subject = $"RE: " + caseTable_Case?.Titulo,
+                    Subject = $"RE: " + caseTable_Case?.Titulo?.ToUpper() ,
                     Body = Body,
                     From = user.mail,
                     Estado = MailState.PENDIENTE.ToString(),
-                    To = toMails.Where(m => m != null && m != user.mail).ToList()
+                    Date = DateTime.Now,
+                    ToAdress = toMails.Where(m => m != null && m != user.mail).ToList().Distinct().ToList()
                 }.Save();
-                Save();
+
                 CommitGlobalTransaction();
                 return this;
             }
@@ -247,10 +257,11 @@ namespace CAPA_NEGOCIO.MAPEO
             ReplyTo = mail.ReplyTo?.Select(r => r.Address).ToList();
             Bcc = mail.Bcc?.Select(r => r.Address).ToList();
             Cc = mail.Cc?.Select(r => r.Address).ToList();
-            To = mail.To?.Select(r => r.Address).ToList();
+            ToAdress = mail.To?.Select(r => r.Address).ToList();
             Date = mail.Date;
             Uid = mail.Uid;
             Body = mail.Body;
+            Estado = MailState.RECIBIDO.ToString();
             Flags = Flags?.ToString();
         }
         [PrimaryKey(Identity = true)]
@@ -263,13 +274,13 @@ namespace CAPA_NEGOCIO.MAPEO
         public string? Body { get; set; }
         public string? From { get; set; }
         [JsonProp]
-        public ICollection<String>? ReplyTo { get; set; }
+        public List<String>? ReplyTo { get; set; }
         [JsonProp]
-        public ICollection<String>? Bcc { get; set; }
+        public List<String>? Bcc { get; set; }
         [JsonProp]
-        public ICollection<String>? Cc { get; set; }
+        public List<String>? Cc { get; set; }
         [JsonProp]
-        public ICollection<String>? To { get; set; }
+        public List<String>? ToAdress { get; set; }
         //public int? Size { get; set; }
         public String? Flags { get; set; }
         //public string[] RawFlags { get; set; }
@@ -281,7 +292,7 @@ namespace CAPA_NEGOCIO.MAPEO
 
     public enum MailState
     {
-        ENVIADO, PENDIENTE
+        ENVIADO, PENDIENTE, RECIBIDO
     }
     public class Cat_Cargos_Dependencias : EntityClass
     {

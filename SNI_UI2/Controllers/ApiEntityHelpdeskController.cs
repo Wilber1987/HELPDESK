@@ -259,6 +259,8 @@ namespace API.Controllers
         {
             inst.Estado ??= Case_Estate.Solicitado.ToString();
             inst.Id_Perfil = AuthNetCore.User(HttpContext.Session.GetString("seassonKey")).UserId;
+            inst.Mail =  AuthNetCore.User(HttpContext.Session.GetString("seassonKey")).mail;
+            inst.Titulo = inst?.Titulo?.ToUpper();
             return inst.Save();
         }
         [HttpPost]

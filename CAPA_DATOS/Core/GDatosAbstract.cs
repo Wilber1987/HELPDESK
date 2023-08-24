@@ -349,22 +349,13 @@ namespace CAPA_DATOS
                         if (oProperty.Name == column.ColumnName)
                         {
                             var val = dr[column.ColumnName];
+                            var jsonProp = (JsonProp?)Attribute.GetCustomAttribute(oProperty, typeof(JsonProp));
                             var oneToOne = (OneToOne?)Attribute.GetCustomAttribute(oProperty, typeof(OneToOne));
                             var manyToOne = (ManyToOne?)Attribute.GetCustomAttribute(oProperty, typeof(ManyToOne));
                             var oneToMany = (OneToMany?)Attribute.GetCustomAttribute(oProperty, typeof(OneToMany));
-                            if (manyToOne != null)
+                            if (oneToOne != null || manyToOne != null || oneToMany != null || jsonProp != null)
                             {
-                                var getVal = GetListValue(val, oProperty.PropertyType);
-                                oProperty.SetValue(obj, getVal);
-                            }
-                            else if (oneToMany != null)
-                            {
-                                var getVal = GetListValue(val, oProperty.PropertyType);
-                                oProperty.SetValue(obj, getVal);
-                            }
-                            else if (oneToOne != null)
-                            {
-                                var getVal = GetListValue(val, oProperty.PropertyType);
+                                var getVal = GetJsonValue(val, oProperty.PropertyType);
                                 oProperty.SetValue(obj, getVal);
                             }
                             else
@@ -398,7 +389,7 @@ namespace CAPA_DATOS
                 return Convert.ChangeType(obj, type);
             }
         }
-        private static object? GetListValue(Object DefaultValue, Type type)
+        private static object? GetJsonValue(Object DefaultValue, Type type)
         {
             string? Literal = DefaultValue.ToString();
             if (Literal == null || Literal == "" || Literal == string.Empty) return null;

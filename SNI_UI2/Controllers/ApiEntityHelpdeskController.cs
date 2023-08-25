@@ -74,7 +74,7 @@ namespace API.Controllers
         [AuthController]
         public List<Cat_Dependencias> getCat_Dependencias(Cat_Dependencias Inst)
         {
-            return Inst.Get<Cat_Dependencias>();
+            return Inst.GetDependencias<Cat_Dependencias>();
         }
         [HttpPost]
         [AuthController]

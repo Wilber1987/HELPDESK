@@ -18,9 +18,20 @@ namespace CAPA_NEGOCIO.Services
                 {
                     Estado = MailState.PENDIENTE.ToString()
                 }.Get<CaseTable_Mails>();
+
                 foreach (var item in caseMail)
                 {
-                    SMTPMailServices.SendMail(item.From,  item.ToAdress, item.Subject, item.Body);
+                    var Tcase = new CaseTable_Case() { Id_Case = item.Id_Case }.Find<CaseTable_Case>();
+                    SMTPMailServices.SendMail(item.From,
+                    item.ToAdress,
+                    item.Subject,
+                    item.Body,
+                    new MailConfig()
+                    {
+                        HOST = Tcase?.Cat_Dependencias?.Host,
+                        PASSWORD = Tcase?.Cat_Dependencias?.Password,
+                        USERNAME = Tcase?.Cat_Dependencias?.Username
+                    });
                     item.Estado = MailState.ENVIADO.ToString();
                     item.Update();
                 }

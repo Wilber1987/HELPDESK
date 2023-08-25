@@ -76,12 +76,10 @@ namespace CAPA_NEGOCIO.MAPEO
                     Save();
                     new CaseTable_Mails(mail) { Id_Case = this.Id_Case }.Save();
                 }
-
-
                 CommitGlobalTransaction();
                 return true;
             }
-            catch (System.Exception)
+            catch (Exception)
             {
                 Console.Write("error al guardar");
                 RollBackGlobalTransaction();
@@ -220,7 +218,7 @@ namespace CAPA_NEGOCIO.MAPEO
                 new CaseTable_Mails()
                 {
                     Id_Case = caseTable_Case?.Id_Case,
-                    Subject = $"RE: " + caseTable_Case?.Titulo?.ToUpper() ,
+                    Subject = $"RE: " + caseTable_Case?.Titulo?.ToUpper(),
                     Body = Body,
                     From = user.mail,
                     Estado = MailState.PENDIENTE.ToString(),
@@ -307,6 +305,9 @@ namespace CAPA_NEGOCIO.MAPEO
         [PrimaryKey(Identity = true)]
         public int? Id_Dependencia { get; set; }
         public string? Descripcion { get; set; }
+        public string? Username { get; set; }
+        public string? Password { get; set; }
+        public string? Host { get; set; }
         public int? Id_Dependencia_Padre { get; set; }
         public int? Id_Institucion { get; set; }
         [ManyToOne(TableName = "Cat_Dependencias", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia_Padre")]
@@ -333,6 +334,15 @@ namespace CAPA_NEGOCIO.MAPEO
             return new Cat_Dependencias().Get_WhereIN<Cat_Dependencias>(
                 "Id_Dependencia", Inst.Get<CaseTable_Dependencias_Usuarios>().Select(p => p.Id_Dependencia.ToString()).ToArray()
             );
+        }
+
+        internal List<Cat_Dependencias> GetDependencias<T>()
+        {
+            return new Cat_Dependencias().Get<Cat_Dependencias>().Select(m =>
+            {
+                m.Password = "PROTECTED";
+                return m;
+            }).ToList();
         }
     }
     public class Cat_Tipo_Participaciones : EntityClass

@@ -76,6 +76,7 @@ class WForm extends HTMLElement {
                 this.SetOperationValues(Model, target)
                 const control = this.shadowRoot?.querySelector("#ControlValue" + property);
                 if (control) {
+                    // @ts-ignore
                     control.value = target[property];
                 }
                 if (this.Config.ProxyAction != undefined) {
@@ -266,7 +267,9 @@ class WForm extends HTMLElement {
                     }, 1000);
                 }
             }
-        } else if (targetControl?.type == "checkbox" || targetControl?.type == "radio") {
+        } else if (targetControl?.type == "checkbox") {
+            ObjectF[prop] = targetControl?.checked;
+        } else if (targetControl?.type == "radio") {
             ObjectF[prop] = targetControl?.value;
         } else {
             ObjectF[prop] = targetControl?.value;
@@ -498,7 +501,11 @@ class WForm extends HTMLElement {
                 InputControl = WRender.Create({
                     className: "radio-group-container",
                     id: "ControlValue" + prop,
-                    children: ModelProperty.Dataset?.map(radioElement => {
+                    children: ModelProperty.Dataset?.map((radioElement, index) => {
+                        if ((val == null || val == "" || val == undefined) && index == 0) {
+                            val = radioElement;
+                            ObjectF[prop] = val;
+                        }
                         return WRender.Create({
                             className: "radio-element", children: [
                                 {
@@ -1037,7 +1044,7 @@ class WForm extends HTMLElement {
         }
         //console.log(JSON.stringify(this.#OriginalObject), JSON.stringify(ObjectF));
         if (JSON.stringify(this.#OriginalObject) == JSON.stringify(ObjectF)) {
-           //this.shadowRoot?.append(ModalMessege("No se han detectado cambios."));
+            //this.shadowRoot?.append(ModalMessege("No se han detectado cambios."));
             //return false;
         }
         return true;
@@ -1075,8 +1082,7 @@ class WForm extends HTMLElement {
                     this.Config.SaveFunction(ObjectF);
                 } else if (this.Config.ObjectOptions?.SaveFunction != undefined) {
                     this.Config.ObjectOptions?.SaveFunction(ObjectF);
-                } 
-                ModalCheck.close();                
+                }
             } catch (error) {
                 ModalCheck.close();
                 console.log(error);

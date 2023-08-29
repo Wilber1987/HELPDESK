@@ -166,7 +166,7 @@ class CaseManagerComponent extends HTMLElement {
                     name: "Vinculaciones", action: async (ev) => {
                         const modelVinculate = new CaseTable_Case({ Id_Vinculate: actividad.Id_Vinculate });
                         tabManager.NavigateFunction("vinculaciones",
-                            new WTableComponent({ Dataset: await modelVinculate.GetOwCase(), ModelObject: new CaseTable_Case()}))
+                            new WTableComponent({ Dataset: await modelVinculate.GetOwCase(), ModelObject: new CaseTable_Case() }))
                     }
                 } : undefined
             ]
@@ -312,3 +312,37 @@ const CaseForm = (entity, dependencias, action) => {
     return form;
 }
 export { CaseForm }
+
+/**
+ * @param {CaseTable_Case} [entity] 
+ * @param {Array<Cat_Dependencias>} [dependencias] 
+ * @param {Function} [action] 
+ * @returns {WForm}
+ */
+const simpleCaseForm = (entity, dependencias, action) => {
+    const form = new WForm({
+        EditObject: entity,
+        SaveFunction: action,
+        ImageUrlPath: "/Media/Image/",
+        ModelObject: new CaseTable_Case({
+            CaseTable_Tareas: { hidden: true },
+            Id_Vinculate: { hidden: true },
+            Titulo: { hidden: true },
+            Tbl_Servicios: { hidden: true },
+            Fecha_Inicial: { hidden: true },
+            Estado: { hidden: true },
+            Fecha_Final: { hidden: true },
+            Descripcion: { hidden: true },
+            CaseTable_Comments: { type: "MasterDetail", ModelObject: new CaseTable_Comments(), label: "Comentario" },
+            Cat_Dependencias: {
+                type: "WSELECT", ModelObject: new Cat_Dependencias(),
+                Dataset: dependencias,
+                action: (caso) => {
+                    
+                }
+            },
+        })
+    })
+    return form;
+}
+export { simpleCaseForm }

@@ -8,7 +8,7 @@ import { css } from '../../WDevCore/WModules/WStyledRender.js';
 import { WFilterOptions } from "../../WDevCore/WComponents/WFilterControls.js";
 import { WTableComponent } from '../../WDevCore/WComponents/WTableComponent.js';
 import { WModalForm } from '../../WDevCore/WComponents/WModalForm.js';
-import { CaseForm } from '../Perfil/Proyectos/CaseManagerComponent.js';
+import { CaseForm, simpleCaseForm } from '../Perfil/Proyectos/CaseManagerComponent.js';
 
 const OnLoad = async () => {
     const Solicitudes = await new CaseTable_Case().GetSolicitudesPendientesAprobar();
@@ -61,7 +61,7 @@ class SolicitudesPendientesView extends HTMLElement {
                             const dependencias = await new Cat_Dependencias().GetOwDependencies();
                             const modal = new WModalForm({
                                 ObjectModal: CaseForm(element, dependencias, async (table_case) => {
-                                    this.shadowRoot.append(ModalVericateAction(async ()=> {
+                                    this.shadowRoot.append(ModalVericateAction(async () => {
                                         const response = await table_case.Update();
                                         if (response.status == 200) {
                                             this.shadowRoot.append(ModalMessege("Solicitud aprobada"));
@@ -98,6 +98,27 @@ class SolicitudesPendientesView extends HTMLElement {
                                     }
                                 }
                             }))
+                        }
+                    }, {
+                        name: "Remitir a otra dependencia", action: async (/**@type {CaseTable_Case}*/element) => {
+                            const dependencias = await new Cat_Dependencias().Get();
+                            const modal = new WModalForm({
+                                ObjectModal: simpleCaseForm(element,
+                                    dependencias.filter(d => d.Id_Dependencia != element.Id_Dependencia),
+                                    async (table_case) => {
+                                        this.shadowRoot.append(ModalVericateAction(async () => {
+                                            const response = await table_case.Update();
+                                            if (response.status == 200) {
+                                                this.shadowRoot.append(ModalMessege("Solicitud remitida"));
+                                                this.update();
+                                            } else {
+                                                this.shadowRoot.append(ModalMessege("Error"));
+                                            }
+                                            modal.close();
+                                        }, "Esta seguro que desea remitir esta solicitud"))
+                                    })
+                            });
+                            this.shadowRoot.append(modal);
                         }
                     }
                 ]

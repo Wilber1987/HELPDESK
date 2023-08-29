@@ -59,7 +59,7 @@ class Cat_Tipo_Servicio extends EntityClass {
     }
     Id_Tipo_Servicio = { type: 'number', primary: true };
     Descripcion = { type: 'text' };
-    Estado = { type: 'text' };
+    Estado = { type: "Select", Dataset: ["Activo", "Inactivo"] };
     Icon = { type: 'img' };
     Tbl_Servicios = { type: 'MasterDetail', ModelObject: () => new Tbl_Servicios() };
 }
@@ -72,13 +72,13 @@ class Tbl_Servicios extends EntityClass {
         }
     }
     Id_Servicio = { type: 'number', primary: true };
-    Nombre_Proyecto = { type: 'text' };
+    //Nombre_Proyecto = { type: 'text', label: "Nombre" };
     Descripcion_Servicio = { type: 'text' };
-    Visibilidad = { type: 'text' };
-    Estado = { type: 'text' };
-    Fecha_Inicio = { type: 'date' };
-    Fecha_Finalizacion = { type: 'date' };
-    CaseTable_Case = { type: 'MasterDetail', ModelObject: () => new CaseTable_Case() };
+    //Visibilidad = { type: 'text' };
+    Estado = { type: "Select", Dataset: ["Activo", "Inactivo"] };
+    //Fecha_Inicio = { type: 'date' };
+    //Fecha_Finalizacion = { type: 'date' };
+    //CaseTable_Case = { type: 'MasterDetail', ModelObject: () => new CaseTable_Case() };
 }
 export { Tbl_Servicios }
 
@@ -239,7 +239,7 @@ class Cat_Dependencias extends EntityClass {
     }
     Id_Dependencia = { type: 'number', primary: true };
     Descripcion = { type: 'text' };
-    Cat_Dependencia = { type: 'WSelect', ModelObject: () => new Cat_Dependencias(), require: false };
+    //Cat_Dependencia = { type: 'WSelect', ModelObject: () => new Cat_Dependencias(), require: false };
     Cat_Dependencias_Hijas = { type: 'Multiselect', ModelObject: () => new Cat_Dependencias(), require: false };
     CaseTable_Agenda = { type: 'MasterDetail', ModelObject: () => new CaseTable_Agenda(), require: false };
     CaseTable_Dependencias_Usuarios = { type: 'MasterDetail', ModelObject: () => new CaseTable_Dependencias_Usuarios(), require: false };

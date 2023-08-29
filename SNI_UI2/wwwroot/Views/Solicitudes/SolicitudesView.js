@@ -77,7 +77,7 @@ class MainSolicitudesView extends HTMLElement {
                 },  {
                     className: "options", children: [
                         { tagName: 'button', className: 'Btn-Mini', innerText: "Detalle", onclick: async () => await this.actividadDetail(actividad) },
-                        { tagName: 'button', className: 'Btn-Mini', innerText: 'Informe', onclick: this.action }
+                      //  { tagName: 'button', className: 'Btn-Mini', innerText: 'Informe', onclick: this.action }
                     ]
                 },
             ]

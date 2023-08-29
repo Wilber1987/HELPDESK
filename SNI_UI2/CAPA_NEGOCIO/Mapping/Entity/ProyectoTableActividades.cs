@@ -39,7 +39,7 @@ namespace CAPA_NEGOCIO.MAPEO
         [OneToMany(TableName = "CaseTable_Comments", KeyColumn = "Id_Case", ForeignKeyColumn = "Id_Case")]
         public List<CaseTable_Comments>? CaseTable_Comments { get; set; }
 
-        public bool CreateAutomaticCase(MailMessage mail)
+        public bool CreateAutomaticCase(MailMessage mail, Cat_Dependencias dependencia)
         {
             try
             {
@@ -70,8 +70,9 @@ namespace CAPA_NEGOCIO.MAPEO
                 {
                     Titulo = mail.Subject.ToUpper();
                     Descripcion = mail.Body;
-                    Estado = Case_Estate.Pendiente.ToString();
+                    Estado = Case_Estate.Solicitado.ToString();
                     Fecha_Inicial = mail.Date;
+                    Id_Dependencia = dependencia.Id_Dependencia;
                     Mail = mail.From.Address;
                     Save();
                     new CaseTable_Mails(mail) { Id_Case = this.Id_Case }.Save();
@@ -139,10 +140,12 @@ namespace CAPA_NEGOCIO.MAPEO
         }
         public List<CaseTable_Case> GetOwCase(string identity)
         {
-            return new CaseTable_Case()
+            if (AuthNetCore.HavePermission(PermissionsEnum.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identity)
+             && AuthNetCore.HavePermission(PermissionsEnum.TECNICO_CASOS_DEPENDENCIA.ToString(), identity))
             {
-                Id_Perfil = AuthNetCore.User(identity).UserId
-            }.Get<CaseTable_Case>();
+              return getCaseByDependencia(identity, null);
+            }
+            throw new Exception("no tienes permisos para gestionar casos");
         }
 
         public List<CaseTable_Case> GetOwSolicitudes(string? identity, Case_Estate case_Estate)
@@ -158,24 +161,60 @@ namespace CAPA_NEGOCIO.MAPEO
         {
             if (AuthNetCore.HavePermission(PermissionsEnum.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identity))
             {
-                return new CaseTable_Case()
-                {
-                    Estado = case_Estate.ToString()
-                }.Get_WhereIN<CaseTable_Case>("Id_Dependencia",
-               new CaseTable_Dependencias_Usuarios() { Id_Perfil = AuthNetCore.User(identity).UserId }
-               .Get<CaseTable_Dependencias_Usuarios>().Select(p => p.Id_Dependencia.ToString()).ToArray());
+                return getCaseByDependencia(identity, case_Estate);
             }
             throw new Exception("no tienes permisos para aprobar casos");
         }
 
-        internal object RechazarSolicitud()
+        private static List<CaseTable_Case> getCaseByDependencia(string? identity, Case_Estate? case_Estate)
         {
-            Estado = Case_Estate.Rechazado.ToString();
-            return Update() ?? new ResponseService()
+            return new CaseTable_Case()
             {
-                status = 500,
-                message = "error desconocido"
-            };
+                Estado = case_Estate?.ToString()
+            }.Get_WhereIN<CaseTable_Case>("Id_Dependencia",
+           new CaseTable_Dependencias_Usuarios() { Id_Perfil = AuthNetCore.User(identity).UserId }
+           .Get<CaseTable_Dependencias_Usuarios>().Select(p => p.Id_Dependencia.ToString()).ToArray());
+        }
+
+        internal object AprobarSolicitud(string identity)
+        {
+            var user = AuthNetCore.User(identity);
+            if (!AuthNetCore.HavePermission(PermissionsEnum.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identity))
+            {
+                throw new Exception("no tienes permisos para rechazar casos");
+            }
+            if (Estado.Equals(Case_Estate.Rechazado.ToString()))
+            {
+                throw new Exception("no puedes rechazar este caso en este proceso caso");
+            }
+            BeginGlobalTransaction();
+
+            var response = Update();
+            new CaseTable_Comments()
+            {
+                Id_Case = this.Id_Case,
+                Body = $"El caso esta en estado: {this.Estado}, para mayor información consulte con nuestro equipo",
+                NickName = $"{user.UserData.Nombres} ({user.mail})",
+                Fecha = DateTime.Now,
+                Estado = CommetsState.Pendiente.ToString(),
+                Mail = user.mail
+            }.Save();
+            CommitGlobalTransaction();
+            return response;
+        }
+
+        internal object RechazarSolicitud(string identity)
+        {
+            if (AuthNetCore.HavePermission(PermissionsEnum.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identity))
+            {
+                Estado = Case_Estate.Rechazado.ToString();
+                return Update() ?? new ResponseService()
+                {
+                    status = 500,
+                    message = "error desconocido"
+                };
+            }
+            throw new Exception("no tienes permisos para rechazar casos");
         }
 
     }
@@ -328,8 +367,7 @@ namespace CAPA_NEGOCIO.MAPEO
             }
             CaseTable_Dependencias_Usuarios Inst = new CaseTable_Dependencias_Usuarios()
             {
-                Id_Perfil = AuthNetCore.User(identity).UserId,
-                Id_Cargo = 2
+                Id_Perfil = AuthNetCore.User(identity).UserId
             };
             return new Cat_Dependencias().Get_WhereIN<Cat_Dependencias>(
                 "Id_Dependencia", Inst.Get<CaseTable_Dependencias_Usuarios>().Select(p => p.Id_Dependencia.ToString()).ToArray()

@@ -62,17 +62,22 @@ namespace API.Controllers
         }
         public object RechazarSolicitud(CaseTable_Case caseTable_Case)
         {
-            return caseTable_Case.RechazarSolicitud();            
+            return caseTable_Case.RechazarSolicitud(HttpContext.Session.GetString("seassonKey"));            
         }
+        public object AprobarSolicitud(CaseTable_Case caseTable_Case)
+        {
+            return caseTable_Case.AprobarSolicitud(HttpContext.Session.GetString("seassonKey"));            
+        }
+
 
         //CASOS VINCULADOS      
         public object VincularCaso(CaseTable_VinculateCase inst)
         {
-            return inst.Save();
+            return inst.VincularCaso();
         }
          public object DesvincularCaso(CaseTable_VinculateCase inst)
         {
-            return inst.Save();            
+            return inst.DesvincularCaso();            
         }
 
     }

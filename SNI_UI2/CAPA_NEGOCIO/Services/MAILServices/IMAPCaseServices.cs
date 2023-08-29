@@ -25,7 +25,7 @@ namespace CAPA_NEGOCIO.Services
                         var MailMessage = imap.SearchMessages(SearchCondition.Unseen()).Select(m => m.Value).ToList();
                         foreach (var mail in MailMessage)
                         {
-                            new CaseTable_Case().CreateAutomaticCase(mail);
+                            new CaseTable_Case().CreateAutomaticCase(mail, dependencia);
                             imap.MoveMessage(mail.Uid, "READY");
                         }
                         imap.Expunge();

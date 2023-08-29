@@ -1,5 +1,6 @@
 @page
 @using API.Controllers
+@using CAPA_NEGOCIO.Security
 @{
     // Layout = null;
     if (!SecurityController.Auth(HttpContext.Session.GetString("seassonKey")))
@@ -7,11 +8,13 @@
         Response.Redirect("../Security/login");
         return;
     }
-    if (!SecurityController.HavePermission("PERFIL_ACCESS", HttpContext.Session.GetString("seassonKey")))
+    if (!SecurityController.HavePermission(PermissionsEnum.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), HttpContext.Session.GetString("seassonKey")) 
+    && !SecurityController.HavePermission(PermissionsEnum.TECNICO_CASOS_DEPENDENCIA.ToString(), HttpContext.Session.GetString("seassonKey")) )
     {
         Response.Redirect("../Security/permission_error");
         return;
     }
+    
 }
 
 <script src="../Views/Perfil/Proyectos/MainProyect.js" type="module"></script>

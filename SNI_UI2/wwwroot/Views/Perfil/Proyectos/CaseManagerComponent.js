@@ -1,13 +1,13 @@
 
 
-import { Cat_Dependencias, CaseTable_Case, CaseTable_Agenda, CaseTable_Calendario, CaseTable_Evidencias, CaseTable_Participantes, CaseTable_Tareas, CaseTable_Comments } from '../../../Model/ProyectDataBaseModel.js';
+import { Cat_Dependencias, CaseTable_Case, CaseTable_Agenda, CaseTable_Calendario, CaseTable_Evidencias, CaseTable_Participantes, CaseTable_Tareas, CaseTable_Comments, CaseTable_VinculateCase } from '../../../Model/ProyectDataBaseModel.js';
 import { ViewCalendarioByDependencia } from '../../../Model/DBOViewModel.js';
 import { StylesControlsV2, StylesControlsV3 } from "../../../WDevCore/StyleModules/WStyleComponents.js";
 import { WAppNavigator } from '../../../WDevCore/WComponents/WAppNavigator.js';
 import { ColumChart, GanttChart, RadialChart } from '../../../WDevCore/WComponents/WChartJSComponents.js';
 import { DocumentViewer } from '../../../WDevCore/WComponents/WDocumentViewer.js';
 import { WFilterOptions } from '../../../WDevCore/WComponents/WFilterControls.js';
-import { WForm } from "../../../WDevCore/WComponents/WForm.js";
+import { ModalVericateAction, WForm } from "../../../WDevCore/WComponents/WForm.js";
 import { WModalForm } from '../../../WDevCore/WComponents/WModalForm.js';
 import { WPaginatorViewer } from '../../../WDevCore/WComponents/WPaginatorViewer.js';
 import { WTableComponent } from "../../../WDevCore/WComponents/WTableComponent.js";
@@ -17,6 +17,7 @@ import { WCssClass, WStyledRender, css } from '../../../WDevCore/WModules/WStyle
 import { TaskManagers } from './TaskManager.js';
 import { WCommentsComponent } from '../../../WDevCore/WComponents/WCommentsComponent.js';
 import { WSecurity } from '../../../WDevCore/WModules/WSecurity.js';
+import { CaseSearcher } from '../../../AppComponents/CaseSearcher.js';
 
 class CaseManagerComponent extends HTMLElement {
     /**
@@ -63,11 +64,11 @@ class CaseManagerComponent extends HTMLElement {
     actividadElement = (actividad) => {
         return WRender.Create({
             className: "actividad", object: actividad, children: [
-                { tagName: 'h4', innerText: actividad.Titulo },
+                { tagName: 'h4', innerText: `${actividad.Titulo} (${actividad.Tbl_Servicios?.Descripcion_Servicio ?? ""})` },
                 {
                     className: "options", children: [
                         { tagName: 'button', className: 'Btn-Mini', innerText: "Detalle", onclick: async () => await this.actividadDetail(actividad) },
-                        { tagName: 'button', className: 'Btn-Mini', innerText: 'Informe', onclick: this.action }
+                        { tagName: 'button', className: 'Btn-Mini', innerText: 'Vincular Caso', onclick: () => this.Vincular(actividad) }
                     ]
                 }, {
                     className: "propiedades", children: [
@@ -146,15 +147,15 @@ class CaseManagerComponent extends HTMLElement {
                         tabManager.NavigateFunction("taskPanel",
                             new TaskManagers(tareasActividad,
                                 taskModel, {
-                                    ImageUrlPath: "/Media/Image/", action: async (task) => {
-                                        const find = actividad.CaseTable_Tareas.find(t => t.Id_Tarea == task.Id_Tarea);
-                                        for (const prop in task) {
-                                            find[prop] = task[prop]
-                                        }
-                                        actividad.Progreso = actividad.CaseTable_Tareas?.filter(tarea => tarea.Estado?.includes("Finalizado")).length;
-                                        actividadDetailView.querySelector(".actividadDetail").innerHTML = "";
-                                        actividadDetailView.querySelector(".actividadDetail").append(this.actividadElementDetail(actividad));
+                                ImageUrlPath: "/Media/Image/", action: async (task) => {
+                                    const find = actividad.CaseTable_Tareas.find(t => t.Id_Tarea == task.Id_Tarea);
+                                    for (const prop in task) {
+                                        find[prop] = task[prop]
                                     }
+                                    actividad.Progreso = actividad.CaseTable_Tareas?.filter(tarea => tarea.Estado?.includes("Finalizado")).length;
+                                    actividadDetailView.querySelector(".actividadDetail").innerHTML = "";
+                                    actividadDetailView.querySelector(".actividadDetail").append(this.actividadElementDetail(actividad));
+                                }
                             }))
                     }
                 },
@@ -195,6 +196,22 @@ class CaseManagerComponent extends HTMLElement {
         this.TabManager.NavigateFunction("Tab-CaseFormView",
             WRender.Create({ className: "CaseFormView", children: [CaseForm(undefined, this.Dependencias)] }));
     }
+    Vincular = async (actividad) => {
+        this.shadowRoot.append(new WModalForm({
+            title: "Vincular Casos",
+            ObjectModal: CaseSearcher("Vincular", async (caso_vinculado, TableComponent, model) => {
+                this.shadowRoot.append(ModalVericateAction(async () => {
+                    const response = await new CaseTable_VinculateCase({
+                        Casos_Vinculados: [actividad, caso_vinculado]
+                    }).VincularCaso();
+                    const updateData = await model.Get();
+                    TableComponent.Dataset = updateData;
+                    TableComponent.DrawTable();
+                }, "Esta seguro de vincular este caso"))
+            })
+        }));
+    }
+
 
 
     WStyle = css`

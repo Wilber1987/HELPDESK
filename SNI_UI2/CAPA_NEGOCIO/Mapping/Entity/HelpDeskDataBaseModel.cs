@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 namespace CAPA_NEGOCIO.MAPEO
 {
-   
+
     public class Cat_Tipo_Evidencia : EntityClass
     {
         [PrimaryKey(Identity = true)]
@@ -19,7 +19,7 @@ namespace CAPA_NEGOCIO.MAPEO
         public string? Estado { get; set; }
 
     }
-   
+
 
     public class Cat_Paises : EntityClass
     {
@@ -27,7 +27,7 @@ namespace CAPA_NEGOCIO.MAPEO
         public int? Id_Pais { get; set; }
         public string? Estado { get; set; }
         public string? Descripcion { get; set; }
-    }   
+    }
 
     public class Tbl_Profile : EntityClass
     {
@@ -48,7 +48,7 @@ namespace CAPA_NEGOCIO.MAPEO
         [ManyToOne(TableName = "Security_Users", KeyColumn = "Id_User", ForeignKeyColumn = "IdUser")]
         public Security_Users? Security_Users { get; set; }
         [ManyToOne(TableName = "Cat_Paises", KeyColumn = "Id_Pais", ForeignKeyColumn = "Id_Pais_Origen")]
-        public Cat_Paises? Cat_Paises { get; set; }       
+        public Cat_Paises? Cat_Paises { get; set; }
         //[OneToMany(TableName = "CaseTable_Case", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
         public List<CaseTable_Case>? CaseTable_Case { get; set; }
         [OneToMany(TableName = "CaseTable_Agenda", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
@@ -56,8 +56,8 @@ namespace CAPA_NEGOCIO.MAPEO
         [OneToMany(TableName = "CaseTable_Dependencias_Usuarios", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
         public List<CaseTable_Dependencias_Usuarios>? CaseTable_Dependencias_Usuarios { get; set; }
         [OneToMany(TableName = "CaseTable_Participantes", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
-        public List<CaseTable_Participantes>? CaseTable_Participantes { get; set; }        
-        
+        public List<CaseTable_Participantes>? CaseTable_Participantes { get; set; }
+
         public List<CaseTable_Dependencias_Usuarios> TakeDepCoordinaciones()
         {
             CaseTable_Dependencias_Usuarios DU = new CaseTable_Dependencias_Usuarios();
@@ -97,7 +97,7 @@ namespace CAPA_NEGOCIO.MAPEO
             {
                 this.Update("Id_Perfil");
             }
-           
+
             return this;
         }
         public Object AdmitirPostulante()
@@ -125,7 +125,7 @@ namespace CAPA_NEGOCIO.MAPEO
             }
             catch (Exception) { return false; }
         }
-    } 
+    }
 
 
     public class Cat_Tipo_Servicio : EntityClass
@@ -150,8 +150,8 @@ namespace CAPA_NEGOCIO.MAPEO
         public DateTime? Fecha_Inicio { get; set; }
         public DateTime? Fecha_Finalizacion { get; set; }
         [ManyToOne(TableName = "Cat_Tipo_Servicio", KeyColumn = "Id_Tipo_Servicio", ForeignKeyColumn = "Id_Tipo_Servicio")]
-        public Cat_Tipo_Servicio? Cat_Tipo_Servicio { get; set; }       
-    } 
+        public Cat_Tipo_Servicio? Cat_Tipo_Servicio { get; set; }
+    }
 
     public class CaseTable_VinculateCase : EntityClass
     {
@@ -161,5 +161,51 @@ namespace CAPA_NEGOCIO.MAPEO
         public DateTime? Fecha { get; set; }
         [OneToMany(TableName = "CaseTable_Case", KeyColumn = "Id_Vinculate", ForeignKeyColumn = "Id_Vinculate")]
         public List<CaseTable_Case>? Casos_Vinculados { get; set; }
+
+        internal object DesvincularCaso()
+        {
+
+            throw new NotImplementedException();
+        }
+
+        internal object? VincularCaso()
+        {
+            try
+            {
+                BeginGlobalTransaction();
+                Fecha = DateTime.Now;
+                CaseTable_Case caseV = Casos_Vinculados.First(c => c.Id_Vinculate != null);
+                if (caseV != null)
+                {
+                    Id_Vinculate = caseV.Id_Vinculate;
+                    List<CaseTable_Case> oldCase = new CaseTable_Case() { Id_Vinculate = caseV.Id_Vinculate }.Get<CaseTable_Case>();
+                    Casos_Vinculados.AddRange(oldCase.Where(c =>
+                         Casos_Vinculados.Where(cv => cv.Id_Case != c.Id_Case).ToList().Count == 0));
+                    Casos_Vinculados.ForEach(c =>
+                    {
+                        c.Id_Vinculate = Id_Vinculate;
+                    });
+                }
+                Descripcion = $"Vinculación de casos: {string.Join(", ", Casos_Vinculados.Select(c => "#" + c.Id_Case).ToList())}";
+                if (caseV != null)
+                {
+                    var response = Update();
+                    CommitGlobalTransaction();
+                    return response;
+                }
+                else
+                {
+                    var response = Save();
+                    CommitGlobalTransaction();
+                    return response;
+                }
+            }
+            catch (System.Exception)
+            {
+                RollBackGlobalTransaction();
+                throw;
+            }
+
+        }
     }
 }

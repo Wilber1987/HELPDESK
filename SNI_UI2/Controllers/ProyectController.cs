@@ -25,9 +25,9 @@ namespace API.Controllers
         {
             return new CaseTable_Tareas().GetOwParticipations(HttpContext.Session.GetString("seassonKey"));
         }
-        public List<CaseTable_Case> GetOwCase()
+        public List<CaseTable_Case> GetOwCase(CaseTable_Case inst)
         {
-            return new CaseTable_Case().GetOwCase(HttpContext.Session.GetString("seassonKey"));
+            return inst.GetOwCase(HttpContext.Session.GetString("seassonKey"));
         }
         public List<Cat_Dependencias> GetOwDependencies()
         {
@@ -78,6 +78,11 @@ namespace API.Controllers
          public object DesvincularCaso(CaseTable_VinculateCase inst)
         {
             return inst.DesvincularCaso();            
+        }
+         public List<CaseTable_Case> GetCasosToVinculate(CaseTable_Case Inst)
+        {
+            return new CaseTable_Case()
+            .GetCasosToVinculate(HttpContext.Session.GetString("seassonKey"), Inst);
         }
 
     }

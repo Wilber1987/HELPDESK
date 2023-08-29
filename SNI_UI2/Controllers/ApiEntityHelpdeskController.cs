@@ -15,7 +15,7 @@ namespace API.Controllers
         [AuthController]
         public List<CaseTable_Comments> getCaseTable_Comments(CaseTable_Comments Inst)
         {
-            return Inst.Get<CaseTable_Comments>();
+            return Inst.GetComments();
         }
         [HttpPost]
         [AuthController]

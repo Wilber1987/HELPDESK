@@ -90,6 +90,7 @@ class CaseTable_Case extends EntityClass {
         }
     }
     Id_Case = { type: 'number', primary: true };
+    Id_Vinculate = { type: 'number', hidden: true };
 
     Titulo = { type: 'text' };
     Tbl_Servicios = { type: 'WSelect', ModelObject: () => new Tbl_Servicios() };
@@ -99,7 +100,7 @@ class CaseTable_Case extends EntityClass {
     Estado = { type: "Select", Dataset: ["Activo", "Espera", "Pendiente", "Finalizado"] };
     Fecha_Final = { type: 'date' };
 
-    Descripcion = { type: 'textarea', hiddenInTable: true, hiddenInFilter: true };
+    Descripcion = { type: 'textarea', hiddenInTable: true, hiddenFilter: true };
     CaseTable_Tareas = { type: 'MasterDetail', ModelObject: () => new CaseTable_Tareas() };
     /**
      * @returns {Array<CaseTable_Case>}

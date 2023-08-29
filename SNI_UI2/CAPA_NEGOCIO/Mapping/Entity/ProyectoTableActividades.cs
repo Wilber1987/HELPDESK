@@ -143,7 +143,10 @@ namespace CAPA_NEGOCIO.MAPEO
             if (AuthNetCore.HavePermission(PermissionsEnum.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identity)
              && AuthNetCore.HavePermission(PermissionsEnum.TECNICO_CASOS_DEPENDENCIA.ToString(), identity))
             {
-              return getCaseByDependencia(identity, null);
+                return getCaseByDependencia(identity, null)
+                .Where(c => c.Estado != Case_Estate.Rechazado.ToString()
+                && c.Estado != Case_Estate.Solicitado.ToString()
+                && c.Estado != Case_Estate.Finalizado.ToString()).ToList();
             }
             throw new Exception("no tienes permisos para gestionar casos");
         }
@@ -175,7 +178,6 @@ namespace CAPA_NEGOCIO.MAPEO
            new CaseTable_Dependencias_Usuarios() { Id_Perfil = AuthNetCore.User(identity).UserId }
            .Get<CaseTable_Dependencias_Usuarios>().Select(p => p.Id_Dependencia.ToString()).ToArray());
         }
-
         internal object AprobarSolicitud(string identity)
         {
             var user = AuthNetCore.User(identity);
@@ -217,6 +219,31 @@ namespace CAPA_NEGOCIO.MAPEO
             throw new Exception("no tienes permisos para rechazar casos");
         }
 
+        internal List<CaseTable_Case> GetCasosToVinculate(string? identity, CaseTable_Case inst)
+        {
+            this.Id_Dependencia = inst.Id_Dependencia;
+            if (AuthNetCore.HavePermission(PermissionsEnum.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identity)
+             && AuthNetCore.HavePermission(PermissionsEnum.TECNICO_CASOS_DEPENDENCIA.ToString(), identity))
+            {
+                if (inst.Id_Vinculate != null)
+                {
+                    return this.Get_WhereNotIN<CaseTable_Case>("Id_Vinculate",
+                     new string[] { inst.Id_Vinculate.ToString() })
+                     .Where(c => c.Estado != Case_Estate.Solicitado.ToString()
+                     && c.Estado != Case_Estate.Rechazado.ToString()
+                     && c.Estado != Case_Estate.Finalizado.ToString()).ToList();
+                }
+                else
+                {
+                    return this.Get_WhereNotIN<CaseTable_Case>("Id_Case",
+                     new string[] { inst.Id_Case.ToString() })
+                     .Where(c => c.Estado != Case_Estate.Solicitado.ToString()
+                     && c.Estado != Case_Estate.Rechazado.ToString()
+                     && c.Estado != Case_Estate.Finalizado.ToString()).ToList();
+                }
+            }
+            throw new Exception("no tienes permisos para vincular casos");
+        }
     }
 
     public enum CommetsState
@@ -275,11 +302,28 @@ namespace CAPA_NEGOCIO.MAPEO
             }
 
         }
+
+        internal List<CaseTable_Comments> GetComments()
+        {
+            CaseTable_Case caseTable_Case = new CaseTable_Case() { Id_Case = Id_Case }.Find<CaseTable_Case>();
+            if (caseTable_Case?.Id_Vinculate != null)
+            {
+                return new CaseTable_Comments().Get_WhereIN<CaseTable_Comments>(
+                    "Id_Case",
+                    new CaseTable_Case() { Id_Vinculate = caseTable_Case.Id_Vinculate }
+                    .Get<CaseTable_Case>().Select(c => c.Id_Case.ToString()).ToArray());
+            }
+            else
+            {
+                return Get<CaseTable_Comments>();
+            }
+
+        }
     }
 
     public enum Case_Estate
     {
-        Pendiente, Solicitado, Activo, Finalizado, Espera, Rechazado
+        Solicitado, Pendiente, Activo, Finalizado, Espera, Rechazado
     }
 
     public class CaseTable_Mails : EntityClass

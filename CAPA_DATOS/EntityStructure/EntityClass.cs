@@ -51,9 +51,16 @@ namespace CAPA_DATOS
         public List<T> Get_WhereNotIN<T>(string Field, string[] conditions)
         {
             string condition = BuildArrayIN(conditions);
-            var Data = SqlADOConexion.SQLM?.TakeList<T>(this, true, Field + " NOT IN (" + condition + ")");
+            var Data = SqlADOConexion.SQLM?.TakeList<T>(this, true, $" ({Field} NOT IN ({condition}) OR {Field} IS NULL)");
             return Data ?? new List<T>();
         }
+
+        // public List<T> Get_WhereNotIN<T>(List<WhereNotInConditions> conditios)
+        // {
+        //     string condition = BuildArrayIN(conditions);
+        //     var Data = SqlADOConexion.SQLM?.TakeList<T>(this, true, $" ({Field} NOT IN ({condition}) OR {Field} IS NULL)");
+        //     return Data ?? new List<T>();
+        // }
         private static string BuildArrayIN(string?[]? conditions)
         {
             string condition = "";
@@ -173,5 +180,9 @@ namespace CAPA_DATOS
         {
             SqlADOConexion.SQLM?.RollBackGlobalTransaction();
         }
+    }
+
+    public class WhereNotInConditions
+    {
     }
 }

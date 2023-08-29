@@ -17,7 +17,7 @@ import { WCssClass, WStyledRender, css } from '../../../WDevCore/WModules/WStyle
 import { TaskManagers } from './TaskManager.js';
 import { WCommentsComponent } from '../../../WDevCore/WComponents/WCommentsComponent.js';
 import { WSecurity } from '../../../WDevCore/WModules/WSecurity.js';
-import { CaseSearcher } from '../../../AppComponents/CaseSearcher.js';
+import { CaseSearcherToVinculate } from '../../../AppComponents/CaseSearcherToVinculate.js';
 
 class CaseManagerComponent extends HTMLElement {
     /**
@@ -161,7 +161,14 @@ class CaseManagerComponent extends HTMLElement {
                 },
                 { name: "Vista de progreso", action: async (ev) => { tabManager.NavigateFunction("ganttChart", ganttChart) } },
                 { name: "Vista de detalles", action: async (ev) => { tabManager.NavigateFunction("taskTable", tasktable) } },
-                { name: "Nueva Tarea", action: async (ev) => { this.shadowRoot.append(new WModalForm({ ModelObject: taskModel, title: "Nueva Tarea" })) } }
+                { name: "Nueva Tarea", action: async (ev) => { this.shadowRoot.append(new WModalForm({ ModelObject: taskModel, title: "Nueva Tarea" })) } },
+                actividad.Id_Vinculate != null ? {
+                    name: "Vinculaciones", action: async (ev) => {
+                        const modelVinculate = new CaseTable_Case({ Id_Vinculate: actividad.Id_Vinculate });
+                        tabManager.NavigateFunction("vinculaciones",
+                            new WTableComponent({ Dataset: await modelVinculate.GetOwCase(), ModelObject: new CaseTable_Case()}))
+                    }
+                } : undefined
             ]
         });
         const commentsDataset = await new CaseTable_Comments({ Id_Case: actividad.Id_Case }).Get();
@@ -199,7 +206,7 @@ class CaseManagerComponent extends HTMLElement {
     Vincular = async (actividad) => {
         this.shadowRoot.append(new WModalForm({
             title: "Vincular Casos",
-            ObjectModal: CaseSearcher("Vincular", async (caso_vinculado, TableComponent, model) => {
+            ObjectModal: CaseSearcherToVinculate(actividad, "Vincular", async (caso_vinculado, TableComponent, model) => {
                 this.shadowRoot.append(ModalVericateAction(async () => {
                     const response = await new CaseTable_VinculateCase({
                         Casos_Vinculados: [actividad, caso_vinculado]

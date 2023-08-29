@@ -174,17 +174,24 @@ namespace CAPA_NEGOCIO.MAPEO
             {
                 BeginGlobalTransaction();
                 Fecha = DateTime.Now;
-                CaseTable_Case caseV = Casos_Vinculados.First(c => c.Id_Vinculate != null);
+                CaseTable_Case caseV = Casos_Vinculados.FirstOrDefault(c => c.Id_Vinculate != null);
                 if (caseV != null)
                 {
                     Id_Vinculate = caseV.Id_Vinculate;
                     List<CaseTable_Case> oldCase = new CaseTable_Case() { Id_Vinculate = caseV.Id_Vinculate }.Get<CaseTable_Case>();
-                    Casos_Vinculados.AddRange(oldCase.Where(c =>
-                         Casos_Vinculados.Where(cv => cv.Id_Case != c.Id_Case).ToList().Count == 0));
-                    Casos_Vinculados.ForEach(c =>
+                    foreach (var c in oldCase)
+                    {
+                        CaseTable_Case caseSelected = Casos_Vinculados.FirstOrDefault(cv => cv.Id_Case == c.Id_Case);
+                        if (caseSelected == null)
+                        {
+                            Casos_Vinculados.Add(c);
+                        }
+                    }
+                    foreach (var c in Casos_Vinculados)
                     {
                         c.Id_Vinculate = Id_Vinculate;
-                    });
+                    }
+
                 }
                 Descripcion = $"Vinculación de casos: {string.Join(", ", Casos_Vinculados.Select(c => "#" + c.Id_Case).ToList())}";
                 if (caseV != null)

@@ -10,8 +10,10 @@ namespace API.Controllers
         {
             if (!AuthNetCore.Authenticate( filterContext.HttpContext.Session.GetString("seassonKey")))
             {
-                Authenticate Aut = new Authenticate();
-                Aut.AuthVal = AuthNetCore.Authenticate(filterContext.HttpContext.Session.GetString("seassonKey"));
+                Authenticate Aut = new Authenticate
+                {
+                    AuthVal = AuthNetCore.Authenticate(filterContext.HttpContext.Session.GetString("seassonKey"))
+                };
                 filterContext.Result = new ObjectResult(Aut);
             }
         }

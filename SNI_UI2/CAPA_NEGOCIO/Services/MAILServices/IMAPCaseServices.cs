@@ -18,17 +18,25 @@ namespace CAPA_NEGOCIO.Services
                 List<Cat_Dependencias> dependencias = new Cat_Dependencias().Get<Cat_Dependencias>();
                 foreach (var dependencia in dependencias)
                 {
-                    using (ImapClient imap = new IMAPServices()
-                    .GetClient(new MailConfig() { HOST = dependencia.Host, PASSWORD = dependencia.Password, USERNAME = dependencia.Username }))
+                    if (dependencia.Host != null && dependencia.Username != null && dependencia.Password != null)
                     {
-                        imap.SelectMailbox("INBOX");
-                        var MailMessage = imap.SearchMessages(SearchCondition.Unseen()).Select(m => m.Value).ToList();
-                        foreach (var mail in MailMessage)
+                        using (ImapClient imap = new IMAPServices()
+                        .GetClient(new MailConfig()
                         {
-                            new CaseTable_Case().CreateAutomaticCase(mail, dependencia);
-                            imap.MoveMessage(mail.Uid, "READY");
+                            HOST = dependencia.Host,
+                            PASSWORD = dependencia.Password,
+                            USERNAME = dependencia.Username
+                        }))
+                        {
+                            imap.SelectMailbox("INBOX");
+                            var MailMessage = imap.SearchMessages(SearchCondition.Unseen()).Select(m => m.Value).ToList();
+                            foreach (var mail in MailMessage)
+                            {
+                                new CaseTable_Case().CreateAutomaticCase(mail, dependencia);
+                                imap.MoveMessage(mail.Uid, "READY");
+                            }
+                            imap.Expunge();
                         }
-                        imap.Expunge();
                     }
                 }
 

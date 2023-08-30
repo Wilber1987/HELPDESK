@@ -161,7 +161,14 @@ class CaseManagerComponent extends HTMLElement {
                 },
                 { name: "Vista de progreso", action: async (ev) => { tabManager.NavigateFunction("ganttChart", ganttChart) } },
                 { name: "Vista de detalles", action: async (ev) => { tabManager.NavigateFunction("taskTable", tasktable) } },
-                { name: "Nueva Tarea", action: async (ev) => { this.shadowRoot.append(new WModalForm({ ModelObject: taskModel, title: "Nueva Tarea" })) } },
+                {
+                    name: "Nueva Tarea", action: async (ev) => {
+                        this.shadowRoot.append(new WModalForm({
+                            ModelObject: taskModel,
+                            AutoSave: true, title: "Nueva Tarea"
+                        }))
+                    }
+                },
                 actividad.Id_Vinculate != null ? {
                     name: "Vinculaciones", action: async (ev) => {
                         const modelVinculate = new CaseTable_Case({ Id_Vinculate: actividad.Id_Vinculate });
@@ -338,7 +345,7 @@ const simpleCaseForm = (entity, dependencias, action) => {
                 type: "WSELECT", ModelObject: new Cat_Dependencias(),
                 Dataset: dependencias,
                 action: (caso) => {
-                    
+
                 }
             },
         })

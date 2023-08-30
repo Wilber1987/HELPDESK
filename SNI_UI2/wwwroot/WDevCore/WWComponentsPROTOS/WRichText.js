@@ -1,22 +1,36 @@
+//@ts-check
 import { WRender } from "../WModules/WComponentsTools.js";
-import { WCssClass } from "../WModules/WStyledRender.js";
+import { WCssClass, css } from "../WModules/WStyledRender.js";
+class modelFiles {
+    constructor(value, type) {
+        this.type = type;
+        this.value = value
+    }
+    value = ""//base64,
+    type = "" //PDF,PNG,JPG
+}
 class WRichText extends HTMLElement {
     constructor() {
         super();
         this.value = "";
+        /**
+         * @type {Array<modelFiles>}
+         */
         this.Files = [];
         this.DrawComponent();
     }
-    connectedCallback() {        
+    connectedCallback() {
     }
     DrawComponent = async () => {
         this.innerHTML != "";
-        this.append(WRender.createElement(WRichTextStyle))
+        this.append(WRichTextStyle.cloneNode(true))
         this.DrawOptions();
         this.Divinput = WRender.Create({
+            // @ts-ignore
             contentEditable: true,
             class: "WREditor",
             oninput: () => {
+                // @ts-ignore
                 this.value = this.querySelector(".WREditor").innerHTML;
             }
         })
@@ -24,31 +38,42 @@ class WRichText extends HTMLElement {
     }
     DrawOptions() {
         const OptionsSection = WRender.Create({
-            tagName: "section",class: "WOptionsSection" 
+            tagName: "section", class: "WOptionsSection"
         })
         this.Commands.forEach(command => {
             let CommandBtn = WRender.Create({
                 tagName: "input",
+                className: "ROption tooltip " + command.class,
                 type: command.type,
-                class: "ROption tooltip",
                 id: "ROption" + command.commandName,
+                // @ts-ignore
                 title: command.commandName,
-                value: command.commandName
+                value: command.label
             });
             CommandBtn[command.event] = () => {
                 const ROption = this.querySelector("#ROption" + command.commandName);
                 //console.log( ROption.value );   
+                // @ts-ignore
                 document.execCommand(command.commandName, false, ROption.value);
             }
-            OptionsSection.append(WRender.Create({ class: "tooltip" ,
+            OptionsSection.append(WRender.Create({
+                class: "tooltip",
                 children: [CommandBtn, { tagName: "span", class: "tooltiptext", children: [command.commandName] }]
             }))
         });
-        this.append(OptionsSection);
+        const OptionsAdjuntosSection = WRender.Create({
+            tagName: "section", class: "WOptionsSection", children: [
+                WRender.Create({tagName: "input", type: "file", onchange: ()=>{
+                    this.Files.push(new modelFiles("pdf", "zjshikzhsdjk"))
+                    console.log(this.Files);
+                }})
+            ]
+        })
+        this.append(OptionsSection, OptionsAdjuntosSection);
     }
     Commands = [
-        { commandName: "backColor", icon: "", type: "color", commandOptions: null, state: 1, event: "onchange" },
-        { commandName: "bold", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
+        //{ commandName: "backColor", icon: "", type: "color", commandOptions: null, state: 1, event: "onchange" },
+        { commandName: "bold", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick", class: "bold", label: "B" },
         { commandName: "createLink", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
         { commandName: "copy", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
         { commandName: "cut", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
@@ -84,62 +109,71 @@ class WRichText extends HTMLElement {
     ];
 }
 
-const WRichTextStyle = {
-    type: "w-style",
-    props: {
-        ClassList: [
-            new WCssClass("w-rich-text .WREditor", {
-                height: "200px",
-                border: "solid 1px #000",
-                display: "block",
-                margin: 0,
-                padding: "10px"
-            }),
-            new WCssClass("w-rich-text .WOptionsSection", {
-                border: "solid 1px #000",
-                display: "block",
-                margin: 0
-            }),
-            new WCssClass("w-rich-text .ROption", {
-                border: "solid 1px #000",
-                padding: "5px",
-                margin: "0px"
-            }),
-            new WCssClass(".tooltip", {
-                position: "relative",
-                display: "inline-block",
-                padding: "0px", margin: "5px"
-            }),
-            new WCssClass(" .tooltiptext", {
-                "visibility": "hidden",
-                "min-width": "120px",
-                "background-color": "black",
-                "color": "#fff",
-                "text-align": "center",
-                "border-radius": "6px",
-                "padding": "5px 0",
-                "position": "absolute",
-                "z-index": "1",
-                "bottom": "150%",
-                "left": "50%",
-                padding: "5px",
-                "margin-left": "-60px",
-            }),
-            new WCssClass(" .tooltiptext::after", {
-                "content": '""',
-                "position": "absolute",
-                "top": "100%",
-                "left": "50%",
-                "margin-left": "-5px",
-                "border-width": "5px",
-                "border-style": "solid",
-                "border-color": "black transparent transparent transparent",
-            }),
-            new WCssClass(".tooltip:hover .tooltiptext", {
-                "visibility": "visible"
-            }),
-        ]
+const WRichTextStyle = css` 
+    w-rich-text .WREditor {
+        height: 200px;
+        border: solid 1px #000;
+        display: block;
+        margin: 0px;
+        padding: 10px;
     }
-}
+
+    w-rich-text .WOptionsSection {
+        border: solid 1px #000;
+        display: block;
+        margin: 0px;
+    }
+
+    w-rich-text .ROption {
+        border: solid 1px #000;
+        padding: 5px;
+        margin: 0px;
+    }
+
+    .tooltip {
+        position: relative;
+        display: inline-block;
+        padding: 0px;
+        margin: 5px;
+    }
+
+    .tooltiptext {
+        visibility: hidden;
+        min-width: 120px;
+        background-color: black;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px;
+        position: absolute;
+        z-index: 1;
+        bottom: 150%;
+        left: 50%;
+        margin-left: -60px;
+    }
+
+    .tooltiptext::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: black transparent transparent transparent;
+    }
+
+    .tooltip:hover .tooltiptext {
+        visibility: visible;
+    } 
+    input {
+        cursor: pointer;
+    }
+    .bold {
+        font-weight: bold;
+        font-size: 16px;
+    }
+    `
+
 customElements.define("w-rich-text", WRichText);
 export { WRichText }

@@ -1,6 +1,6 @@
 //@ts-check
-import { WRender } from "../WModules/WComponentsTools.js";
-import { WCssClass, css } from "../WModules/WStyledRender.js";
+import { WRender } from "/WDevCore/WModules/WComponentsTools.js";
+import { WCssClass, css } from "/WDevCore/WModules/WStyledRender.js";
 class modelFiles {
     constructor(name, value, type) {
         this.name = name;
@@ -352,7 +352,7 @@ const WRichTextStyle = css`
         background-repeat: no-repeat;
         background-position: center;
         background-size: 16px;
-        background-image: url("../Icons/list.png");
+        background-image: url("/WDevCore/Icons/list.png");
     }
 
     .link {
@@ -361,7 +361,7 @@ const WRichTextStyle = css`
         background-repeat: no-repeat;
         background-position: center;
         background-size: 16px;
-        background-image: url("../Icons/globe.png");
+        background-image: url("/WDevCore/Icons/globe.png");
     }
 
     .center {
@@ -370,7 +370,7 @@ const WRichTextStyle = css`
         background-repeat: no-repeat;
         background-position: center;
         background-size: 16px;
-        background-image: url("../Icons/align-center.png");
+        background-image: url("/WDevCore/Icons/align-center.png");
     }
 
     .right {
@@ -379,7 +379,7 @@ const WRichTextStyle = css`
         background-repeat: no-repeat;
         background-position: center;
         background-size: 16px;
-        background-image: url("../Icons/symbol.png");
+        background-image: url("/WDevCore/Icons/symbol.png");
     }
 
     .left {
@@ -388,7 +388,7 @@ const WRichTextStyle = css`
         background-repeat: no-repeat;
         background-position: center;
         background-size: 16px;
-        background-image: url("../Icons/align-left.png");
+        background-image: url("/WDevCore/Icons/align-left.png");
     }
 
     .bold {

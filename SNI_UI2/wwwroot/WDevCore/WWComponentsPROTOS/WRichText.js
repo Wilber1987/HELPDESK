@@ -2,10 +2,12 @@
 import { WRender } from "../WModules/WComponentsTools.js";
 import { WCssClass, css } from "../WModules/WStyledRender.js";
 class modelFiles {
-    constructor(value, type) {
+    constructor(name, value, type) {
+        this.name = name;
         this.type = type;
-        this.value = value
+        this.value = value;
     }
+    name = "";
     value = ""//base64,
     type = "" //PDF,PNG,JPG
 }
@@ -35,6 +37,7 @@ class WRichText extends HTMLElement {
             }
         })
         this.append(this.Divinput);
+        this.DrawAttached();
     }
     DrawOptions() {
         const OptionsSection = WRender.Create({
@@ -61,73 +64,174 @@ class WRichText extends HTMLElement {
                 children: [CommandBtn, { tagName: "span", class: "tooltiptext", children: [command.commandName] }]
             }))
         });
-        const OptionsAdjuntosSection = WRender.Create({
-            tagName: "section", class: "WOptionsSection", children: [
-                WRender.Create({tagName: "input", type: "file", onchange: ()=>{
-                    this.Files.push(new modelFiles("pdf", "zjshikzhsdjk"))
-                    console.log(this.Files);
-                }})
+
+        this.append(OptionsSection);
+
+    }
+
+    DrawAttached() {
+        const AttachedSection = WRender.Create({
+            tagName: "section", class: "InputFileSection", children: []
+        })
+        const ButtonSection = WRender.Create({
+            tagName: "section", class: "AddInputFileSection", children: [
+                WRender.Create({
+                    tagName: "input", type: "button", class: "button", value: "Agregar Adjunto", onclick: () => {
+                        AttachedSection.append(WRender.Create({
+                            tagName: "input", type: "file", class: "inputfile",
+
+                            onchange: (ev) => {
+                                const targetControl = ev.target
+                                let base64Type = "";
+                                let fileB64;
+                                const file = targetControl?.files[0];
+                                if (targetControl?.files != null) {
+                                    switch (targetControl?.files[0]?.type.toUpperCase()) {
+                                        case "IMAGE/PNG": case "IMAGE/JPG": case "IMAGE/JPEG":
+                                            base64Type = "data:image/png;base64,";
+                                            break;
+                                        case "APPLICATION/PDF":
+                                            base64Type = "data:application/pdf;base64,";
+                                        default:
+                                            base64Type = "data:" + targetControl?.files[0]?.type + ";base64,";
+                                            break;
+                                    }
+                                }
+                                var reader = new FileReader();
+                                reader.onloadend = (e) => {
+                                    //@ts-ignore
+                                    fileB64 = e.target?.result?.split("base64,")[1];
+                                    this.Files.push(new modelFiles(file.name, fileB64, base64Type))
+                                };
+                                reader.readAsDataURL(file);
+                            },
+
+                            onclick: (ev) => {
+                                let file = '';
+                                if (ev.target?.value) {
+                                    file = ev.target?.value;
+                                    const search = "C:\\fakepath\\";
+                                    const files = file.replace(search, "");
+                                    this.Files.filter(obj => obj.name !== files);
+                                    ev.target.value = "";
+                                }
+                            },
+                        }))
+                    }
+                }),
             ]
         })
-        this.append(OptionsSection, OptionsAdjuntosSection);
+
+        const SendSection = WRender.Create({
+            tagName: "section", class: "SendSection", children: [
+                WRender.Create({
+                    tagName: "input", type: "button", class: "button", value: "Enviar", onclick: () => {
+                        console.log("Envio" + this.Files);
+                    }
+                })
+
+            ]
+        })
+
+        this.append(ButtonSection, AttachedSection, SendSection);
     }
     Commands = [
         //{ commandName: "backColor", icon: "", type: "color", commandOptions: null, state: 1, event: "onchange" },
         { commandName: "bold", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick", class: "bold", label: "B" },
-        { commandName: "createLink", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
-        { commandName: "copy", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
-        { commandName: "cut", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
-        { commandName: "defaultParagraphSeparator", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
-        { commandName: "delete", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
-        { commandName: "fontName", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
-        { commandName: "fontSize", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
-        { commandName: "foreColor", icon: "", type: "color", commandOptions: null, state: 1, event: "onchange" },
-        { commandName: "formatBlock", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
-        { commandName: "forwardDelete", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
-        { commandName: "insertHorizontalRule", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
-        { commandName: "insertHTML", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
-        { commandName: "insertImage", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
-        { commandName: "insertLineBreak", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
-        { commandName: "insertOrderedList", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
-        { commandName: "insertParagraph", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
-        { commandName: "insertText", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
-        { commandName: "insertUnorderedList", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
-        { commandName: "justifyCenter", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
-        { commandName: "justifyFull", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
-        { commandName: "justifyLeft", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
-        { commandName: "justifyRight", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
-        { commandName: "outdent", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
-        { commandName: "paste", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
-        { commandName: "redo", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
-        { commandName: "selectAll", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
-        { commandName: "strikethrough", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
-        { commandName: "styleWithCss", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
-        { commandName: "subscript", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
-        { commandName: "superscript", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
-        { commandName: "undo", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
-        { commandName: "unlink", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
+        { commandName: "italic", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick", class: "italic", label: "I" },
+        { commandName: "underline", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick", class: "underline", label: "U" },
+        { commandName: "insertUnorderedList", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick", class: "list", label: "" },
+        { commandName: "createLink", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick", class: "link", label: "" },
+        //{ commandName: "uppercase", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick", class: "bold", label: "A" },
+        //{ commandName: "insertOrderedList", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick", class: "list", label: "" },
+        //{ commandName: "copy", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
+        //{ commandName: "cut", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
+        //{ commandName: "defaultParagraphSeparator", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
+        //{ commandName: "delete", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
+        //{ commandName: "fontName", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
+        //{ commandName: "foreColor", icon: "", type: "color", commandOptions: null, state: 1, event: "onchange" },
+        //{ commandName: "formatBlock", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
+        //{ commandName: "forwardDelete", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
+        //{ commandName: "insertHorizontalRule", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
+        //{ commandName: "insertHTML", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
+        //{ commandName: "insertImage", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
+        //{ commandName: "insertLineBreak", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
+        //{ commandName: "insertParagraph", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
+        //{ commandName: "insertText", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
+        { commandName: "justifyLeft", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick", class: "left", label: "" },
+        { commandName: "justifyCenter", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick", class: "center", label: "" },
+        { commandName: "justifyRight", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick", class: "right", label: "" },
+        //{ commandName: "justifyFull", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
+        //{ commandName: "outdent", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
+        //{ commandName: "paste", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
+        //{ commandName: "redo", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
+        //{ commandName: "selectAll", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
+        //{ commandName: "strikethrough", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
+        //{ commandName: "styleWithCss", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
+        //{ commandName: "subscript", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
+        //{ commandName: "superscript", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
+        //{ commandName: "undo", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
+        //{ commandName: "unlink", icon: "", type: "button", commandOptions: null, state: 1, event: "onclick" },
     ];
 }
 
 const WRichTextStyle = css` 
     w-rich-text .WREditor {
         height: 200px;
-        border: solid 1px #000;
+        border: solid 2px #000;
         display: block;
         margin: 0px;
+        margin-top: 10px;
         padding: 10px;
+        border-radius: 6px;
     }
 
     w-rich-text .WOptionsSection {
-        border: solid 1px #000;
+        border: solid 2px #000;
+        margin: 0px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    w-rich-text .InputFileSection {
+        border: none;
         display: block;
         margin: 0px;
+        border-radius: 4px;
+        padding: 5px;
+        border: solid 2px #000;
+        display: grid;
+        justify-content: center;
+    }
+
+    w-rich-text .AddInputFileSection {
+        border: none;
+        display: block;
+        margin: 0px;
+        border-radius: 4px;
+        padding: 5px;
+        text-align: right;
+    }
+
+    w-rich-text .SendSection {
+        border: none;
+        margin: 10px;    
+        border-radius: 4px;
+        padding: 5px;
+        display: flex;
+        justify-content: center;
     }
 
     w-rich-text .ROption {
         border: solid 1px #000;
+        border: none;
         padding: 5px;
         margin: 0px;
+        display: grid;
+        place-items: center;
+
     }
 
     .tooltip {
@@ -166,12 +270,131 @@ const WRichTextStyle = css`
     .tooltip:hover .tooltiptext {
         visibility: visible;
     } 
+
     input {
         cursor: pointer;
+        width: 50px;
+        padding: 10px 20px;
+        border: none;
+        background-color: #f5f5f5;
+        color: #000;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
     }
+    
+      input[type="file"]::file-selector-button {
+        border-radius: 4px;
+        padding: 0 16px;
+        height: 40px;
+        cursor: pointer;
+        background-color: white;
+        border: 1px solid rgba(0, 0, 0, 0.16);
+        box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.05);
+        margin-right: 16px;
+        transition: background-color 200ms;
+      }
+      
+      input[type="file"]::file-selector-button:hover {
+        background-color: #f3f4f6;
+      }
+      
+      input[type="file"]::file-selector-button:active {
+        background-color: #e5e7eb;
+      } 
+      
+    .inputfile {
+        cursor: pointer;
+        width: 400px;
+        padding: 10px 20px;
+        border: none;
+        background-color: #f5f5f5;
+        color: #000;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+    }
+
+    .button {
+        font-family: "Times New Roman";
+        cursor: pointer;
+        width: 130px;
+        padding: 10px 20px;
+        margin: 5px;
+        box-shadow: 0 4px 7px rgba(0, 0, 0, 0.9);
+        transition: transform .2s ease-out;
+        background-color: #fff;
+        color: #000;
+        border-radius: 5px;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .list {
+        border: none;
+        box-shadow: 0 4px 7px rgba(0, 0, 0, 0.4);
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 16px;
+        background-image: url("../Icons/list.png");
+    }
+
+    .link {
+        border: none;
+        box-shadow: 0 4px 7px rgba(0, 0, 0, 0.4);
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 16px;
+        background-image: url("../Icons/globe.png");
+    }
+
+    .center {
+        border: none;
+        box-shadow: 0 4px 7px rgba(0, 0, 0, 0.4);
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 16px;
+        background-image: url("../Icons/align-center.png");
+    }
+
+    .right {
+        border: none;
+        box-shadow: 0 4px 7px rgba(0, 0, 0, 0.4);
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 16px;
+        background-image: url("../Icons/symbol.png");
+    }
+
+    .left {
+        border: none;
+        box-shadow: 0 4px 7px rgba(0, 0, 0, 0.4);
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 16px;
+        background-image: url("../Icons/align-left.png");
+    }
+
     .bold {
+        border: none;
+        font-family: "Times New Roman";
         font-weight: bold;
         font-size: 16px;
+        box-shadow: 0 4px 7px rgba(0, 0, 0, 0.4);
+    }
+    .italic {
+        border: none;
+        font-family: "Times New Roman";
+        font-weight: bold;
+        font-style: italic;
+        font-size: 16px;
+        box-shadow: 0 4px 7px rgba(0, 0, 0, 0.4);
+    }
+    .underline {
+        border: none;
+        font-family: "Times New Roman";
+        font-weight: bold;
+        text-decoration: underline;
+        font-size: 16px;
+        box-shadow: 0 4px 7px rgba(0, 0, 0, 0.4);
     }
     `
 

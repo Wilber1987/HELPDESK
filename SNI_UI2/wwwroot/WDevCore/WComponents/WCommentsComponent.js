@@ -17,7 +17,8 @@ class WCommentsComponent extends HTMLElement {
         this.attachShadow({ mode: 'open' });
         this.CommentsContainer = WRender.Create({ className: "CommentsContainer" })
         this.MessageInput = WRender.Create({ tagName: 'textarea' });
-        this.style.backgroundColor = "#fff";
+
+        //this.style.backgroundColor = "#fff";
         this.OptionContainer = WRender.Create({
             className: "OptionContainer", children: [
                 this.MessageInput,
@@ -43,6 +44,17 @@ class WCommentsComponent extends HTMLElement {
             ]
         })
 
+        this.TypetextContainer = WRender.Create({
+            className: "OptionContainer", children: [
+                this.RitchInput,
+                {
+                    tagName: 'input', type: 'button', className: 'Btn-Mini',
+                    value: 'Send', onclick: async () => {
+                        this.saveRitchComment();
+                    }
+                }
+            ]
+        })
 
 
         this.shadowRoot?.append(StyleScrolls.cloneNode(true), StylesControlsV2.cloneNode(true),

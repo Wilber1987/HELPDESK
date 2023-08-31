@@ -1,6 +1,6 @@
 //@ts-check
-import { WRender } from "/WDevCore/WModules/WComponentsTools.js";
-import { WCssClass, css } from "/WDevCore/WModules/WStyledRender.js";
+import { WRender } from "../WModules/WComponentsTools.js";
+import { WCssClass, css } from "../WModules/WStyledRender.js";
 class modelFiles {
     constructor(name, value, type) {
         this.name = name;

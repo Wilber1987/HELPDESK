@@ -76,64 +76,62 @@ class WRichText extends HTMLElement {
         const ButtonSection = WRender.Create({
             tagName: "section", class: "AddInputFileSection", children: [
                 WRender.Create({
-                    tagName: "input", type: "button", class: "button", value: "Agregar Adjunto", onclick: () => {
-                        AttachedSection.append(WRender.Create({
-                            tagName: "input", type: "file", class: "inputfile",
-
-                            onchange: (ev) => {
-                                const targetControl = ev.target
-                                let base64Type = "";
-                                let fileB64;
-                                const file = targetControl?.files[0];
-                                if (targetControl?.files != null) {
-                                    switch (targetControl?.files[0]?.type.toUpperCase()) {
-                                        case "IMAGE/PNG": case "IMAGE/JPG": case "IMAGE/JPEG":
-                                            base64Type = "data:image/png;base64,";
-                                            break;
-                                        case "APPLICATION/PDF":
-                                            base64Type = "data:application/pdf;base64,";
-                                        default:
-                                            base64Type = "data:" + targetControl?.files[0]?.type + ";base64,";
-                                            break;
-                                    }
-                                }
-                                var reader = new FileReader();
-                                reader.onloadend = (e) => {
-                                    //@ts-ignore
-                                    fileB64 = e.target?.result?.split("base64,")[1];
-                                    this.Files.push(new modelFiles(file.name, fileB64, base64Type))
-                                };
-                                reader.readAsDataURL(file);
-                            },
-
-                            onclick: (ev) => {
-                                let file = '';
-                                if (ev.target?.value) {
-                                    file = ev.target?.value;
-                                    const search = "C:\\fakepath\\";
-                                    const files = file.replace(search, "");
-                                    this.Files.filter(obj => obj.name !== files);
-                                    ev.target.value = "";
-                                }
-                            },
-                        }))
-                    }
+                    tagName: "label", htmlFor: "attachInput", class: "button", innerHTML: "Agregar Adjunto"
                 }),
             ]
         })
-
-        const SendSection = WRender.Create({
-            tagName: "section", class: "SendSection", children: [
-                WRender.Create({
-                    tagName: "input", type: "button", class: "button", value: "Enviar", onclick: () => {
-                        console.log("Envio" + this.Files);
+        ButtonSection.append(WRender.Create({
+            tagName: "input", id: "attachInput", type: "file", class: "inputfile",
+            onchange: (ev) => {
+                const targetControl = ev.target
+                let base64Type = "";
+                let fileB64;
+                const file = targetControl?.files[0];
+                if (targetControl?.files != null) {
+                    switch (targetControl?.files[0]?.type.toUpperCase()) {
+                        case "IMAGE/PNG": case "IMAGE/JPG": case "IMAGE/JPEG":
+                            base64Type = "data:image/png;base64,";
+                            break;
+                        case "APPLICATION/PDF":
+                            base64Type = "data:application/pdf;base64,";
+                        default:
+                            base64Type = "data:" + targetControl?.files[0]?.type + ";base64,";
+                            break;
                     }
-                })
+                }
+                var reader = new FileReader();
+                reader.onloadend = (e) => {
+                    //@ts-ignore
+                    fileB64 = e.target?.result?.split("base64,")[1];
+                    const fileClass = new modelFiles(file.name, fileB64, base64Type);
+                    this.Files.push(fileClass);
+                    AttachedSection.innerHTML = "";
+                    this.Files.forEach(file => {
+                        const AttachBtn = WRender.Create({
+                            className: "AttachBtn", innerHTML: "X", onclick: () => {
+                                this.Files.splice(this.Files.indexOf(file), 1);
+                                AttachBtn.parentNode?.parentNode?.removeChild(AttachBtn.parentNode);
+                            }
+                        })
+                        AttachedSection.append(WRender.Create({ class: "AttachItem", children: [fileClass.name, AttachBtn] }))
+                    });
 
-            ]
-        })
+                };
+                reader.readAsDataURL(file);
+            },
 
-        this.append(ButtonSection, AttachedSection, SendSection);
+            onclick: (ev) => {
+                let file = '';
+                if (ev.target?.value) {
+                    file = ev.target?.value;
+                    const search = "C:\\fakepath\\";
+                    const files = file.replace(search, "");
+                    this.Files.filter(obj => obj.name !== files);
+                    ev.target.value = "";
+                }
+            },
+        }))       
+        this.append(ButtonSection, AttachedSection);
     }
     Commands = [
         //{ commandName: "backColor", icon: "", type: "color", commandOptions: null, state: 1, event: "onchange" },
@@ -178,7 +176,7 @@ class WRichText extends HTMLElement {
 const WRichTextStyle = css` 
     w-rich-text .WREditor {
         height: 200px;
-        border: solid 2px #000;
+        border: solid 1px #c5c5c5;
         display: block;
         margin: 0px;
         margin-top: 10px;
@@ -187,7 +185,7 @@ const WRichTextStyle = css`
     }
 
     w-rich-text .WOptionsSection {
-        border: solid 2px #000;
+        border: solid 1px #c5c5c5;
         margin: 0px;
         border-radius: 4px;
         display: flex;
@@ -196,14 +194,12 @@ const WRichTextStyle = css`
     }
 
     w-rich-text .InputFileSection {
-        border: none;
-        display: block;
         margin: 0px;
         border-radius: 4px;
         padding: 5px;
-        border: solid 2px #000;
+        border: solid 1px #c5c5c5;
         display: grid;
-        justify-content: center;
+        justify-content: left
     }
 
     w-rich-text .AddInputFileSection {
@@ -213,6 +209,27 @@ const WRichTextStyle = css`
         border-radius: 4px;
         padding: 5px;
         text-align: right;
+    }
+
+    .AttachBtn {
+        padding: 5px;
+        cursor: pointer;
+        color: #fff;
+        background-color: #994914;
+        border-radius: 5px;
+        display: flex;
+        text-align: center;
+        align-items: center;
+    }
+    .AttachItem {
+        font-size: 11px;
+        padding: 5px;
+        background-color: #f3f3f3;
+        border-radius: 5px;
+        display: flex;
+        gap: 5px;
+        align-items: center;
+        justify-content: space-between;
     }
 
     w-rich-text .SendSection {
@@ -225,7 +242,7 @@ const WRichTextStyle = css`
     }
 
     w-rich-text .ROption {
-        border: solid 1px #000;
+        border: solid 1px #c5c5c5;
         border: none;
         padding: 5px;
         margin: 0px;
@@ -259,7 +276,7 @@ const WRichTextStyle = css`
     .tooltiptext::after {
         content: "";
         position: absolute;
-        top: 100%;
+        bottom: -100;
         left: 50%;
         margin-left: -5px;
         border-width: 5px;
@@ -304,6 +321,7 @@ const WRichTextStyle = css`
       
     .inputfile {
         cursor: pointer;
+        display: none;
         width: 400px;
         padding: 10px 20px;
         border: none;
@@ -319,7 +337,7 @@ const WRichTextStyle = css`
         width: 130px;
         padding: 10px 20px;
         margin: 5px;
-        box-shadow: 0 4px 7px rgba(0, 0, 0, 0.9);
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
         transition: transform .2s ease-out;
         background-color: #fff;
         color: #000;
@@ -330,7 +348,7 @@ const WRichTextStyle = css`
 
     .list {
         border: none;
-        box-shadow: 0 4px 7px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
         background-repeat: no-repeat;
         background-position: center;
         background-size: 16px;
@@ -339,7 +357,7 @@ const WRichTextStyle = css`
 
     .link {
         border: none;
-        box-shadow: 0 4px 7px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
         background-repeat: no-repeat;
         background-position: center;
         background-size: 16px;
@@ -348,7 +366,7 @@ const WRichTextStyle = css`
 
     .center {
         border: none;
-        box-shadow: 0 4px 7px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
         background-repeat: no-repeat;
         background-position: center;
         background-size: 16px;
@@ -357,7 +375,7 @@ const WRichTextStyle = css`
 
     .right {
         border: none;
-        box-shadow: 0 4px 7px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
         background-repeat: no-repeat;
         background-position: center;
         background-size: 16px;
@@ -366,7 +384,7 @@ const WRichTextStyle = css`
 
     .left {
         border: none;
-        box-shadow: 0 4px 7px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
         background-repeat: no-repeat;
         background-position: center;
         background-size: 16px;
@@ -378,7 +396,7 @@ const WRichTextStyle = css`
         font-family: "Times New Roman";
         font-weight: bold;
         font-size: 16px;
-        box-shadow: 0 4px 7px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
     }
     .italic {
         border: none;
@@ -386,7 +404,7 @@ const WRichTextStyle = css`
         font-weight: bold;
         font-style: italic;
         font-size: 16px;
-        box-shadow: 0 4px 7px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
     }
     .underline {
         border: none;
@@ -394,7 +412,7 @@ const WRichTextStyle = css`
         font-weight: bold;
         text-decoration: underline;
         font-size: 16px;
-        box-shadow: 0 4px 7px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
     }
     `
 

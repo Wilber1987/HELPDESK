@@ -40,7 +40,7 @@ namespace CAPA_NEGOCIO.MAPEO
         [OneToMany(TableName = "CaseTable_Tareas", KeyColumn = "Id_Case", ForeignKeyColumn = "Id_Case")]
         public List<CaseTable_Tareas>? CaseTable_Tareas { get; set; }
 
-        [OneToMany(TableName = "CaseTable_Comments", KeyColumn = "Id_Case", ForeignKeyColumn = "Id_Case")]
+        //[OneToMany(TableName = "CaseTable_Comments", KeyColumn = "Id_Case", ForeignKeyColumn = "Id_Case")]
         public List<CaseTable_Comments>? CaseTable_Comments { get; set; }
 
         public bool CreateAutomaticCase(MailMessage mail, Cat_Dependencias dependencia)
@@ -412,8 +412,8 @@ namespace CAPA_NEGOCIO.MAPEO
         public Cat_Dependencias? Cat_Dependencia { get; set; }
         [OneToMany(TableName = "Cat_Dependencias", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia_Padre")]
         public List<Cat_Dependencias>? Cat_Dependencias_Hijas { get; set; }
-        [OneToMany(TableName = "CaseTable_Case", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
-        public List<CaseTable_Case>? CaseTable_Case { get; set; }
+        //[OneToMany(TableName = "CaseTable_Case", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
+       // public List<CaseTable_Case>? CaseTable_Case { get; set; }
         [OneToMany(TableName = "CaseTable_Agenda", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
         public List<CaseTable_Agenda>? CaseTable_Agenda { get; set; }
         [OneToMany(TableName = "CaseTable_Dependencias_Usuarios", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]

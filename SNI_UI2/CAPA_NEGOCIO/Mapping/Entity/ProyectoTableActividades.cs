@@ -1,6 +1,7 @@
 ﻿using CAPA_DATOS;
 using CAPA_NEGOCIO.MAPEO;
 using CAPA_NEGOCIO.Security;
+using CAPA_NEGOCIO.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,9 @@ using System.Threading.Tasks;
 using API.Controllers;
 using AE.Net.Mail;
 using System.Text.Json.Serialization;
+using System.Net;
+using System.Collections.Generic;
+using System.Collections;
 
 namespace CAPA_NEGOCIO.MAPEO
 {
@@ -251,6 +255,13 @@ namespace CAPA_NEGOCIO.MAPEO
         Leido, Pendiente
     }
 
+    public class ModelFiles
+    {
+        public string? Name { get; set; }
+        public string? Value { get; set; }
+        public string? Type { get; set; }
+    }
+
     public class CaseTable_Comments : EntityClass
     {
         [PrimaryKey(Identity = true)]
@@ -259,6 +270,8 @@ namespace CAPA_NEGOCIO.MAPEO
         public string? NickName { get; set; }
         public string? Mail { get; set; }
         public string? Body { get; set; }
+        [JsonProp]
+        public List<ModelFiles>? Attach_Files { get; set; }
         public int? Id_Case { get; set; }
         public int? Id_User { get; set; }
         public DateTime? Fecha { get; set; }
@@ -362,6 +375,8 @@ namespace CAPA_NEGOCIO.MAPEO
         public List<String>? Cc { get; set; }
         [JsonProp]
         public List<String>? ToAdress { get; set; }
+        //[JsonProp]
+        //public string? Attach_Files { get; set; }
         //public int? Size { get; set; }
         public String? Flags { get; set; }
         //public string[] RawFlags { get; set; }

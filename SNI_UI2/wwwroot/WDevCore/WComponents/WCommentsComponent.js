@@ -43,8 +43,6 @@ class WCommentsComponent extends HTMLElement {
             ]
         })
 
-
-
         this.shadowRoot?.append(StyleScrolls.cloneNode(true), StylesControlsV2.cloneNode(true),
             this.CustomStyle, this.CommentsContainer, this.OptionContainer,  this.RitchOptionContainer)
         this.DrawWCommentsComponent();
@@ -65,13 +63,15 @@ class WCommentsComponent extends HTMLElement {
         const Message = {
             // @ts-ignore
             Body: this.RitchInput.value,
-            AttachFiles: this.RitchInput.Files,
+            Attach_Files: this.RitchInput.Files,
             Id_Case: this.CommentsIdentify,
-            Id_User: this.User.UserId
+            Id_User: this.User.UserI
         }
+        //console.log(Message.Attach_Files);
         const response = await WAjaxTools.PostRequest(this.UrlAdd, Message);
-        // @ts-ignore 
-        //this.MessageInput.value = ""; TODO REINICIAR EL RITTEXT
+        //this.RitchInput.FunctionClear();
+        //@ts-ignore 
+        //this.MessageInput.value = ""; //TODO REINICIAR EL RITTEXT
         this.update();
     }
     update = async () => {
@@ -79,6 +79,7 @@ class WCommentsComponent extends HTMLElement {
             Id_Case: this.CommentsIdentify
         }
         const response = await WAjaxTools.PostRequest(this.UrlSearch, Message);
+        //console.log(response);
         this.Dataset = response;
         this.DrawWCommentsComponent();
     }

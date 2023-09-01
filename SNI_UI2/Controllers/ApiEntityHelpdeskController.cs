@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using CAPA_NEGOCIO.MAPEO;
 using API.Controllers;
 using System.Collections.Generic;
+using System.Linq;
+using CAPA_NEGOCIO.Services;
 
 namespace API.Controllers
 {
@@ -21,7 +23,6 @@ namespace API.Controllers
         [AuthController]
         public object? saveCaseTable_Comments(CaseTable_Comments inst)
         {
-                      
             return inst.SaveComment(HttpContext.Session.GetString("seassonKey"));
         }
         [HttpPost]

@@ -169,13 +169,14 @@ class CaseManagerComponent extends HTMLElement {
                         }))
                     }
                 },
-                actividad.Id_Vinculate != null ? {
+                //actividad.Id_Vinculate != null ? 
+                {
                     name: "Vinculaciones", action: async (ev) => {
                         const modelVinculate = new CaseTable_Case({ Id_Vinculate: actividad.Id_Vinculate });
                         tabManager.NavigateFunction("vinculaciones",
                             new WTableComponent({ Dataset: await modelVinculate.GetOwCase(), ModelObject: new CaseTable_Case() }))
                     }
-                } : undefined
+                } 
             ]
         });
         const commentsDataset = await new CaseTable_Comments({ Id_Case: actividad.Id_Case }).Get();
@@ -239,7 +240,7 @@ class CaseManagerComponent extends HTMLElement {
         }
         .actividadDetailView {
             display: grid;
-            grid-template-columns: calc(100% - 420px) 400px;
+            grid-template-columns: calc(100% - 520px) 500px;
             grid-template-rows: 150px 50px auto;
             gap: 0px 20px;
         }
@@ -256,7 +257,7 @@ class CaseManagerComponent extends HTMLElement {
             color: #0a2542;
             border-radius: 15px;
             display: grid;
-            grid-template-columns: calc(100% - 100px) 100px;
+            grid-template-columns: calc(100% - 180px) 100px;
         }
         .actividad h4 {
             margin: 5px 0px;

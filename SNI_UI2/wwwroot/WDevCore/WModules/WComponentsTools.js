@@ -142,7 +142,7 @@ function html(body) {
     // @ts-ignore
     return WRender.CreateStringNode(body);
 }
-export {html}
+export { html }
 class WRender {
     /**
      * 
@@ -344,7 +344,6 @@ class ComponentsManager {
                 let navigateComponets = JSON.parse(sessionStorage.getItem("navigateComponets"));
                 if (navigateComponets != null) {
                     const newNode = this.DomComponents.find(node => node.id == hashD);
-                    //console.log(newNode);
                     this.NavigateFunction(hashD, newNode, this.MainContainer);
                 }
 
@@ -631,8 +630,9 @@ class WArrayF {
     static MaxDateValue(Data, MaxParam) {
         var Maxvalue = new Date(Data[0][MaxParam]);
         for (let index = 0; index < Data.length; index++) {
-            if (new Date((Data[index][MaxParam]) > Maxvalue)) {
-                Maxvalue = Data[index][MaxParam];
+
+            if (new Date(Data[index][MaxParam]) > Maxvalue) {
+                Maxvalue = new Date(Data[index][MaxParam]);
             }
         }
         return Maxvalue;
@@ -640,8 +640,9 @@ class WArrayF {
     static MinDateValue(Data, MaxParam) {
         var MinValue = new Date(Data[0][MaxParam]);
         for (let index = 0; index < Data.length; index++) {
+
             if (new Date(Data[index][MaxParam]) < MinValue) {
-                MinValue = Data[index][MaxParam];
+                MinValue = new Date(Data[index][MaxParam]);
             }
         }
         return MinValue;
@@ -892,7 +893,7 @@ Date.prototype.subtractDays = function (days) {
  * @param {Integer} month 
  * @returns {Date}
  */
-Date.prototype.modifyMonth = function(meses) {  
+Date.prototype.modifyMonth = function (meses) {
     const fecha = new Date(this.toString()); //¡se hace esto para no modificar la fecha original!
     const mes = fecha.getMonth();
     fecha.setMonth(fecha.getMonth() + meses);
@@ -918,7 +919,7 @@ String.prototype.getMonthFormatEs = function () {
     const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
     const dias_semana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
     const fecha = new Date(this);
-    return  meses[fecha.getMonth()];
+    return meses[fecha.getMonth()];
 };
 
 

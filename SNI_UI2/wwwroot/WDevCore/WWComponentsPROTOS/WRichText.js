@@ -19,6 +19,9 @@ class WRichText extends HTMLElement {
          * @type {Array<modelFiles>}
          */
         this.Files = [];
+        this.style.backgroundColor = "#fff";
+        this.style.padding= "5px";
+        this.style.border= "1px solid rgb(222 222 222)"
         this.DrawComponent();
     }
     connectedCallback() {
@@ -191,6 +194,7 @@ const WRichTextStyle = css`
         display: flex;
         align-items: center;
         justify-content: center;
+        flex-wrap: wrap;
     }
 
     w-rich-text .InputFileSection {

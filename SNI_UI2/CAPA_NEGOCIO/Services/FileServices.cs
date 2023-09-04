@@ -2,45 +2,47 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using CAPA_DATOS;
+using CAPA_NEGOCIO.MAPEO;
+using CAPA_NEGOCIO.Mapping;
 
 namespace CAPA_NEGOCIO.Services
 {
     public class FileService
     {
-        public static ResponseService upload(string path, string base64String)//exampl(e imagenes,"ascd41asd==")
+        public static ResponseService upload(string path, ModelFiles Attach)
         {
             try
             {
-                DirectoryInfo dir = Directory.CreateDirectory(@"/Files/" + path + "/");//se crea la carpeta, segun documentacion no es necesario validar si ya existe
-                string[] subs = base64String.Split(',');
-                if (!IsBase64String(subs[1]) || subs.Count() <= 1)
+
+                string Carpeta = @"\wwwroot\Media\" + path;
+                string Ruta = Directory.GetCurrentDirectory() + Carpeta;
+                if (!Directory.Exists(Ruta))
                 {
-                    return new ResponseService()
-                    {
-                        status = 403,
-                        value = base64String,
-                        message = "Formato incorrecto, bse64 invalido"
-                    };
+                    Directory.CreateDirectory(Ruta);
                 }
-                String extension = ".pdf";
-                if (subs[0].Contains("data:image/"))
+
+                byte[] File64 = Convert.FromBase64String(Attach.Value);
+                string[] extension = Attach.Type.Split(new string[] { "data:" }, StringSplitOptions.RemoveEmptyEntries);
+                string MimeType = "";
+                if (extension.Length > 0)
                 {
-                    extension = ".png";
+                    MimeType = extension[0];
                 }
-                Guid myuuid = Guid.NewGuid();//genero el nombre del archivo                
-                string myuuidAsString = myuuid.ToString();
-                String fileName = myuuid.ToString() + extension;
+                string FileType = GetFileType(MimeType);
+                Guid Uuid = Guid.NewGuid();
+                string FileName = Uuid.ToString() + FileType;
+                string FileRoute = Ruta + FileName;
+                File.WriteAllBytes(FileRoute, File64);
+                string RutaRelativa = Path.GetRelativePath(Directory.GetCurrentDirectory(), FileRoute);
 
-                byte[] fileByteArray = Convert.FromBase64String(subs[1]);
-                File.WriteAllBytes(dir + fileName, fileByteArray);
-
-
-                Console.WriteLine(dir);
+                ModelFiles AttachFiles = new ModelFiles();
+                AttachFiles.Value = RutaRelativa;
+                AttachFiles.Type = FileType;
 
                 return new ResponseService()
                 {
                     status = 200,
-                    value = fileName,
+                    body = AttachFiles,
                     message = "Archivo creado correctamente"
                 };
 
@@ -57,10 +59,22 @@ namespace CAPA_NEGOCIO.Services
 
         }
 
-        public static bool IsBase64String(string base64)
+        public static string GetFileType(string mimeType)
         {
-            Span<byte> buffer = new Span<byte>(new byte[base64.Length]);
-            return Convert.TryFromBase64String(base64, buffer, out int bytesParsed);
+            Dictionary<string, string> TypeFile = new Dictionary<string, string>
+        {
+            { "image/png;base64,", ".png" },
+            { "application/pdf;base64,", ".pdf" },
+        };
+
+            if (TypeFile.TryGetValue(mimeType, out string Type))
+            {
+                return Type;
+            }
+            else
+            {
+                return ".unknown";
+            }
         }
     }
 }

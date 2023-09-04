@@ -286,6 +286,12 @@ namespace CAPA_NEGOCIO.MAPEO
                 Id_User = user.UserId;
                 NickName = user.UserData?.Nombres;
                 Mail = user.mail;
+                foreach(var file in Attach_Files)
+                {
+                    ModelFiles Response = (ModelFiles) FileService.upload("Attach\\", file).body;
+                    file.Value = Response.Value;
+                    file.Type = Response.Type;
+                }
                 Save();
                 List<String?>? toMails = new List<string?>();
                 CaseTable_Case? caseTable_Case = new CaseTable_Case() { Id_Case = Id_Case }.Find<CaseTable_Case>();

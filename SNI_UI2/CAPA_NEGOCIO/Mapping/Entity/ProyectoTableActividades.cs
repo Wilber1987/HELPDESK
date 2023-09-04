@@ -286,6 +286,12 @@ namespace CAPA_NEGOCIO.MAPEO
                 Id_User = user.UserId;
                 NickName = user.UserData?.Nombres;
                 Mail = user.mail;
+                foreach(var file in Attach_Files)
+                {
+                    ModelFiles Response = (ModelFiles) FileService.upload("Attach\\", file).body;
+                    file.Value = Response.Value;
+                    file.Type = Response.Type;
+                }
                 Save();
                 List<String?>? toMails = new List<string?>();
                 CaseTable_Case? caseTable_Case = new CaseTable_Case() { Id_Case = Id_Case }.Find<CaseTable_Case>();
@@ -375,8 +381,8 @@ namespace CAPA_NEGOCIO.MAPEO
         public List<String>? Cc { get; set; }
         [JsonProp]
         public List<String>? ToAdress { get; set; }
-        //[JsonProp]
-        //public string? Attach_Files { get; set; }
+        [JsonProp]
+        public List<ModelFiles> Attach_Files { get; set; }
         //public int? Size { get; set; }
         public String? Flags { get; set; }
         //public string[] RawFlags { get; set; }

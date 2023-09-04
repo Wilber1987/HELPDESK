@@ -286,9 +286,9 @@ namespace CAPA_NEGOCIO.MAPEO
                 Id_User = user.UserId;
                 NickName = user.UserData?.Nombres;
                 Mail = user.mail;
-                foreach(var file in Attach_Files)
+                foreach (var file in Attach_Files)
                 {
-                    ModelFiles Response = (ModelFiles) FileService.upload("Attach\\", file).body;
+                    ModelFiles Response = (ModelFiles)FileService.upload("Attach\\", file).body;
                     file.Value = Response.Value;
                     file.Type = Response.Type;
                 }
@@ -419,7 +419,7 @@ namespace CAPA_NEGOCIO.MAPEO
         [OneToMany(TableName = "Cat_Dependencias", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia_Padre")]
         public List<Cat_Dependencias>? Cat_Dependencias_Hijas { get; set; }
         //[OneToMany(TableName = "CaseTable_Case", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
-       // public List<CaseTable_Case>? CaseTable_Case { get; set; }
+        // public List<CaseTable_Case>? CaseTable_Case { get; set; }
         [OneToMany(TableName = "CaseTable_Agenda", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
         public List<CaseTable_Agenda>? CaseTable_Agenda { get; set; }
         [OneToMany(TableName = "CaseTable_Dependencias_Usuarios", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
@@ -563,6 +563,15 @@ namespace CAPA_NEGOCIO.MAPEO
                 Fecha_Finalizacion = DateTime.Now;
             }
             return Update();
+        }
+
+        internal object? SaveTarea()
+        {
+            List<DateTime?> fechasIniciales = this.CaseTable_Calendario.Select(c => c.Fecha_Inicial).ToList();
+            List<DateTime?> fechasFinales = this.CaseTable_Calendario.Select(c => c.Fecha_Inicial).ToList();
+            Fecha_Inicio = fechasIniciales.Min();
+            Fecha_Finalizacion = fechasFinales.Max();
+            return this.Save();
         }
     }
     public class CaseTable_Participantes : EntityClass

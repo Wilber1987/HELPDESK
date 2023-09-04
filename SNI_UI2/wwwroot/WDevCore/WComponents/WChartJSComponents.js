@@ -820,7 +820,7 @@ class GanttChart extends HTMLElement {
             this.TimeLine.append(WRender.Create({
                 id: i.toLocaleDateString(),
                 class: "TimeLineBlock",
-                innerText: this.listOfAllDaysSpanish_mini[i.getDay()]//formateadorFecha.format(i)
+                children: [ i.toISO(), this.listOfAllDaysSpanish_mini[i.getDay()]] //formateadorFecha.format(i)
             }))
         }
         this.TaskContainer.innerHTML = "";
@@ -844,7 +844,7 @@ class GanttChart extends HTMLElement {
         const days = this.TimeLine.querySelectorAll(".TimeLineBlock");
         const task = this.TaskContainer.querySelectorAll(".taskBlock");
         const daysArray = [...days];
-        console.log(daysArray);
+        //console.log(daysArray);
         task.forEach(el => {
             //const duration = el.dataset.duration.split("-");
             const duration = el.name.split("-");
@@ -931,9 +931,13 @@ class GanttChart extends HTMLElement {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            text-transform: lowercase;
             padding: 5px 20px;
             transition: all 0.65s linear 0.2s;
         }
+        .taskDetail::first-letter {
+            text-transform: uppercase;
+         }        
 
         /* CHART-VALUES
         –––––––––––––––––––––––––––––––––––––––––––––––––– */
@@ -957,10 +961,13 @@ class GanttChart extends HTMLElement {
         
 
         .TimeLineBlock {
+            display: flex;
             flex: 1;
             grid-column: 2/3;
-            min-width: 30px;
+            min-width: 80px;
+            font-size: 12px;
             text-align: center;
+            flex-direction: column;
         }
 
         .TimeLineBlock:not(:last-child) {

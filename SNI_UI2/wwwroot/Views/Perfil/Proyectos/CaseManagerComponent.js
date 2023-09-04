@@ -91,9 +91,10 @@ class CaseManagerComponent extends HTMLElement {
             ]
         })
     }
+    
     actividadDetail = async (actividad = (new CaseTable_Case())) => {
         const actividadDetailView = WRender.Create({ className: "actividadDetailView", children: [this.actividadElementDetail(actividad)] });
-        const tareasActividad = await new CaseTable_Tareas({ Id_Case: actividad.Id_Case }).Get();
+        const tareasActividad = await new CaseTable_Tareas({ Id_Case: actividad.Id_Case }).Get();        
         const taskModel = new CaseTable_Tareas({
             Id_Case: { type: 'number', hidden: true, value: actividad.Id_Case },
             CaseTable_Tarea: { type: 'WSelect', Dataset: tareasActividad, ModelObject: () => new CaseTable_Tareas() },
@@ -103,7 +104,7 @@ class CaseManagerComponent extends HTMLElement {
                         Agenda: await new CaseTable_Agenda({ Id_Dependencia: actividad.Cat_Dependencias.Id_Dependencia }).Get(),
                         Calendario: await new ViewCalendarioByDependencia({ Id_Dependencia: actividad.Cat_Dependencias.Id_Dependencia }).Get()
                     }
-                }, require: false, hiddenInTable: true
+                }, require: true, hiddenInTable: true
             }
         });
         const tasktable = new WTableComponent({
@@ -138,47 +139,7 @@ class CaseManagerComponent extends HTMLElement {
         const taskContainer = WRender.Create({ className: "" });
         const ganttChart = new GanttChart({ Dataset: tareasActividad ?? [], EvalValue: "date" });
         const tabManager = new ComponentsManager({ MainContainer: taskContainer });
-        const taskNav = new WAppNavigator({
-            //NavStyle: "tab",
-            Inicialize: true,
-            Elements: [
-                {
-                    name: "Vista de panel", action: async (ev) => {
-                        tabManager.NavigateFunction("taskPanel",
-                            new TaskManagers(tareasActividad,
-                                taskModel, {
-                                ImageUrlPath: "/Media/Image/", action: async (task) => {
-                                    const find = actividad.CaseTable_Tareas.find(t => t.Id_Tarea == task.Id_Tarea);
-                                    for (const prop in task) {
-                                        find[prop] = task[prop]
-                                    }
-                                    actividad.Progreso = actividad.CaseTable_Tareas?.filter(tarea => tarea.Estado?.includes("Finalizado")).length;
-                                    actividadDetailView.querySelector(".actividadDetail").innerHTML = "";
-                                    actividadDetailView.querySelector(".actividadDetail").append(this.actividadElementDetail(actividad));
-                                }
-                            }))
-                    }
-                },
-                { name: "Vista de progreso", action: async (ev) => { tabManager.NavigateFunction("ganttChart", ganttChart) } },
-                { name: "Vista de detalles", action: async (ev) => { tabManager.NavigateFunction("taskTable", tasktable) } },
-                {
-                    name: "Nueva Tarea", action: async (ev) => {
-                        this.shadowRoot.append(new WModalForm({
-                            ModelObject: taskModel,
-                            AutoSave: true, title: "Nueva Tarea"
-                        }))
-                    }
-                },
-                //actividad.Id_Vinculate != null ? 
-                {
-                    name: "Vinculaciones", action: async (ev) => {
-                        const modelVinculate = new CaseTable_Case({ Id_Vinculate: actividad.Id_Vinculate });
-                        tabManager.NavigateFunction("vinculaciones",
-                            new WTableComponent({ Dataset: await modelVinculate.GetOwCase(), ModelObject: new CaseTable_Case() }))
-                    }
-                } 
-            ]
-        });
+       
         const commentsDataset = await new CaseTable_Comments({ Id_Case: actividad.Id_Case }).Get();
         const commentsContainer = new WCommentsComponent({
             Dataset: commentsDataset,
@@ -189,7 +150,64 @@ class CaseManagerComponent extends HTMLElement {
             UrlSearch: "../api/ApiEntityHelpdesk/getCaseTable_Comments",
             UrlAdd: "../api/ApiEntityHelpdesk/saveCaseTable_Comments"
         });
-
+        const taskManager =   new TaskManagers(tareasActividad,
+            taskModel, {
+            ImageUrlPath: "/Media/Image/", action: async (task) => {
+                const find = actividad.CaseTable_Tareas.find(t => t.Id_Tarea == task.Id_Tarea);
+                for (const prop in task) {
+                    find[prop] = task[prop]
+                }
+                actividad.Progreso = actividad.CaseTable_Tareas?.filter(tarea => tarea.Estado?.includes("Finalizado")).length;
+                actividadDetailView.querySelector(".actividadDetail").innerHTML = "";
+                actividadDetailView.querySelector(".actividadDetail").append(this.actividadElementDetail(actividad));
+            }
+        })
+        const update = async () => {
+            const dataTask = await new CaseTable_Tareas({ Id_Case: actividad.Id_Case }).Get();  
+            ganttChart.Dataset = dataTask;
+            ganttChart.DrawComponent();
+            ganttChart.Animate();            
+            tasktable.Dataset = dataTask;  
+            tasktable.DrawTable();
+            taskManager.Dataset = dataTask;
+            taskManager.DrawTaskManagers();
+        }
+        const taskNav = new WAppNavigator({
+            //NavStyle: "tab",
+            Inicialize: true,
+            Elements: [
+                {
+                    name: "Vista de panel", action: async (ev) => {
+                        tabManager.NavigateFunction("taskManager", taskManager)
+                    }
+                },
+                { name: "Vista de progreso", action: async (ev) => { tabManager.NavigateFunction("ganttChart", ganttChart) } },
+                { name: "Vista de detalles", action: async (ev) => { tabManager.NavigateFunction("taskTable", tasktable) } },
+                {
+                    name: "Nueva Tarea", action: async (ev) => {
+                        this.shadowRoot.append(new WModalForm({
+                            ModelObject: taskModel,
+                            AutoSave: true,
+                            title: "Nueva Tarea",
+                            ObjectOptions: {
+                                SaveFunction: () => {
+                                    update();
+                                }
+                            }
+                        }))
+                    }
+                },
+                //actividad.Id_Vinculate != null ? 
+                {
+                    name: "Vinculaciones", action: async (ev) => {
+                        const modelVinculate = new CaseTable_Case({ Id_Vinculate: actividad.Id_Vinculate });
+                        tabManager.NavigateFunction("vinculaciones",
+                            new WTableComponent({ Dataset: await modelVinculate.GetOwCase(), ModelObject: new CaseTable_Case() }))
+                    }
+                }
+            ]
+        });
+       
         actividadDetailView.append(commentsContainer, taskNav, taskContainer)
         this.TabManager.NavigateFunction("Tab-Actividades-Viewer" + actividad.Id_Case, actividadDetailView);
     }

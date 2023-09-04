@@ -1034,7 +1034,10 @@ class WForm extends HTMLElement {
                             return false;
                         }
 
-                    } else if (this.Config.ModelObject[prop]?.type.toUpperCase() == "MASTERDETAIL") {
+                    } else if (this.Config.ModelObject[prop]?.type.toUpperCase() == "MASTERDETAIL" 
+                    || this.Config.ModelObject[prop]?.type.toUpperCase() == "CALENDAR") {
+                        console.log(this.Config.ModelObject[prop].require == true);
+                        console.log(ObjectF[prop]);
                         if (this.Config.ModelObject[prop].require == true) {
                             this.Config.ModelObject[prop].MinimunRequired = this.Config.ModelObject[prop]?.MinimunRequired ?? 1;
                         }

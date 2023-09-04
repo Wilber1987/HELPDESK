@@ -9,13 +9,13 @@ import { css } from '../../../WDevCore/WModules/WStyledRender.js';
 class TaskManagers extends HTMLElement {
     /**
      * 
-     * @param {Array<CaseTable_Tareas>} Tasks 
+     * @param {Array<CaseTable_Tareas>} Dataset 
      * @param {CaseTable_Tareas} Model 
      * @param {Object} [Config] 
      */
-    constructor(Tasks, Model, Config) {
+    constructor(Dataset, Model, Config) {
         super();
-        this.Tasks = Tasks;
+        this.Dataset = Dataset;
         this.Config = Config;
         this.TaskModel = Model ?? new CaseTable_Tareas();
         this.attachShadow({ mode: 'open' });
@@ -30,23 +30,23 @@ class TaskManagers extends HTMLElement {
         this.DrawTaskManagers();
     }
     connectedCallback() { }
-    DrawTaskManagers = async (TasksData) => {
+    DrawTaskManagers = async (DatasetData) => {
         this.TabContainer.innerHTML = "";
-        this.TaskManager(TasksData);
+        this.TaskManager(DatasetData);
     }
     /**
      * 
-     * @param {Array<Object>} TasksData 
+     * @param {Array<Object>} DatasetData 
      */
-    TaskManager = (TasksData = this.Tasks) => {
+    TaskManager = (DatasetData = this.Dataset) => {
         const StatePanelContainer = WRender.Create({
             className: "panelContainer",
             style: " grid-template-columns: repeat(" + this.TaskModel.Estado.Dataset.length + ", auto);"
         })
         this.TaskModel.Estado.Dataset.forEach(state => {
-            const Tasks = TasksData.filter(t => t.Estado == state);
+            const Dataset = DatasetData.filter(t => t.Estado == state);
             const Panel = WRender.Create({
-                className: Tasks.length > 0 ? "panel" : "panel-inact", id: "Panel-" + state,
+                className: Dataset.length > 0 ? "panel" : "panel-inact", id: "Panel-" + state,
                 ondrop: (ev) => {
                     var data = ev.dataTransfer.getData("text");
                     const taskCard = this.shadowRoot?.getElementById(data);
@@ -61,7 +61,7 @@ class TaskManagers extends HTMLElement {
                     { tagName: "label", class: "title-panel", innerText: state }
                 ]
             });
-            Tasks.forEach(task => {
+            Dataset.forEach(task => {
                 Panel.append(this.taskCard(task));
             });
             const panelOptions = WRender.Create({

@@ -64,8 +64,6 @@ class WCommentsComponent extends HTMLElement {
                 }
             ]
         })
-
-
         this.shadowRoot?.append(StyleScrolls.cloneNode(true), StylesControlsV2.cloneNode(true),
             this.CustomStyle, this.CommentsContainer, this.TypeTextContainer,
             this.OptionContainer, this.RitchOptionContainer)
@@ -113,6 +111,12 @@ class WCommentsComponent extends HTMLElement {
                 - this.CommentsContainer.clientHeight;
         }
         scrollToBottom();
+        this.Interval = setInterval(async ()=> {
+            await this.update()
+        }, 20000)
+    }
+    disconnectedCallback() {      
+        this.Interval = null;
     }
     DrawWCommentsComponent = async () => {
         this.CommentsContainer.innerHTML = "";
@@ -136,7 +140,7 @@ class WCommentsComponent extends HTMLElement {
             overflow: hidden;
             overflow-y: auto;  
             min-width: 380px;
-            min-height: 400px;
+            min-height: 350px;
             background-color: #e9e9e9;     
             height: calc(100%  - 100px);
             border-radius: 10px;

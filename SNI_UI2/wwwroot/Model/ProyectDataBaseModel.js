@@ -198,7 +198,7 @@ class CaseTable_Tareas extends EntityClass {
     CaseTable_Calendario = {
         type: 'CALENDAR',
         ModelObject: () => new CaseTable_Calendario(),
-        require: false,
+        require: true,
         hiddenInTable: true,
         CalendarFunction: () => { }
     };

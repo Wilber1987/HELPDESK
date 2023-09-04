@@ -1,8 +1,6 @@
 //@ts-check
-//import { WRender } from "/WDevCore/WModules/WComponentsTools.js";
 import { WRender } from "../WModules/WComponentsTools.js"
-import { WCssClass, css } from "../WModules/WStyledRender.js"
-//import { WCssClass, css } from "/WDevCore/WModules/WStyledRender.js";
+import {  css } from "../WModules/WStyledRender.js"
 class ModelFiles {
     constructor(name, value, type) {
         this.Name = name;
@@ -21,6 +19,9 @@ class WRichText extends HTMLElement {
          * @type {Array<ModelFiles>}
          */
         this.Files = [];
+        this.style.backgroundColor = "#fff";
+        this.style.padding= "5px";
+        this.style.border= "1px solid rgb(222 222 222)"
         this.DrawComponent();
     }
     connectedCallback() {
@@ -207,6 +208,7 @@ const WRichTextStyle = css`
         display: flex;
         align-items: center;
         justify-content: center;
+        flex-wrap: wrap;
     }
 
     w-rich-text .InputFileSection {
@@ -368,7 +370,7 @@ const WRichTextStyle = css`
         background-repeat: no-repeat;
         background-position: center;
         background-size: 16px;
-        background-image: url("../Icons/list.png");
+        background-image: url("/WDevCore/Icons/list.png");
     }
 
     .link {
@@ -377,7 +379,7 @@ const WRichTextStyle = css`
         background-repeat: no-repeat;
         background-position: center;
         background-size: 16px;
-        background-image: url("../Icons/globe.png");
+        background-image: url("/WDevCore/Icons/globe.png");
     }
 
     .center {
@@ -386,7 +388,7 @@ const WRichTextStyle = css`
         background-repeat: no-repeat;
         background-position: center;
         background-size: 16px;
-        background-image: url("../Icons/align-center.png");
+        background-image: url("/WDevCore/Icons/align-center.png");
     }
 
     .right {
@@ -395,7 +397,7 @@ const WRichTextStyle = css`
         background-repeat: no-repeat;
         background-position: center;
         background-size: 16px;
-        background-image: url("../Icons/symbol.png");
+        background-image: url("/WDevCore/Icons/symbol.png");
     }
 
     .left {
@@ -404,7 +406,7 @@ const WRichTextStyle = css`
         background-repeat: no-repeat;
         background-position: center;
         background-size: 16px;
-        background-image: url("../Icons/align-left.png");
+        background-image: url("/WDevCore/Icons/align-left.png");
     }
 
     .bold {

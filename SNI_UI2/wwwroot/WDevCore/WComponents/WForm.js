@@ -1113,11 +1113,12 @@ class WForm extends HTMLElement {
                     this.ExecuteSaveFunction(ObjectF, response);
                 }
                 ModalCheck.close();
-                if (this.Config.SaveFunction != undefined) {
-                    this.Config.SaveFunction(ObjectF);
-                } else if (this.Config.ObjectOptions?.SaveFunction != undefined) {
-                    this.Config.ObjectOptions?.SaveFunction(ObjectF);
-                }
+                // if (this.Config.SaveFunction != undefined) {
+                //     console.log("HEARE");
+                //     this.Config.SaveFunction(ObjectF);
+                // } else if (this.Config.ObjectOptions?.SaveFunction != undefined) {
+                //     this.Config.ObjectOptions?.SaveFunction(ObjectF);
+                // }
             } catch (error) {
                 ModalCheck.close();
                 console.log(error);

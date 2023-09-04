@@ -17,12 +17,13 @@ class WCommentsComponent extends HTMLElement {
         this.attachShadow({ mode: 'open' });
         this.CommentsContainer = WRender.Create({ className: "CommentsContainer" })
         this.MessageInput = WRender.Create({ tagName: 'textarea' });
-        this.style.backgroundColor = "#fff";
+
+        //this.style.backgroundColor = "#fff";
         this.OptionContainer = WRender.Create({
             className: "OptionContainer", children: [
                 this.MessageInput,
                 {
-                    tagName: 'input', type: 'button', className: 'Btn-Mini',
+                    tagName: 'input', type: "button",  className: 'Btn-Mini',
                     value: 'Send', onclick: async () => {
                         this.saveComment();
                     }
@@ -32,10 +33,10 @@ class WCommentsComponent extends HTMLElement {
 
         this.RitchInput = new WRichText();
         this.RitchOptionContainer = WRender.Create({
-            className: "OptionContainer", children: [
+            className: "RichOptionContainer", style: {display: "none"}, children: [
                 this.RitchInput,
                 {
-                    tagName: 'input', type: 'button', className: 'Btn-Mini',
+                    tagName: 'input', type: "button",  className: 'Btn-Mini',
                     value: 'Send', onclick: async () => {
                         this.saveRitchComment();
                     }
@@ -43,8 +44,31 @@ class WCommentsComponent extends HTMLElement {
             ]
         })
 
+        this.TypeTextContainer = WRender.Create({
+            className: "textContainer", children: [
+                {
+                    tagName: 'label',
+                    innerText: 'Texto normal', onclick: async () => {
+                        this.CommentsContainer.style.height = "calc(100% - 100px)";
+                        this.RitchOptionContainer.style.display = "none";
+                        this.OptionContainer.style.display = "grid";
+                    }
+                }, {
+                    tagName: 'label',
+                    innerText: 'Texto enriquecido', onclick: async () => {
+                        this.CommentsContainer.style.height = "calc(100% - 600px)";
+                        this.RitchOptionContainer.style.display = "flex";
+                        this.OptionContainer.style.display = "none";
+
+                    }
+                }
+            ]
+        })
+
+
         this.shadowRoot?.append(StyleScrolls.cloneNode(true), StylesControlsV2.cloneNode(true),
-            this.CustomStyle, this.CommentsContainer, this.OptionContainer,  this.RitchOptionContainer)
+            this.CustomStyle, this.CommentsContainer, this.TypeTextContainer,
+            this.OptionContainer, this.RitchOptionContainer)
         this.DrawWCommentsComponent();
     }
     saveComment = async () => {
@@ -84,7 +108,7 @@ class WCommentsComponent extends HTMLElement {
         this.DrawWCommentsComponent();
     }
     connectedCallback() {
-        const scrollToBottom = ()=> {
+        const scrollToBottom = () => {
             this.CommentsContainer.scrollTop = this.CommentsContainer.scrollHeight
                 - this.CommentsContainer.clientHeight;
         }
@@ -120,11 +144,26 @@ class WCommentsComponent extends HTMLElement {
             display: block;
             max-height: 70vh;
         }
+        .textContainer {
+            display: flex;
+        }
+        .textContainer label{
+            padding: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+            font-weight: bold;
+            font-size: 12px;
+        }
         .OptionContainer {
             padding: 10px;
             display: grid;
             grid-template-columns: calc(100% - 120px) 80px;
             min-width: 400px;
+        }
+        .RichOptionContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
         }
         .comment, .commentSelf {
             padding: 10px;

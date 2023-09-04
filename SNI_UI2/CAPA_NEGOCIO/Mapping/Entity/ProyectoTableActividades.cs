@@ -381,8 +381,8 @@ namespace CAPA_NEGOCIO.MAPEO
         public List<String>? Cc { get; set; }
         [JsonProp]
         public List<String>? ToAdress { get; set; }
-        //[JsonProp]
-        //public string? Attach_Files { get; set; }
+        [JsonProp]
+        public List<ModelFiles> Attach_Files { get; set; }
         //public int? Size { get; set; }
         public String? Flags { get; set; }
         //public string[] RawFlags { get; set; }

@@ -31,7 +31,7 @@ namespace CAPA_NEGOCIO.MAPEO
         public int? Id_Servicio { get; set; }
         public int? Id_Vinculate { get; set; }
 
-        [ManyToOne(TableName = "Tbl_Profile", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
+       // [ManyToOne(TableName = "Tbl_Profile", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
         public Tbl_Profile? Tbl_Profile { get; set; }
         [ManyToOne(TableName = "Cat_Dependencias", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
         public Cat_Dependencias? Cat_Dependencias { get; set; }
@@ -286,7 +286,7 @@ namespace CAPA_NEGOCIO.MAPEO
                 Id_User = user.UserId;
                 NickName = user.UserData?.Nombres;
                 Mail = user.mail;
-                foreach (var file in Attach_Files)
+                foreach (var file in Attach_Files ?? new List<ModelFiles>())
                 {
                     ModelFiles Response = (ModelFiles)FileService.upload("Attach\\", file).body;
                     file.Value = Response.Value;

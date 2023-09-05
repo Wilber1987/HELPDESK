@@ -3,6 +3,7 @@ import { StylesControlsV2, StyleScrolls } from "../StyleModules/WStyleComponents
 import { WAjaxTools, WRender } from "../WModules/WComponentsTools.js";
 import { css } from "../WModules/WStyledRender.js";
 import { WRichText } from "../WWComponentsPROTOS/WRichText.js";
+import { WModalForm } from "./WModalForm.js";
 
 class WCommentsComponent extends HTMLElement {
     constructor(props) {
@@ -23,7 +24,7 @@ class WCommentsComponent extends HTMLElement {
             className: "OptionContainer", children: [
                 this.MessageInput,
                 {
-                    tagName: 'input', type: "button",  className: 'Btn-Mini',
+                    tagName: 'input', type: "button", className: 'Btn-Mini',
                     value: 'Send', onclick: async () => {
                         this.saveComment();
                     }
@@ -33,10 +34,10 @@ class WCommentsComponent extends HTMLElement {
 
         this.RitchInput = new WRichText();
         this.RitchOptionContainer = WRender.Create({
-            className: "RichOptionContainer", style: {display: "none"}, children: [
+            className: "RichOptionContainer", style: { display: "none" }, children: [
                 this.RitchInput,
                 {
-                    tagName: 'input', type: "button",  className: 'Btn-Mini',
+                    tagName: 'input', type: "button", className: 'Btn-Mini',
                     value: 'Send', onclick: async () => {
                         this.saveRitchComment();
                     }
@@ -108,32 +109,55 @@ class WCommentsComponent extends HTMLElement {
     connectedCallback() {
         const scrollToBottom = () => {
             this.CommentsContainer.scrollTop = this.CommentsContainer.scrollHeight
-                - this.CommentsContainer.clientHeight;
+                //- this.CommentsContainer.clientHeight;
         }
         scrollToBottom();
-        this.Interval = setInterval(async ()=> {
+        this.Interval = setInterval(async () => {
             await this.update()
         }, 20000)
     }
-    disconnectedCallback() {      
+    disconnectedCallback() {
         this.Interval = null;
     }
     DrawWCommentsComponent = async () => {
         this.CommentsContainer.innerHTML = "";
-        console.log(this.Dataset);
+        //console.log(this.Dataset);
         this.Dataset.forEach(comment => {
+            const attachs = WRender.Create({ className: "attachs" });
+            comment.Attach_Files?.forEach(attach => {
+                if (attach.Type.toUpperCase().includes("JPG")
+                    || attach.Type.toUpperCase().includes("JPEG")
+                    || attach.Type.toUpperCase().includes("PNG")) {
+                    attachs.append(WRender.Create({ tagName: "img", src: attach.Value.replace("wwwroot", "") }));
+                } else if (attach.Type.toUpperCase().includes("PDF")) {
+                    attachs.append(WRender.Create({
+                        tagName: "a", innerText: attach.Name , onclick: () => {
+                            //attach.Value.replace("wwwroot", "")
+                            this.shadowRoot?.append(new WModalForm({
+                                ObjectModal: WRender.Create({
+                                    tagName: "iframe", src: attach.Value.replace("wwwroot", ""), style: {
+                                        height: "600px",
+                                        width: "100%"
+                                    }
+                                })
+                            }))
+                        }
+                    }));
+                }
+
+            });
             this.CommentsContainer.insertBefore(WRender.Create({
                 tagName: "div",
                 className: comment.Id_User == this.User.UserId ? "commentSelf" : "comment",
                 children: [
                     { tagName: "label", className: "nickname", innerHTML: comment.NickName },
-                    { tagName: "p", innerHTML: comment.Body },
+                    { tagName: "p", innerHTML: comment.Body }, attachs,
                     { tagName: "label", innerHTML: comment.Fecha.toDateFormatEs() }
                 ]
             }), this.CommentsContainer.firstChild);
         });
     }
-    CustomStyle = css`
+    CustomStyle = css`    
         .CommentsContainer{
             display: flex;
             flex-direction: column;
@@ -196,6 +220,22 @@ class WCommentsComponent extends HTMLElement {
         label.nickname {
             font-weight: bold;
             text-align: left;
+        }
+        .attachs {
+            overflow: hidden;           
+        }
+        .attachs img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .attachs a {
+            cursor: pointer;
+            margin: 10px 0px;
+            display: block;
+            font-weight: bold;
+            text-decoration: underline;
+            color: #020c1f;
         }
        
     `

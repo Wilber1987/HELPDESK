@@ -147,8 +147,7 @@ namespace CAPA_NEGOCIO.Security
             }
             return Security_Users_List;
         }
-
-        internal bool IsAdmin()
+         internal bool IsAdmin()
         {
             return Security_Users_Roles?.Find(r => r.Security_Role?.Security_Permissions_Roles?.Find(p =>
              p.Security_Permissions.Descripcion.Equals(PermissionsEnum.ADMIN_ACCESS.ToString())

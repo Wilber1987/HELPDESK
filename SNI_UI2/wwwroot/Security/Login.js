@@ -5,15 +5,16 @@ import { WSecurity } from "../WDevCore/WModules/WSecurity.js";
 
 const OnLoad = async () => {
     const UserData = {
-        mail: undefined,
-        password: undefined
+        mail: "",
+        password: ""
     }
     const LoginForm = WRender.Create({
         className: "LoginForm", children: [
             WRender.Create({ tagName: "style", innerHTML: '@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap");' }),
-           StylesControlsV2.cloneNode(true),
+            WRender.createElement(StylesControlsV2),
             WRender.Create(MasterStyle),
-            { tagName: 'h1', innerText: "HELPDESK", class: 'login-header' },
+            //{ tagName: 'img', src: Icons.SNI, class: 'className' },
+            { tagName: 'h1', innerText: "Inicio de sesion", class: 'className' },
             {
                 children: ["Correo", {
                     tagName: 'input', type: 'text', placeholder: 'Correo', onchange: (ev) => {
@@ -30,11 +31,6 @@ const OnLoad = async () => {
                 children: [{
                     tagName: 'input', type: 'button', className: 'Btn', value: 'Ok',
                     onclick: async () => WSecurity.Login(UserData)
-                }]
-            }, {
-                children: [{
-                    tagName: 'input', type: 'button', className: 'Btn', value: 'Postularse',
-                    onclick: async () => { window.location = "./Register"; }
                 }]
             }
         ]
@@ -72,10 +68,6 @@ const MasterStyle = {
         }), new WCssClass("img", {
             display: "block",
             width: "50%"
-        }),new WCssClass(".login-header", {
-            display: "block",
-           color: "#555",
-           "font-size": 36
         }),
     ], MediaQuery: [{
         condicion: "(max-width: 800px)",

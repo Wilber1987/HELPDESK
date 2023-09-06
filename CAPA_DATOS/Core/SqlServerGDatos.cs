@@ -300,12 +300,13 @@ namespace CAPA_DATOS
                     JsonProp? json = (JsonProp?)Attribute.GetCustomAttribute(oProperty, typeof(JsonProp));
                     if (json != null)
                     {
-                        Values = Values + AtributeName + "= '" + JsonConvert.SerializeObject(AtributeValue) + "',";
+                        String jsonV = JsonConvert.SerializeObject(AtributeValue);
+                        Values = Values + AtributeName + "= '" + JValue.Parse(jsonV).ToString(Formatting.Indented) + "',";
                     }
                     else
                     {
                         Values = Values + AtributeName + "= '" + AtributeValue.ToString() + "',";
-                    }
+                    }                   
                     break;
                 case "int":
                 case "float":

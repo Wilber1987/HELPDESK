@@ -113,6 +113,10 @@ namespace CAPA_NEGOCIO.Security
                 }
                 else
                 {
+                    if (this.Estado == null)
+                    {   
+                        this.Estado = "ACTIVO";                        
+                    }
                     this.Update("Id_User");
                 }
                 if (this.Security_Users_Roles != null)

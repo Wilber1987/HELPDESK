@@ -31,7 +31,7 @@ namespace CAPA_NEGOCIO.MAPEO
         public int? Id_Servicio { get; set; }
         public int? Id_Vinculate { get; set; }
 
-       // [ManyToOne(TableName = "Tbl_Profile", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
+        // [ManyToOne(TableName = "Tbl_Profile", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
         public Tbl_Profile? Tbl_Profile { get; set; }
         [ManyToOne(TableName = "Cat_Dependencias", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
         public Cat_Dependencias? Cat_Dependencias { get; set; }
@@ -438,6 +438,8 @@ namespace CAPA_NEGOCIO.MAPEO
                 "Id_Dependencia", Inst.Get<CaseTable_Dependencias_Usuarios>().Select(p => p.Id_Dependencia.ToString()).ToArray()
             );
         }
+        [OneToMany(TableName = "Tbl_Servicios", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
+        public List<Tbl_Servicios>? Tbl_Servicios { get; set; }
 
         internal List<Cat_Dependencias> GetDependencias<T>()
         {

@@ -8,11 +8,16 @@ const OnLoad = async () => {
     const dep = await new Cat_Dependencias().Get();
     const container = WRender.Create({ className: "dep-container" });
     dep.forEach((element, index) => {
-        container.append(WRender.Create({
+        const cont = WRender.Create({
             className: "card", style: { backgroundColor: ColorsList[index] }, children: [
-                { tagName: "label", innerText: element.Descripcion }
+                { tagName: "h1", innerText: element.Descripcion },
+                { tagName: "label", innerText: element.Username },
+                {className: "cont-mini-cards", children: element.Tbl_Servicios?.map(s =>  WRender.Create({className: "mini-card", innerText: s.Descripcion_Servicio}))}               
             ]
-        }))
+        })
+        
+       
+        container.append(cont)
     });
     Main.append(cssCus, container);
 }
@@ -28,6 +33,17 @@ const cssCus = css`
         background-color: #0e8bd9;
         color: #fff;
         border-radius: 15px;
+    }
+    .cont-mini-cards {
+        width: 100%;
+        display: flex;
+    }
+    .mini-card {
+        padding: 10px;
+        background-color: #fff;
+        border-radius: 10px;
+        color: #444;
+        margin: 10px;
     }
 `
 window.onload = OnLoad;

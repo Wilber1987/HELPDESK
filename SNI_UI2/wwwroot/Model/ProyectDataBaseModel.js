@@ -76,6 +76,8 @@ class Tbl_Servicios extends EntityClass {
     Descripcion_Servicio = { type: 'text' };
     //Visibilidad = { type: 'text' };
     Estado = { type: "Select", Dataset: ["Activo", "Inactivo"] };
+    Cat_Tipo_Servicio = { type: 'WSelect', ModelObject: () => new Cat_Tipo_Servicio() };
+    Cat_Dependencias = { type: 'WSelect', ModelObject: () => new Cat_Dependencias() }
     //Fecha_Inicio = { type: 'date' };
     //Fecha_Finalizacion = { type: 'date' };
     //CaseTable_Case = { type: 'MasterDetail', ModelObject: () => new CaseTable_Case() };
@@ -239,9 +241,12 @@ class Cat_Dependencias extends EntityClass {
     }
     Id_Dependencia = { type: 'number', primary: true };
     Descripcion = { type: 'text' };
+    Username = { type: 'email' };
+    Password = { type: 'text' , hiddenInTable: true};
+    Host = { type: 'text' };
     //Cat_Dependencia = { type: 'WSelect', ModelObject: () => new Cat_Dependencias(), require: false };
     Cat_Dependencias_Hijas = { type: 'Multiselect', ModelObject: () => new Cat_Dependencias(), require: false };
-    CaseTable_Agenda = { type: 'MasterDetail', ModelObject: () => new CaseTable_Agenda(), require: false };
+    CaseTable_Agenda = { type: 'MasterDetail', ModelObject: () => new CaseTable_Agenda() };
     CaseTable_Dependencias_Usuarios = { type: 'MasterDetail', ModelObject: () => new CaseTable_Dependencias_Usuarios(), require: false };
     GetOwDependencies = async () => {
         return await this.GetData("Proyect/GetOwDependencies");

@@ -55,7 +55,7 @@ namespace CAPA_NEGOCIO.MAPEO
         public List<CaseTable_Agenda>? CaseTable_Agenda { get; set; }
         //[OneToMany(TableName = "CaseTable_Dependencias_Usuarios", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
         public List<CaseTable_Dependencias_Usuarios>? CaseTable_Dependencias_Usuarios { get; set; }
-       //[OneToMany(TableName = "CaseTable_Participantes", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
+        //[OneToMany(TableName = "CaseTable_Participantes", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
         public List<CaseTable_Participantes>? CaseTable_Participantes { get; set; }
 
         public List<CaseTable_Dependencias_Usuarios> TakeDepCoordinaciones()
@@ -148,9 +148,13 @@ namespace CAPA_NEGOCIO.MAPEO
         public string? Visibilidad { get; set; }
         public string? Estado { get; set; }
         public DateTime? Fecha_Inicio { get; set; }
+        public int? Id_Dependencia { get; set; }
         public DateTime? Fecha_Finalizacion { get; set; }
         [ManyToOne(TableName = "Cat_Tipo_Servicio", KeyColumn = "Id_Tipo_Servicio", ForeignKeyColumn = "Id_Tipo_Servicio")]
         public Cat_Tipo_Servicio? Cat_Tipo_Servicio { get; set; }
+        [ManyToOne(TableName = "Cat_Dependencias", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
+        public Cat_Dependencias? Cat_Dependencias { get; set; }
+       
     }
 
     public class CaseTable_VinculateCase : EntityClass

@@ -16,12 +16,12 @@ window.addEventListener("load", async () => {
             Elements: [{
                 name: WOrtograficValidation.es("Mantenimiento de Catalogos"), SubNav: {
                     Elements: [
-                        ElementTab(DOMManager, new Cat_Tipo_Servicio()),
-                        ElementTab(DOMManager, new Tbl_Servicios()),
-                        ElementTab(DOMManager, new Cat_Cargos_Dependencias()),
                         ElementTab(DOMManager, new Cat_Dependencias()),
-                        ElementTab(DOMManager, new Cat_Tipo_Evidencia()),
-                        ElementTab(DOMManager, new Cat_Tipo_Participaciones()),
+                        ElementTab(DOMManager, new Tbl_Servicios()),
+                        ElementTab(DOMManager, new Cat_Tipo_Servicio()),                        
+                        ElementTab(DOMManager, new Cat_Cargos_Dependencias()),                        
+                        //ElementTab(DOMManager, new Cat_Tipo_Evidencia()),
+                        //ElementTab(DOMManager, new Cat_Tipo_Participaciones()),
                         ElementTab(DOMManager, new Cat_Paises())
                     ]
                 }
@@ -34,6 +34,11 @@ function ElementTab(DOMManager, Model) {
         name: WOrtograficValidation.es(Model.constructor.name), url: "#",
         action: async (ev) => {
             const response = await WAjaxTools.PostRequest("../api/ApiEntityHelpdesk/get" + Model.constructor.name, {});
+            if ( Model.constructor.name == "Cat_Dependencias") {
+                response.forEach(e => {
+                    e.Password = undefined;
+                });
+            }
             const Table = new WTableComponent({
                 Dataset: response,
                 ModelObject: Model,

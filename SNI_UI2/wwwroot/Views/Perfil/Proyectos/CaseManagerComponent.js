@@ -51,7 +51,7 @@ class CaseManagerComponent extends HTMLElement {
         this.actividadesManager();
     }
     actividadesManager = async () => {
-        const datasetMap = this.Dataset.map(actividad => {
+        const datasetMap = this.Dataset.filter(x => x.Estado != "Vinculado").map(actividad => {
             actividad.Dependencia = actividad.Cat_Dependencias?.Descripcion;
             actividad.Progreso = actividad.CaseTable_Tareas?.filter(tarea => tarea.Estado?.includes("Finalizado")).length;
             return this.actividadElement(actividad);

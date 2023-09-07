@@ -155,7 +155,7 @@ namespace CAPA_NEGOCIO.MAPEO
         public Cat_Tipo_Servicio? Cat_Tipo_Servicio { get; set; }
         [ManyToOne(TableName = "Cat_Dependencias", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
         public Cat_Dependencias? Cat_Dependencias { get; set; }
-       
+
     }
 
     public class CaseTable_VinculateCase : EntityClass
@@ -199,6 +199,15 @@ namespace CAPA_NEGOCIO.MAPEO
 
                 }
                 Descripcion = $"Vinculación de casos: {string.Join(", ", Casos_Vinculados.Select(c => "#" + c.Id_Case).ToList())}";
+                int? caseFatherId = Casos_Vinculados.Where(x => x.Id_Case != null).ToList().Select(x => x.Id_Case).ToList().Min();
+                foreach (var caseIten in Casos_Vinculados)
+                {
+                    if (caseIten.Id_Case != caseFatherId)
+                    {
+                        caseIten.Estado = Case_Estate.Vinculado.ToString();
+                    }
+
+                }
                 if (caseV != null)
                 {
                     var response = Update();

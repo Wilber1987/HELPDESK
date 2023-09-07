@@ -335,7 +335,7 @@ namespace CAPA_NEGOCIO.MAPEO
 
     public enum Case_Estate
     {
-        Solicitado, Pendiente, Activo, Finalizado, Espera, Rechazado
+        Solicitado, Pendiente, Activo, Finalizado, Espera, Rechazado, Vinculado
     }
 
     public class CaseTable_Mails : EntityClass

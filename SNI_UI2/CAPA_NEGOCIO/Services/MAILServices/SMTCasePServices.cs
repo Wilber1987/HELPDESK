@@ -21,10 +21,9 @@ namespace CAPA_NEGOCIO.Services
                 }.Get<CaseTable_Mails>();
 
                 foreach (var item in caseMail)
-                {
-                     
+                {                     
                     var Tcase = new CaseTable_Case() { Id_Case = item.Id_Case }.Find<CaseTable_Case>();
-                    await SMTPMailServices.SendMail(item.FromAdress,
+                    SMTPMailServices.SendMail(item.FromAdress,
                     item.ToAdress,
                     item.Subject,
                     item.Body,

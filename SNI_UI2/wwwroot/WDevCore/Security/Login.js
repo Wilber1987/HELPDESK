@@ -1,7 +1,7 @@
-import { WCssClass } from "../WDevCore/WModules/WStyledRender.js";
-import { StylesControlsV2 } from "../WDevCore/StyleModules/WStyleComponents.js";
-import { WRender, WAjaxTools } from "../WDevCore/WModules/WComponentsTools.js";
-import { WSecurity } from "../WDevCore/WModules/WSecurity.js";
+import { StylesControlsV2 } from "../StyleModules/WStyleComponents.js";
+import { WRender } from "../WModules/WComponentsTools.js";
+import { WSecurity } from "../Security/WSecurity.js";
+import { WCssClass } from "../WModules/WStyledRender.js";
 
 const OnLoad = async () => {
     const UserData = {

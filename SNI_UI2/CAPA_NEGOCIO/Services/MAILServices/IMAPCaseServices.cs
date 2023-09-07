@@ -35,13 +35,9 @@ namespace CAPA_NEGOCIO.Services
                             {
                                 try
                                 {
-                                     new CaseTable_Case().CreateAutomaticCase(mail, dependencia);
+                                    new CaseTable_Case().CreateAutomaticCase(mail, dependencia);
                                 }
-                                catch (System.Exception)
-                                {
-                                    
-                                }
-                               
+                                catch (System.Exception) { }
                                 imap.MoveMessage(mail.Uid, "READY");
                             }
                             imap.Expunge();

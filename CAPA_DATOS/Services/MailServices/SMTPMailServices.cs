@@ -16,8 +16,7 @@ namespace CAPA_DATOS.Services
         //const string PASSWORD = "%3e2w1qazsX";
         //const string HOST = "outlook.office365.com";
         const int PORT = 587;
-        public async static         Task
-SendMail(string from, List<string> toMails, string subject, string body, MailConfig config)
+        public static void SendMail(string from, List<string> toMails, string subject, string body, MailConfig config)
         {
             try
             {

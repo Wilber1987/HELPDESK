@@ -1,6 +1,6 @@
 import { ElementStyle, WNode } from "./CommonModel.js";
 import { EntityClass } from "./EntityClass.js";
-import { WSecurity } from "./WSecurity.js";
+
 function type(value) {
     var r;
     if (typeof value === 'object') {

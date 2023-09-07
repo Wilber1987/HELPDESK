@@ -9,6 +9,9 @@ import { WFilterOptions } from "../../WDevCore/WComponents/WFilterControls.js";
 import { WTableComponent } from '../../WDevCore/WComponents/WTableComponent.js';
 import { WModalForm } from '../../WDevCore/WComponents/WModalForm.js';
 import { CaseForm, simpleCaseForm } from '../Perfil/Proyectos/CaseManagerComponent.js';
+import { ControlBuilder } from '../../WDevCore/WModules/WControlBuilder.js';
+import { WCommentsComponent } from '../../WDevCore/WComponents/WCommentsComponent.js';
+import { WSecurity } from '../../WDevCore/Security/WSecurity.js';
 
 const OnLoad = async () => {
     const Solicitudes = await new CaseTable_Case().GetSolicitudesPendientesAprobar();
@@ -120,6 +123,10 @@ class SolicitudesPendientesView extends HTMLElement {
                             });
                             this.shadowRoot.append(modal);
                         }
+                    }, {
+                        name: "Ver bandeja", action: async (/**@type {CaseTable_Case}*/element) => {
+                            this.actividadDetail(element);
+                        }
                     }
                 ]
             }
@@ -146,6 +153,49 @@ class SolicitudesPendientesView extends HTMLElement {
     update = async () => {
         const Solicitudes = await new CaseTable_Case().GetSolicitudesPendientesAprobar();
         this.mainTable?.DrawTable(Solicitudes);
+    }
+
+    actividadDetail = async (actividad) => {
+        const actividadDetailView = WRender.Create({ className: "actividadDetailView", children: [this.actividadElementDetail(actividad)] });
+        const commentsDataset = await new CaseTable_Comments({ Id_Case: actividad.Id_Case }).Get();
+        const commentsContainer = new WCommentsComponent({
+            Dataset: commentsDataset,
+            ModelObject: new CaseTable_Comments(),
+            User: WSecurity.UserData,
+            UserIdProp: "Id_User",
+            CommentsIdentify: actividad.Id_Case,
+            UrlSearch: "../api/ApiEntityHelpdesk/getCaseTable_Comments",
+            UrlAdd: "../api/ApiEntityHelpdesk/saveCaseTable_Comments"
+        });
+        actividadDetailView.append(commentsContainer)
+        this.TabManager.NavigateFunction("Tab-Actividades-Viewer" + actividad.Id_Case, actividadDetailView);
+    }
+    actividadElementDetail = (actividad) => {
+        return WRender.Create({
+            className: "actividadDetail", object: actividad, children: [
+                this.actividadElement(actividad)
+            ]
+        })
+    }
+    actividadElement = (actividad) => {
+        return WRender.Create({
+            className: "actividad", object: actividad, children: [
+                { tagName: 'h4', innerText: `${actividad.Titulo} (${actividad.Tbl_Servicios?.Descripcion_Servicio ?? ""})` },
+                {
+                    className: "options", children: [
+                        { tagName: 'button', className: 'Btn-Mini', innerText: "Detalle", onclick: async () => await this.actividadDetail(actividad) },
+                        { tagName: 'button', className: 'Btn-Mini', innerText: 'Vincular Caso', onclick: () => this.Vincular(actividad) }
+                    ]
+                }, {
+                    className: "propiedades", children: [
+                        { tagName: 'label', innerText: "Estado: " + actividad.Estado },
+                        { tagName: 'label', innerText: "Dependencia: " + actividad.Dependencia },
+                        { tagName: 'label', innerText: "Fecha inicio: " + actividad.Fecha_Inicial?.toString().toDateFormatEs() },
+                        { tagName: 'label', innerText: "Fecha de finalización: " + actividad.Fecha_Final?.toString().toDateFormatEs() },
+                    ]
+                }
+            ]
+        })
     }
 
 

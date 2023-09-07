@@ -1,23 +1,22 @@
 
 
-import { Cat_Dependencias, CaseTable_Case, CaseTable_Agenda, CaseTable_Calendario, CaseTable_Evidencias, CaseTable_Participantes, CaseTable_Tareas, CaseTable_Comments, CaseTable_VinculateCase } from '../../../Model/ProyectDataBaseModel.js';
+import { CaseSearcherToVinculate } from '../../../AppComponents/CaseSearcherToVinculate.js';
 import { ViewCalendarioByDependencia } from '../../../Model/DBOViewModel.js';
+import { CaseTable_Agenda, CaseTable_Calendario, CaseTable_Case, CaseTable_Comments, CaseTable_Evidencias, CaseTable_Tareas, CaseTable_VinculateCase, Cat_Dependencias } from '../../../Model/ProyectDataBaseModel.js';
+import { WSecurity } from '../../../WDevCore/Security/WSecurity.js';
 import { StylesControlsV2, StylesControlsV3 } from "../../../WDevCore/StyleModules/WStyleComponents.js";
 import { WAppNavigator } from '../../../WDevCore/WComponents/WAppNavigator.js';
-import { ColumChart, GanttChart, RadialChart } from '../../../WDevCore/WComponents/WChartJSComponents.js';
+import { GanttChart } from '../../../WDevCore/WComponents/WChartJSComponents.js';
+import { WCommentsComponent } from '../../../WDevCore/WComponents/WCommentsComponent.js';
 import { DocumentViewer } from '../../../WDevCore/WComponents/WDocumentViewer.js';
-import { WFilterOptions } from '../../../WDevCore/WComponents/WFilterControls.js';
 import { ModalVericateAction, WForm } from "../../../WDevCore/WComponents/WForm.js";
 import { WModalForm } from '../../../WDevCore/WComponents/WModalForm.js';
 import { WPaginatorViewer } from '../../../WDevCore/WComponents/WPaginatorViewer.js';
 import { WTableComponent } from "../../../WDevCore/WComponents/WTableComponent.js";
-import { ComponentsManager, WArrayF, WRender } from '../../../WDevCore/WModules/WComponentsTools.js';
+import { ComponentsManager, WRender } from '../../../WDevCore/WModules/WComponentsTools.js';
 import { ControlBuilder } from '../../../WDevCore/WModules/WControlBuilder.js';
-import { WCssClass, WStyledRender, css } from '../../../WDevCore/WModules/WStyledRender.js';
+import { css } from '../../../WDevCore/WModules/WStyledRender.js';
 import { TaskManagers } from './TaskManager.js';
-import { WCommentsComponent } from '../../../WDevCore/WComponents/WCommentsComponent.js';
-import { WSecurity } from '../../../WDevCore/WModules/WSecurity.js';
-import { CaseSearcherToVinculate } from '../../../AppComponents/CaseSearcherToVinculate.js';
 
 class CaseManagerComponent extends HTMLElement {
     /**
@@ -297,6 +296,8 @@ class CaseManagerComponent extends HTMLElement {
 }
 customElements.define('w-case-manager', CaseManagerComponent);
 export { CaseManagerComponent };
+export { CaseForm };
+export { simpleCaseForm };
 /**
  * @param {CaseTable_Case} [entity] 
  * @param {Array<Cat_Dependencias>} [dependencias] 
@@ -337,7 +338,6 @@ const CaseForm = (entity, dependencias, action) => {
     })
     return form;
 }
-export { CaseForm }
 
 /**
  * @param {CaseTable_Case} [entity] 
@@ -371,4 +371,4 @@ const simpleCaseForm = (entity, dependencias, action) => {
     })
     return form;
 }
-export { simpleCaseForm }
+

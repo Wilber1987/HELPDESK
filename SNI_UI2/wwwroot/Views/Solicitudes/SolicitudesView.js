@@ -1,11 +1,13 @@
 
-import { CaseTable_Case, Cat_Dependencias } from '../../Model/ProyectDataBaseModel.js';
+import { CaseTable_Case, CaseTable_Comments, Cat_Dependencias } from '../../Model/ProyectDataBaseModel.js';
 import { StylesControlsV2, StylesControlsV3 } from "../../WDevCore/StyleModules/WStyleComponents.js";
 import { WForm } from "../../WDevCore/WComponents/WForm.js";
 import { WPaginatorViewer } from '../../WDevCore/WComponents/WPaginatorViewer.js';
 import { ComponentsManager, WRender } from '../../WDevCore/WModules/WComponentsTools.js';
 import { css } from '../../WDevCore/WModules/WStyledRender.js';
 import { WFilterOptions } from "../../WDevCore/WComponents/WFilterControls.js";
+import { WCommentsComponent } from '../../WDevCore/WComponents/WCommentsComponent.js';
+import { WSecurity } from '../../WDevCore/Security/WSecurity.js';
 
 const OnLoad = async () => {
     const Solicitudes = await new CaseTable_Case().GetOwSolicitudesPendientesAprobar();
@@ -34,7 +36,7 @@ class MainSolicitudesView extends HTMLElement {
             }, Estado: {
                 hidden: true
             }, Cat_Dependencias: {
-                type: "WSELECT", ModelObject: ()=> new Cat_Dependencias()
+                type: "WSELECT", ModelObject: () => new Cat_Dependencias()
             }
         });
         this.DrawMainSolicitudesView();
@@ -74,15 +76,33 @@ class MainSolicitudesView extends HTMLElement {
                         { tagName: 'label', innerText: "Fecha inicio: " + actividad.Fecha_Inicial?.toString().toDateFormatEs() },
                         { tagName: 'label', innerText: "Fecha de finalización: " + actividad.Fecha_Final?.toString().toDateFormatEs() },
                     ]
-                },  {
+                }, {
                     className: "options", children: [
-                        { tagName: 'button', className: 'Btn-Mini', innerText: "Detalle", onclick: async () => await this.actividadDetail(actividad) },
-                      //  { tagName: 'button', className: 'Btn-Mini', innerText: 'Informe', onclick: this.action }
+                        {
+                            tagName: 'button', className: 'Btn-Mini', innerText: "Detalle",
+                            onclick: async () => await this.actividadDetail(actividad)
+                        },
                     ]
                 },
             ]
         })
     }
+    actividadDetail = async (actividad) => {
+        const actividadDetailView = WRender.Create({ className: "actividadDetailView", children: [this.actividadElementDetail(actividad)] });  
+        const commentsDataset = await new CaseTable_Comments({ Id_Case: actividad.Id_Case }).Get();
+        const commentsContainer = new WCommentsComponent({
+            Dataset: commentsDataset,
+            ModelObject: new CaseTable_Comments(),
+            User: WSecurity.UserData,
+            UserIdProp: "Id_User",
+            CommentsIdentify: actividad.Id_Case,
+            UrlSearch: "../api/ApiEntityHelpdesk/getCaseTable_Comments",
+            UrlAdd: "../api/ApiEntityHelpdesk/saveCaseTable_Comments"
+        }); 
+        actividadDetailView.append(commentsContainer)
+        this.TabManager.NavigateFunction("Tab-Actividades-Viewer" + actividad.Id_Case, actividadDetailView);
+    }
+
     actividadElementDetail = (actividad) => {
         return WRender.Create({
             className: "actividadDetail", object: actividad, children: [

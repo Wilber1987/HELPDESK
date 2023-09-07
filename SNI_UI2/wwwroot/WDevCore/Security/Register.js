@@ -1,10 +1,9 @@
-import { css, WCssClass } from "../WDevCore/WModules/WStyledRender.js";
-import { StylesControlsV2 } from "../WDevCore/StyleModules/WStyleComponents.js";
-import { WRender, WAjaxTools } from "../WDevCore/WModules/WComponentsTools.js";
-import { WSecurity } from "../WDevCore/WModules/WSecurity.js";
-import { WForm } from "../WDevCore/WComponents/WForm.js";
-import { WTableComponent } from "../WDevCore/WComponents/WTableComponent.js";
 import { Tbl_Datos_Laborales, Tbl_Formacion_Academica, Tbl_Investigaciones, Tbl_Profile } from "../Model/ModelDatabase.js";
+import { StylesControlsV2 } from "../StyleModules/WStyleComponents.js";
+import { WForm } from "../WComponents/WForm.js";
+import { WTableComponent } from "../WComponents/WTableComponent.js";
+import { WAjaxTools, WRender } from "../WModules/WComponentsTools.js";
+import { css } from "../WModules/WStyledRender.js";
 
 const OnLoad = async () => {
     //const { WRender, WAjaxTools } = await import("./WDevCore/WModules/WComponentsTools.js");

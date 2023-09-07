@@ -1,7 +1,6 @@
-import { WSecurity } from "../WModules/WSecurity.js";
-import { WRender, ComponentsManager } from "../WModules/WComponentsTools.js";
-import { WCssClass } from "../WModules/WStyledRender.js";
+import { WRender } from "../WModules/WComponentsTools.js";
 import { WIcons } from "../WModules/WIcons.js";
+import { WCssClass } from "../WModules/WStyledRender.js";
 
 
 /**
@@ -340,4 +339,4 @@ class WAppNavigator extends HTMLElement {
     }
 }
 customElements.define("w-app-navigator", WAppNavigator);
-export { WAppNavigator }
+export { WAppNavigator };

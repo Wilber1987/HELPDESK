@@ -1,6 +1,6 @@
 ﻿using CAPA_DATOS;
 using CAPA_NEGOCIO.MAPEO;
-using CAPA_NEGOCIO.Security;
+using CAPA_DATOS.Security;
 using CAPA_NEGOCIO.Services;
 using System;
 using System.Collections.Generic;
@@ -13,6 +13,7 @@ using System.Text.Json.Serialization;
 using System.Net;
 using System.Collections.Generic;
 using System.Collections;
+using CAPA_DATOS.Services;
 
 namespace CAPA_NEGOCIO.MAPEO
 {
@@ -254,14 +255,6 @@ namespace CAPA_NEGOCIO.MAPEO
     {
         Leido, Pendiente
     }
-
-    public class ModelFiles
-    {
-        public string? Name { get; set; }
-        public string? Value { get; set; }
-        public string? Type { get; set; }
-    }
-
     public class CaseTable_Comments : EntityClass
     {
         [PrimaryKey(Identity = true)]
@@ -305,7 +298,7 @@ namespace CAPA_NEGOCIO.MAPEO
                     Id_Case = caseTable_Case?.Id_Case,
                     Subject = $"RE: " + caseTable_Case?.Titulo?.ToUpper(),
                     Body = Body,
-                    From = user.mail,
+                    FromAdress = user.mail,
                     Estado = MailState.PENDIENTE.ToString(),
                     Date = DateTime.Now,
                     ToAdress = toMails.Where(m => m != null && m != user.mail).ToList().Distinct().ToList()
@@ -353,7 +346,7 @@ namespace CAPA_NEGOCIO.MAPEO
             Subject = mail.Subject;
             MessageID = mail.MessageID;
             Sender = mail.Sender?.Address;
-            From = mail.From?.Address;
+            FromAdress = mail.From?.Address;
             ReplyTo = mail.ReplyTo?.Select(r => r.Address).ToList();
             Bcc = mail.Bcc?.Select(r => r.Address).ToList();
             Cc = mail.Cc?.Select(r => r.Address).ToList();
@@ -372,7 +365,7 @@ namespace CAPA_NEGOCIO.MAPEO
         public string? Estado { get; set; }
         public string? Sender { get; set; }
         public string? Body { get; set; }
-        public string? From { get; set; }
+        public string? FromAdress { get; set; }
         [JsonProp]
         public List<String>? ReplyTo { get; set; }
         [JsonProp]

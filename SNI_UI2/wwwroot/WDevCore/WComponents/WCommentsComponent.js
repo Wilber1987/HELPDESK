@@ -90,11 +90,8 @@ class WCommentsComponent extends HTMLElement {
             Id_Case: this.CommentsIdentify,
             Id_User: this.User.UserI
         }
-        //console.log(Message.Attach_Files);
         const response = await WAjaxTools.PostRequest(this.UrlAdd, Message);
-        //this.RitchInput.FunctionClear();
-        //@ts-ignore 
-        //this.MessageInput.value = ""; //TODO REINICIAR EL RITTEXT
+        this.RitchInput.FunctionClear();
         this.update();
     }
     update = async () => {
@@ -128,11 +125,23 @@ class WCommentsComponent extends HTMLElement {
                 if (attach.Type.toUpperCase().includes("JPG")
                     || attach.Type.toUpperCase().includes("JPEG")
                     || attach.Type.toUpperCase().includes("PNG")) {
-                    attachs.append(WRender.Create({ tagName: "img", src: attach.Value.replace("wwwroot", "") }));
+                    attachs.append(WRender.Create({ tagName: "img", src: attach.Value.replace("wwwroot", "") , onclick : ()=>{                        
+                        this.shadowRoot?.append(new WModalForm({
+                            ObjectModal: WRender.Create({
+                                tagName: "img", src: attach.Value.replace("wwwroot", ""), style: {
+                                    width: "auto",
+                                    objectFit: "cover",
+                                    height: "calc(100% - 20px)",
+                                    maxWidth: "100%",
+                                    overflow: "hidden",
+                                    borderRadius: "20px"
+                                }
+                            })
+                        }))
+                    }}));
                 } else if (attach.Type.toUpperCase().includes("PDF")) {
                     attachs.append(WRender.Create({
                         tagName: "a", innerText: attach.Name , onclick: () => {
-                            //attach.Value.replace("wwwroot", "")
                             this.shadowRoot?.append(new WModalForm({
                                 ObjectModal: WRender.Create({
                                     tagName: "iframe", src: attach.Value.replace("wwwroot", ""), style: {
@@ -222,15 +231,22 @@ class WCommentsComponent extends HTMLElement {
             text-align: left;
         }
         .attachs {
-            overflow: hidden;           
+            overflow: hidden;   
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;       
         }
         .attachs img {
-            width: 100%;
-            height: 100%;
+            width: 100px;
+            height: 100px;
+            overflow: hidden;
+            cursor: pointer;
+            border-radius: 10px;
             object-fit: cover;
         }
         .attachs a {
             cursor: pointer;
+            width: 100%;
             margin: 10px 0px;
             display: block;
             font-weight: bold;

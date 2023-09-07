@@ -86,16 +86,15 @@ namespace CAPA_DATOS
                             {
                                 Values = Values + "'" + AtributeValue.ToString() + "',";
                             }
-
                             break;
                         case "int":
                         case "float":
                             ColumnNames = ColumnNames + AtributeName.ToString() + ",";
-                            Values = Values + "cast ('" + AtributeValue.ToString().Replace(",", ".") + "' as float),";
+                            Values = Values + "cast ('" + AtributeValue?.ToString()?.Replace(",", ".") + "' as float),";
                             break;
                         case "decimal":
                             ColumnNames = ColumnNames + AtributeName.ToString() + ",";
-                            Values = Values + "cast ('" + AtributeValue.ToString().Replace(",", ".") + "' as decimal),";
+                            Values = Values + "cast ('" + AtributeValue?.ToString()?.Replace(",", ".") + "' as decimal),";
                             break;
                         case "bigint":
                         case "money":
@@ -104,7 +103,8 @@ namespace CAPA_DATOS
                             Values = Values + AtributeValue.ToString() + ",";
                             break;
                         case "bit":
-                            Values = Values + AtributeName + "= '" + (AtributeValue.ToString() == "True" ? "1" : "0") + "',";
+                            ColumnNames = ColumnNames + AtributeName.ToString() + ",";
+                            Values = Values + "'" + (AtributeValue.ToString() == "True" ? "1" : "0") + "',";
                             break;
                         case "datetime":
                         case "date":
@@ -306,14 +306,14 @@ namespace CAPA_DATOS
                     else
                     {
                         Values = Values + AtributeName + "= '" + AtributeValue.ToString() + "',";
-                    }                   
+                    }
                     break;
                 case "int":
                 case "float":
-                    Values = Values + AtributeName + "= cast('" + AtributeValue.ToString().Replace(",", ".") + "' as float),";
+                    Values = Values + AtributeName + "= cast('" + AtributeValue?.ToString()?.Replace(",", ".") + "' as float),";
                     break;
                 case "decimal":
-                    Values = Values + AtributeName + "= cast('" + AtributeValue.ToString().Replace(",", ".") + "' as decimal),";
+                    Values = Values + AtributeName + "= cast('" + AtributeValue?.ToString()?.Replace(",", ".") + "' as decimal),";
                     break;
                 case "bigint":
                 case "money":
@@ -363,12 +363,12 @@ namespace CAPA_DATOS
                 else if (AtributeValue?.GetType() == typeof(Double))
                 {
                     WhereOrAnd(ref CondicionString, ref index);
-                    CondicionString = CondicionString + AtributeName + "= cast('" + AtributeValue?.ToString().Replace(",", ".") + "' as float)  ";
+                    CondicionString = CondicionString + AtributeName + "= cast('" + AtributeValue?.ToString()?.Replace(",", ".") + "' as float)  ";
                 }
                 else if (AtributeValue?.GetType() == typeof(Decimal))
                 {
                     WhereOrAnd(ref CondicionString, ref index);
-                    CondicionString = CondicionString + AtributeName + "= cast('" + AtributeValue?.ToString().Replace(",", ".") + "' as decimal)  ";
+                    CondicionString = CondicionString + AtributeName + "= cast('" + AtributeValue?.ToString()?.Replace(",", ".") + "' as decimal)  ";
                 }
             }
         }

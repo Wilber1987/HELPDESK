@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using CAPA_NEGOCIO.Security;
+using CAPA_DATOS.Security; 
 using System.Collections.Generic;
 
 namespace API.Controllers

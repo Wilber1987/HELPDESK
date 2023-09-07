@@ -1,11 +1,10 @@
 ﻿using CAPA_DATOS;
-using DataBaseModel;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 
-namespace CAPA_NEGOCIO.Security
+namespace CAPA_DATOS.Security
 {
     public class Security_Roles : EntityClass
     {

@@ -4,13 +4,14 @@ using System.Net;
 using System.Text;
 using AE.Net.Mail;
 using CAPA_DATOS;
+using CAPA_DATOS.Services;
 using CAPA_NEGOCIO.MAPEO;
 
 namespace CAPA_NEGOCIO.Services
 {
     public class SMTPCaseServices
     {
-        public Boolean sendCaseMailNotifications()
+        public async Task<bool> sendCaseMailNotificationsAsync()
         {
             try
             {
@@ -21,8 +22,9 @@ namespace CAPA_NEGOCIO.Services
 
                 foreach (var item in caseMail)
                 {
+                     
                     var Tcase = new CaseTable_Case() { Id_Case = item.Id_Case }.Find<CaseTable_Case>();
-                    SMTPMailServices.SendMail(item.From,
+                    await SMTPMailServices.SendMail(item.FromAdress,
                     item.ToAdress,
                     item.Subject,
                     item.Body,
@@ -34,6 +36,8 @@ namespace CAPA_NEGOCIO.Services
                     });
                     item.Estado = MailState.ENVIADO.ToString();
                     item.Update();
+                    await Task.Delay(5000);
+
                 }
                 return true;
 

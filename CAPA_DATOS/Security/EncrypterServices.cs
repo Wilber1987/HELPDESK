@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using CAPA_DATOS;
 
-namespace CAPA_NEGOCIO.Security
+namespace CAPA_DATOS.Security
 {
     public class EncrypterServices
     {      

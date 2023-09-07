@@ -2,10 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using CAPA_DATOS;
-using CAPA_NEGOCIO.MAPEO;
-using CAPA_NEGOCIO.Mapping;
 
-namespace CAPA_NEGOCIO.Services
+namespace CAPA_DATOS.Services
 {
     public class FileService
     {
@@ -77,4 +75,12 @@ namespace CAPA_NEGOCIO.Services
             }
         }
     }
+
+    public class ModelFiles
+    {
+        public string? Name { get; set; }
+        public string? Value { get; set; }
+        public string? Type { get; set; }
+    }
+
 }

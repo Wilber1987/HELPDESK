@@ -5,7 +5,7 @@ using System.Text;
 using AE.Net.Mail;
 using CAPA_DATOS;
 
-namespace CAPA_NEGOCIO.Services
+namespace CAPA_DATOS.Services
 {
     public class MailConfig
     {

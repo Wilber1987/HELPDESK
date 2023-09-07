@@ -1,6 +1,6 @@
 ﻿using CAPA_DATOS;
-using CAPA_NEGOCIO.Services;
-using CAPA_NEGOCIO.Security;
+using CAPA_DATOS.Services;
+using CAPA_DATOS.Security;
 
 namespace API.Controllers
 {

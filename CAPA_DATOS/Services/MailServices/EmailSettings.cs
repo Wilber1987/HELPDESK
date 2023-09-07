@@ -1,3 +1,4 @@
+namespace CAPA_DATOS.Services;
 public class EmailSettings
 {
     public string Host { get; set; }

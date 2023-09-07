@@ -1,3 +1,6 @@
+
+
+using CAPA_DATOS.Cron.Jobs;
 using CAPA_NEGOCIO.Services;
 
 namespace BackgroundJob.Cron.Jobs
@@ -20,7 +23,7 @@ namespace BackgroundJob.Cron.Jobs
             {
                 new IMAPCaseServices().chargeAutomaticCase();
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 _log.LogInformation(":::::::::::ERROR... at {0}", ex);
             }
@@ -72,9 +75,9 @@ namespace BackgroundJob.Cron.Jobs
             //CARGA AUTOMATICA DE CASOS
             try
             {
-                new SMTPCaseServices().sendCaseMailNotifications();
+                new SMTPCaseServices().sendCaseMailNotificationsAsync();
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 _log.LogInformation(":::::::::::ERROR... at {0}", ex);
             }

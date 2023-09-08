@@ -67,7 +67,7 @@ class CaseManagerComponent extends HTMLElement {
                 {
                     className: "options", children: [
                         { tagName: 'button', className: 'Btn-Mini', innerText: "Detalle", onclick: async () => await this.actividadDetail(actividad) },
-                        { tagName: 'button', className: 'Btn-Mini', innerText: 'Desvincular Caso', onclick: () => this.Desvincular(actividad) }
+                        { tagName: 'button', className: 'Btn-Mini', innerText: 'Vincular Caso', onclick: () => this.Vincular(actividad) }
                     ]
                 }, {
                     className: "propiedades", children: [
@@ -113,18 +113,18 @@ class CaseManagerComponent extends HTMLElement {
         this.TabManager.NavigateFunction("Tab-CaseFormView",
             WRender.Create({ className: "CaseFormView", children: [CaseForm(undefined, this.Dependencias)] }));
     }
-    Desvincular = async (actividad) => {
+    Vincular = async (actividad) => {
         this.shadowRoot.append(new WModalForm({
-            title: "Desvincular Casos",
-            ObjectModal: CaseSearcherToVinculate(actividad, "Desvincular", async (caso_vinculado, TableComponent, model) => {
+            title: "Vincular Casos",
+            ObjectModal: CaseSearcherToVinculate(actividad, "Vincular", async (caso_vinculado, TableComponent, model) => {
                 this.shadowRoot.append(ModalVericateAction(async () => {
                     const response = await new CaseTable_VinculateCase({
                         Casos_Vinculados: [actividad, caso_vinculado]
-                    }).DesvincularCaso();
+                    }).VincularCaso();
                     const updateData = await model.Get();
                     TableComponent.Dataset = updateData;
                     TableComponent.DrawTable();
-                }, "Esta seguro de Desvincular este caso"))
+                }, "Esta seguro de Vincular este caso"))
             })
         }));
     }

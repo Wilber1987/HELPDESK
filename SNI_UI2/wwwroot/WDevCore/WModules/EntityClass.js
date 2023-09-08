@@ -78,7 +78,7 @@ class EntityClass {
         if (Dataset.__proto__ == Object.prototype) {
             return Dataset;
         }
-        return Dataset.map(ent => new this.constructor(ent));;
+        return Dataset.map(ent => new this.constructor(ent));
     }
     SaveWithModel = async (Object, Edit = false) => {
         if (Edit == false) {

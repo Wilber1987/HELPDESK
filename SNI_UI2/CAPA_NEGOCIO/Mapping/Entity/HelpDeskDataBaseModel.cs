@@ -167,7 +167,7 @@ namespace CAPA_NEGOCIO.MAPEO
         [OneToMany(TableName = "CaseTable_Case", KeyColumn = "Id_Vinculate", ForeignKeyColumn = "Id_Vinculate")]
         public List<CaseTable_Case>? Casos_Vinculados { get; set; }
 
-        internal object DesvincularCaso()
+        internal object DesvincularCaso(CaseTable_Case caseDV)
         {
 
             throw new NotImplementedException();

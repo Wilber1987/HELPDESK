@@ -25,6 +25,7 @@ class CaseTable_Evidencias extends EntityClass {
     IdEvidencia = { type: 'number', primary: true };
     Cat_Tipo_Evidencia = { type: 'WSelect', ModelObject: () => new Cat_Tipo_Evidencia() };
     Data = { type: 'file' };
+    Id_Tarea = { type: 'number', hidden: true };
 
 }
 export { CaseTable_Evidencias }
@@ -146,6 +147,38 @@ class CaseTable_Case extends EntityClass {
     RechazarSolicitud = async () => {
         return await this.GetData("Proyect/RechazarSolicitud");
     }
+    /**
+    * @param {Array<CaseTable_Case>} element
+    * @returns {Object}
+    */
+    AprobarCaseList = async (element) => {
+        return await WAjaxTools.PostRequest("/api/Proyect/AprobarCaseList",
+         { caseTable_Cases: element });
+    }
+    /**
+       * @param {Array<CaseTable_Case>} element
+       *  @param {CaseTable_Comments} comentario
+       * @returns {Object}
+       */
+    RechazarCaseList = async (element, comentario) => {
+        return await WAjaxTools.PostRequest("/api/Proyect/RechazarCaseList", {
+            caseTable_Cases: element,
+            comentarios: [comentario]
+        });
+    }
+    /**
+       * @param {Array<CaseTable_Case>} element
+       * @param {CaseTable_Comments} dependencia
+       * @param {Array<CaseTable_Comments>} comentarios
+       * @returns {Object}
+       */
+    RemitirCasos = async (element, dependencia, comentarios) => {
+        return await WAjaxTools.PostRequest("/api/Proyect/RemitirCasos", {
+            caseTable_Cases: element,
+            dependencia: dependencia,
+            comentarios: comentarios
+        });
+    }
 }
 export { CaseTable_Case }
 class CaseTable_Comments extends EntityClass {
@@ -242,7 +275,7 @@ class Cat_Dependencias extends EntityClass {
     Id_Dependencia = { type: 'number', primary: true };
     Descripcion = { type: 'text' };
     Username = { type: 'email' };
-    Password = { type: 'text' , hiddenInTable: true};
+    Password = { type: 'text', hiddenInTable: true };
     Host = { type: 'text' };
     //Cat_Dependencia = { type: 'WSelect', ModelObject: () => new Cat_Dependencias(), require: false };
     Cat_Dependencias_Hijas = { type: 'Multiselect', ModelObject: () => new Cat_Dependencias(), require: false };
@@ -321,7 +354,7 @@ class CaseTable_VinculateCase extends EntityClass {
         type: 'MasterDetail', ModelObject: () => new CaseTable_Case(),
         require: false
     };
-    
+
     VincularCaso = async () => {
         return await this.GetData("Proyect/VincularCaso");
     }

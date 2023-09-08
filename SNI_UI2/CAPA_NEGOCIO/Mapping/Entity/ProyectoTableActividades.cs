@@ -194,7 +194,8 @@ namespace CAPA_NEGOCIO.MAPEO
             {
                 throw new Exception("no puedes rechazar este caso en este proceso caso");
             }
-            BeginGlobalTransaction();
+            //BeginGlobalTransaction();
+            Estado = Case_Estate.Activo.ToString();
 
             var response = Update();
             new CaseTable_Comments()
@@ -206,7 +207,7 @@ namespace CAPA_NEGOCIO.MAPEO
                 Estado = CommetsState.Pendiente.ToString(),
                 Mail = user.mail
             }.Save();
-            CommitGlobalTransaction();
+            //CommitGlobalTransaction();
             return response;
         }
 

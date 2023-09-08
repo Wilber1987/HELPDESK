@@ -1,5 +1,6 @@
 ﻿using CAPA_DATOS;
 using CAPA_NEGOCIO.MAPEO;
+using CAPA_NEGOCIO.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -77,13 +78,27 @@ namespace API.Controllers
         }
          public object DesvincularCaso(CaseTable_VinculateCase inst)
         {
-            return inst.DesvincularCaso();            
+            return inst.DesvincularCaso(inst.Casos_Vinculados.FirstOrDefault());            
         }
          public List<CaseTable_Case> GetCasosToVinculate(CaseTable_Case Inst)
         {
             return new CaseTable_Case()
             .GetCasosToVinculate(HttpContext.Session.GetString("seassonKey"), Inst);
         }
+        public object AprobarCaseList(CaseBlock Inst)
+        {
+            return Inst.AprobarSolicitudes(HttpContext.Session.GetString("seassonKey"));
+        }
+        public object RechazarCaseList(CaseBlock Inst)
+        {
+            return Inst.RechazarSolicitudes(HttpContext.Session.GetString("seassonKey"));
+        }
+         public object RemitirCasos(CaseBlock Inst)
+        {
+            return Inst.RemitirCasos(HttpContext.Session.GetString("seassonKey"));
+        }
+
+
 
     }
 }

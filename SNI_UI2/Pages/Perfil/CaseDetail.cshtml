@@ -1,0 +1,29 @@
+@page
+@using API.Controllers
+@using CAPA_DATOS.Security
+@{
+    // Layout = null;
+    if (!SecurityController.Auth(HttpContext.Session.GetString("seassonKey")))
+    {
+        Response.Redirect("../Security/login");
+        return;
+    }
+    if (!SecurityController.HavePermission(PermissionsEnum.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(),
+    HttpContext.Session.GetString("seassonKey"))
+    && !SecurityController.HavePermission(PermissionsEnum.TECNICO_CASOS_DEPENDENCIA.ToString(),
+    HttpContext.Session.GetString("seassonKey")))
+    {
+        Response.Redirect("../Security/permission_error");
+        return;
+    }
+
+}
+
+<script type="module">
+    import { CaseDetailComponent } from '../Views/Perfil/Proyectos/CaseDetailComponent.js';
+    const OnLoad = async () => {
+        const CaseDetail = new CaseDetailComponent(JSON.parse(sessionStorage.getItem("detailCase")));
+        Main.appendChild(CaseDetail);
+    }
+    window.onload = OnLoad;
+</script>

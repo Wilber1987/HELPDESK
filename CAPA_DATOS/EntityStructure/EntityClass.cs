@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CAPA_DATOS
 {
-    public abstract class EntityClass
+    public abstract class EntityClass: TransactionalClass
     {
         public List<FilterData>? filterData { get; set; }
         public List<T> Get<T>()
@@ -51,16 +51,9 @@ namespace CAPA_DATOS
         public List<T> Get_WhereNotIN<T>(string Field, string[] conditions)
         {
             string condition = BuildArrayIN(conditions);
-            var Data = SqlADOConexion.SQLM?.TakeList<T>(this, true, $" ({Field} NOT IN ({condition}) OR {Field} IS NULL)");
+            var Data = SqlADOConexion.SQLM?.TakeList<T>(this, true, Field + " NOT IN (" + condition + ")");
             return Data ?? new List<T>();
         }
-
-        // public List<T> Get_WhereNotIN<T>(List<WhereNotInConditions> conditios)
-        // {
-        //     string condition = BuildArrayIN(conditions);
-        //     var Data = SqlADOConexion.SQLM?.TakeList<T>(this, true, $" ({Field} NOT IN ({condition}) OR {Field} IS NULL)");
-        //     return Data ?? new List<T>();
-        // }
         private static string BuildArrayIN(string?[]? conditions)
         {
             string condition = "";
@@ -109,7 +102,7 @@ namespace CAPA_DATOS
                 else return new ResponseService()
                 {
                     status = 500,
-                    message = "Error al actualizar: no se encuentra el registro " + this.GetType().Name                   
+                    message = "Error al actualizar: no se encuentra el registro " + this.GetType().Name
                 };
             }
             catch (Exception e)
@@ -165,7 +158,10 @@ namespace CAPA_DATOS
                 SqlADOConexion.SQLM?.RollBackTransaction();
                 throw e;
             }
-        }
+        }      
+    }
+    public abstract class TransactionalClass
+    {
 
         //TRANSACCIONES
         public void BeginGlobalTransaction()
@@ -180,9 +176,5 @@ namespace CAPA_DATOS
         {
             SqlADOConexion.SQLM?.RollBackGlobalTransaction();
         }
-    }
-
-    public class WhereNotInConditions
-    {
     }
 }

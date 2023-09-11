@@ -13,7 +13,7 @@ import { WModalForm } from "../../../WDevCore/WComponents/WModalForm.js";
 class ComponentView extends HTMLElement {
     /**
      * 
-     * @param {ComponentConfig} props 
+     * @param {ComponentConfig} [props] 
      */
     constructor(props) {
         super();
@@ -71,5 +71,6 @@ window.onload = ()=>{
     const t = document.createElement("w-component");
    // @ts-ignore
    Main.append(new ComponentView()); 
+   // @ts-ignore
    Main.append(t);
 }

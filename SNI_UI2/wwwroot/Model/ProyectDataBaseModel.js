@@ -114,6 +114,12 @@ class CaseTable_Case extends EntityClass {
     /**
      * @returns {Array<CaseTable_Case>}
      */
+    GetVinculateCase = async () => {
+        return await this.GetData("Proyect/GetVinculateCase");
+    }
+    /**
+     * @returns {Array<CaseTable_Case>}
+     */
     GetOwSolicitudesPendientesAprobar = async () => {
         return await this.GetData("Proyect/GetOwSolicitudesPendientesAprobar");
     }
@@ -146,6 +152,12 @@ class CaseTable_Case extends EntityClass {
      */
     RechazarSolicitud = async () => {
         return await this.GetData("Proyect/RechazarSolicitud");
+    }
+    /**
+     * @returns {Object}
+     */
+    CerrarCaso = async () => {
+        return await this.GetData("Proyect/CerrarCaso");
     }
     /**
     * @param {Array<CaseTable_Case>} element

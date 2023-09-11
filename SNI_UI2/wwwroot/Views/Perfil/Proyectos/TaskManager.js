@@ -30,9 +30,10 @@ class TaskManagers extends HTMLElement {
         this.DrawTaskManagers();
     }
     connectedCallback() { }
-    DrawTaskManagers = async (DatasetData) => {
+    DrawTaskManagers = async () => {
         this.TabContainer.innerHTML = "";
-        this.TaskManager(DatasetData);
+        console.log(this.Dataset);
+        this.TaskManager(this.Dataset);
     }
     /**
      * 

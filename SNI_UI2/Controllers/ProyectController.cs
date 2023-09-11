@@ -30,6 +30,11 @@ namespace API.Controllers
         {
             return inst.GetOwCase(HttpContext.Session.GetString("seassonKey"));
         }
+        public List<CaseTable_Case> GetVinculateCase(CaseTable_Case inst)
+        {
+            
+            return inst.GetVinculateCase(HttpContext.Session.GetString("seassonKey"));
+        }
         public List<Cat_Dependencias> GetOwDependencies()
         {
             return new Cat_Dependencias().GetOwDependencies(HttpContext.Session.GetString("seassonKey"));
@@ -65,12 +70,15 @@ namespace API.Controllers
         {
             return caseTable_Case.RechazarSolicitud(HttpContext.Session.GetString("seassonKey"));            
         }
+
         public object AprobarSolicitud(CaseTable_Case caseTable_Case)
         {
             return caseTable_Case.AprobarSolicitud(HttpContext.Session.GetString("seassonKey"));            
         }
-
-
+        public object CerrarCaso(CaseTable_Case caseTable_Case)
+        {
+            return caseTable_Case.CerrarCaso(HttpContext.Session.GetString("seassonKey"));            
+        }
         //CASOS VINCULADOS      
         public object VincularCaso(CaseTable_VinculateCase inst)
         {

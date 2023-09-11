@@ -22,10 +22,9 @@ namespace CAPA_DATOS
         // private static string SGBD_USER = "sa";
         // private static string SWGBD_PASSWORD = "zaxscd";
 
-
         // static string SQLServer = "DESKTOP-G6FLNBQ\\SQLSIZM";
         // private static string SGBD_USER = "sa";
-        // private static string SWGBD_PASSWORD = "123456";
+        // private static string SWGBD_PASSWORD = "123456"; 
         static public bool IniciarConexion()
         {
             try

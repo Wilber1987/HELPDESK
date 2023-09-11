@@ -121,8 +121,8 @@ class SolicitudesPendientesView extends HTMLElement {
     actividadElement = (actividad) => {
         return WRender.Create({
             className: "actividad", object: actividad, children: [
-                { tagName: 'h4', innerText: `${actividad.Titulo} (${actividad.Tbl_Servicios?.Descripcion_Servicio ?? ""})` },
-                {
+                { tagName: 'h4', innerText: `#${actividad.Id_Case} - ${actividad.Titulo} (${actividad.Tbl_Servicios?.Descripcion_Servicio ?? ""})` },
+               {
                     className: "options", children: [
                         { tagName: 'button', className: 'Btn-Mini', innerText: "Detalle", onclick: async () => await this.actividadDetail(actividad) },
                         { tagName: 'button', className: 'Btn-Mini', innerText: 'Vincular Caso', onclick: () => this.Vincular(actividad) }
@@ -130,7 +130,7 @@ class SolicitudesPendientesView extends HTMLElement {
                 }, {
                     className: "propiedades", children: [
                         { tagName: 'label', innerText: "Estado: " + actividad.Estado },
-                        { tagName: 'label', innerText: "Dependencia: " + actividad.Dependencia },
+                        { tagName: 'label', innerText: "Dependencia: " + actividad.Cat_Dependencias.Descripcion },
                         { tagName: 'label', innerText: "Fecha inicio: " + actividad.Fecha_Inicial?.toString().toDateFormatEs() },
                         { tagName: 'label', innerText: "Fecha de finalización: " + actividad.Fecha_Final?.toString().toDateFormatEs() },
                     ]
@@ -157,9 +157,13 @@ class SolicitudesPendientesView extends HTMLElement {
                 //     })
                 // });
                 // this.shadowRoot.append(modal);
+                if (this.mainTable.selectedItems.length <= 0) {
+                    this.shadowRoot.append(ModalMessege("Seleccione solicitudes"));
+                    return;
+                }
                 this.shadowRoot.append(ModalVericateAction(async () => {
                     const response = await new CaseTable_Case()
-                    .AprobarCaseList(this.mainTable.selectedItems);
+                        .AprobarCaseList(this.mainTable.selectedItems);
                     if (response.status == 200) {
                         this.shadowRoot.append(ModalMessege("Solicitudes aprobadas"));
                         this.update();
@@ -171,6 +175,10 @@ class SolicitudesPendientesView extends HTMLElement {
             }
         }, {
             name: "Rechazar", action: async (/**@type {CaseTable_Case}*/element) => {
+                if (this.mainTable.selectedItems.length <= 0) {
+                    this.shadowRoot.append(ModalMessege("Seleccione solicitudes"));
+                    return;
+                }
                 this.shadowRoot.append(new WModalForm({
                     title: "Escriba la razón por la cual se están rechazando estas solicitudes",
                     EditObject: {
@@ -179,9 +187,7 @@ class SolicitudesPendientesView extends HTMLElement {
                     ModelObject: new CaseTable_Comments(),
                     ObjectOptions: {
                         SaveFunction: async (comentario) => {
-                            console.log(this.mainTable.selectedItems, comentario);
                             this.shadowRoot.append(ModalVericateAction(async () => {
-                                console.log(this.mainTable.selectedItems, comentario);
                                 const response = await new CaseTable_Case()
                                     .RechazarCaseList(this.mainTable.selectedItems, comentario);
                                 if (response.status == 200) {
@@ -190,7 +196,7 @@ class SolicitudesPendientesView extends HTMLElement {
                                 } else {
                                     this.shadowRoot.append(ModalMessege("Error"));
                                 }
-                               // modal.close();
+                                // modal.close();
                             }, "Esta seguro que desea rechazar estas solicitudes"));
                         }
                     }
@@ -199,15 +205,19 @@ class SolicitudesPendientesView extends HTMLElement {
             }
         }, {
             name: "Remitir a otra dependencia", action: async (/**@type {CaseTable_Case}*/element) => {
+                if (this.mainTable.selectedItems.length <= 0) {
+                    this.shadowRoot.append(ModalMessege("Seleccione solicitudes"));
+                    return;
+                }
                 const dependencias = await new Cat_Dependencias().Get();
                 const modal = new WModalForm({
                     ObjectModal: simpleCaseForm(element,
                         dependencias.filter(d => d.Id_Dependencia != element.Id_Dependencia),
                         async (table_case) => {
                             this.shadowRoot.append(ModalVericateAction(async () => {
-                                const response = 
-                                await new CaseTable_Case().RemitirCasos(this.mainTable.selectedItems, 
-                                    table_case.Cat_Dependencias, table_case.CaseTable_Comments);
+                                const response =
+                                    await new CaseTable_Case().RemitirCasos(this.mainTable.selectedItems,
+                                        table_case.Cat_Dependencias, table_case.CaseTable_Comments);
                                 if (response.status == 200) {
                                     this.shadowRoot.append(ModalMessege("Solicitud remitida"));
                                     this.update();
@@ -220,7 +230,7 @@ class SolicitudesPendientesView extends HTMLElement {
                 });
                 this.shadowRoot.append(modal);
             }
-        }, 
+        },
         // {
         //     name: "Ver bandeja", action: async (/**@type {CaseTable_Case}*/element) => {
         //         this.actividadDetail(element);

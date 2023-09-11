@@ -169,8 +169,40 @@ namespace CAPA_NEGOCIO.MAPEO
 
         internal object DesvincularCaso(CaseTable_Case caseDV)
         {
+            try
+            {
+                BeginGlobalTransaction();
+                List<CaseTable_Case> caseTable_Cases = new CaseTable_Case()
+                { Id_Vinculate = caseDV.Id_Vinculate }.Get<CaseTable_Case>();
+                if (caseTable_Cases.Count == 2)
+                {
+                    foreach (var item in caseTable_Cases)
+                    {
+                        if (item.Id_Case != caseDV.Id_Case)
+                        {
+                            desvicular(item);
+                        }
+                    }
+                    this.Id_Vinculate = caseDV.Id_Vinculate;
+                    Delete();
+                }
+                object? response = desvicular(caseDV);
+                CommitGlobalTransaction();
+                return response;
+            }
+            catch (System.Exception)
+            {
+                RollBackGlobalTransaction();
+                throw;
+            }
+        }
 
-            throw new NotImplementedException();
+        private static object? desvicular(CaseTable_Case caseDV)
+        {
+            caseDV.Id_Vinculate = null;
+            caseDV.Estado = Case_Estate.Activo.ToString();
+            var response = caseDV.Update();
+            return response;
         }
 
         internal object? VincularCaso()

@@ -49,6 +49,7 @@ namespace CAPA_NEGOCIO.MAPEO
             {
                 BeginGlobalTransaction();
 
+                List<ModelFiles> Attach = new List<ModelFiles>();
                 if (mail.Subject.ToUpper().Contains("RE:"))
                 {
                     char[] MyChar = { 'R', 'E', ':', ' ' };
@@ -58,7 +59,14 @@ namespace CAPA_NEGOCIO.MAPEO
                     }.Find<CaseTable_Case>();
                     if (findCase != null)
                     {
-                        new CaseTable_Mails(mail) { Id_Case = findCase.Id_Case }.Save();
+                        foreach (Attachment attach in mail.Attachments)
+                        {
+                            ModelFiles Response = FileService.ReceiveFiles("Upload\\", attach);
+                            Attach.Add(Response);
+                        }
+
+                        new CaseTable_Mails(mail) { Id_Case = findCase.Id_Case, Attach_Files = Attach }.Save();
+
                         new CaseTable_Comments()
                         {
                             Id_Case = findCase.Id_Case,
@@ -66,7 +74,8 @@ namespace CAPA_NEGOCIO.MAPEO
                             NickName = $"{mail.From.DisplayName} ({mail.From.Address})",
                             Fecha = mail.Date,
                             Estado = CommetsState.Pendiente.ToString(),
-                            Mail = mail.From.Address
+                            Mail = mail.From.Address,
+                            Attach_Files = Attach
                         }.Save();
                     }
                 }
@@ -79,7 +88,30 @@ namespace CAPA_NEGOCIO.MAPEO
                     Id_Dependencia = dependencia.Id_Dependencia;
                     Mail = mail.From.Address;
                     Save();
-                    new CaseTable_Mails(mail) { Id_Case = this.Id_Case }.Save();
+
+                    if (mail.Attachments.Count > 0)
+                    {
+                        foreach (Attachment attach in mail.Attachments)
+                        {
+                            ModelFiles Response = FileService.ReceiveFiles("Upload\\", attach);
+                            Attach.Add(Response);
+                        }
+                        new CaseTable_Mails(mail) { Id_Case = this.Id_Case, Attach_Files = Attach }.Save();
+                        new CaseTable_Comments()
+                        {
+                            Id_Case = this.Id_Case,
+                            Body = mail.Body,
+                            NickName = $"{mail.From.DisplayName} ({mail.From.Address})",
+                            Fecha = mail.Date,
+                            Estado = CommetsState.Pendiente.ToString(),
+                            Mail = mail.From.Address,
+                            Attach_Files = Attach
+                        }.Save();
+                    }
+                    else
+                    {
+                        new CaseTable_Mails(mail) { Id_Case = this.Id_Case }.Save();
+                    }
                 }
                 CommitGlobalTransaction();
                 return true;
@@ -286,9 +318,9 @@ namespace CAPA_NEGOCIO.MAPEO
                 Id_User = user.UserId;
                 NickName = user.UserData?.Nombres;
                 Mail = user.mail;
-                foreach(var file in Attach_Files)
+                foreach (var file in Attach_Files)
                 {
-                    ModelFiles Response = (ModelFiles) FileService.upload("Attach\\", file).body;
+                    ModelFiles Response = (ModelFiles)FileService.upload("Attach\\", file).body;
                     file.Value = Response.Value;
                     file.Type = Response.Type;
                 }
@@ -305,9 +337,10 @@ namespace CAPA_NEGOCIO.MAPEO
                     Id_Case = caseTable_Case?.Id_Case,
                     Subject = $"RE: " + caseTable_Case?.Titulo?.ToUpper(),
                     Body = Body,
-                    From = user.mail,
+                    FromAdress = user.mail,
                     Estado = MailState.PENDIENTE.ToString(),
                     Date = DateTime.Now,
+                    Attach_Files = Attach_Files,
                     ToAdress = toMails.Where(m => m != null && m != user.mail).ToList().Distinct().ToList()
                 }.Save();
 
@@ -353,7 +386,7 @@ namespace CAPA_NEGOCIO.MAPEO
             Subject = mail.Subject;
             MessageID = mail.MessageID;
             Sender = mail.Sender?.Address;
-            From = mail.From?.Address;
+            FromAdress = mail.From?.Address;
             ReplyTo = mail.ReplyTo?.Select(r => r.Address).ToList();
             Bcc = mail.Bcc?.Select(r => r.Address).ToList();
             Cc = mail.Cc?.Select(r => r.Address).ToList();
@@ -372,7 +405,7 @@ namespace CAPA_NEGOCIO.MAPEO
         public string? Estado { get; set; }
         public string? Sender { get; set; }
         public string? Body { get; set; }
-        public string? From { get; set; }
+        public string? FromAdress { get; set; }
         [JsonProp]
         public List<String>? ReplyTo { get; set; }
         [JsonProp]
@@ -419,7 +452,7 @@ namespace CAPA_NEGOCIO.MAPEO
         [OneToMany(TableName = "Cat_Dependencias", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia_Padre")]
         public List<Cat_Dependencias>? Cat_Dependencias_Hijas { get; set; }
         //[OneToMany(TableName = "CaseTable_Case", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
-       // public List<CaseTable_Case>? CaseTable_Case { get; set; }
+        // public List<CaseTable_Case>? CaseTable_Case { get; set; }
         [OneToMany(TableName = "CaseTable_Agenda", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
         public List<CaseTable_Agenda>? CaseTable_Agenda { get; set; }
         [OneToMany(TableName = "CaseTable_Dependencias_Usuarios", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]

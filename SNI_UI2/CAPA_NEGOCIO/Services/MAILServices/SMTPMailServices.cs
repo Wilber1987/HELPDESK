@@ -5,6 +5,7 @@ using System.Net.Mail;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using CAPA_NEGOCIO.MAPEO;
 
 namespace CAPA_NEGOCIO.Services
 {
@@ -16,7 +17,7 @@ namespace CAPA_NEGOCIO.Services
         //const string PASSWORD = "%3e2w1qazsX";
         //const string HOST = "outlook.office365.com";
         const int PORT = 587;
-        public static Boolean SendMail(string from, List<string> toMails, string subject, string body, MailConfig config)
+        public static Boolean SendMail(string from, List<string> toMails, string subject, string body, List<ModelFiles> attach, MailConfig config)
         {
             try
             {
@@ -27,6 +28,16 @@ namespace CAPA_NEGOCIO.Services
                 {
                     correo.To.Add(toMail); //Correos de destino
                 }
+
+                if (attach.Count > 0)
+                {
+                    foreach (var files in attach)
+                    {
+                        Attachment AttachFile = new Attachment(files.Value);
+                        correo.Attachments.Add(AttachFile);
+                    }
+                }
+
                 correo.Subject = subject; //Asunto
                 correo.Body = body;//ContractService.RenderTemplate(templatePage, model);
                 correo.IsBodyHtml = true;

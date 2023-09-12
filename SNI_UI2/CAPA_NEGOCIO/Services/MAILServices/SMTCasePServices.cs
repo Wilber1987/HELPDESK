@@ -22,10 +22,11 @@ namespace CAPA_NEGOCIO.Services
                 foreach (var item in caseMail)
                 {
                     var Tcase = new CaseTable_Case() { Id_Case = item.Id_Case }.Find<CaseTable_Case>();
-                    SMTPMailServices.SendMail(item.From,
+                    SMTPMailServices.SendMail(item.FromAdress,
                     item.ToAdress,
                     item.Subject,
                     item.Body,
+                    item.Attach_Files,
                     new MailConfig()
                     {
                         HOST = Tcase?.Cat_Dependencias?.Host,

@@ -28,7 +28,7 @@ namespace CAPA_DATOS.Services
                     correo.To.Add(toMail); //Correos de destino
                 }
 
-                if (attach.Count > 0)
+                if (attach != null)
                 {
                     foreach (var files in attach)
                     {

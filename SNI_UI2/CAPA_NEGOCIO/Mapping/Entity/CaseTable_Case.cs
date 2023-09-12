@@ -49,10 +49,13 @@ namespace CAPA_NEGOCIO.MAPEO
                     }.Find<CaseTable_Case>();
                     if (findCase != null)
                     {
-                        foreach (Attachment attach in mail.Attachments)
+                        if (mail?.Attachments != null)
                         {
-                            ModelFiles Response = FileService.ReceiveFiles("Upload\\", attach);
-                            Attach.Add(Response);
+                            foreach (Attachment attach in mail.Attachments)
+                            {
+                                ModelFiles Response = FileService.ReceiveFiles("Upload\\", attach);
+                                Attach.Add(Response);
+                            }
                         }
                         //new CaseTable_Mails(mail) { Id_Case = findCase.Id_Case }.Save();
                         new CaseTable_Mails(mail) { Id_Case = findCase.Id_Case, Attach_Files = Attach }.Save();
@@ -79,7 +82,7 @@ namespace CAPA_NEGOCIO.MAPEO
                     Mail = mail.From.Address;
                     Save();
                     //new CaseTable_Mails(mail) { Id_Case = this.Id_Case }.Save();
-                    if (mail.Attachments.Count > 0)
+                    if (mail?.Attachments != null)
                     {
                         foreach (Attachment attach in mail.Attachments)
                         {

@@ -17,3 +17,4 @@ CREATE TABLE HELPDESK.helpdesk.CaseTable_Mails (
 
 ALTER TABLE HELPDESK.helpdesk.CaseTable_Tareas ADD Fecha_Inicio_Proceso datetime NULL;
 ALTER TABLE HELPDESK.helpdesk.CaseTable_Tareas ADD Fecha_Finalizacion_Proceso datetime NULL;
+ALTER TABLE HELPDESK.helpdesk.CaseTable_Mails ADD Attach_Files varchar(MAX) NULL;

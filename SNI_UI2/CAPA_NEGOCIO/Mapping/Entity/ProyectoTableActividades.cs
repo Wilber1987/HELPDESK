@@ -597,6 +597,15 @@ namespace CAPA_NEGOCIO.MAPEO
             }
             return Update();
         }
+
+        internal object? SaveTarea()
+        {
+            List<DateTime?> fechasIniciales = this.CaseTable_Calendario.Select(c => c.Fecha_Inicial).ToList();
+            List<DateTime?> fechasFinales = this.CaseTable_Calendario.Select(c => c.Fecha_Inicial).ToList();
+            Fecha_Inicio = fechasIniciales.Min();
+            Fecha_Finalizacion = fechasFinales.Max();
+            return this.Save();
+        }
     }
     public class CaseTable_Participantes : EntityClass
     {

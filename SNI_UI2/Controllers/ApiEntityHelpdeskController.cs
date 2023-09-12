@@ -300,7 +300,7 @@ namespace API.Controllers
         [AuthController]
         public object? saveCaseTable_Tareas(CaseTable_Tareas inst)
         {
-            return inst.Save();
+            return inst.SaveTarea();
         }
         [HttpPost]
         [AuthController]

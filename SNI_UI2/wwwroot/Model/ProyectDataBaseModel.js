@@ -61,7 +61,7 @@ class Cat_Tipo_Servicio extends EntityClass {
     Descripcion = { type: 'text' };
     Estado = { type: "Select", Dataset: ["Activo", "Inactivo"] };
     Icon = { type: 'img' };
-    Tbl_Servicios = { type: 'MasterDetail', ModelObject: () => new Tbl_Servicios() };
+    //Tbl_Servicios = { type: 'MasterDetail', ModelObject: () => new Tbl_Servicios() };
 }
 export { Cat_Tipo_Servicio }
 class Tbl_Servicios extends EntityClass {
@@ -198,7 +198,7 @@ class CaseTable_Tareas extends EntityClass {
     CaseTable_Calendario = {
         type: 'CALENDAR',
         ModelObject: () => new CaseTable_Calendario(),
-        require: false,
+        require: true,
         hiddenInTable: true,
         CalendarFunction: () => { }
     };
@@ -227,7 +227,7 @@ class Cat_Cargos_Dependencias extends EntityClass {
     }
     IdCargo = { type: 'number', primary: true };
     Descripcion = { type: 'text' };
-    CaseTable_Dependencias_Usuarios = { type: 'MasterDetail', ModelObject: () => new CaseTable_Dependencias_Usuarios() };
+    //CaseTable_Dependencias_Usuarios = { type: 'MasterDetail', ModelObject: () => new CaseTable_Dependencias_Usuarios() };
 }
 export { Cat_Cargos_Dependencias }
 class Cat_Dependencias extends EntityClass {

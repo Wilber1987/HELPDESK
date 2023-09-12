@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using AE.Net.Mail;
 using CAPA_DATOS;
 
 namespace CAPA_DATOS.Services
@@ -57,12 +58,39 @@ namespace CAPA_DATOS.Services
 
         }
 
+        public static ModelFiles ReceiveFiles(string path, Attachment Attach)
+        {
+                string Carpeta = @"\wwwroot\Media\" + path;
+                string Ruta = Directory.GetCurrentDirectory() + Carpeta;
+                if (!Directory.Exists(Ruta))
+                {
+                    Directory.CreateDirectory(Ruta);
+                }
+                string FileType = GetFileType(Attach.ContentType);
+                Guid Uuid = Guid.NewGuid();
+                string FileName = Uuid.ToString() + FileType;
+                string FileRoute = Ruta + FileName;
+                File.WriteAllBytes(FileRoute, Attach.GetData());
+                string RutaRelativa = Path.GetRelativePath(Directory.GetCurrentDirectory(), FileRoute);
+
+                ModelFiles AttachFiles = new ModelFiles();
+                AttachFiles.Name = Attach.Filename;
+                AttachFiles.Value = RutaRelativa;
+                AttachFiles.Type = FileType;
+                return AttachFiles;
+        }
+
+        
+
         public static string GetFileType(string mimeType)
         {
             Dictionary<string, string> TypeFile = new Dictionary<string, string>
         {
             { "image/png;base64,", ".png" },
             { "application/pdf;base64,", ".pdf" },
+            { "application/pdf", ".pdf" },
+            { "image/jpeg", ".png" },
+            { "image/png", ".png" },
         };
 
             if (TypeFile.TryGetValue(mimeType, out string Type))

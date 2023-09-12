@@ -53,6 +53,7 @@ namespace CAPA_NEGOCIO.MAPEO
                     file.Type = Response.Type;
                 }
                 Save();
+
                 CreateMailForComment(user);
 
                 CommitGlobalTransaction();
@@ -83,6 +84,7 @@ namespace CAPA_NEGOCIO.MAPEO
                 FromAdress = user.mail,
                 Estado = MailState.PENDIENTE.ToString(),
                 Date = DateTime.Now,
+                Attach_Files = Attach_Files,
                 ToAdress = toMails.Where(m => m != null && m != user.mail).ToList().Distinct().ToList()
             }.Save();
         }
@@ -339,23 +341,23 @@ namespace CAPA_NEGOCIO.MAPEO
         {
             try
             {
-                 var user = AuthNetCore.User(identity);
+                var user = AuthNetCore.User(identity);
                 BeginGlobalTransaction();
                 List<DateTime?> fechasIniciales = this.CaseTable_Calendario.Select(c => c.Fecha_Inicial).ToList();
                 List<DateTime?> fechasFinales = this.CaseTable_Calendario.Select(c => c.Fecha_Inicial).ToList();
                 Fecha_Inicio = fechasIniciales.Min();
                 Fecha_Finalizacion = fechasFinales.Max();
-                 var comment = new CaseTable_Comments()
-            {
-                Id_Case = this.Id_Case,
-                Body = $"Se a creado una nueva tarea: {this.Descripcion}",
-                NickName = $"{user.UserData.Nombres} ({user.mail})",
-                Fecha = DateTime.Now,
-                Estado = CommetsState.Pendiente.ToString(),
-                Mail = user.mail
-            };
-            comment.Save();
-            comment.CreateMailForComment(user);
+                var comment = new CaseTable_Comments()
+                {
+                    Id_Case = this.Id_Case,
+                    Body = $"Se a creado una nueva tarea: {this.Descripcion}",
+                    NickName = $"{user.UserData.Nombres} ({user.mail})",
+                    Fecha = DateTime.Now,
+                    Estado = CommetsState.Pendiente.ToString(),
+                    Mail = user.mail
+                };
+                comment.Save();
+                comment.CreateMailForComment(user);
                 var response = this.Save();
                 CommitGlobalTransaction();
                 return response;

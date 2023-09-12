@@ -4,6 +4,7 @@ using System.Net;
 using System.Text;
 using AE.Net.Mail;
 using CAPA_DATOS;
+using CAPA_DATOS.Services;
 using CAPA_NEGOCIO.MAPEO;
 
 namespace CAPA_NEGOCIO.Services
@@ -32,7 +33,11 @@ namespace CAPA_NEGOCIO.Services
                             var MailMessage = imap.SearchMessages(SearchCondition.Unseen()).Select(m => m.Value).ToList();
                             foreach (var mail in MailMessage)
                             {
-                                new CaseTable_Case().CreateAutomaticCase(mail, dependencia);
+                                try
+                                {
+                                    new CaseTable_Case().CreateAutomaticCase(mail, dependencia);
+                                }
+                                catch (System.Exception) { }
                                 imap.MoveMessage(mail.Uid, "READY");
                             }
                             imap.Expunge();

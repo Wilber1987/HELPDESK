@@ -105,7 +105,7 @@ namespace Security
         <meta name='viewport' content='width=device-width, initial-scale=1.0'>  
         <script type='module'>
             import { WRender, WAjaxTools } from './WDevCore/WModules/WComponentsTools.js';
-            import { WSecurity } from './WDevCore/WModules/WSecurity.js';
+            import { WSecurity } from './WDevCore/Security/WSecurity.js';
             import { WForm } from './WDevCore/WComponents/WForm.js';
 
             const OnLoad = async () => {                

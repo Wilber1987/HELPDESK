@@ -8,26 +8,63 @@ const OnLoad = async () => {
     const dep = await new Cat_Dependencias().Get();
     const container = WRender.Create({ className: "dep-container" });
     dep.forEach((element, index) => {
-        container.append(WRender.Create({
+        const cont = WRender.Create({
             className: "card", style: { backgroundColor: ColorsList[index] }, children: [
-                { tagName: "label", innerText: element.Descripcion }
+                { tagName: "h1", innerText: element.Descripcion },
+                { tagName: "label", innerText: element.Username },
+                {
+                    className: "cont-mini-cards", children: element.Tbl_Servicios?.map(s =>
+                        WRender.Create({ className: "mini-card", children: [{ tagName: "IMG", src: "data:image/png;base64,"  + s.Cat_Tipo_Servicio.Icon }, s.Descripcion_Servicio] }))
+                }
             ]
-        }))
+        })
+
+
+        container.append(cont)
     });
     Main.append(cssCus, container);
 }
 const cssCus = css`
     .dep-container{
         display: grid;
-        grid-column: 30% 30% 30%;
+        grid-template-columns: 30% 30% 30%;
         gap: 20px;
         padding: 20px;
     }
     .card {
         padding: 20px;
         background-color: #0e8bd9;
+        display: grid;
+        grid-template-rows: 40px 20px 70px;
         color: #fff;
         border-radius: 15px;
+    }
+    .card h1 {
+        font-size: 24px;
+        margin: 5px 0px;
+    }
+    .cont-mini-cards {
+        width: 100%;
+        display: flex;
+        gap: 5px;
+    }
+    .mini-card {
+        padding: 8px;
+        background-color: #fff;
+        font-size: 11px;
+        border-radius: 10px;
+        color: #444;
+        margin: 10px 0px;
+        display: flex;
+        flex-wrap: wrap;
+        height: 21px;
+        align-items: center;
+        gap:5px;
+    }
+    .mini-card img{ 
+        height: 20px;
+        width: 20px;
+        object-fit: contain;
     }
 `
 window.onload = OnLoad;

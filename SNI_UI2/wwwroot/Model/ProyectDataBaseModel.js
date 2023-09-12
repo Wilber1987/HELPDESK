@@ -25,6 +25,7 @@ class CaseTable_Evidencias extends EntityClass {
     IdEvidencia = { type: 'number', primary: true };
     Cat_Tipo_Evidencia = { type: 'WSelect', ModelObject: () => new Cat_Tipo_Evidencia() };
     Data = { type: 'file' };
+    Id_Tarea = { type: 'number', hidden: true };
 
 }
 export { CaseTable_Evidencias }
@@ -76,6 +77,8 @@ class Tbl_Servicios extends EntityClass {
     Descripcion_Servicio = { type: 'text' };
     //Visibilidad = { type: 'text' };
     Estado = { type: "Select", Dataset: ["Activo", "Inactivo"] };
+    Cat_Tipo_Servicio = { type: 'WSelect', ModelObject: () => new Cat_Tipo_Servicio() };
+    Cat_Dependencias = { type: 'WSelect', ModelObject: () => new Cat_Dependencias() }
     //Fecha_Inicio = { type: 'date' };
     //Fecha_Finalizacion = { type: 'date' };
     //CaseTable_Case = { type: 'MasterDetail', ModelObject: () => new CaseTable_Case() };
@@ -107,6 +110,12 @@ class CaseTable_Case extends EntityClass {
      */
     GetOwCase = async () => {
         return await this.GetData("Proyect/GetOwCase");
+    }
+    /**
+     * @returns {Array<CaseTable_Case>}
+     */
+    GetVinculateCase = async () => {
+        return await this.GetData("Proyect/GetVinculateCase");
     }
     /**
      * @returns {Array<CaseTable_Case>}
@@ -143,6 +152,44 @@ class CaseTable_Case extends EntityClass {
      */
     RechazarSolicitud = async () => {
         return await this.GetData("Proyect/RechazarSolicitud");
+    }
+    /**
+     * @returns {Object}
+     */
+    CerrarCaso = async () => {
+        return await this.GetData("Proyect/CerrarCaso");
+    }
+    /**
+    * @param {Array<CaseTable_Case>} element
+    * @returns {Object}
+    */
+    AprobarCaseList = async (element) => {
+        return await WAjaxTools.PostRequest("/api/Proyect/AprobarCaseList",
+         { caseTable_Cases: element });
+    }
+    /**
+       * @param {Array<CaseTable_Case>} element
+       *  @param {CaseTable_Comments} comentario
+       * @returns {Object}
+       */
+    RechazarCaseList = async (element, comentario) => {
+        return await WAjaxTools.PostRequest("/api/Proyect/RechazarCaseList", {
+            caseTable_Cases: element,
+            comentarios: [comentario]
+        });
+    }
+    /**
+       * @param {Array<CaseTable_Case>} element
+       * @param {CaseTable_Comments} dependencia
+       * @param {Array<CaseTable_Comments>} comentarios
+       * @returns {Object}
+       */
+    RemitirCasos = async (element, dependencia, comentarios) => {
+        return await WAjaxTools.PostRequest("/api/Proyect/RemitirCasos", {
+            caseTable_Cases: element,
+            dependencia: dependencia,
+            comentarios: comentarios
+        });
     }
 }
 export { CaseTable_Case }
@@ -239,9 +286,12 @@ class Cat_Dependencias extends EntityClass {
     }
     Id_Dependencia = { type: 'number', primary: true };
     Descripcion = { type: 'text' };
+    Username = { type: 'email' };
+    Password = { type: 'text', hiddenInTable: true };
+    Host = { type: 'text' };
     //Cat_Dependencia = { type: 'WSelect', ModelObject: () => new Cat_Dependencias(), require: false };
     Cat_Dependencias_Hijas = { type: 'Multiselect', ModelObject: () => new Cat_Dependencias(), require: false };
-    CaseTable_Agenda = { type: 'MasterDetail', ModelObject: () => new CaseTable_Agenda(), require: false };
+    CaseTable_Agenda = { type: 'MasterDetail', ModelObject: () => new CaseTable_Agenda() };
     CaseTable_Dependencias_Usuarios = { type: 'MasterDetail', ModelObject: () => new CaseTable_Dependencias_Usuarios(), require: false };
     GetOwDependencies = async () => {
         return await this.GetData("Proyect/GetOwDependencies");
@@ -316,7 +366,7 @@ class CaseTable_VinculateCase extends EntityClass {
         type: 'MasterDetail', ModelObject: () => new CaseTable_Case(),
         require: false
     };
-    
+
     VincularCaso = async () => {
         return await this.GetData("Proyect/VincularCaso");
     }

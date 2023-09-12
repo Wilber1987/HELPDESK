@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using CAPA_NEGOCIO.Security;
+using CAPA_DATOS.Security; 
 
 namespace API.Controllers
 {

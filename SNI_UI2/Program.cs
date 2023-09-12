@@ -1,5 +1,7 @@
 using BackgroundJob.Cron.Jobs;
 using CAPA_DATOS;
+using CAPA_DATOS.Cron.Jobs;
+
 SqlADOConexion.IniciarConexion();
 var builder = WebApplication.CreateBuilder(args);
 

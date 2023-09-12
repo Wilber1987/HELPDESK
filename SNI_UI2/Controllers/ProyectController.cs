@@ -1,5 +1,6 @@
 ﻿using CAPA_DATOS;
 using CAPA_NEGOCIO.MAPEO;
+using CAPA_NEGOCIO.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -28,6 +29,11 @@ namespace API.Controllers
         public List<CaseTable_Case> GetOwCase(CaseTable_Case inst)
         {
             return inst.GetOwCase(HttpContext.Session.GetString("seassonKey"));
+        }
+        public List<CaseTable_Case> GetVinculateCase(CaseTable_Case inst)
+        {
+            
+            return inst.GetVinculateCase(HttpContext.Session.GetString("seassonKey"));
         }
         public List<Cat_Dependencias> GetOwDependencies()
         {
@@ -64,12 +70,15 @@ namespace API.Controllers
         {
             return caseTable_Case.RechazarSolicitud(HttpContext.Session.GetString("seassonKey"));            
         }
+
         public object AprobarSolicitud(CaseTable_Case caseTable_Case)
         {
             return caseTable_Case.AprobarSolicitud(HttpContext.Session.GetString("seassonKey"));            
         }
-
-
+        public object CerrarCaso(CaseTable_Case caseTable_Case)
+        {
+            return caseTable_Case.CerrarCaso(HttpContext.Session.GetString("seassonKey"));            
+        }
         //CASOS VINCULADOS      
         public object VincularCaso(CaseTable_VinculateCase inst)
         {
@@ -77,13 +86,27 @@ namespace API.Controllers
         }
          public object DesvincularCaso(CaseTable_VinculateCase inst)
         {
-            return inst.DesvincularCaso();            
+            return inst.DesvincularCaso(inst.Casos_Vinculados.FirstOrDefault());            
         }
          public List<CaseTable_Case> GetCasosToVinculate(CaseTable_Case Inst)
         {
             return new CaseTable_Case()
             .GetCasosToVinculate(HttpContext.Session.GetString("seassonKey"), Inst);
         }
+        public object AprobarCaseList(CaseBlock Inst)
+        {
+            return Inst.AprobarSolicitudes(HttpContext.Session.GetString("seassonKey"));
+        }
+        public object RechazarCaseList(CaseBlock Inst)
+        {
+            return Inst.RechazarSolicitudes(HttpContext.Session.GetString("seassonKey"));
+        }
+         public object RemitirCasos(CaseBlock Inst)
+        {
+            return Inst.RemitirCasos(HttpContext.Session.GetString("seassonKey"));
+        }
+
+
 
     }
 }

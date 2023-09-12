@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using CAPA_NEGOCIO.Security;
 using CAPA_NEGOCIO.Views;
 using CAPA_NEGOCIO.MAPEO;
 

@@ -300,7 +300,7 @@ namespace API.Controllers
         [AuthController]
         public object? saveCaseTable_Tareas(CaseTable_Tareas inst)
         {
-            return inst.SaveTarea();
+            return inst.SaveTarea(HttpContext.Session.GetString("seassonKey"));
         }
         [HttpPost]
         [AuthController]

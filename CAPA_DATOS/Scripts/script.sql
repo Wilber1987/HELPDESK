@@ -15,3 +15,5 @@ CREATE TABLE HELPDESK.helpdesk.CaseTable_Mails (
     CONSTRAINT FK_Mail_Case FOREIGN KEY (Id_Case) REFERENCES HELPDESK.helpdesk.CaseTable_Case(Id_Case)
 )
 
+ALTER TABLE HELPDESK.helpdesk.CaseTable_Tareas ADD Fecha_Inicio_Proceso datetime NULL;
+ALTER TABLE HELPDESK.helpdesk.CaseTable_Tareas ADD Fecha_Finalizacion_Proceso datetime NULL;

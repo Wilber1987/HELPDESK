@@ -18,13 +18,13 @@ namespace CAPA_DATOS
         //Server=tcp:helpdesk-app.database.windows.net,1433;Initial Catalog=HELPDESK;Persist Security Info=False;User ID=HELPDESK;
         //Password={your_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
 
-        // static string SQLServer = ".";
-        // private static string SGBD_USER = "sa";
-        // private static string SWGBD_PASSWORD = "zaxscd";
-
-        static string SQLServer = "DESKTOP-G6FLNBQ\\SQLSIZM";
+        static string SQLServer = ".";
         private static string SGBD_USER = "sa";
-        private static string SWGBD_PASSWORD = "123456"; 
+        private static string SWGBD_PASSWORD = "zaxscd";
+
+        // static string SQLServer = "DESKTOP-G6FLNBQ\\SQLSIZM";
+        // private static string SGBD_USER = "sa";
+        // private static string SWGBD_PASSWORD = "123456"; 
         static public bool IniciarConexion()
         {
             try

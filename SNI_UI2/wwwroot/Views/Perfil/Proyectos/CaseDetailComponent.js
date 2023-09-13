@@ -1,6 +1,7 @@
 
 
 import { CaseSearcherToVinculate } from '../../../AppComponents/CaseSearcherToVinculate.js';
+import { priorityStyles } from '../../../AppComponents/Styles.js';
 import { CaseOwModel } from '../../../Model/CaseOwModel.js';
 import { ViewCalendarioByDependencia } from '../../../Model/DBOViewModel.js';
 import { CaseTable_Agenda, CaseTable_Calendario, CaseTable_Case, CaseTable_Comments, CaseTable_Evidencias, CaseTable_Tareas, CaseTable_VinculateCase, Cat_Dependencias } from '../../../Model/ProyectDataBaseModel.js';
@@ -166,6 +167,7 @@ class CaseDetailComponent extends HTMLElement {
 
     actividadElement = (actividad) => {
         actividad.Progreso = actividad.CaseTable_Tareas?.filter(tarea => tarea.Estado?.includes("Finalizado")).length;
+        this.shadowRoot.append(priorityStyles.cloneNode(true));
         return WRender.Create({
             className: "actividad", object: actividad, children: [
                 { tagName: 'h4', innerText: `#${actividad.Id_Case} - ${actividad.Titulo} (${actividad.Tbl_Servicios?.Descripcion_Servicio ?? ""})` },
@@ -179,6 +181,8 @@ class CaseDetailComponent extends HTMLElement {
                 }, {
                     className: "propiedades", children: [
                         { tagName: 'label', innerText: "Estado: " + actividad.Estado },
+                        { tagName: 'label', className: "prioridad_" + (actividad.Case_Priority != null ?  actividad.Case_Priority : undefined ), 
+                        innerText: "Prioridad: " + (actividad.Case_Priority != null ?  actividad.Case_Priority ?? "indefinida" : "indefinida" ) },
                         { tagName: 'label', innerText: "Dependencia: " + actividad.Cat_Dependencias.Descripcion },
                         { tagName: 'label', innerText: "Fecha inicio: " + actividad.Fecha_Inicial?.toString().toDateFormatEs() },
                         { tagName: 'label', innerText: "Fecha de finalización: " + actividad.Fecha_Final?.toString().toDateFormatEs() },

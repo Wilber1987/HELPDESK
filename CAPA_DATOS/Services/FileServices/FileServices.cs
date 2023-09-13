@@ -73,11 +73,13 @@ namespace CAPA_DATOS.Services
                 File.WriteAllBytes(FileRoute, Attach.GetData());
                 string RutaRelativa = Path.GetRelativePath(Directory.GetCurrentDirectory(), FileRoute);
 
-                ModelFiles AttachFiles = new ModelFiles();
-                AttachFiles.Name = Attach.Filename;
-                AttachFiles.Value = RutaRelativa;
-                AttachFiles.Type = FileType;
-                return AttachFiles;
+            ModelFiles AttachFiles = new ModelFiles
+            {
+                Name = Attach.Filename,
+                Value = RutaRelativa,
+                Type = FileType
+            };
+            return AttachFiles;
         }
 
         

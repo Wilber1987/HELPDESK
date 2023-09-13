@@ -6,12 +6,16 @@ using CAPA_DATOS.Services;
 
 namespace CAPA_NEGOCIO.MAPEO
 {
+    enum Case_Priority {
+        Alta, Media, Baja
+    }
     public class CaseTable_Case : EntityClass
     {
         [PrimaryKey(Identity = true)]
         public int? Id_Case { get; set; }
         public string? Titulo { get; set; }
         public string? Descripcion { get; set; }
+        public string? Case_Priority { get; set; }
         public string? Mail { get; set; }
         public int? Id_Perfil { get; set; }
         public string? Estado { get; set; }

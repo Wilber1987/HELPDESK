@@ -101,6 +101,8 @@ class CaseTable_Case extends EntityClass {
 
     Cat_Dependencias = { type: 'WSelect', ModelObject: () => new Cat_Dependencias() };
     Estado = { type: "Select", Dataset: ["Activo", "Espera", "Pendiente", "Finalizado"] };
+    Case_Priority = { type: "Select", Dataset: ["Alta", "Media", "Baja"], label: "Prioridad" };
+    
     Fecha_Final = { type: 'date' };
 
     Descripcion = { type: 'textarea', hiddenInTable: true, hiddenFilter: true };

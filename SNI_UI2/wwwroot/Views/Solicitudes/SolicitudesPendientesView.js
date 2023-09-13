@@ -12,6 +12,7 @@ import { CaseForm, simpleCaseForm } from '../Perfil/Proyectos/CaseManagerCompone
 import { ControlBuilder } from '../../WDevCore/WModules/WControlBuilder.js';
 import { WCommentsComponent } from '../../WDevCore/WComponents/WCommentsComponent.js';
 import { WSecurity } from '../../WDevCore/Security/WSecurity.js';
+import { priorityStyles } from '../../AppComponents/Styles.js';
 
 const OnLoad = async () => {
     const Solicitudes = await new CaseTable_Case().GetSolicitudesPendientesAprobar();
@@ -119,6 +120,7 @@ class SolicitudesPendientesView extends HTMLElement {
         })
     }
     actividadElement = (actividad) => {
+        this.shadowRoot.append(priorityStyles.cloneNode(true));
         return WRender.Create({
             className: "actividad", object: actividad, children: [
                 { tagName: 'h4', innerText: `#${actividad.Id_Case} - ${actividad.Titulo} (${actividad.Tbl_Servicios?.Descripcion_Servicio ?? ""})` },
@@ -130,6 +132,8 @@ class SolicitudesPendientesView extends HTMLElement {
                 }, {
                     className: "propiedades", children: [
                         { tagName: 'label', innerText: "Estado: " + actividad.Estado },
+                        { tagName: 'label', className: "prioridad_" + (actividad.Case_Priority != null ?  actividad.Case_Priority : undefined ), 
+                        innerText: "Prioridad: " + (actividad.Case_Priority != null ?  actividad.Case_Priority ?? "indefinida" : "indefinida" ) },
                         { tagName: 'label', innerText: "Dependencia: " + actividad.Cat_Dependencias.Descripcion },
                         { tagName: 'label', innerText: "Fecha inicio: " + actividad.Fecha_Inicial?.toString().toDateFormatEs() },
                         { tagName: 'label', innerText: "Fecha de finalización: " + actividad.Fecha_Final?.toString().toDateFormatEs() },

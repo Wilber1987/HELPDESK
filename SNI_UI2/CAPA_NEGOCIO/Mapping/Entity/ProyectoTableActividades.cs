@@ -312,8 +312,10 @@ namespace CAPA_NEGOCIO.MAPEO
 
         public List<CaseTable_Tareas> GetOwParticipations(string identity)
         {
-            CaseTable_Participantes Inst = new CaseTable_Participantes();
-            Inst.Id_Perfil = AuthNetCore.User(identity).UserId;
+
+
+            Tbl_Profile? profile = new Tbl_Profile() { IdUser = AuthNetCore.User(identity).UserId }.Find<Tbl_Profile>();
+            CaseTable_Participantes Inst = new CaseTable_Participantes() { Id_Perfil = profile?.Id_Perfil };
             return new CaseTable_Tareas().Get_WhereIN<CaseTable_Tareas>(
                 "Id_Tarea", Inst.Get<CaseTable_Participantes>().Select(p => p.Id_Tarea.ToString()).ToArray()
             );
@@ -335,6 +337,26 @@ namespace CAPA_NEGOCIO.MAPEO
                 Fecha_Finalizacion_Proceso = DateTime.Now;
             }
             return Update();
+        }
+
+        internal void NotificarTecnicos(CaseTable_Case caseTable_Case, UserModel user)
+        {
+            foreach (var participante in CaseTable_Participantes)
+            {
+                List<String?>? toMails = new List<string?>();
+                toMails.Add(participante.Tbl_Profile.Correo_institucional);
+                new CaseTable_Mails()
+                {
+                    Id_Case = caseTable_Case?.Id_Case,
+                    Subject = $"TAREA ASIGNADA: - {Titulo} ",
+                    Body = $"TAREA ASIGNADA: {Titulo} - ROL: {participante.Cat_Tipo_Participaciones.Descripcion} - CASO:  {caseTable_Case?.Titulo?.ToUpper()}" + Descripcion,
+                    FromAdress = user.mail,
+                    Estado = MailState.PENDIENTE.ToString(),
+                    Date = DateTime.Now,
+                    Attach_Files = null,
+                    ToAdress = toMails.Where(m => m != null && m != user.mail).ToList().Distinct().ToList()
+                }.Save();
+            }
         }
 
         internal object? SaveTarea(string identity)

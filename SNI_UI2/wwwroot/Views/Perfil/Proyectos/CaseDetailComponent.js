@@ -116,52 +116,55 @@ class CaseDetailComponent extends HTMLElement {
         const taskNav = new WAppNavigator({
             //NavStyle: "tab",
             Inicialize: true,
-            Elements: [
-                {
-                    name: "Vista de panel", action: async (ev) => {
-                        tabManager.NavigateFunction("taskManager", this.taskManager)
-                    }
-                },
-                { name: "Vista de progreso", action: async (ev) => { tabManager.NavigateFunction("ganttChart", this.ganttChart) } },
-                //{ name: "Vista de detalles", action: async (ev) => { tabManager.NavigateFunction("taskTable", this.tasktable) } },
-                {
-                    name: "Nueva Tarea", action: async (ev) => {
-                        this.shadowRoot.append(new WModalForm({
-                            ModelObject: taskModel,
-                            AutoSave: true,
-                            title: "Nueva Tarea",
-                            ObjectOptions: {
-                                SaveFunction: (task) => {
-                                    this.update();
-                                }
-                            }
-                        }))
-                    }
-                },
-                //actividad.Id_Vinculate != null ? 
-                {
-                    name: "Vinculaciones", action: async (ev) => {
-                        const modelVinculate = new CaseTable_Case({ Id_Vinculate: actividad.Id_Vinculate });
-                        console.log(modelVinculate);
-                        const vinculateTable = new WTableComponent({
-                            Dataset: await modelVinculate.GetVinculateCase(),
-                            ModelObject: new CaseTable_Case(),
-                            AddItemsFromApi: false,
-                            Options: {
-                                UserActions: [{
-                                    name: "Desvincular caso", action: (caso) => {
-                                        this.Desvincular(caso, vinculateTable, modelVinculate);
-                                    }
-                                }]
-                            }
-                        })
-                        tabManager.NavigateFunction("vinculaciones", vinculateTable)
-                    }
+            Elements: [{
+                name: "Bandeja de entrada", action: async (ev) => {
+                    tabManager.NavigateFunction("bandeja", commentsContainer)
                 }
+            }, {
+                name: "Vista de panel", action: async (ev) => {
+                    tabManager.NavigateFunction("taskManager", this.taskManager)
+                }
+            },
+            { name: "Vista de progreso", action: async (ev) => { tabManager.NavigateFunction("ganttChart", this.ganttChart) } },
+            //{ name: "Vista de detalles", action: async (ev) => { tabManager.NavigateFunction("taskTable", this.tasktable) } },
+            {
+                name: "Nueva Tarea", action: async (ev) => {
+                    this.shadowRoot.append(new WModalForm({
+                        ModelObject: taskModel,
+                        AutoSave: true,
+                        title: "Nueva Tarea",
+                        ObjectOptions: {
+                            SaveFunction: (task) => {
+                                this.update();
+                            }
+                        }
+                    }))
+                }
+            },
+            //actividad.Id_Vinculate != null ? 
+            {
+                name: "Vinculaciones", action: async (ev) => {
+                    const modelVinculate = new CaseTable_Case({ Id_Vinculate: actividad.Id_Vinculate });
+                    console.log(modelVinculate);
+                    const vinculateTable = new WTableComponent({
+                        Dataset: await modelVinculate.GetVinculateCase(),
+                        ModelObject: new CaseTable_Case(),
+                        AddItemsFromApi: false,
+                        Options: {
+                            UserActions: [{
+                                name: "Desvincular caso", action: (caso) => {
+                                    this.Desvincular(caso, vinculateTable, modelVinculate);
+                                }
+                            }]
+                        }
+                    })
+                    tabManager.NavigateFunction("vinculaciones", vinculateTable)
+                }
+            }
             ]
         });
 
-        this.actividadDetailView.append(commentsContainer, taskNav, taskContainer)
+        this.actividadDetailView.append(taskNav, taskContainer)
         this.TabManager.NavigateFunction("Tab-Actividades-Viewer" + actividad.Id_Case, this.actividadDetailView);
     }
 
@@ -181,8 +184,10 @@ class CaseDetailComponent extends HTMLElement {
                 }, {
                     className: "propiedades", children: [
                         { tagName: 'label', innerText: "Estado: " + actividad.Estado },
-                        { tagName: 'label', className: "prioridad_" + (actividad.Case_Priority != null ?  actividad.Case_Priority : undefined ), 
-                        innerText: "Prioridad: " + (actividad.Case_Priority != null ?  actividad.Case_Priority ?? "indefinida" : "indefinida" ) },
+                        {
+                            tagName: 'label', className: "prioridad_" + (actividad.Case_Priority != null ? actividad.Case_Priority : undefined),
+                            innerText: "Prioridad: " + (actividad.Case_Priority != null ? actividad.Case_Priority ?? "indefinida" : "indefinida")
+                        },
                         { tagName: 'label', innerText: "Dependencia: " + actividad.Cat_Dependencias.Descripcion },
                         { tagName: 'label', innerText: "Fecha inicio: " + actividad.Fecha_Inicial?.toString().toDateFormatEs() },
                         { tagName: 'label', innerText: "Fecha de finalización: " + actividad.Fecha_Final?.toString().toDateFormatEs() },
@@ -199,11 +204,13 @@ class CaseDetailComponent extends HTMLElement {
         this.shadowRoot.append(new WModalForm({
             title: "Editar Caso",
             AutoSave: true,
-            EditObject: this.Actividad, 
+            EditObject: this.Actividad,
             ModelObject: await CaseOwModel(),
-            ObjectOptions: { SaveFunction: ()=> {
-                this.update();
-            }}
+            ObjectOptions: {
+                SaveFunction: () => {
+                    this.update();
+                }
+            }
         }))
     }
 
@@ -289,7 +296,7 @@ class CaseDetailComponent extends HTMLElement {
         }
         .actividadDetailView {
             display: grid;
-            grid-template-columns: calc(100% - 520px) 500px;
+            /* grid-template-columns: calc(100% - 520px) 500px; */
             grid-template-rows: 150px 50px auto;
             gap: 0px 20px;
         }

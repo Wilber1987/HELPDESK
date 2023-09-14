@@ -6,7 +6,8 @@ using CAPA_DATOS.Services;
 
 namespace CAPA_NEGOCIO.MAPEO
 {
-    enum Case_Priority {
+    enum Case_Priority
+    {
         Alta, Media, Baja
     }
     public class CaseTable_Case : EntityClass
@@ -76,6 +77,7 @@ namespace CAPA_NEGOCIO.MAPEO
                         }.Save();
                     }
                 }
+                else if (mail.Subject.ToUpper().Contains("TAREA ASIGNADA:")) { }
                 else
                 {
                     Titulo = mail.Subject.ToUpper();
@@ -183,6 +185,17 @@ namespace CAPA_NEGOCIO.MAPEO
             }
             throw new Exception("no tienes permisos para gestionar casos");
         }
+        public List<CaseTable_Case> GetOwCloseCase(string identity)
+        {
+            if (AuthNetCore.HavePermission(PermissionsEnum.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identity)
+             && AuthNetCore.HavePermission(PermissionsEnum.TECNICO_CASOS_DEPENDENCIA.ToString(), identity))
+            {
+                return getCaseByDependencia(identity, null)
+                .Where(c => c.Estado == Case_Estate.Finalizado.ToString()).ToList();
+            }
+            throw new Exception("no tienes permisos para gestionar casos");
+        }
+
 
         public List<CaseTable_Case> GetOwSolicitudes(string? identity, Case_Estate case_Estate)
         {
@@ -235,6 +248,10 @@ namespace CAPA_NEGOCIO.MAPEO
                 Estado = CommetsState.Pendiente.ToString(),
                 Mail = user.mail
             };
+            foreach (var task in CaseTable_Tareas)
+            {
+                task.NotificarTecnicos(this, user);
+            }
             comment.Save();
             comment.CreateMailForComment(user);
             //CommitGlobalTransaction();

@@ -1,4 +1,5 @@
 ﻿@using API.Controllers
+@using CAPA_DATOS.Security
 <!DOCTYPE html>
 <html lang="en">
 @{
@@ -16,14 +17,16 @@
             WSecurity.LogOut();
         }
         window.addEventListener("load", () => {
-            //active nav
+            //active nav ProyectosCerrados Tareas
             if (location.href.includes("PerfilView")) {
                 PerfilView.className = "active";
             } else if (location.href.includes("SolicitudesRealizadas")) {
                 SolicitudesRealizadas.className = "active";
             } else if (location.href.includes("SolicitudesPendientes")) {
                 SolicitudesPendientes.className = "active";
-            } else if (location.href.includes("Proyectos")) {
+            } else if (location.href.includes("ProyectosCerrados")) {
+                ProyectosCerrados.className = "active";
+            }else if (location.href.includes("Proyectos")) {
                 Proyectos.className = "active";
             } else if (location.href.includes("CaseDetail")) {
                 Proyectos.className = "active";
@@ -31,7 +34,10 @@
                 VinculateCaseView.className = "active";
             } else if (location.href.includes("Transaction_Valoraciones_View")) {
                 Transaction_Valoraciones_View.className = "active";
-            } else {
+            }else if (location.href.includes("Tareas")) {
+                Tareas.className = "active";
+            }
+             else {
                 Home.className = "active";
             }
             //logOut
@@ -44,15 +50,34 @@
     <aside id="Aside">
         <nav>
             <div class="logo-container">
-                <img src="~/Media/Image/logo.png"/>
+                <img src="~/Media/Image/logo.png" />
             </div>
             <h3>TRANSACCIONES</h3>
             <a class="" id="Home" href="/">HOME</a>
-            <a class="" id="SolicitudesRealizadas" href="~/Perfil/SolicitudesRealizadas">Solicitudes Realizadas</a>
-            <a class="" id="SolicitudesPendientes" href="~/Perfil/SolicitudesPendientes">Solicitudes Pendientes</a>
-            <a class="" id="Proyectos" href="~/Perfil/Proyectos">Casos en Proceso</a>
+            @if (SecurityController.HavePermission(PermissionsEnum.GENERADOR_SOLICITUDES.ToString(), identify))
+            {
+                <a class="" id="SolicitudesRealizadas" href="~/Perfil/SolicitudesRealizadas">Solicitudes Realizadas</a>
+            }
+            @if (SecurityController.HavePermission(PermissionsEnum.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identify))
+            {
+                <a class="" id="SolicitudesPendientes" href="~/Perfil/SolicitudesPendientes">Solicitudes Pendientes</a>
+            }
+            @if (SecurityController.HavePermission(PermissionsEnum.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identify)
+            || SecurityController.HavePermission(PermissionsEnum.TECNICO_CASOS_DEPENDENCIA.ToString(), identify))
+            {
+                <a class="" id="Proyectos" href="~/Perfil/Proyectos">Casos en Proceso</a>
+            }
+            @if (SecurityController.HavePermission(PermissionsEnum.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identify)
+            || SecurityController.HavePermission(PermissionsEnum.TECNICO_CASOS_DEPENDENCIA.ToString(), identify))
+            {
+                <a class="" id="ProyectosCerrados" href="~/Perfil/ProyectosCerrados">Casos finalizados</a>
+            }
+            @if (SecurityController.HavePermission(PermissionsEnum.TECNICO_CASOS_DEPENDENCIA.ToString(), identify))
+            {
+                <a class="" id="Tareas" href="~/Perfil/Tareas">Tareas en Proceso</a>
+            }
             @* <a class="" id="VinculateCaseView" href="~/Perfil/VinculateCaseView">Casos vinculados</a> *@
-           
+
         </nav>
     </aside>
 
@@ -66,7 +91,10 @@
         {
             <a href="~/Admin/Index">Admin Panel</a>
         }
-        <a class="" href="~/Perfil/PerfilView">Perfil</a>
+        @if (SecurityController.HavePermission(PermissionsEnum.PERFIL_ACCESS.ToString(), identify))
+        {
+            <a class="" href="~/Perfil/PerfilView">Perfil</a>
+        }
         <a href="#" id="btnLogOut">Cerrar Sesión</a>
     </header>
     <div class="background"></div>

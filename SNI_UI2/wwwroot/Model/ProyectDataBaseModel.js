@@ -116,6 +116,12 @@ class CaseTable_Case extends EntityClass {
     /**
      * @returns {Array<CaseTable_Case>}
      */
+    GetOwCloseCase = async () => {
+        return await this.GetData("Proyect/GetOwCloseCase");
+    }
+    /**
+     * @returns {Array<CaseTable_Case>}
+     */
     GetVinculateCase = async () => {
         return await this.GetData("Proyect/GetVinculateCase");
     }

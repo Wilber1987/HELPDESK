@@ -25,7 +25,7 @@ class WCommentsComponent extends HTMLElement {
                 this.MessageInput,
                 {
                     tagName: 'input', type: "button", className: 'Btn-Mini',
-                    value: 'Send', onclick: async () => {
+                    value: 'Enviar', onclick: async () => {
                         this.saveComment();
                     }
                 }
@@ -38,7 +38,7 @@ class WCommentsComponent extends HTMLElement {
                 this.RitchInput,
                 {
                     tagName: 'input', type: "button", className: 'Btn-Mini',
-                    value: 'Send', onclick: async () => {
+                    value: 'Enviar', onclick: async () => {
                         this.saveRitchComment();
                     }
                 }
@@ -252,6 +252,9 @@ class WCommentsComponent extends HTMLElement {
             font-weight: bold;
             text-decoration: underline;
             color: #020c1f;
+        }
+        w-rich-text {
+            width: 100%;
         }
        
     `

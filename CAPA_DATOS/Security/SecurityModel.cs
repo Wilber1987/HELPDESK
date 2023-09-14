@@ -60,7 +60,6 @@ namespace CAPA_DATOS.Security
     {
         [PrimaryKey(Identity = true)]
         public int? Id_User { get; set; }
-        public int? id_agente { get; set; }
         public string? Nombres { get; set; }
         public string? Estado { get; set; }
         public string? Descripcion { get; set; }
@@ -73,7 +72,6 @@ namespace CAPA_DATOS.Security
         public List<Security_Users_Roles>? Security_Users_Roles { get; set; }
         public Security_Users? GetUserData()
         {
-
             Security_Users? user = this.Find<Security_Users>();
             if (user != null && user.Estado == "ACTIVO")
             {
@@ -109,12 +107,21 @@ namespace CAPA_DATOS.Security
                         throw new Exception("Correo en uso");
                     }
                     this.Save();
+                    new Tbl_Profile()
+                    {
+                        Nombres = this.Nombres,
+                        Estado = this.Estado,
+                        Correo_institucional = this.Mail,
+                        Foto = "avatar.png",
+                        IdUser = Id_User
+
+                    }.Save();
                 }
                 else
                 {
                     if (this.Estado == null)
-                    {   
-                        this.Estado = "ACTIVO";                        
+                    {
+                        this.Estado = "ACTIVO";
                     }
                     this.Update("Id_User");
                 }
@@ -150,7 +157,7 @@ namespace CAPA_DATOS.Security
             }
             return Security_Users_List;
         }
-         internal bool IsAdmin()
+        internal bool IsAdmin()
         {
             return Security_Users_Roles?.Find(r => r.Security_Role?.Security_Permissions_Roles?.Find(p =>
              p.Security_Permissions.Descripcion.Equals(PermissionsEnum.ADMIN_ACCESS.ToString())
@@ -185,4 +192,19 @@ namespace CAPA_DATOS.Security
         public Security_Roles? Security_Role { get; set; }
 
     }
+    public class Tbl_Profile : EntityClass
+    {
+        [PrimaryKey(Identity = true)]
+        public int? Id_Perfil { get; set; }
+        public string? Nombres { get; set; }
+        public string? Apellidos { get; set; }
+        public DateTime? FechaNac { get; set; }
+        public int? IdUser { get; set; }
+        public string? Sexo { get; set; }
+        public string? Foto { get; set; }
+        public string? DNI { get; set; }
+        public string? Correo_institucional { get; set; }
+        public string? Estado { get; set; }
+    }
+
 }

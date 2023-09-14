@@ -30,6 +30,10 @@ namespace API.Controllers
         {
             return inst.GetOwCase(HttpContext.Session.GetString("seassonKey"));
         }
+        public List<CaseTable_Case> GetOwCloseCase(CaseTable_Case inst)
+        {
+            return inst.GetOwCloseCase(HttpContext.Session.GetString("seassonKey"));
+        }
         public List<CaseTable_Case> GetVinculateCase(CaseTable_Case inst)
         {
             

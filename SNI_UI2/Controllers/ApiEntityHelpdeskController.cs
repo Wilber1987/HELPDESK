@@ -295,7 +295,7 @@ namespace API.Controllers
         public List<CaseTable_Tareas> getCaseTable_Tareas(CaseTable_Tareas Inst)
         {
             return Inst.Get<CaseTable_Tareas>();
-        }
+        }        
         [HttpPost]
         [AuthController]
         public object? saveCaseTable_Tareas(CaseTable_Tareas inst)

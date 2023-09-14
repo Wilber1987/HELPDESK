@@ -94,7 +94,7 @@ const ActionFunction = async (Id_Perfil, DOMManager) => {
     const BodyComponents = new WDetailObject({
         ObjectDetail: response,
         ModelObject: new Tbl_Profile(),
-        ImageUrlPath: "/Media/Image",
+        ImageUrlPath: "",
         DOMManager: DOMManager
     }); // new WProfileInvestigador(response, { DOMManager: DOMManager });
     DOMManager.NavigateFunction("Investigador" + Id_Perfil, BodyComponents);

@@ -60,6 +60,11 @@ namespace API.Controllers
             return new CaseTable_Case()
             .GetSolicitudesPendientesAprobar(HttpContext.Session.GetString("seassonKey"), Case_Estate.Solicitado);
         }
+        public List<CaseTable_Case> GetSolicitudesPendientesAprobarAdmin()
+        {
+            return new CaseTable_Case()
+            .GetSolicitudesPendientesAprobarAdmin(HttpContext.Session.GetString("seassonKey"));
+        }
         public List<CaseTable_Case> GetOwSolicitudesProceso()
         {
             return new CaseTable_Case()

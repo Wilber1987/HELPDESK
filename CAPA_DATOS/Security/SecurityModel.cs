@@ -112,7 +112,7 @@ namespace CAPA_DATOS.Security
                         Nombres = this.Nombres,
                         Estado = this.Estado,
                         Correo_institucional = this.Mail,
-                        Foto = "avatar.png",
+                        Foto = "\\Media\\profiles\\avatar.png",
                         IdUser = Id_User
 
                     }.Save();
@@ -163,6 +163,20 @@ namespace CAPA_DATOS.Security
              p.Security_Permissions.Descripcion.Equals(PermissionsEnum.ADMIN_ACCESS.ToString())
             ) != null) != null;
         }
+        class Tbl_Profile : EntityClass
+        {
+            [PrimaryKey(Identity = true)]
+            public int? Id_Perfil { get; set; }
+            public string? Nombres { get; set; }
+            public string? Apellidos { get; set; }
+            public DateTime? FechaNac { get; set; }
+            public int? IdUser { get; set; }
+            public string? Sexo { get; set; }
+            public string? Foto { get; set; }
+            public string? DNI { get; set; }
+            public string? Correo_institucional { get; set; }
+            public string? Estado { get; set; }
+        }
     }
     public class Security_Permissions : EntityClass
     {
@@ -192,19 +206,6 @@ namespace CAPA_DATOS.Security
         public Security_Roles? Security_Role { get; set; }
 
     }
-    public class Tbl_Profile : EntityClass
-    {
-        [PrimaryKey(Identity = true)]
-        public int? Id_Perfil { get; set; }
-        public string? Nombres { get; set; }
-        public string? Apellidos { get; set; }
-        public DateTime? FechaNac { get; set; }
-        public int? IdUser { get; set; }
-        public string? Sexo { get; set; }
-        public string? Foto { get; set; }
-        public string? DNI { get; set; }
-        public string? Correo_institucional { get; set; }
-        public string? Estado { get; set; }
-    }
+
 
 }

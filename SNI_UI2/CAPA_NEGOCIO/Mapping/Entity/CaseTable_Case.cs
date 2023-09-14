@@ -176,7 +176,7 @@ namespace CAPA_NEGOCIO.MAPEO
         public List<CaseTable_Case> GetOwCase(string identity)
         {
             if (AuthNetCore.HavePermission(PermissionsEnum.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identity)
-             && AuthNetCore.HavePermission(PermissionsEnum.TECNICO_CASOS_DEPENDENCIA.ToString(), identity))
+             || AuthNetCore.HavePermission(PermissionsEnum.TECNICO_CASOS_DEPENDENCIA.ToString(), identity))
             {
                 return getCaseByDependencia(identity, null)
                 .Where(c => c.Estado != Case_Estate.Rechazado.ToString()
@@ -188,7 +188,7 @@ namespace CAPA_NEGOCIO.MAPEO
         public List<CaseTable_Case> GetOwCloseCase(string identity)
         {
             if (AuthNetCore.HavePermission(PermissionsEnum.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identity)
-             && AuthNetCore.HavePermission(PermissionsEnum.TECNICO_CASOS_DEPENDENCIA.ToString(), identity))
+             || AuthNetCore.HavePermission(PermissionsEnum.TECNICO_CASOS_DEPENDENCIA.ToString(), identity))
             {
                 return getCaseByDependencia(identity, null)
                 .Where(c => c.Estado == Case_Estate.Finalizado.ToString()).ToList();
@@ -333,6 +333,16 @@ namespace CAPA_NEGOCIO.MAPEO
                 return new List<CaseTable_Case>();
 
             }
+        }
+
+        internal List<CaseTable_Case> GetSolicitudesPendientesAprobarAdmin(string? identity)
+        {
+             if (AuthNetCore.HavePermission(PermissionsEnum.ADMIN_ACCESS.ToString(), identity))
+            {
+                Estado = Case_Estate.Solicitado.ToString();
+                return Get<CaseTable_Case>();
+            }
+            throw new Exception("no tienes permisos para aprobar casos");
         }
     }
 }

@@ -92,7 +92,7 @@ class WAppNavigator extends HTMLElement {
         this.Elements.forEach((element, Index) => {
             const elementNav = WRender.createElement({
                 type: "a",
-                props: { class: "elementNav" }
+                props: { id: "element" + (element.id ?? Index), class: "elementNav" }
             });
 
             elementNav.append(element.name)

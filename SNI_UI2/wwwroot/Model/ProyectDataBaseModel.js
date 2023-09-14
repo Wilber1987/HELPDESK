@@ -41,13 +41,12 @@ class Tbl_Profile extends EntityClass {
     Id_Perfil = { type: 'number', primary: true };
     Nombres = { type: 'text' };
     Apellidos = { type: 'text' };
-    FechaNac = { type: 'date' };
-    Sexo = { type: 'text' };
+    FechaNac = { type: 'date', label: "fecha de nacimiento" };
+    Sexo ={ type: "Select", Dataset: ["Masculino", "Femenino"] };
     Foto = { type: 'img' };
     DNI = { type: 'text' };
-    Correo_institucional = { type: 'text' };
-    Indice_H = { type: 'text' };
-    Estado = { type: "Select", Dataset: ["Activo", "Inactivo"] };
+    Correo_institucional = { type: 'text', label: "correo", disabled: true };
+    Estado = { type: "Select", Dataset: ["ACTIVO", "INACTIVO"] };
 }
 export { Tbl_Profile }
 
@@ -154,6 +153,12 @@ class CaseTable_Case extends EntityClass {
      */
     GetSolicitudesPendientesAprobar = async () => {
         return await this.GetData("Proyect/GetSolicitudesPendientesAprobar");
+    }
+    /**
+     * @returns {Array<CaseTable_Case>}
+     */
+    GetSolicitudesPendientesAprobarAdmin = async () => {
+        return await this.GetData("Proyect/GetSolicitudesPendientesAprobarAdmin");
     }
     /**
      * @returns {Object}

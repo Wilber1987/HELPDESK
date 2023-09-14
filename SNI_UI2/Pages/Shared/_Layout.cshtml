@@ -11,6 +11,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] HELPDESK</title>
     <link rel="stylesheet" href="~/css/AdminTemplate.css" />
+    <script>
+        function displayNav() {
+            Aside.className = Aside.className.includes("navActive") ? "" : "navActive";
+        }
+    </script>
     <script type="module">
         import { WSecurity } from "../WDevCore/Security/WSecurity.js";
         const logout = () => {
@@ -19,14 +24,14 @@
         window.addEventListener("load", () => {
             //active nav ProyectosCerrados Tareas
             if (location.href.includes("PerfilView")) {
-                PerfilView.className = "active";
+                //PerfilView.className = "active";
             } else if (location.href.includes("SolicitudesRealizadas")) {
                 SolicitudesRealizadas.className = "active";
             } else if (location.href.includes("SolicitudesPendientes")) {
                 SolicitudesPendientes.className = "active";
             } else if (location.href.includes("ProyectosCerrados")) {
                 ProyectosCerrados.className = "active";
-            }else if (location.href.includes("Proyectos")) {
+            } else if (location.href.includes("Proyectos")) {
                 Proyectos.className = "active";
             } else if (location.href.includes("CaseDetail")) {
                 Proyectos.className = "active";
@@ -34,10 +39,10 @@
                 VinculateCaseView.className = "active";
             } else if (location.href.includes("Transaction_Valoraciones_View")) {
                 Transaction_Valoraciones_View.className = "active";
-            }else if (location.href.includes("Tareas")) {
+            } else if (location.href.includes("Tareas")) {
                 Tareas.className = "active";
             }
-             else {
+            else {
                 Home.className = "active";
             }
             //logOut
@@ -49,6 +54,7 @@
 <body id="AdminTemplate">
     <aside id="Aside">
         <nav>
+            <img src="~/Media/Image/close.webp" class="navIcon" onclick="displayNav()">
             <div class="logo-container">
                 <img src="~/Media/Image/logo.png" />
             </div>
@@ -82,6 +88,7 @@
     </aside>
 
     <header id="Header" class="admin-header">
+        <img src="~/Media/Image/navIcon.png" class="navIcon" onclick="displayNav()">
         <div class="title-container">
             <label for="" class="title">HELPDESK</label>
             <label for="" class="sub-title">Sistema de ayuda</label>

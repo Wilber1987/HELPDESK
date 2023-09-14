@@ -27,6 +27,10 @@ class ColumChart extends HTMLElement {
     }
     connectedCallback() {
         //console.log("conected");
+        if (this.Dataset == null || this.Dataset ==  undefined || this.Dataset.length == 0) {
+            this.shadowRoot.innerHTML = "No hay datos que mostar";
+            return;
+        }
         this.shadowRoot.innerHTML = "";
         this.MainChart.children = [];
         this.GroupsData = [];

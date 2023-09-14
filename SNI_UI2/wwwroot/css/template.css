@@ -15,8 +15,8 @@ body {
     top: 0px;
     left: 0px;
     position: absolute;
-    background: rgb(2,0,36);
-    background: linear-gradient(180deg, rgba(2,0,36,1) 0%, rgba(9,109,121,1) 22%, rgba(0,212,255,0) 48%);
+    background: rgb(2, 0, 36);
+    background: linear-gradient(180deg, rgba(2, 0, 36, 1) 0%, rgba(9, 109, 121, 1) 22%, rgba(0, 212, 255, 0) 48%);
     background-attachment: fixed;
     display: block;
     height: 900px;
@@ -192,16 +192,39 @@ body {
     display: flex;
     justify-content: flex-end;
 }
+.navIcon {
+      display: none;  
+}
 
 
 @media(max-width: 1200px) {
     #Aside {
-        display: none;
+        position: fixed;
+        transform: translateX(-100%);
+        transition: all 0.5s;
+        z-index: 100000;
     }
+
     #AdminTemplate {
         display: grid;
         grid-template-rows: 50px calc(100vh - 50px);
-        grid-template-columns:  100%;
+        grid-template-columns: 100%;
     }
-    
+
+    #Aside.navActive {
+        transform: translateX(0%);
+        position: fixed;
+        top: 0;
+        bottom: 0;
+    }
+    .navIcon {
+        display: block;
+        height: 40px;
+        width: 40px;
+        margin: 0px 20px;
+        cursor: pointer;
+    }
+    #Header .navIcon {
+        filter: invert(1);
+    }
 }

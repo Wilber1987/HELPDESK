@@ -6,9 +6,9 @@ const CaseOwModel = async ()=> {
     console.log(tbl_servicios);
     const ModelObject = new CaseTable_Case({
         CaseTable_Tareas: {
-            hidden: true
+            type: "text",  hidden: true
         }, Estado: {
-            hidden: true
+            type: "text",  hidden: true
         }, Cat_Dependencias: {
             type: "WSELECT", hidden: true
         }, Tbl_Servicios: {

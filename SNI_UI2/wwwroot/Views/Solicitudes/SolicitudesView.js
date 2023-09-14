@@ -165,6 +165,6 @@ class MainSolicitudesView extends HTMLElement {
         });
     }
 }
-customElements.define('w-main-solicitudes-component', MainSolicitudesView);
+customElements.define('w-main-solicitudes', MainSolicitudesView);
 export { MainSolicitudesView };
 

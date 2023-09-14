@@ -209,7 +209,7 @@ const CaseForm = (entity, dependencias, action) => {
     const form = new WForm({
         EditObject: entity,
         SaveFunction: action,
-        ImageUrlPath: "/Media/Image/",
+        ImageUrlPath: "",
         ModelObject: new CaseTable_Case({
             CaseTable_Tareas: {
                 type: 'MasterDetail',
@@ -238,7 +238,7 @@ const simpleCaseForm = (entity, dependencias, action) => {
     const form = new WForm({
         EditObject: entity,
         SaveFunction: action,
-        ImageUrlPath: "/Media/Image/",
+        ImageUrlPath: "",
         ModelObject: new CaseTable_Case({
             CaseTable_Tareas: { hidden: true },
             Id_Vinculate: { hidden: true },

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CAPA_DATOS.Security;
+using CAPA_DATOS.Services;
 
 namespace CAPA_NEGOCIO.MAPEO
 {
@@ -90,12 +91,25 @@ namespace CAPA_NEGOCIO.MAPEO
         }
         public Object SaveProfile()
         {
+
+            if (Foto != null)
+            {
+                var pic = (ModelFiles)FileService.upload("profiles\\", new ModelFiles
+                {
+                    Value = Foto,
+                    Type = "png",
+                    Name = "profile"
+                }).body;
+                Foto = pic.Value.Replace("wwwroot", "");
+            }
             if (this.Id_Perfil == null)
             {
                 this.Id_Perfil = (Int32?)this.Save();
             }
             else
             {
+                Correo_institucional = null;
+                IdUser = null;
                 this.Update("Id_Perfil");
             }
 

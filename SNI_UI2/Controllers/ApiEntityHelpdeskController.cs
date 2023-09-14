@@ -199,13 +199,13 @@ namespace API.Controllers
         [AuthController]
         public object? saveTbl_Profile(Tbl_Profile inst)
         {
-            return inst.Save();
+            return inst.SaveProfile();
         }
         [HttpPost]
         [AuthController]
         public object? updateTbl_Profile(Tbl_Profile inst)
         {
-            return inst.Update();
+            return inst.SaveProfile();
         }
 
         //Cat_Tipo_Servicio

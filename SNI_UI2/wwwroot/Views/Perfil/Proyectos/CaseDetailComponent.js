@@ -109,7 +109,7 @@ class CaseDetailComponent extends HTMLElement {
         });
         this.taskManager = new TaskManagers(tareasActividad,
             taskModel, {
-            ImageUrlPath: "/Media/Image/", action: async (task) => {
+            ImageUrlPath: "", action: async (task) => {
                 this.update();
             }
         })

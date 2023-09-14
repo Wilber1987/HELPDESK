@@ -23,7 +23,7 @@ class PerfilClass extends HTMLElement {
         this.Id_Perfil = 1;
         this.id = "PerfilClass";
         this.className = "PerfilClass DivContainer";
-        this.append(this.WStyle,StylesControlsV2.cloneNode(true));
+        this.append(this.WStyle, StylesControlsV2.cloneNode(true));
         this.TabContainer = WRender.createElement({ type: 'div', props: { class: 'TabContainer', id: "TabContainer" } });
         this.TabManager = new ComponentsManager({ MainContainer: this.TabContainer });
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });
@@ -38,7 +38,7 @@ class PerfilClass extends HTMLElement {
     MainNav = new WAppNavigator({
         //NavStyle: "tab",
         Direction: "column",
-        Inicialize: true,       
+        Inicialize: true,
         Elements: [
             {
                 name: "Datos Generales",
@@ -46,17 +46,30 @@ class PerfilClass extends HTMLElement {
                     this.response = await WAjaxTools.PostRequest("../../api/Profile/TakeProfile",
                         { Id_Perfil: this.Id_Perfil }
                     );
-                    this.response.Id_Idiomas = this.response.Tbl_IdiomasInv?.map(i => i.Idioma)
                     this.TabManager.NavigateFunction("Tab-Generales",
-                        new WDetailObject({ ObjectDetail: this.response, ModelObject: new Tbl_Profile(),  ImageUrlPath: "/Media/Image" }));
+                        new WDetailObject({ ObjectDetail: this.response, ModelObject: new Tbl_Profile(), ImageUrlPath: "" }));
+                }
+            }, {
+                name: "Editar Perfil",
+                action: async (ev) => {
+                    this.response = await WAjaxTools.PostRequest("../../api/Profile/TakeProfile",
+                        { Id_Perfil: this.Id_Perfil }
+                    );
+                    this.TabManager.NavigateFunction("Tab-Edit-Generales",
+                        new WForm({
+                            AutoSave: true,
+                            EditObject: this.response,
+                            ModelObject: new Tbl_Profile(),
+                            ImageUrlPath: ""
+                        }));
                 }
             }
         ]
-    });    
+    });
 
     EditProfile = async () => {
         //const Id_Institucion = await WAjaxTools.PostRequest("../../api/PublicCat/GetInstitucion");
-       // const Id_Paises = await WAjaxTools.PostRequest("../../api/PublicCat/GetPaises");
+        // const Id_Paises = await WAjaxTools.PostRequest("../../api/PublicCat/GetPaises");
         const InvestigadorModel = new Tbl_Profile({
         });
         const EditForm = WRender.Create({
@@ -69,14 +82,14 @@ class PerfilClass extends HTMLElement {
                 new WForm({
                     ModelObject: InvestigadorModel,
                     EditObject: this.response,
-                    ImageUrlPath: "/Media/Image",
+                    ImageUrlPath: "",
                     ObjectOptions: { Url: "../../api/Profile/SaveProfile" },
                 })
             ]
         });
         this.TabManager.NavigateFunction("Tab-Editar", EditForm);
     }
-  
+
 
     connectedCallback() { }
     DrawComponent = async () => {

@@ -17,14 +17,14 @@
         }
     </script>
     <script type="module">
-        import { WSecurity } from "../WDevCore/Security/WSecurity.js";
+        import { WSecurity } from "/WDevCore/Security/WSecurity.js";
         const logout = () => {
             WSecurity.LogOut();
         }
         window.addEventListener("load", () => {
-            //active nav ProyectosCerrados Tareas
-            if (location.href.includes("PerfilView")) {
-                //PerfilView.className = "active";
+            //active nav ProyectosCerrados Tareas PerfilManager
+            if (location.href.includes("PerfilManager")) {
+                PerfilManager.className = "active";
             } else if (location.href.includes("SolicitudesRealizadas")) {
                 SolicitudesRealizadas.className = "active";
             } else if (location.href.includes("SolicitudesPendientes")) {
@@ -81,6 +81,10 @@
             @if (SecurityController.HavePermission(PermissionsEnum.TECNICO_CASOS_DEPENDENCIA.ToString(), identify))
             {
                 <a class="" id="Tareas" href="~/Perfil/Tareas">Tareas en Proceso</a>
+            }
+             @if (SecurityController.HavePermission(PermissionsEnum.ADMINISTRAR_USUARIOS.ToString(), identify))
+            {
+                <a class="" id="PerfilManager" href="~/CaseManager/Admin/PerfilManager">Administrador de perfiles</a>
             }
             @* <a class="" id="VinculateCaseView" href="~/Perfil/VinculateCaseView">Casos vinculados</a> *@
 

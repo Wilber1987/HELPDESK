@@ -114,6 +114,11 @@ namespace API.Controllers
         {
             return Inst.RemitirCasos(HttpContext.Session.GetString("seassonKey"));
         }
+         public object AsignarDependencias(ProfileTransaction Inst)
+        {
+            return Inst.AsignarDependencias(HttpContext.Session.GetString("seassonKey"));
+        }
+
 
 
 

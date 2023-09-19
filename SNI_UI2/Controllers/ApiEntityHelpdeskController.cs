@@ -193,7 +193,7 @@ namespace API.Controllers
         [AuthController]
         public List<Tbl_Profile> getTbl_Profile(Tbl_Profile Inst)
         {
-            return Inst.Get<Tbl_Profile>();
+            return Inst.GetProfiles();
         }
         [HttpPost]
         [AuthController]

@@ -558,7 +558,7 @@ class WArrayF {
      */
     static GroupBy(DataArray, Property, sumProperty = null) {
         let DataArraySR = []
-        DataArray.forEach(element => {
+        DataArray?.forEach(element => {
             const DFilt = DataArraySR.find(x => x[Property] == element[Property]);
             if (!DFilt) {
                 const NewElement = {};

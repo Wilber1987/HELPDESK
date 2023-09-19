@@ -83,7 +83,7 @@ class PerfilManagerComponent extends HTMLElement {
             d.CaseTable_Dependencias_Usuarios = d.CaseTable_Dependencias_Usuarios?.map(dp => dp.Cat_Dependencias);
         });
         this.Dataset = Dataset;
-        this.mainTable?.selectedItems = [];
+        this.mainTable.selectedItems = [];
         this.mainTable?.DrawTable(this.Dataset);
     }
     UserActions = [{

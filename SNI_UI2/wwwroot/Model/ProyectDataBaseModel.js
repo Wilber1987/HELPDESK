@@ -23,7 +23,7 @@ class CaseTable_Evidencias extends EntityClass {
         }
     }
     IdEvidencia = { type: 'number', primary: true };
-    Cat_Tipo_Evidencia = { type: 'WSelect', ModelObject: () => new Cat_Tipo_Evidencia() };
+    Cat_Tipo_Evidencia = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Tipo_Evidencia() };
     Data = { type: 'file' };
     Id_Tarea = { type: 'number', hidden: true };
 
@@ -47,7 +47,7 @@ class Tbl_Profile extends EntityClass {
     DNI = { type: 'text' };
     Correo_institucional = { type: 'text', label: "correo", disabled: true };
     Estado = { type: "Select", Dataset: ["ACTIVO", "INACTIVO"] };
-    CaseTable_Dependencias_Usuarios = { type: 'Multiselect', ModelObject: () => new Cat_Dependencias() }
+    CaseTable_Dependencias_Usuarios = { type: 'Multiselect', hiddenFilter: true, ModelObject: () => new Cat_Dependencias() }
     /**
       * @param {Array<Tbl_Profile>} perfiles
       * @param {Cat_Dependencias} dependencia
@@ -88,8 +88,8 @@ class Tbl_Servicios extends EntityClass {
     Descripcion_Servicio = { type: 'text' };
     //Visibilidad = { type: 'text' };
     Estado = { type: "Select", Dataset: ["Activo", "Inactivo"] };
-    Cat_Tipo_Servicio = { type: 'WSelect', ModelObject: () => new Cat_Tipo_Servicio() };
-    Cat_Dependencias = { type: 'WSelect', ModelObject: () => new Cat_Dependencias() }
+    Cat_Tipo_Servicio = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Tipo_Servicio() };
+    Cat_Dependencias = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Dependencias() }
     //Fecha_Inicio = { type: 'date' };
     //Fecha_Finalizacion = { type: 'date' };
     //CaseTable_Case = { type: 'MasterDetail', ModelObject: () => new CaseTable_Case() };
@@ -107,10 +107,10 @@ class CaseTable_Case extends EntityClass {
     Id_Vinculate = { type: 'number', hidden: true };
 
     Titulo = { type: 'text' };
-    Tbl_Servicios = { type: 'WSelect', ModelObject: () => new Tbl_Servicios() };
+    Tbl_Servicios = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Tbl_Servicios() };
     Fecha_Inicial = { type: 'date' };
 
-    Cat_Dependencias = { type: 'WSelect', ModelObject: () => new Cat_Dependencias() };
+    Cat_Dependencias = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Dependencias() };
     Estado = { type: "Select", Dataset: ["Activo", "Espera", "Pendiente", "Finalizado"] };
     Case_Priority = { type: "Select", Dataset: ["Alta", "Media", "Baja"], label: "Prioridad" };
 
@@ -260,10 +260,10 @@ class CaseTable_Tareas extends EntityClass {
     Id_Case = { type: 'number', hidden: true, value: undefined };
     Descripcion = { type: 'text', hiddenInTable: true };
     CaseTable_Tarea = {
-        type: 'WSelect', label: "Tarea principal", SelfChargeDataset: "CaseTable_Tareas",
+        type: 'WSelect', hiddenFilter: true, label: "Tarea principal", SelfChargeDataset: "CaseTable_Tareas",
         ModelObject: () => new CaseTable_Tareas(), require: false
     };
-    //CaseTable_TareasHijas = { type: 'MULTISELECT', ModelObject: () => new CaseTable_Tareas() };
+    //CaseTable_TareasHijas = { type: 'MULTISELECT', hiddenFilter: true, ModelObject: () => new CaseTable_Tareas() };
     Estado = { type: "Select", Dataset: ["Activo", "Proceso", "Finalizado", "Espera", "Inactivo"] };
     CaseTable_Participantes = { type: 'MasterDetail', ModelObject: () => new CaseTable_Participantes() };
     //CaseTable_Evidencias = { type: 'MasterDetail', require: false, ModelObject: () => new CaseTable_Evidencias() };
@@ -286,8 +286,8 @@ class CaseTable_Participantes extends EntityClass {
             this[prop] = props[prop];
         }
     }
-    Tbl_Profile = { type: 'WSelect', ModelObject: () => new Tbl_Profile() }
-    Cat_Tipo_Participaciones = { type: 'WSelect', ModelObject: () => new Cat_Tipo_Participaciones() }
+    Tbl_Profile = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Tbl_Profile() }
+    Cat_Tipo_Participaciones = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Tipo_Participaciones() }
 }
 export { CaseTable_Participantes }
 class Cat_Cargos_Dependencias extends EntityClass {
@@ -314,8 +314,8 @@ class Cat_Dependencias extends EntityClass {
     Username = { type: 'email' };
     Password = { type: 'text', hiddenInTable: true };
     Host = { type: 'text' };
-    //Cat_Dependencia = { type: 'WSelect', ModelObject: () => new Cat_Dependencias(), require: false };
-    Cat_Dependencias_Hijas = { type: 'Multiselect', ModelObject: () => new Cat_Dependencias(), require: false };
+    //Cat_Dependencia = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Dependencias(), require: false };
+    Cat_Dependencias_Hijas = { type: 'Multiselect', hiddenFilter: true, ModelObject: () => new Cat_Dependencias(), require: false };
     CaseTable_Agenda = { type: 'MasterDetail', ModelObject: () => new CaseTable_Agenda() };
     CaseTable_Dependencias_Usuarios = { type: 'MasterDetail', ModelObject: () => new CaseTable_Dependencias_Usuarios(), require: false };
     GetOwDependencies = async () => {
@@ -357,8 +357,8 @@ class CaseTable_Dependencias_Usuarios extends EntityClass {
             this[prop] = props[prop];
         }
     }
-    Tbl_Profile = { type: 'WSelect', ModelObject: () => new Tbl_Profile() }
-    Cat_Cargos_Dependencias = { type: 'WSelect', ModelObject: () => new Cat_Cargos_Dependencias() }
+    Tbl_Profile = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Tbl_Profile() }
+    Cat_Cargos_Dependencias = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Cargos_Dependencias() }
 }
 export { CaseTable_Dependencias_Usuarios }
 

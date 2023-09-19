@@ -12,7 +12,7 @@ const CaseOwModel = async ()=> {
         }, Cat_Dependencias: {
             type: "WSELECT", hidden: true
         }, Tbl_Servicios: {
-            type: 'WSelect', ModelObject:  new Tbl_Servicios() , Dataset: tbl_servicios
+            type: 'WSelect', hiddenFilter: true, ModelObject:  new Tbl_Servicios() , Dataset: tbl_servicios
         }
     });
     return ModelObject;

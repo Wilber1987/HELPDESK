@@ -42,7 +42,7 @@ class CasosCerradosView extends HTMLElement {
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });
         this.ModelObject = new CaseTable_Case({
             CaseTable_Tareas: undefined, Estado: undefined, Cat_Dependencias: {
-                type: "WSELECT", ModelObject: () => new Cat_Dependencias()
+                type: "WSELECT",  hiddenFilter: true, ModelObject: () => new Cat_Dependencias()
             }, Get : async ()=> {
                 return await this.ModelObject.GetData("Proyect/GetOwCloseCase");
             }

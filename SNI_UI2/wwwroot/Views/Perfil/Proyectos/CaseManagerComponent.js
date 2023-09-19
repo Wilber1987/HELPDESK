@@ -215,7 +215,7 @@ const CaseForm = (entity, dependencias, action) => {
                 type: 'MasterDetail',
                 ModelObject: () => new CaseTable_Tareas({ CaseTable_Calendario: ModelCalendar })
             }, Cat_Dependencias: {
-                type: "WSELECT", ModelObject: new Cat_Dependencias(),
+                type: "WSELECT",  hiddenFilter: true, ModelObject: new Cat_Dependencias(),
                 Dataset: dependencias,
                 action: (caso) => {
                     caso.CaseTable_Tareas
@@ -250,7 +250,7 @@ const simpleCaseForm = (entity, dependencias, action) => {
             Descripcion: { hidden: true },
             CaseTable_Comments: { type: "MasterDetail", ModelObject: new CaseTable_Comments(), label: "Comentario" },
             Cat_Dependencias: {
-                type: "WSELECT", ModelObject: new Cat_Dependencias(),
+                type: "WSELECT",  hiddenFilter: true, ModelObject: new Cat_Dependencias(),
                 Dataset: dependencias,
                 action: (caso) => {
 

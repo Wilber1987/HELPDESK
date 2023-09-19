@@ -35,7 +35,7 @@ class SolicitudesPendientesComponent extends HTMLElement {
             }, Estado: {
                 hidden: true
             }, Cat_Dependencias: {
-                type: "WSELECT", ModelObject: () => new Cat_Dependencias()
+                type: "WSELECT",  hiddenFilter: true, ModelObject: () => new Cat_Dependencias()
             }
         });
         this.DrawSolicitudesPendientesComponent();

@@ -136,22 +136,22 @@ namespace CAPA_NEGOCIO.MAPEO
         {
             try
             {
-                new Security_Users()
-                {
-                    Mail = this.Correo_institucional,
-                    Nombres = this.Nombres + " " + this.Apellidos,
-                    Estado = "Activo",
-                    Descripcion = "Investigador postulado",
-                    Password = Guid.NewGuid().ToString(),
-                    Token = Guid.NewGuid().ToString(),
-                    Token_Date = DateTime.Now,
-                    Token_Expiration_Date = DateTime.Now.AddMonths(6),
-                    Security_Users_Roles = new List<Security_Users_Roles>(){
-                        new Security_Users_Roles() { Id_Role = 2 }
-                    }
-                }.SaveUser();
-                this.Estado = "ACTIVO";
-                this.Update("Id_Perfil");
+                // new Security_Users()
+                // {
+                //     Mail = this.Correo_institucional,
+                //     Nombres = this.Nombres + " " + this.Apellidos,
+                //     Estado = "Activo",
+                //     Descripcion = "Investigador postulado",
+                //     Password = Guid.NewGuid().ToString(),
+                //     Token = Guid.NewGuid().ToString(),
+                //     Token_Date = DateTime.Now,
+                //     Token_Expiration_Date = DateTime.Now.AddMonths(6),
+                //     Security_Users_Roles = new List<Security_Users_Roles>(){
+                //         new Security_Users_Roles() { Id_Role = 2 }
+                //     }
+                // }.SaveUser();
+                // this.Estado = "ACTIVO";
+                // this.Update("Id_Perfil");
                 //MailServices.SendMail(this.Correo_institucional);
                 return true;
             }

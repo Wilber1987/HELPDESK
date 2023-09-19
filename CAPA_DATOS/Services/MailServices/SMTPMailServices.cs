@@ -10,14 +10,28 @@ namespace CAPA_DATOS.Services
 {
     public class SMTPMailServices
     {
-        //const string USERNAME = "wdevexp@outlook.com";
-        //const string PASSWORD = "%WtestDev2023%";
+        const string USERNAME = "wdevexp@outlook.com";
+        const string PASSWORD = "%WtestDev2023%";
         //const string USERNAME = "amejia@ximtechnology.onmicrosoft.com";
         //const string PASSWORD = "%3e2w1qazsX";
-        //const string HOST = "outlook.office365.com";
+        const string HOST = "outlook.office365.com";
         const int PORT = 587;
-        public static void SendMail(string from, List<string> toMails, string subject, string body, List<ModelFiles> attach, MailConfig config)
+        public static void SendMail(string from,
+            List<string> toMails,
+            string subject,
+            string body,
+            List<ModelFiles> attach,
+            MailConfig config)
         {
+            if (config == null)
+            {
+                config = new MailConfig()
+                {
+                    HOST = HOST,
+                    PASSWORD = PASSWORD,
+                    USERNAME = USERNAME
+                };
+            }
             try
             {
                 //var templatePage = Path.Combine(System.IO.Path.GetFullPath("../UI/Pages/Mails"), path);
@@ -36,7 +50,6 @@ namespace CAPA_DATOS.Services
                         correo.Attachments.Add(AttachFile);
                     }
                 }
-
                 correo.Subject = subject; //Asunto
                 correo.Body = from + ": " + body;//ContractService.RenderTemplate(templatePage, model);
                 correo.IsBodyHtml = true;
@@ -50,7 +63,6 @@ namespace CAPA_DATOS.Services
                 };
                 ServicePointManager.ServerCertificateValidationCallback +=
                   (sender, cert, chain, sslPolicyErrors) => true;
-
                 smtp.EnableSsl = true;//True si el servidor de correo permite ssl
                 smtp.Send(correo);
             }

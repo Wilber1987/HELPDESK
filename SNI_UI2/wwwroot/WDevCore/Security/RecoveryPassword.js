@@ -22,19 +22,9 @@ const OnLoad = async () => {
                     }
                 }]
             }, {
-                children: ["Contraseña", {
-                    tagName: 'input', type: 'password', placeholder: 'Contraseña', onchange: (ev) => {
-                        UserData.password = ev.target.value;
-                    }
-                }]
-            }, {
                 children: [{
-                    tagName: 'input', type: 'button', className: 'Btn', value: 'Ok',
-                    onclick: async () => WSecurity.Login(UserData)
-                }]
-            }, {
-                children: [{
-                    tagName: 'a', innerText: 'Recuperar contraseña', href: "/Security/RecoveryPassword"
+                    tagName: 'input', type: 'button', className: 'Btn', value: 'Enviar petición',
+                    onclick: async () => WSecurity.RecoveryPassword(UserData)
                 }]
             }
         ]

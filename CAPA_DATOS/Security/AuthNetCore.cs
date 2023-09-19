@@ -4,9 +4,9 @@ using CAPA_DATOS.Security;
 
 namespace API.Controllers
 {
-    public class AuthNetCore 
+    public class AuthNetCore
     {
-        static public bool AuthAttribute = false;      
+        static public bool AuthAttribute = false;
         static public bool Authenticate(string idetify)
         {
             var security_User = SeasonServices.Get<Security_Users>("loginIn", idetify);
@@ -41,7 +41,7 @@ namespace API.Controllers
                     Mail = mail,
                     Password = EncrypterServices.Encrypt(password)
                 }.GetUserData();
-                if (security_User == null) ClearSeason();            
+                if (security_User == null) ClearSeason();
                 SeasonServices.Set("loginIn", security_User, idetify);
                 return User(idetify);
             }
@@ -95,7 +95,7 @@ namespace API.Controllers
                 };
             }
         }
-         public static UserModel User()
+        public static UserModel User()
         {
             var security_User = SeasonServices
                 .Get<Security_Users>("loginIn", "identfy");
@@ -158,6 +158,55 @@ namespace API.Controllers
         private static List<Security_Permissions_Roles>? RoleHavePermission(string permission, Security_Users_Roles? r)
         {
             return r?.Security_Role?.Security_Permissions_Roles?.Where(p => p.Security_Permissions?.Descripcion == permission).ToList();
+        }
+
+        public static UserModel RecoveryPassword(string? mail)
+        {
+            if (mail == null || mail.Equals(""))
+            {
+                return new UserModel()
+                {
+                    success = false,
+                    message = "Usuario y contraseña son requeridos.",
+                    status = 500
+                };
+            }
+            try
+            {
+                SqlADOConexion.IniciarConexion();
+                var security_User = new Security_Users()
+                {
+                    Mail = mail
+                }.RecoveryPassword();
+                if (security_User != null)
+                {
+                    return new UserModel()
+                    {
+                        success = true,
+                        message = "Contraseña enviada por correo",
+                        status = 200
+                    };
+                }
+                else
+                {
+                    return new UserModel()
+                    {
+                        success = false,
+                        message = "El usuario no existe",
+                        status = 500
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("-- > :" + ex);
+                return new UserModel()
+                {
+                    success = false,
+                    message = "Error al intentar recuperar la contraseña, favor intentarlo mas tarde, o contactese con nosotros.",
+                    status = 500
+                };
+            }
         }
     }
     public class UserModel

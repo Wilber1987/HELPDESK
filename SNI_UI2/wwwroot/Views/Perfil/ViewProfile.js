@@ -1,5 +1,6 @@
 
 import { Tbl_Profile } from '../../Model/ProyectDataBaseModel.js';
+import { ChangePasswordModel } from '../../WDevCore/Security/SecurityModel.js';
 import { StylesControlsV2 } from "../../WDevCore/StyleModules/WStyleComponents.js";
 import { WAppNavigator } from '../../WDevCore/WComponents/WAppNavigator.js';
 import { WDetailObject } from '../../WDevCore/WComponents/WDetailObject.js';
@@ -62,6 +63,17 @@ class PerfilClass extends HTMLElement {
                             ModelObject: new Tbl_Profile(),
                             ImageUrlPath: ""
                         }));
+                }
+            }, {
+                name: "Editar Contraseña",
+                action: async (ev) => {
+                    this.append(new WModalForm({
+                        title: "CAMBIO DE CONTRASEÑA",
+                        EditObject: { Password: "" },
+                        ModelObject: new ChangePasswordModel(),
+                        StyleForm: "ColumnX1",
+                        ObjectOptions: { Url: "../api/ApiEntitySECURITY/changePassword" }
+                    }));
                 }
             }
         ]

@@ -21,6 +21,11 @@ namespace API.Controllers
         {
             return AuthNetCore.Authenticate(HttpContext.Session.GetString("seassonKey"));
         }
+        public object RecoveryPassword(UserModel Inst)
+        {
+            return AuthNetCore.RecoveryPassword(Inst.mail);     
+        }
+       
        
         public static bool Auth(string identfy)
         {

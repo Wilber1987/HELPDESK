@@ -1,4 +1,8 @@
-﻿using CAPA_DATOS;
+﻿using API.Controllers;
+using CAPA_DATOS;
+using CAPA_DATOS.Services;
+using MailKit;
+using Org.BouncyCastle.Security;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -91,10 +95,15 @@ namespace CAPA_DATOS.Security
             }
             return null;
         }
-        public object SaveUser()
+        public object SaveUser(string identity)
         {
+            if (!AuthNetCore.HavePermission(PermissionsEnum.ADMINISTRAR_USUARIOS.ToString(), identity))
+            {
+                throw new Exception("no tiene permisos");
+            }
             try
             {
+                
                 this.BeginGlobalTransaction();
                 if (this.Password != null)
                 {
@@ -163,6 +172,36 @@ namespace CAPA_DATOS.Security
              p.Security_Permissions.Descripcion.Equals(PermissionsEnum.ADMIN_ACCESS.ToString())
             ) != null) != null;
         }
+
+        internal object RecoveryPassword()
+        {
+            Security_Users? user = this.Find<Security_Users>();
+            if (user != null && user.Estado == "ACTIVO")
+            {
+                string password = Guid.NewGuid().ToString();
+                user.Password = EncrypterServices.Encrypt(password);
+                user.Update();
+                SMTPMailServices.SendMail("heldesk@password.recovery",
+                 new List<string> { user.Mail },
+                 "Recuperación de contraseña",
+                 $"nueva contraseña: {password}", null, null);
+                return user;
+            }
+            if (user?.Estado == "INACTIVO")
+            {
+                throw new Exception("usuario inactivo");
+            }
+            return null;
+        }
+
+        public object changePassword(string? identfy)
+        {            
+            var security_User = AuthNetCore.User(identfy).UserData;
+            Password = EncrypterServices.Encrypt(Password);
+            Id_User = security_User.Id_User;
+            return Update();
+        }
+
         class Tbl_Profile : EntityClass
         {
             [PrimaryKey(Identity = true)]

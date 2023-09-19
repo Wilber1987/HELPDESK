@@ -8,6 +8,7 @@ class WOrtograficValidation {
         try {
             val = val.toString().replaceAll("_id", "")
                 .replaceAll("Tbl_", "")
+                .replaceAll("CaseTable_", "")
                 .replaceAll("Cat_", "")
                 .replaceAll("Catalogo_", "")
                 .replaceAll("catalogo_", "")

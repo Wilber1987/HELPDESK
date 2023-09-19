@@ -8,6 +8,7 @@ import { css } from '../../WDevCore/WModules/WStyledRender.js';
 import { WFilterOptions } from "../../WDevCore/WComponents/WFilterControls.js";
 import { WCommentsComponent } from '../../WDevCore/WComponents/WCommentsComponent.js';
 import { WSecurity } from '../../WDevCore/Security/WSecurity.js';
+import { priorityStyles } from '../../AppComponents/Styles.js';
 
 const OnLoad = async () => {
     const Solicitudes = await new CaseTable_Case().GetOwSolicitudesPendientesAprobar();
@@ -66,13 +67,16 @@ class MainSolicitudesView extends HTMLElement {
     }
 
     actividadElement = (actividad) => {
+        this.shadowRoot.append(priorityStyles.cloneNode(true));
         return WRender.Create({
             className: "actividad", object: actividad, children: [
-                { tagName: 'h4', innerText: actividad.Descripcion },
+                { tagName: 'h4', innerText: `#${actividad.Id_Case} - ${actividad.Titulo} (${actividad.Tbl_Servicios?.Descripcion_Servicio ?? ""})` },
                 {
                     className: "propiedades", children: [
                         { tagName: 'label', innerText: "Estado: " + actividad.Estado },
-                        { tagName: 'label', innerText: "Dependencia: " + actividad.Dependencia },
+                        { tagName: 'label', className: "prioridad_" + (actividad.Case_Priority != null ?  actividad.Case_Priority : undefined ), 
+                        innerText: "Prioridad: " + (actividad.Case_Priority != null ?  actividad.Case_Priority ?? "indefinida" : "indefinida" ) },
+                        { tagName: 'label', innerText: "Dependencia: " + actividad.Cat_Dependencias.Descripcion },
                         { tagName: 'label', innerText: "Fecha inicio: " + actividad.Fecha_Inicial?.toString().toDateFormatEs() },
                         { tagName: 'label', innerText: "Fecha de finalización: " + actividad.Fecha_Final?.toString().toDateFormatEs() },
                     ]
@@ -88,7 +92,7 @@ class MainSolicitudesView extends HTMLElement {
         })
     }
     actividadDetail = async (actividad) => {
-        const actividadDetailView = WRender.Create({ className: "actividadDetailView", children: [this.actividadElementDetail(actividad)] });  
+        const actividadDetailView = WRender.Create({ className: "actividadDetailView", children: [this.actividadElementDetail(actividad)] });
         const commentsDataset = await new CaseTable_Comments({ Id_Case: actividad.Id_Case }).Get();
         const commentsContainer = new WCommentsComponent({
             Dataset: commentsDataset,
@@ -98,7 +102,7 @@ class MainSolicitudesView extends HTMLElement {
             CommentsIdentify: actividad.Id_Case,
             UrlSearch: "../api/ApiEntityHelpdesk/getCaseTable_Comments",
             UrlAdd: "../api/ApiEntityHelpdesk/saveCaseTable_Comments"
-        }); 
+        });
         actividadDetailView.append(commentsContainer)
         this.TabManager.NavigateFunction("Tab-Actividades-Viewer" + actividad.Id_Case, actividadDetailView);
     }
@@ -161,6 +165,6 @@ class MainSolicitudesView extends HTMLElement {
         });
     }
 }
-customElements.define('w-main-solicitudes-component', MainSolicitudesView);
+customElements.define('w-main-solicitudes', MainSolicitudesView);
 export { MainSolicitudesView };
 

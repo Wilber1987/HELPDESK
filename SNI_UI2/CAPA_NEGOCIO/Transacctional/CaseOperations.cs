@@ -99,4 +99,49 @@ namespace CAPA_NEGOCIO.Services
 
         }
     }
+    public class ProfileTransaction : TransactionalClass
+    {
+        public Cat_Dependencias? dependencia { get; set; }
+        public List<Tbl_Profile>? perfiles { get; set; }
+
+
+        public object AsignarDependencias(string? v)
+        {
+            try
+            {
+                BeginGlobalTransaction();
+                foreach (var item in perfiles)
+                {
+                    if (item.CaseTable_Dependencias_Usuarios
+                        .Where(x => x.Id_Dependencia == dependencia.Id_Dependencia).ToList().Count == 0)
+                    {
+                        new CaseTable_Dependencias_Usuarios()
+                        {
+                            Id_Dependencia = dependencia.Id_Dependencia,
+                            Id_Perfil = item.Id_Perfil
+                        }.Save();
+                    }
+
+                }
+                CommitGlobalTransaction();
+                return new ResponseService()
+                {
+                    status = 200,
+                    message = "Asignación de dependencias exitoso."
+                };
+            }
+            catch (System.Exception e)
+            {
+                RollBackGlobalTransaction();
+                return new ResponseService()
+                {
+                    status = 500,
+                    message = e.Message
+                };
+            }
+
+
+        }
+    }
+
 }

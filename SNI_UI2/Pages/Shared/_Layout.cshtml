@@ -1,4 +1,5 @@
 ﻿@using API.Controllers
+@using CAPA_DATOS.Security
 <!DOCTYPE html>
 <html lang="en">
 @{
@@ -10,26 +11,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] HELPDESK</title>
     <link rel="stylesheet" href="~/css/AdminTemplate.css" />
+    <script>
+        function displayNav() {
+            Aside.className = Aside.className.includes("navActive") ? "" : "navActive";
+        }
+    </script>
     <script type="module">
-        import { WSecurity } from "../WDevCore/Security/WSecurity.js";
+        import { WSecurity } from "/WDevCore/Security/WSecurity.js";
         const logout = () => {
             WSecurity.LogOut();
         }
         window.addEventListener("load", () => {
-            //active nav
-            if (location.href.includes("PerfilView")) {
-                PerfilView.className = "active";
+            //active nav ProyectosCerrados Tareas PerfilManager
+            if (location.href.includes("PerfilManager")) {
+                PerfilManager.className = "active";
             } else if (location.href.includes("SolicitudesRealizadas")) {
                 SolicitudesRealizadas.className = "active";
             } else if (location.href.includes("SolicitudesPendientes")) {
                 SolicitudesPendientes.className = "active";
+            } else if (location.href.includes("ProyectosCerrados")) {
+                ProyectosCerrados.className = "active";
             } else if (location.href.includes("Proyectos")) {
+                Proyectos.className = "active";
+            } else if (location.href.includes("CaseDetail")) {
                 Proyectos.className = "active";
             } else if (location.href.includes("VinculateCaseView")) {
                 VinculateCaseView.className = "active";
             } else if (location.href.includes("Transaction_Valoraciones_View")) {
                 Transaction_Valoraciones_View.className = "active";
-            } else {
+            } else if (location.href.includes("Tareas")) {
+                Tareas.className = "active";
+            }
+            else {
                 Home.className = "active";
             }
             //logOut
@@ -41,20 +54,45 @@
 <body id="AdminTemplate">
     <aside id="Aside">
         <nav>
+            <img src="~/Media/Image/close.webp" class="navIcon" onclick="displayNav()">
             <div class="logo-container">
-                <img src="~/Media/Image/logo.png"/>
+                <img src="~/Media/Image/logo.png" />
             </div>
             <h3>TRANSACCIONES</h3>
             <a class="" id="Home" href="/">HOME</a>
-            <a class="" id="SolicitudesRealizadas" href="~/Perfil/SolicitudesRealizadas">Solicitudes Realizadas</a>
-            <a class="" id="SolicitudesPendientes" href="~/Perfil/SolicitudesPendientes">Solicitudes Pendientes</a>
-            <a class="" id="Proyectos" href="~/Perfil/Proyectos">Casos en Proceso</a>
+            @if (SecurityController.HavePermission(PermissionsEnum.GENERADOR_SOLICITUDES.ToString(), identify))
+            {
+                <a class="" id="SolicitudesRealizadas" href="~/Perfil/SolicitudesRealizadas">Solicitudes Realizadas</a>
+            }
+            @if (SecurityController.HavePermission(PermissionsEnum.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identify))
+            {
+                <a class="" id="SolicitudesPendientes" href="~/Perfil/SolicitudesPendientes">Solicitudes Pendientes</a>
+            }
+            @if (SecurityController.HavePermission(PermissionsEnum.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identify)
+            || SecurityController.HavePermission(PermissionsEnum.TECNICO_CASOS_DEPENDENCIA.ToString(), identify))
+            {
+                <a class="" id="Proyectos" href="~/Perfil/Proyectos">Casos en Proceso</a>
+            }
+            @if (SecurityController.HavePermission(PermissionsEnum.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identify)
+            || SecurityController.HavePermission(PermissionsEnum.TECNICO_CASOS_DEPENDENCIA.ToString(), identify))
+            {
+                <a class="" id="ProyectosCerrados" href="~/Perfil/ProyectosCerrados">Casos finalizados</a>
+            }
+            @if (SecurityController.HavePermission(PermissionsEnum.TECNICO_CASOS_DEPENDENCIA.ToString(), identify))
+            {
+                <a class="" id="Tareas" href="~/Perfil/Tareas">Tareas en Proceso</a>
+            }
+             @if (SecurityController.HavePermission(PermissionsEnum.ADMINISTRAR_USUARIOS.ToString(), identify))
+            {
+                <a class="" id="PerfilManager" href="~/CaseManager/Admin/PerfilManager">Administrador de perfiles</a>
+            }
             @* <a class="" id="VinculateCaseView" href="~/Perfil/VinculateCaseView">Casos vinculados</a> *@
-           
+
         </nav>
     </aside>
 
     <header id="Header" class="admin-header">
+        <img src="~/Media/Image/navIcon.png" class="navIcon" onclick="displayNav()">
         <div class="title-container">
             <label for="" class="title">HELPDESK</label>
             <label for="" class="sub-title">Sistema de ayuda</label>
@@ -64,7 +102,10 @@
         {
             <a href="~/Admin/Index">Admin Panel</a>
         }
-        <a class="" href="~/Perfil/PerfilView">Perfil</a>
+        @if (SecurityController.HavePermission(PermissionsEnum.PERFIL_ACCESS.ToString(), identify))
+        {
+            <a class="" href="~/Perfil/PerfilView">Perfil</a>
+        }
         <a href="#" id="btnLogOut">Cerrar Sesión</a>
     </header>
     <div class="background"></div>

@@ -27,6 +27,7 @@ namespace CAPA_NEGOCIO.Services
                     item.ToAdress,
                     item.Subject,
                     item.Body,
+                    item.Attach_Files,
                     new MailConfig()
                     {
                         HOST = Tcase?.Cat_Dependencias?.Host,

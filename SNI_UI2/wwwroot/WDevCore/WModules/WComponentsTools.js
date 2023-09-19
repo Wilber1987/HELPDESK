@@ -1,3 +1,4 @@
+import { WAppNavigator } from "../WComponents/WAppNavigator.js";
 import { ElementStyle, WNode } from "./CommonModel.js";
 import { EntityClass } from "./EntityClass.js";
 
@@ -313,6 +314,7 @@ class WRender {
 /**
  * @typedef {Object} ConfigDOMManager
      * @property {Boolean} [SPAManage]
+     * @property {WAppNavigator} [WNavigator]
      * @property {HTMLElement} [MainContainer]
      * @property {String} [ContainerName]
      * */
@@ -346,7 +348,19 @@ class ComponentsManager {
                     const newNode = this.DomComponents.find(node => node.id == hashD);
                     this.NavigateFunction(hashD, newNode, this.MainContainer);
                 }
+            }
+            if (this.Config.WNavigator != undefined) {
+                const hashD = window.location.hash.replace("#", "");
+                const navElment = this.Config.WNavigator.Elements.find(e => e.id == hashD)
+                if (navElment != null && navElment.action != undefined) {
+                    const elementNav = this.Config.WNavigator.shadowRoot.querySelector("#element" + navElment.id)
+                    if (elementNav != null) {
+                        this.Config.WNavigator.InitialNav = () => {
+                            elementNav.onclick()
+                        }
+                    }
 
+                }
             }
         }
     }
@@ -544,7 +558,7 @@ class WArrayF {
      */
     static GroupBy(DataArray, Property, sumProperty = null) {
         let DataArraySR = []
-        DataArray.forEach(element => {
+        DataArray?.forEach(element => {
             const DFilt = DataArraySR.find(x => x[Property] == element[Property]);
             if (!DFilt) {
                 const NewElement = {};

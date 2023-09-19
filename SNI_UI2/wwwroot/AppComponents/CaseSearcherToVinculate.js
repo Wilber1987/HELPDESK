@@ -27,7 +27,8 @@ const CaseSearcherToVinculate = (caseToVinculate, actionName = null, action = nu
         })
     }
     const TableComponent = new WTableComponent({
-        ModelObject: model, Dataset: [], Options: {
+        ModelObject: model, Dataset: [],
+        maxElementByPage: 5, Options: {
             UserActions: action != null ? [{
                 name: actionName ?? "Selecionar",
                 action: async (caso) => {

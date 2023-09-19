@@ -16,7 +16,7 @@ namespace CAPA_DATOS.Services
         //const string PASSWORD = "%3e2w1qazsX";
         //const string HOST = "outlook.office365.com";
         const int PORT = 587;
-        public static void SendMail(string from, List<string> toMails, string subject, string body, MailConfig config)
+        public static void SendMail(string from, List<string> toMails, string subject, string body, List<ModelFiles> attach, MailConfig config)
         {
             try
             {
@@ -27,6 +27,16 @@ namespace CAPA_DATOS.Services
                 {
                     correo.To.Add(toMail); //Correos de destino
                 }
+
+                if (attach != null)
+                {
+                    foreach (var files in attach)
+                    {
+                        Attachment AttachFile = new Attachment(files.Value);
+                        correo.Attachments.Add(AttachFile);
+                    }
+                }
+
                 correo.Subject = subject; //Asunto
                 correo.Body = from + ": " + body;//ContractService.RenderTemplate(templatePage, model);
                 correo.IsBodyHtml = true;

@@ -54,8 +54,7 @@ class EntityClass {
      * @returns {ResponseServices}
      */
     Update = async () => {
-        return await this.SaveData(this.ApiMethods.Update, this);
-        
+        return await this.SaveData(this.ApiMethods.Update, this);        
     }
      /**
      * @param {String} Param 

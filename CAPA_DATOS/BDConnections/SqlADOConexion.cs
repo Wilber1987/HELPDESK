@@ -10,22 +10,21 @@ namespace CAPA_DATOS
         public static SqlServerGDatos? SQLM;
         public static string DataBaseName = "HELPDESK";
         public static bool Anonimo = true;
-        private static string SGBD_USER = "helpdesk";
-        private static string SWGBD_PASSWORD = "Wmatus09%";
-        static string SQLServer = "tcp:helpdesk-app.database.windows.net";
+        // private static string SGBD_USER = "helpdesk";
+        // private static string SWGBD_PASSWORD = "Wmatus09%";
+        // static string SQLServer = "tcp:helpdesk-app.database.windows.net";
 
         //static string SQLServer = "DESKTOP-I58J01U";
         //Server=tcp:helpdesk-app.database.windows.net,1433;Initial Catalog=HELPDESK;Persist Security Info=False;User ID=HELPDESK;
         //Password={your_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
 
-        // static string SQLServer = ".";
-        // private static string SGBD_USER = "sa";
-        // private static string SWGBD_PASSWORD = "zaxscd";
-
+        static string SQLServer = ".";
+        private static string SGBD_USER = "sa";
+        private static string SWGBD_PASSWORD = "zaxscd";
 
         // static string SQLServer = "DESKTOP-G6FLNBQ\\SQLSIZM";
         // private static string SGBD_USER = "sa";
-        // private static string SWGBD_PASSWORD = "123456";
+        // private static string SWGBD_PASSWORD = "123456"; 
         static public bool IniciarConexion()
         {
             try

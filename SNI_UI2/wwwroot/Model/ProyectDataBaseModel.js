@@ -41,13 +41,24 @@ class Tbl_Profile extends EntityClass {
     Id_Perfil = { type: 'number', primary: true };
     Nombres = { type: 'text' };
     Apellidos = { type: 'text' };
-    FechaNac = { type: 'date' };
-    Sexo = { type: 'text' };
+    FechaNac = { type: 'date', label: "fecha de nacimiento" };
+    Sexo = { type: "Select", Dataset: ["Masculino", "Femenino"] };
     Foto = { type: 'img' };
     DNI = { type: 'text' };
-    Correo_institucional = { type: 'text' };
-    Indice_H = { type: 'text' };
-    Estado = { type: "Select", Dataset: ["Activo", "Inactivo"] };
+    Correo_institucional = { type: 'text', label: "correo", disabled: true };
+    Estado = { type: "Select", Dataset: ["ACTIVO", "INACTIVO"] };
+    CaseTable_Dependencias_Usuarios = { type: 'Multiselect', ModelObject: () => new Cat_Dependencias() }
+    /**
+      * @param {Array<Tbl_Profile>} perfiles
+      * @param {Cat_Dependencias} dependencia
+      * @returns {Object}
+      */
+    AsignarDependencias = async (perfiles, dependencia) => {
+        return await WAjaxTools.PostRequest("/api/Proyect/AsignarDependencias", {
+            perfiles: perfiles,
+            dependencia: dependencia
+        });
+    }
 }
 export { Tbl_Profile }
 
@@ -101,6 +112,8 @@ class CaseTable_Case extends EntityClass {
 
     Cat_Dependencias = { type: 'WSelect', ModelObject: () => new Cat_Dependencias() };
     Estado = { type: "Select", Dataset: ["Activo", "Espera", "Pendiente", "Finalizado"] };
+    Case_Priority = { type: "Select", Dataset: ["Alta", "Media", "Baja"], label: "Prioridad" };
+
     Fecha_Final = { type: 'date' };
 
     Descripcion = { type: 'textarea', hiddenInTable: true, hiddenFilter: true };
@@ -110,6 +123,18 @@ class CaseTable_Case extends EntityClass {
      */
     GetOwCase = async () => {
         return await this.GetData("Proyect/GetOwCase");
+    }
+    /**
+     * @returns {Array<CaseTable_Case>}
+     */
+    GetOwCloseCase = async () => {
+        return await this.GetData("Proyect/GetOwCloseCase");
+    }
+    /**
+     * @returns {Array<CaseTable_Case>}
+     */
+    GetVinculateCase = async () => {
+        return await this.GetData("Proyect/GetVinculateCase");
     }
     /**
      * @returns {Array<CaseTable_Case>}
@@ -142,10 +167,22 @@ class CaseTable_Case extends EntityClass {
         return await this.GetData("Proyect/GetSolicitudesPendientesAprobar");
     }
     /**
+     * @returns {Array<CaseTable_Case>}
+     */
+    GetSolicitudesPendientesAprobarAdmin = async () => {
+        return await this.GetData("Proyect/GetSolicitudesPendientesAprobarAdmin");
+    }
+    /**
      * @returns {Object}
      */
     RechazarSolicitud = async () => {
         return await this.GetData("Proyect/RechazarSolicitud");
+    }
+    /**
+     * @returns {Object}
+     */
+    CerrarCaso = async () => {
+        return await this.GetData("Proyect/CerrarCaso");
     }
     /**
     * @param {Array<CaseTable_Case>} element
@@ -153,7 +190,7 @@ class CaseTable_Case extends EntityClass {
     */
     AprobarCaseList = async (element) => {
         return await WAjaxTools.PostRequest("/api/Proyect/AprobarCaseList",
-         { caseTable_Cases: element });
+            { caseTable_Cases: element });
     }
     /**
        * @param {Array<CaseTable_Case>} element

@@ -193,19 +193,19 @@ namespace API.Controllers
         [AuthController]
         public List<Tbl_Profile> getTbl_Profile(Tbl_Profile Inst)
         {
-            return Inst.Get<Tbl_Profile>();
+            return Inst.GetProfiles();
         }
         [HttpPost]
         [AuthController]
         public object? saveTbl_Profile(Tbl_Profile inst)
         {
-            return inst.Save();
+            return inst.SaveProfile();
         }
         [HttpPost]
         [AuthController]
         public object? updateTbl_Profile(Tbl_Profile inst)
         {
-            return inst.Update();
+            return inst.SaveProfile();
         }
 
         //Cat_Tipo_Servicio
@@ -295,12 +295,12 @@ namespace API.Controllers
         public List<CaseTable_Tareas> getCaseTable_Tareas(CaseTable_Tareas Inst)
         {
             return Inst.Get<CaseTable_Tareas>();
-        }
+        }        
         [HttpPost]
         [AuthController]
         public object? saveCaseTable_Tareas(CaseTable_Tareas inst)
         {
-            return inst.SaveTarea();
+            return inst.SaveTarea(HttpContext.Session.GetString("seassonKey"));
         }
         [HttpPost]
         [AuthController]

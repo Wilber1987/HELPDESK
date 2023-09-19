@@ -21,18 +21,19 @@ namespace API.Controllers
         //Save
         public object? TakeProfile(Tbl_Profile Inst)
         {
-            Inst.Id_Perfil = AuthNetCore.User(HttpContext.Session.GetString("seassonKey")).UserId;
+            Inst.Id_Perfil = null;
+            Inst.IdUser = AuthNetCore.User(HttpContext.Session.GetString("seassonKey")).UserId;
             return Inst.TakeProfile();
         }
 
-         [HttpGet]
+        [HttpGet]
         [AuthController]
         //Save
         public object? TakeProfile2()
         {
             Tbl_Profile Inst = new()
             {
-                Id_Perfil = AuthNetCore.User(HttpContext.Session.GetString("seassonKey")).UserId
+                IdUser = AuthNetCore.User(HttpContext.Session.GetString("seassonKey")).UserId
             };
             return Inst.TakeProfile();
         }

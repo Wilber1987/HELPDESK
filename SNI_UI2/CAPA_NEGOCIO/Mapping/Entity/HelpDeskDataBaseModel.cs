@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CAPA_DATOS.Security;
+using CAPA_DATOS.Services;
 
 namespace CAPA_NEGOCIO.MAPEO
 {
@@ -54,7 +55,7 @@ namespace CAPA_NEGOCIO.MAPEO
         public List<CaseTable_Case>? CaseTable_Case { get; set; }
         //[OneToMany(TableName = "CaseTable_Agenda", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
         public List<CaseTable_Agenda>? CaseTable_Agenda { get; set; }
-        //[OneToMany(TableName = "CaseTable_Dependencias_Usuarios", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
+        [OneToMany(TableName = "CaseTable_Dependencias_Usuarios", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
         public List<CaseTable_Dependencias_Usuarios>? CaseTable_Dependencias_Usuarios { get; set; }
         //[OneToMany(TableName = "CaseTable_Participantes", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
         public List<CaseTable_Participantes>? CaseTable_Participantes { get; set; }
@@ -90,16 +91,46 @@ namespace CAPA_NEGOCIO.MAPEO
         }
         public Object SaveProfile()
         {
-            if (this.Id_Perfil == null)
+            try
             {
-                this.Id_Perfil = (Int32?)this.Save();
+                BeginGlobalTransaction();
+                if (Foto != null)
+                {
+                    var pic = (ModelFiles)FileService.upload("profiles\\", new ModelFiles
+                    {
+                        Value = Foto,
+                        Type = "png",
+                        Name = "profile"
+                    }).body;
+                    Foto = pic.Value.Replace("wwwroot", "");
+                }
+                if (this.Id_Perfil == null)
+                {
+                    this.Id_Perfil = (Int32?)this.Save();
+                }
+                else
+                {
+                    Correo_institucional = null;
+                    IdUser = null;
+                    new CaseTable_Dependencias_Usuarios() { Id_Perfil = Id_Perfil }.Delete();
+                    foreach (var item in CaseTable_Dependencias_Usuarios)
+                    {
+                        item.Id_Perfil  = Id_Perfil;
+                        item.Save();
+                    }
+                    this.Update();
+                }
+                CommitGlobalTransaction();
+                return this;
+
             }
-            else
+            catch (System.Exception)
             {
-                this.Update("Id_Perfil");
+                RollBackGlobalTransaction();
+                throw;
             }
 
-            return this;
+
         }
         public Object AdmitirPostulante()
         {
@@ -125,6 +156,19 @@ namespace CAPA_NEGOCIO.MAPEO
                 return true;
             }
             catch (Exception) { return false; }
+        }
+
+        internal List<Tbl_Profile> GetProfiles()
+        {
+            var profiles = Get<Tbl_Profile>();
+            foreach (var profile in profiles)
+            {
+                foreach (var dep in profile.CaseTable_Dependencias_Usuarios ?? new List<CaseTable_Dependencias_Usuarios>())
+                {
+                    dep.Cat_Dependencias.Password = "PROTECTED";
+                }
+            }
+            return profiles;
         }
     }
 
@@ -169,8 +213,40 @@ namespace CAPA_NEGOCIO.MAPEO
 
         internal object DesvincularCaso(CaseTable_Case caseDV)
         {
+            try
+            {
+                BeginGlobalTransaction();
+                List<CaseTable_Case> caseTable_Cases = new CaseTable_Case()
+                { Id_Vinculate = caseDV.Id_Vinculate }.Get<CaseTable_Case>();
+                if (caseTable_Cases.Count == 2)
+                {
+                    foreach (var item in caseTable_Cases)
+                    {
+                        if (item.Id_Case != caseDV.Id_Case)
+                        {
+                            desvicular(item);
+                        }
+                    }
+                    this.Id_Vinculate = caseDV.Id_Vinculate;
+                    Delete();
+                }
+                object? response = desvicular(caseDV);
+                CommitGlobalTransaction();
+                return response;
+            }
+            catch (System.Exception)
+            {
+                RollBackGlobalTransaction();
+                throw;
+            }
+        }
 
-            throw new NotImplementedException();
+        private static object? desvicular(CaseTable_Case caseDV)
+        {
+            caseDV.Id_Vinculate = null;
+            caseDV.Estado = Case_Estate.Activo.ToString();
+            var response = caseDV.Update();
+            return response;
         }
 
         internal object? VincularCaso()

@@ -339,7 +339,7 @@ namespace Security
         //return;
     }
 }
-<script src='~/Views/" + name + @"View.js' type='module'></script>
+<script src='~/Proyect/" + name + @"View.js' type='module'></script>
 <div id='MainBody'></div>");
             AppGenerator.Utility.createFile(@"c:\temp\" + (name.Contains("Catalogo") ? "PagesCatalogos" : "PagesViews") + "\\" + name + "View.cshtml", pageString.ToString());
         }

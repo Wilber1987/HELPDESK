@@ -1,4 +1,4 @@
-import { Tbl_Datos_Laborales, Tbl_Formacion_Academica, Tbl_Investigaciones, Tbl_Profile } from "../Model/ModelDatabase.js";
+import { Tbl_Datos_Laborales, Tbl_Formacion_Academica, Tbl_Investigaciones, Tbl_Profile } from "../ModelProyect/ModelDatabase.js";
 import { StylesControlsV2 } from "../StyleModules/WStyleComponents.js";
 import { WForm } from "../WComponents/WForm.js";
 import { WTableComponent } from "../WComponents/WTableComponent.js";

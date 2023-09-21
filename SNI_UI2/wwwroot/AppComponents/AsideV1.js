@@ -10,7 +10,7 @@ class AsideV1 extends HTMLElement {
         DisplinesList.append(WRender.createElement({
             type: 'img', props: {
                 src: MapIcon, class: 'MapIcon', onclick: async () => {
-                   // window.location = location.origin + "/Views/KnowledgeMap.html"
+                   // window.location = location.origin + "/Proyect/KnowledgeMap.html"
                 }
             }
         }));

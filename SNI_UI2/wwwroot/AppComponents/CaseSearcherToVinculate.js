@@ -1,6 +1,6 @@
 
 
-import { CaseTable_Case } from '../Model/ProyectDataBaseModel.js';
+import { CaseTable_Case } from '../ModelProyect/ProyectDataBaseModel.js';
 import { WFilterOptions } from '../WDevCore/WComponents/WFilterControls.js';
 import { WTableComponent } from "../WDevCore/WComponents/WTableComponent.js";
 import { WRender } from '../WDevCore/WModules/WComponentsTools.js';

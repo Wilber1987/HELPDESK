@@ -1,4 +1,4 @@
-import { Cat_Dependencias } from "./Model/ProyectDataBaseModel.js";
+import { Cat_Dependencias } from "./ModelProyect/ProyectDataBaseModel.js";
 import { WRender } from "./WDevCore/WModules/WComponentsTools.js";
 import { css } from "./WDevCore/WModules/WStyledRender.js";
 

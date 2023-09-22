@@ -1,4 +1,4 @@
-import { Cat_Cargos_Dependencias, Cat_Dependencias, Cat_Paises, Cat_Tipo_Evidencia, Cat_Tipo_Participaciones, Cat_Tipo_Servicio, Tbl_Servicios } from "../Model/ProyectDataBaseModel.js";
+import { Cat_Cargos_Dependencias, Cat_Dependencias, Cat_Paises, Cat_Tipo_Evidencia, Cat_Tipo_Participaciones, Cat_Tipo_Servicio, Tbl_Servicios } from "../ModelProyect/ProyectDataBaseModel.js";
 import { StylesControlsV2 } from "../WDevCore/StyleModules/WStyleComponents.js";
 import { WAppNavigator } from "../WDevCore/WComponents/WAppNavigator.js";
 import { WFilterOptions } from "../WDevCore/WComponents/WFilterControls.js";

@@ -10,59 +10,20 @@ namespace CAPA_DATOS
         public static SqlServerGDatos? SQLM;
         public static string DataBaseName = "HELPDESK";
         public static bool Anonimo = true;
-        private static string SGBD_USER = "helpdesk";
-        private static string SWGBD_PASSWORD = "Wmatus09%";
-        static string SQLServer = "tcp:helpdesk-app.database.windows.net";
 
-        //static string SQLServer = "DESKTOP-I58J01U";
-        //Server=tcp:helpdesk-app.database.windows.net,1433;Initial Catalog=HELPDESK;Persist Security Info=False;User ID=HELPDESK;
-        //Password={your_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
-
-        //static string SQLServer = ".";
-       // private static string SGBD_USER = "sa";
-        //private static string SWGBD_PASSWORD = "zaxscd";
-
-        // static string SQLServer = "DESKTOP-G6FLNBQ\\SQLSIZM";
-        // private static string SGBD_USER = "sa";
-        // private static string SWGBD_PASSWORD = "123456"; 
         static public bool IniciarConexion()
         {
-            try
-            {
-                Anonimo = false;
-                UserSQLConexion = "Data Source=" + SQLServer +
-                    "; Initial Catalog=" + DataBaseName + "; User ID="
-                    + SGBD_USER + ";Password=" + SWGBD_PASSWORD + ";MultipleActiveResultSets=true";
-                SQLM = new SqlServerGDatos(UserSQLConexion);
-                if (SQLM.TestConnection()) return true;
-                else
-                {
-                    SQLM = null;
-                    return false;
-                }
-            }
-            catch (Exception)
-            {
-                Anonimo = true;
-                return false;
-                throw;
-            }
+            Anonimo = false;
+            //return IniciarConexionInLocal();
+            return IniciarConexionInServer();
+
         }
-        static public bool IniciarConexion(string user, string password)
+        static public bool IniciarConexion(string SGBD_USER, string SWGBD_PASSWORD, string SQLServer)
         {
             try
             {
                 Anonimo = false;
-                UserSQLConexion = "Data Source=" + SQLServer +
-                    "; Initial Catalog=" + DataBaseName + "; User ID="
-                    + user + ";Password=" + password + ";MultipleActiveResultSets=true";
-                SQLM = new SqlServerGDatos(UserSQLConexion);
-                if (SQLM.TestConnection()) return true;
-                else
-                {
-                    SQLM = null;
-                    return false;
-                }
+                return createConexion(SQLServer, SGBD_USER, SWGBD_PASSWORD);
             }
             catch (Exception)
             {
@@ -76,16 +37,7 @@ namespace CAPA_DATOS
             try
             {
                 Anonimo = false;
-                UserSQLConexion = "Data Source=" + SQLServer +
-                    "; Initial Catalog=" + DataBaseName +
-                    "; User ID=" + SGBD_USER + ";Password=" + SWGBD_PASSWORD + ";MultipleActiveResultSets=true";
-                SQLM = new SqlServerGDatos(UserSQLConexion);
-                if (SQLM.TestConnection()) return true;
-                else
-                {
-                    SQLM = null;
-                    return false;
-                }
+                return IniciarConexion();
             }
             catch (Exception)
             {
@@ -94,20 +46,36 @@ namespace CAPA_DATOS
             }
         }
 
-        static public bool IniciarConexionSNIBD(string user, string password)
+        static public bool IniciarConexionInServer()
+        {
+            try
+            {
+                string SGBD_USER = "helpdesk";
+                string SWGBD_PASSWORD = "Wmatus09%";
+                string SQLServer = "tcp:helpdesk-app.database.windows.net";
+                Anonimo = false;
+                return createConexion(SQLServer, SGBD_USER, SWGBD_PASSWORD);
+            }
+            catch (Exception)
+            {
+                SQLM = null;
+                Anonimo = true;
+                return false;
+                throw;
+            }
+        }
+        static public bool IniciarConexionInLocal()
         {
             try
             {
                 Anonimo = false;
-                UserSQLConexion = "Data Source=" + SQLServer +
-                    "; Initial Catalog=" + DataBaseName + "; User ID="
-                    + user + ";Password=" + password + ";MultipleActiveResultSets=true";
-                SQLM = new SqlServerGDatos(UserSQLConexion);
-                if (SQLM.TestConnection()) return true;
-                else
+                try
                 {
-                    SQLM = null;
-                    return false;
+                    return createConexion(".", "sa", "zaxscd");
+                }
+                catch
+                {
+                    return createConexion(".\\SQLEXPRESS", "sa", "123");
                 }
             }
             catch (Exception)
@@ -116,6 +84,20 @@ namespace CAPA_DATOS
                 Anonimo = true;
                 return false;
                 throw;
+            }
+        }
+
+        private static bool createConexion(string SQLServer, string SGBD_USER, string SWGBD_PASSWORD)
+        {
+            UserSQLConexion = "Data Source=" + SQLServer +
+               "; Initial Catalog=" + DataBaseName + "; User ID="
+               + SGBD_USER + ";Password=" + SWGBD_PASSWORD + ";MultipleActiveResultSets=true";
+            SQLM = new SqlServerGDatos(UserSQLConexion);
+            if (SQLM.TestConnection()) return true;
+            else
+            {
+                SQLM = null;
+                return false;
             }
         }
     }

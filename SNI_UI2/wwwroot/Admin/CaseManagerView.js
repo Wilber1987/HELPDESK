@@ -1,9 +1,9 @@
-import { CaseTable_Case, CaseTable_Tareas, Cat_Dependencias } from "../Model/ProyectDataBaseModel.js";
-import { CaseDashboardComponent } from "../Views/Perfil/Proyectos/CaseDashboardComponent.js";
-import { CaseManagerComponent } from "../Views/Perfil/Proyectos/CaseManagerComponent.js";
-import { TaskManagers } from "../Views/Perfil/Proyectos/TaskManager.js";
-import { SolicitudesPendientesComponent } from "../Views/Solicitudes/SolicitudesPendientesComponent.js";
-import { MainSolicitudesView } from "../Views/Solicitudes/SolicitudesView.js";
+import { CaseTable_Case, CaseTable_Tareas, Cat_Dependencias } from "../ModelProyect/ProyectDataBaseModel.js";
+import { CaseDashboardComponent } from "../Proyect/ProyectViews/Proyectos/CaseDashboardComponent.js";
+import { CaseManagerComponent } from "../Proyect/ProyectViews/Proyectos/CaseManagerComponent.js";
+import { TaskManagers } from "../Proyect/ProyectViews/Proyectos/TaskManager.js";
+import { SolicitudesPendientesComponent } from "../Proyect/Solicitudes/SolicitudesPendientesComponent.js";
+import { MainSolicitudesView } from "../Proyect/Solicitudes/SolicitudesView.js";
 import { StylesControlsV2 } from "../WDevCore/StyleModules/WStyleComponents.js";
 import { WAppNavigator } from "../WDevCore/WComponents/WAppNavigator.js";
 import { WFilterOptions } from "../WDevCore/WComponents/WFilterControls.js";

@@ -62,31 +62,31 @@
             <a class="" id="Home" href="/">HOME</a>
             @if (SecurityController.HavePermission(PermissionsEnum.GENERADOR_SOLICITUDES.ToString(), identify))
             {
-                <a class="" id="SolicitudesRealizadas" href="~/Perfil/SolicitudesRealizadas">Solicitudes Realizadas</a>
+                <a class="" id="SolicitudesRealizadas" href="~/ProyectViews/SolicitudesRealizadas">Solicitudes Realizadas</a>
             }
             @if (SecurityController.HavePermission(PermissionsEnum.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identify))
             {
-                <a class="" id="SolicitudesPendientes" href="~/Perfil/SolicitudesPendientes">Solicitudes Pendientes</a>
+                <a class="" id="SolicitudesPendientes" href="~/ProyectViews/SolicitudesPendientes">Solicitudes Pendientes</a>
             }
             @if (SecurityController.HavePermission(PermissionsEnum.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identify)
             || SecurityController.HavePermission(PermissionsEnum.TECNICO_CASOS_DEPENDENCIA.ToString(), identify))
             {
-                <a class="" id="Proyectos" href="~/Perfil/Proyectos">Casos en Proceso</a>
+                <a class="" id="Proyectos" href="~/ProyectViews/Proyectos">Casos en Proceso</a>
             }
             @if (SecurityController.HavePermission(PermissionsEnum.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identify)
             || SecurityController.HavePermission(PermissionsEnum.TECNICO_CASOS_DEPENDENCIA.ToString(), identify))
             {
-                <a class="" id="ProyectosCerrados" href="~/Perfil/ProyectosCerrados">Casos finalizados</a>
+                <a class="" id="ProyectosCerrados" href="~/ProyectViews/ProyectosCerrados">Casos finalizados</a>
             }
             @if (SecurityController.HavePermission(PermissionsEnum.TECNICO_CASOS_DEPENDENCIA.ToString(), identify))
             {
-                <a class="" id="Tareas" href="~/Perfil/Tareas">Tareas en Proceso</a>
+                <a class="" id="Tareas" href="~/ProyectViews/Tareas">Tareas en Proceso</a>
             }
              @if (SecurityController.HavePermission(PermissionsEnum.ADMINISTRAR_USUARIOS.ToString(), identify))
             {
-                <a class="" id="PerfilManager" href="~/CaseManager/Admin/PerfilManager">Administrador de perfiles</a>
+                <a class="" id="PerfilManager" href="~/Security/PerfilManager">Administrador de perfiles</a>
             }
-            @* <a class="" id="VinculateCaseView" href="~/Perfil/VinculateCaseView">Casos vinculados</a> *@
+            @* <a class="" id="VinculateCaseView" href="~/ProyectViews/VinculateCaseView">Casos vinculados</a> *@
 
         </nav>
     </aside>
@@ -104,7 +104,7 @@
         }
         @if (SecurityController.HavePermission(PermissionsEnum.PERFIL_ACCESS.ToString(), identify))
         {
-            <a class="" href="~/Perfil/PerfilView">Perfil</a>
+            <a class="" href="~/Security/PerfilView">Perfil</a>
         }
         <a href="#" id="btnLogOut">Cerrar Sesión</a>
     </header>

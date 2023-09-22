@@ -76,7 +76,7 @@ class WForm extends HTMLElement {
                 target[property] = value;
                 this.SetOperationValues(Model, target)
                 const control = this.shadowRoot?.querySelector("#ControlValue" + property);
-                if (Model[property].type.toUpperCase() != "IMG" && control) {
+                if (Model[property]?.type?.toUpperCase() != "IMG" && control) {
                     // @ts-ignore
                     control.value = target[property];
                 }

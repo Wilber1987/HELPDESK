@@ -41,6 +41,8 @@
                 Transaction_Valoraciones_View.className = "active";
             } else if (location.href.includes("Tareas")) {
                 Tareas.className = "active";
+            } else if (location.href.includes("TestsView")) {
+                TestsView.className = "active";
             }
             else {
                 Home.className = "active";
@@ -85,6 +87,10 @@
              @if (SecurityController.HavePermission(PermissionsEnum.ADMINISTRAR_USUARIOS.ToString(), identify))
             {
                 <a class="" id="PerfilManager" href="~/Security/PerfilManager">Administrador de perfiles</a>
+            }     
+            @if (SecurityController.HavePermission(PermissionsEnum.QUESTIONNAIRES_MANAGER.ToString(), identify))
+            {
+                <a class="" id="TestsView" href="~/Questionnaires/TestsView">Administrador de Tests</a>
             }
             @* <a class="" id="VinculateCaseView" href="~/ProyectViews/VinculateCaseView">Casos vinculados</a> *@
 

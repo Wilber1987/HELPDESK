@@ -20,6 +20,9 @@ namespace CAPA_DATOS.Security
        ADMINISTRAR_CATALOGOS,
        GENERADOR_SOLICITUDES,
        PERFIL_MANAGER,
-       PERFIL_ACCESS
+       PERFIL_ACCESS,
+
+       //Questionnaires
+       QUESTIONNAIRES_MANAGER
     }
 }

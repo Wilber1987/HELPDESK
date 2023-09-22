@@ -360,7 +360,7 @@ class WForm extends HTMLElement {
                 break;
             case "HORA":
                 //@ts-ignore
-                let time_val = val == "" ? "08:00" : ObjectF[prop];                
+                let time_val = val == "" ? "08:00" : ObjectF[prop];
                 InputControl = WRender.Create({
                     tagName: "input", className: prop, type: "time",
                     placeholder: WArrayF.Capitalize(WOrtograficValidation.es(prop)),
@@ -663,12 +663,22 @@ class WForm extends HTMLElement {
         return InputControl;
     }
     createDrawComponent(InputControl, prop, ControlContainer, ObjectF) {
+        ObjectF[prop]
+        var imgBase64 = ObjectF[prop];
         InputControl = WRender.Create({
             tagName: "canvas",
             id: "ControlValue" + prop,
             className: prop + " draw-canvas"
         });
+        var img = new Image();
         var ctx = InputControl.getContext("2d");
+        if (ObjectF[prop] = !undefined && ObjectF[prop] != null) {
+            img.src = imgBase64;
+            img.onload = function () {
+                // Dibuja la imagen en el canvas
+                ctx.drawImage(img, 0, 0);
+            };
+        }
         const baseData = InputControl.toDataURL();
         ControlContainer.className += " DrawControlContainer"
         ControlContainer.append(

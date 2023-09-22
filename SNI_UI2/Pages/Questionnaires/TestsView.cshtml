@@ -1,0 +1,11 @@
+@page
+@using API.Controllers
+@{
+    if (!SecurityController.Auth(HttpContext.Session.GetString("seassonKey")))
+    {
+        Response.Redirect("../LoginView");
+        return;
+    }    
+}
+<script src='~/Views/TestsView.js' type='module'></script>
+<div id='MainBody'></div>

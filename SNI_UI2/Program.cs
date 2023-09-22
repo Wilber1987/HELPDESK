@@ -2,7 +2,9 @@ using BackgroundJob.Cron.Jobs;
 using CAPA_DATOS;
 using CAPA_DATOS.Cron.Jobs;
 
+
 SqlADOConexion.IniciarConexion();
+//AppGenerate.Program.Main(); //generador de codigo
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -16,14 +18,14 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(40);
 });
 
-builder.Services.AddCronJob<CreateAutomaticsCaseSchedulerJob>(options => 
+builder.Services.AddCronJob<CreateAutomaticsCaseSchedulerJob>(options =>
 {
     // Corre cada minuto
     options.CronExpression = "* * * * *";
     options.TimeZone = TimeZoneInfo.Local;
 });
 
-builder.Services.AddCronJob<SendMailNotificationsSchedulerJob>(options => 
+builder.Services.AddCronJob<SendMailNotificationsSchedulerJob>(options =>
 {
     // Corre cada minuto
     options.CronExpression = "* * * * *";

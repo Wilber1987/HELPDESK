@@ -36,7 +36,7 @@ namespace API.Controllers
         }
         public List<CaseTable_Case> GetVinculateCase(CaseTable_Case inst)
         {
-            
+
             return inst.GetVinculateCase(HttpContext.Session.GetString("seassonKey"));
         }
         public List<Cat_Dependencias> GetOwDependencies()
@@ -77,27 +77,27 @@ namespace API.Controllers
         }
         public object RechazarSolicitud(CaseTable_Case caseTable_Case)
         {
-            return caseTable_Case.RechazarSolicitud(HttpContext.Session.GetString("seassonKey"));            
+            return caseTable_Case.RechazarSolicitud(HttpContext.Session.GetString("seassonKey"));
         }
 
         public object AprobarSolicitud(CaseTable_Case caseTable_Case)
         {
-            return caseTable_Case.AprobarSolicitud(HttpContext.Session.GetString("seassonKey"));            
+            return caseTable_Case.AprobarSolicitud(HttpContext.Session.GetString("seassonKey"));
         }
         public object CerrarCaso(CaseTable_Case caseTable_Case)
         {
-            return caseTable_Case.CerrarCaso(HttpContext.Session.GetString("seassonKey"));            
+            return caseTable_Case.CerrarCaso(HttpContext.Session.GetString("seassonKey"));
         }
         //CASOS VINCULADOS      
         public object VincularCaso(CaseTable_VinculateCase inst)
         {
             return inst.VincularCaso();
         }
-         public object DesvincularCaso(CaseTable_VinculateCase inst)
+        public object DesvincularCaso(CaseTable_VinculateCase inst)
         {
-            return inst.DesvincularCaso(inst.Casos_Vinculados.FirstOrDefault());            
+            return inst.DesvincularCaso(inst.Casos_Vinculados.FirstOrDefault());
         }
-         public List<CaseTable_Case> GetCasosToVinculate(CaseTable_Case Inst)
+        public List<CaseTable_Case> GetCasosToVinculate(CaseTable_Case Inst)
         {
             return new CaseTable_Case()
             .GetCasosToVinculate(HttpContext.Session.GetString("seassonKey"), Inst);
@@ -110,17 +110,14 @@ namespace API.Controllers
         {
             return Inst.RechazarSolicitudes(HttpContext.Session.GetString("seassonKey"));
         }
-         public object RemitirCasos(CaseBlock Inst)
+        public object RemitirCasos(CaseBlock Inst)
         {
             return Inst.RemitirCasos(HttpContext.Session.GetString("seassonKey"));
         }
-         public object AsignarDependencias(ProfileTransaction Inst)
+        public object AsignarDependencias(ProfileTransaction Inst)
         {
             return Inst.AsignarDependencias(HttpContext.Session.GetString("seassonKey"));
         }
-
-
-
 
     }
 }

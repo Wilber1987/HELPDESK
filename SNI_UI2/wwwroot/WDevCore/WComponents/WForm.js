@@ -6,7 +6,7 @@ import { WModalForm, WSimpleModalForm } from './WModalForm.js';
 import { WOrtograficValidation } from '../WModules/WOrtograficValidation.js';
 import { WIcons } from '../WModules/WIcons.js';
 import { WTableComponent } from './WTableComponent.js';
-import { WCalendar, WCalendarComponent } from './WCalendar.js';
+import { WCalendarComponent } from './WCalendar.js';
 import { WDetailObject } from './WDetailObject.js';
 import { EntityClass } from '../WModules/EntityClass.js';
 // @ts-ignore
@@ -1046,8 +1046,8 @@ class WForm extends HTMLElement {
                             return false;
                         }
 
-                    } else if (this.Config.ModelObject[prop]?.type.toUpperCase() == "MASTERDETAIL" 
-                    || this.Config.ModelObject[prop]?.type.toUpperCase() == "CALENDAR") {
+                    } else if (this.Config.ModelObject[prop]?.type.toUpperCase() == "MASTERDETAIL"
+                        || this.Config.ModelObject[prop]?.type.toUpperCase() == "CALENDAR") {
                         console.log(this.Config.ModelObject[prop].require == true);
                         console.log(ObjectF[prop]);
                         if (this.Config.ModelObject[prop].require == true) {

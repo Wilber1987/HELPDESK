@@ -72,14 +72,14 @@ function ModelFunction() { }
     CALENDAR | OPERATION (requiere un action para funcionar)
     * @property {Boolean} [hidden] desabilita la propiedad y la oculta
     * @property {Boolean} [hiddenInTable] oculta en la tabla
-    * @property {Boolean} [require]
-    * @property {Boolean} [disabled]
-    * @property {String} [label]
-    * @property {Array} [fileType]
-    * @property {Array} [ControlAction] botones adicionales que se le agregan al control 
-    * @property {String} [pattern]
-    * @property {String} [defaultValue]
-    * @property {String} [placeholder]
+    * @property {Boolean} [require] esta por defecto en true y obliga al usuario a digitar el valor en el control
+    * @property {Boolean} [disabled] deshabilita el control
+    * @property {String} [label] coloca un texto al control que se sobrepone al nombre de la entidad
+    * @property {Array} [fileType] si el control es de tipo files este arreglo contendra todos los tipos permitidos
+    * @property {Array} [ControlAction] botones adicionales que se le agregan al control y deben conterner una accion
+    * @property {String} [pattern] patron que se le coloca a cada input
+    * @property {String} [defaultValue] valor por defecto que tendra una propiedad si esta esta nula o indefinida
+    * @property {String} [placeholder] 
     * @property {String | Number} [min] para rangos de tipo number y date
     * @property {String | Number} [max] para rangos de tipo number y date
     * @property {String} [fieldRequire] CAMBIA UN ESTADO DE UNA PROPIEDAD A REQUERIDO

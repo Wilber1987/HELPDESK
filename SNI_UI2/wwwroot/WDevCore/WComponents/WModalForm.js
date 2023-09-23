@@ -250,7 +250,7 @@ class WModalForm extends HTMLElement {
                         padding: 5
                     }),
                 ], MediaQuery: [{
-                    condicion: "(max-width: 1200px)",
+                    condicion: "(max-width: 1400px)",
                     ClassList: [new WCssClass(" .ContainerFormWModal", {
                         width: "90%"
                     })]

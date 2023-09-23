@@ -1,11 +1,12 @@
 
-import { StylesControlsV2, StyleScrolls } from "../../WDevCore/StyleModules/WStyleComponents.js";
-import { WTableComponent } from "../../WDevCore/WComponents/WTableComponent.js";
-import { WFilterOptions } from "../../WDevCore/WComponents/WFilterControls.js";
-import { css } from "../../WDevCore/WModules/WStyledRender.js";
-import { Tests_ModelComponent } from "../Model/QuestionnairesComponentsModel.js";
-import { Tests } from "../Model/QuestionnairesDataBaseModel.js";
-import { WRender } from "../../WDevCore/WModules/WComponentsTools.js";
+//@ts-check
+import { StylesControlsV2, StyleScrolls } from "../../../WDevCore/StyleModules/WStyleComponents.js";
+import { WTableComponent } from "../../../WDevCore/WComponents/WTableComponent.js";
+import { WFilterOptions } from "../../../WDevCore/WComponents/WFilterControls.js";
+import { css } from "../../../WDevCore/WModules/WStyledRender.js";
+import { Tests_ModelComponent } from "../../Model/QuestionnairesComponentsModel.js";
+import { Tests } from "../../Model/QuestionnairesDataBaseModel.js";
+import { WRender } from "../../../WDevCore/WModules/WComponentsTools.js";
 
 /**
  * @typedef {Object} ComponentConfig
@@ -20,9 +21,9 @@ class TestsViewManager extends HTMLElement {
         this.Draw();
     }
     Draw = async () => {
-        /**@type {EntityClass} */
+        /**@type {Tests_ModelComponent} */
         this.ModelComponent = new Tests_ModelComponent();
-        /**@type {EntityClass} */
+        /**@type {Tests} */
         this.EntityModel = new Tests();
         /**@type {Array} */
         this.Dataset = await this.EntityModel.Get();
@@ -30,20 +31,17 @@ class TestsViewManager extends HTMLElement {
         this.MainComponent = new WTableComponent({
             ModelObject: this.ModelComponent,
             EntityModel: this.EntityModel,
+            AutoSave: true,
             Dataset: this.Dataset, Options: {
                 Add: true,
                 Edit: true,
                 Search: true,
-                UserActions: [{
-                    name: "action", action: (entity) => {
-                        //action
-                    }
-                }]
+                //UserActions: [{ name: "action", action: (entity) => {/*action*/ }}]
             }
         });
         this.FilterOptions = new WFilterOptions({
             Dataset: this.Dataset,
-            ModelObject: this.EntityModel,
+            ModelObject: this.ModelComponent,
             FilterFunction: (/** @type {Array | undefined} */ DFilt) => {
                 this.MainComponent?.DrawTable(DFilt);
             }

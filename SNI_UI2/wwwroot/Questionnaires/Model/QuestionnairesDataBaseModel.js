@@ -1,5 +1,5 @@
-import { EntityClass } from "../WDevCore/WModules/EntityClass.js.js";
-import { WAjaxTools } from "../WDevCore/WModules/WComponentsTools.js.js";
+import { EntityClass } from "../../WDevCore/WModules/EntityClass.js";
+import { WAjaxTools } from "../../WDevCore/WModules/WComponentsTools.js";
 class Cat_Categorias_Test extends EntityClass {
    constructor(props) {
        super(props, 'EntityQuestionnaires');

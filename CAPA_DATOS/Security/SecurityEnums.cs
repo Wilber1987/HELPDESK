@@ -23,6 +23,7 @@ namespace CAPA_DATOS.Security
        PERFIL_ACCESS,
 
        //Questionnaires
-       QUESTIONNAIRES_MANAGER
+       QUESTIONNAIRES_MANAGER,
+       QUESTIONNAIRES_GESTOR
     }
 }

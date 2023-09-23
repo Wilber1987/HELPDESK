@@ -12,8 +12,9 @@ namespace AppGenerator
         public static void setJsHeaders(out StringBuilder entityString)
         {
             entityString = new StringBuilder();
-            entityString.AppendLine("import { EntityClass } from \"../WDevCore/WModules/EntityClass.js\";");
-            entityString.AppendLine("import { WAjaxTools } from \"../WDevCore/WModules/WComponentsTools.js\";");
+            entityString.AppendLine("import { EntityClass } from \"../../WDevCore/WModules/EntityClass.js\";");
+            entityString.AppendLine("import { WAjaxTools, BasicStates } from \"../../WDevCore/WModules/WComponentsTools.js\";");
+            entityString.AppendLine("import { ModelProperty } from \"../../WDevCore/WModules/CommonModel.js\";");
         }
         public static void mapJsModel(StringBuilder entityString, EntitySchema table, string schema, string typeshema)
         {
@@ -43,7 +44,7 @@ namespace AppGenerator
                     case "uniqueidentifier": type = "text"; break;
                     case "datetime": case "datetime2": type = "date"; break;
                     case "date": type = "date"; break;
-                    case "bit": case "binary(1)": type = "checkbox"; break;
+                    case "bit": case "binary": type = "checkbox"; break;
                 }
                 if (!SqlADOConexion.SQLM.isForeinKey(table.TABLE_NAME, entity.COLUMN_NAME))
                 {
@@ -57,49 +58,9 @@ namespace AppGenerator
                 var oneToMany = SqlADOConexion.SQLM.oneToManyKeys($"{table.TABLE_NAME}", $"{table.TABLE_SCHEMA}");
                 var find = oneToMany.Find(o => o.FKTABLE_NAME == table.TABLE_NAME);
                 string controlType = "WSELECT";
-                if (entity.REFERENCE_TABLE_NAME.ToLower().StartsWith("catalogo")
-                    || entity.REFERENCE_TABLE_NAME.ToLower().StartsWith("catalog"))
-                {
-                    controlType = "WSELECT";
-                    entityString.AppendLine("   /**@type {ModelProperty}*/ " + entity.REFERENCE_TABLE_NAME + " = { type: '" + controlType
-                       + "',  ModelObject: ()=> new " + entity.REFERENCE_TABLE_NAME + "()};");
-                    continue;
-                }
-                else if (entity.REFERENCE_TABLE_NAME.ToLower().StartsWith("detail")
-                    || entity.REFERENCE_TABLE_NAME.ToLower().StartsWith("detalle"))
-                {
-                    if (!table.TABLE_NAME.ToLower().StartsWith("catalogo"))
-                    {
-                        controlType = "WSELECT";
-                        entityString.AppendLine("   /**@type {ModelProperty}*/ " + entity.REFERENCE_TABLE_NAME + " = { type: '" + controlType
-                           + "',  ModelObject: ()=> new " + entity.REFERENCE_TABLE_NAME + "()};");
-                        continue;
-                    }
-                    //controlType = "WSELECT";
-                }
-                else if (entity.REFERENCE_TABLE_NAME.ToLower().StartsWith("transaction"))
-                {
-                    controlType = "Model";
-                    if (table.TABLE_NAME.ToLower().StartsWith("transaction"))
-                    {
-                        controlType = "WSELECT";
-                    }
-                    if (!table.TABLE_NAME.ToLower().StartsWith("detail")
-                        && !table.TABLE_NAME.ToLower().StartsWith("catalogo"))
-                    {
-                        entityString.AppendLine("   /**@type {ModelProperty}*/ " + entity.REFERENCE_TABLE_NAME + " = { type: '" + controlType
-                            + "',  ModelObject: ()=> new " + entity.REFERENCE_TABLE_NAME + "()};");
-                    }
-                    continue;
-                }
-                else if (entity.REFERENCE_TABLE_NAME.ToLower().StartsWith("relational")
-                    || entity.REFERENCE_TABLE_NAME.ToLower().StartsWith("relacional"))
-                {
-                    controlType = "Model";
-                    entityString.AppendLine("   /**@type {ModelProperty}*/ " + entity.REFERENCE_TABLE_NAME + " = { type: '" + controlType
-                            + "',  ModelObject: ()=> new " + entity.REFERENCE_TABLE_NAME + "()};");
-                    continue;
-                }
+                entityString.AppendLine("   /**@type {ModelProperty}*/ " + entity.REFERENCE_TABLE_NAME + " = { type: '" + controlType
+                   + "',  ModelObject: ()=> new " + entity.REFERENCE_TABLE_NAME + "_ModelComponent()};");
+                continue;
 
             }
             foreach (var entity in SqlADOConexion.SQLM.oneToManyKeys($"{table.TABLE_NAME}", $"{table.TABLE_SCHEMA}"))
@@ -118,7 +79,8 @@ namespace AppGenerator
                     || entity.FKTABLE_NAME.ToLower().StartsWith("relational"))
                     & !entity.FKTABLE_NAME.ToLower().StartsWith("transaction"))
                 {
-                    entityString.AppendLine("   /**@type {ModelProperty}*/ " + entity.FKTABLE_NAME + " = { type: '" + mapType + "',  ModelObject: ()=> new " + entity.FKTABLE_NAME + "()};");
+                    entityString.AppendLine("   /**@type {ModelProperty}*/ " + entity.FKTABLE_NAME +
+                     " = { type: '" + mapType + "',  ModelObject: ()=> new " + entity.FKTABLE_NAME + "_ModelComponent()};");
                 }
             }
             entityString.AppendLine("}");
@@ -152,11 +114,11 @@ namespace AppGenerator
                     case "uniqueidentifier": type = "String"; break;
                     case "datetime": case "datetime2": type = "Date"; break;
                     case "date": type = "Date"; break;
-                    case "bit": case "binary(1)": type = "Boolean"; break;
+                    case "bit": case "binary": type = "Boolean"; break;
                 }
                 if (!SqlADOConexion.SQLM.isForeinKey(table.TABLE_NAME, entity.COLUMN_NAME))
                 {
-                    entityString.AppendLine("   /**@type {" +type +"}*/ " + entity.COLUMN_NAME + ";");
+                    entityString.AppendLine("   /**@type {" + type + "}*/ " + entity.COLUMN_NAME + ";");
                 }
 
             }

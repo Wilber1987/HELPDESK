@@ -28,5 +28,9 @@
 }
 @if (SecurityController.HavePermission(PermissionsEnum.ADMINISTRAR_CATALOGOS.ToString(), HttpContext.Session.GetString("seassonKey")))
 {
-    <script src="~/Admin/AdminNavigator.js" type="module"></script>
+    <script src="~/Proyect/AdminNavigator.js" type="module"></script>
+}
+@if (SecurityController.HavePermission(PermissionsEnum.QUESTIONNAIRES_MANAGER.ToString(), HttpContext.Session.GetString("seassonKey")))
+{
+    <script src="~/Questionnaires/Views/AdminNavigator.js" type="module"></script>
 }

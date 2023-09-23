@@ -12,18 +12,14 @@ namespace API.Controllers {
        public List<Cat_Categorias_Test> getCat_Categorias_Test(Cat_Categorias_Test Inst) {
            return Inst.Get<Cat_Categorias_Test>();
        }
-       [HttpPost]
-       [AuthController]
-       public object saveCat_Categorias_Test(Cat_Categorias_Test inst) {
-           return inst.Save();
-       }
-       [HttpPost]
-       [AuthController]
-       public object updateCat_Categorias_Test(Cat_Categorias_Test inst) {
-           return inst.Update();
-       }
-       //Cat_Tipo_Preguntas
-       [HttpPost]
+        [HttpPost]
+        [AuthController]
+        public object saveCat_Categorias_Test(Cat_Categorias_Test inst) => inst.SaveCategoria();
+        [HttpPost]
+        [AuthController]
+        public object updateCat_Categorias_Test(Cat_Categorias_Test inst) => inst.UpdateCategoria();
+        //Cat_Tipo_Preguntas
+        [HttpPost]
        [AuthController]
        public List<Cat_Tipo_Preguntas> getCat_Tipo_Preguntas(Cat_Tipo_Preguntas Inst) {
            return Inst.Get<Cat_Tipo_Preguntas>();
@@ -111,12 +107,12 @@ namespace API.Controllers {
        [HttpPost]
        [AuthController]
        public object saveTests(Tests inst) {
-           return inst.Save();
+           return inst.SaveTets();
        }
        [HttpPost]
        [AuthController]
        public object updateTests(Tests inst) {
-           return inst.Update();
+           return inst.UpdateTest();
        }
    }
 }

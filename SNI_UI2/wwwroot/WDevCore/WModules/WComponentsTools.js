@@ -952,3 +952,6 @@ String.prototype.toDateTimeFormatEs = function () {
 HTMLElement.prototype.SetStyle = function (Style = (new ElementStyle())) {
     WRender.SetStyle(this, Style);
 }
+
+const BasicStates = ["ACTIVO", "INACTIVO"];
+export { BasicStates }

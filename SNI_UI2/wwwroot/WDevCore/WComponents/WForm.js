@@ -57,7 +57,6 @@ class WForm extends HTMLElement {
                 Url: undefined
             };
         }
-        console.log(this.FormObject);
         this.FormObject = this.FormObject ?? this.Config.EditObject ?? {};
         const Model = this.Config.ModelObject ?? this.Config.EditObject;
         const ObjectProxy = this.CreateProxy(Model);
@@ -112,7 +111,6 @@ class WForm extends HTMLElement {
         }
         return OriginalObject;
     }
-
     /**
      * 
      * @param {Object} ObjectF 
@@ -140,7 +138,7 @@ class WForm extends HTMLElement {
                         ObjectF[prop] = ObjectF[prop] ?? Model[prop]?.value ?? undefined;
                     }
                 } else {
-                    let val = ObjectF[prop] == undefined || ObjectF[prop] == null ? "" : ObjectF[prop];
+                    //let val = ObjectF[prop] == undefined || ObjectF[prop] == null ? "" : ObjectF[prop];
                     //ObjectF[prop] = val;
                     const onChangeEvent = (ev) => {
                         /**
@@ -173,13 +171,14 @@ class WForm extends HTMLElement {
                             continue;
                         }
                         ControlLabel.innerHTML = Model[prop].label ?? WOrtograficValidation.es(prop)
-                        let InputControl = await this.CreateModelControl(Model, prop, val, ControlContainer, ObjectF, ControlLabel, onChangeEvent);
+                        let InputControl = await this.CreateModelControl(Model, prop, ControlContainer, ObjectF, ControlLabel, onChangeEvent);
                         ControlContainer.append(InputControl);
                     } else if (Model[prop] != null && Model[prop].__proto__ == Array.prototype) {
                         let InputControl = this.CreateSelect(Model[prop], prop, ObjectF, onChangeEvent);
                         ObjectF[prop] = InputControl.value;
                         ControlContainer.append(InputControl);
                     } else {
+                        let val = ObjectF[prop] == undefined || ObjectF[prop] == null ? "" : ObjectF[prop];
                         let InputControl = WRender.Create({ tagName: "input", id: "ControlValue" + prop, className: prop, value: val, type: "text", onchange: onChangeEvent });
                         if (typeof Model[prop] === "string" && Model[prop].length >= 50) {
                             InputControl = WRender.Create({ tagName: "textarea", className: prop });
@@ -307,13 +306,13 @@ class WForm extends HTMLElement {
     /**
      * @param {Object} Model
      * @param {String} prop
-     * @param {String | undefined} val
      * @param {HTMLElement} ControlContainer
      * @param {Object} ObjectF     
      * @param {HTMLLabelElement} ControlLabel
      * @param {Function} onChangeEvent
      */
-    async CreateModelControl(Model, prop, val, ControlContainer, ObjectF, ControlLabel, onChangeEvent) {
+    async CreateModelControl(Model, prop, ControlContainer, ObjectF, ControlLabel, onChangeEvent) {
+        let val = ObjectF[prop] == undefined || ObjectF[prop] == null ? "" : ObjectF[prop];
         /**
          * @type {ModelProperty}
          */
@@ -331,7 +330,7 @@ class WForm extends HTMLElement {
                 ControlContainer.classList.add("tableContainer");
                 InputControl = WRender.CreateStringNode("<span/>");
                 break;
-            case "IMG": case "IMAGE": case "IMAGES":
+            case "IMG": case "IMAGE": case "IMAGES":                
                 const Multiple = ModelProperty.type.toUpperCase() == "IMAGES" ? true : false;
                 InputControl = this.CreateImageControl(val, ControlContainer, prop, Multiple, onChangeEvent);
                 if (Multiple) {

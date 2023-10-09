@@ -248,10 +248,14 @@ namespace CAPA_NEGOCIO.MAPEO
                 Estado = CommetsState.Pendiente.ToString(),
                 Mail = user.mail
             };
-            foreach (var task in CaseTable_Tareas)
+            if (CaseTable_Tareas != null)
             {
-                task.NotificarTecnicos(this, user);
+                foreach (var task in CaseTable_Tareas)
+                {
+                    task.NotificarTecnicos(this, user);
+                }
             }
+
             comment.Save();
             comment.CreateMailForComment(user);
             //CommitGlobalTransaction();
@@ -337,7 +341,7 @@ namespace CAPA_NEGOCIO.MAPEO
 
         internal List<CaseTable_Case> GetSolicitudesPendientesAprobarAdmin(string? identity)
         {
-             if (AuthNetCore.HavePermission(PermissionsEnum.ADMIN_ACCESS.ToString(), identity))
+            if (AuthNetCore.HavePermission(PermissionsEnum.ADMIN_ACCESS.ToString(), identity))
             {
                 Estado = Case_Estate.Solicitado.ToString();
                 return Get<CaseTable_Case>();

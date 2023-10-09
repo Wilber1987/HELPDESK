@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 
 namespace CAPA_DATOS
 {
-    public abstract class EntityClass: TransactionalClass
+    public abstract class EntityClass : TransactionalClass
     {
+        #region  metodos genericos
         public List<FilterData>? filterData { get; set; }
         public List<T> Get<T>()
         {
@@ -158,7 +159,8 @@ namespace CAPA_DATOS
                 SqlADOConexion.SQLM?.RollBackTransaction();
                 throw e;
             }
-        }      
+        }
+        #endregion
     }
     public abstract class TransactionalClass
     {

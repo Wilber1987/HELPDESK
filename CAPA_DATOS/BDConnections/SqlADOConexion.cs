@@ -14,8 +14,8 @@ namespace CAPA_DATOS
         static public bool IniciarConexion()
         {
             Anonimo = false;
-            //return IniciarConexionInLocal();
-            return IniciarConexionInServer();
+            return IniciarConexionInLocal();
+            //return IniciarConexionInServer();
 
         }
         static public bool IniciarConexion(string SGBD_USER, string SWGBD_PASSWORD, string SQLServer)
@@ -69,14 +69,7 @@ namespace CAPA_DATOS
             try
             {
                 Anonimo = false;
-                try
-                {
-                    return createConexion(".", "sa", "zaxscd");
-                }
-                catch
-                {
-                    return createConexion(".\\SQLEXPRESS", "sa", "123");
-                }
+                return createConexion(".", "sa", "Helpdesk2023");                
             }
             catch (Exception)
             {

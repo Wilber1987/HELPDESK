@@ -18,6 +18,7 @@ namespace CAPA_DATOS.Security
         public string? Estado { get; set; }
         [OneToMany(TableName = "Security_Permissions_Roles", KeyColumn = "Id_Role", ForeignKeyColumn = "Id_Role")]
         public List<Security_Permissions_Roles>? Security_Permissions_Roles { get; set; }
+        #region  metodos
         public object SaveRole()
         {
             if (this.Id_Role == null)
@@ -59,6 +60,7 @@ namespace CAPA_DATOS.Security
             }
             return roles;
         }
+        #endregion
     }
     public class Security_Users : EntityClass
     {
@@ -74,6 +76,7 @@ namespace CAPA_DATOS.Security
         public DateTime? Token_Expiration_Date { get; set; }
         [OneToMany(TableName = "Security_Users_Roles", KeyColumn = "Id_User", ForeignKeyColumn = "Id_User")]
         public List<Security_Users_Roles>? Security_Users_Roles { get; set; }
+        #region  metodos
         public Security_Users? GetUserData()
         {
             Security_Users? user = this.Find<Security_Users>();
@@ -103,7 +106,7 @@ namespace CAPA_DATOS.Security
             }
             try
             {
-                
+
                 this.BeginGlobalTransaction();
                 if (this.Password != null)
                 {
@@ -195,7 +198,7 @@ namespace CAPA_DATOS.Security
         }
 
         public object changePassword(string? identfy)
-        {            
+        {
             var security_User = AuthNetCore.User(identfy).UserData;
             Password = EncrypterServices.Encrypt(Password);
             Id_User = security_User.Id_User;
@@ -216,6 +219,7 @@ namespace CAPA_DATOS.Security
             public string? Correo_institucional { get; set; }
             public string? Estado { get; set; }
         }
+        #endregion
     }
     public class Security_Permissions : EntityClass
     {

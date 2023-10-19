@@ -33,9 +33,9 @@ class MainSolicitudesView extends HTMLElement {
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });
         this.ModelObject = new CaseTable_Case({
             CaseTable_Tareas: {
-                hidden: true
+                type: "text", hidden: true
             }, Estado: {
-                hidden: true
+                type: "text", hidden: true
             }, Cat_Dependencias: {
                 type: "WSELECT", hiddenFilter: true, ModelObject: () => new Cat_Dependencias()
             }

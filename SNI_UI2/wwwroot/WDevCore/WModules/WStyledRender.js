@@ -101,7 +101,7 @@ class WStyledRender extends HTMLElement {
  */
 function css(body) {
     // @ts-ignore
-    return WRender.Create({ tagName: "style", innerHTML: body.toString() });
+    return WRender.Create({ tagName: "style", innerHTML: body });
 }
 /**
  * 

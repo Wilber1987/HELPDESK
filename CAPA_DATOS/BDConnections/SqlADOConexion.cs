@@ -69,7 +69,7 @@ namespace CAPA_DATOS
             try
             {
                 Anonimo = false;
-                return createConexion(".", "sa", "Helpdesk2023");                
+                return createConexion(".", "sa", "zaxscd");                
             }
             catch (Exception)
             {

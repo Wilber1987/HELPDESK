@@ -262,8 +262,10 @@ namespace CAPA_DATOS
                     }
                 }
             }
-
-            ExcuteSqlQuery(strQuery);
+            if (strQuery != null)
+            {
+                  ExcuteSqlQuery(strQuery);
+            }
             return entity;
         }
         public object UpdateObject(Object Inst, string IdObject)
@@ -276,6 +278,10 @@ namespace CAPA_DATOS
                     + Inst.GetType().Name + " esta en nulo y no es posible actualizar");
             }
             string strQuery = BuildUpdateQueryByObject(Inst, IdObject);
+            if (strQuery == null)
+            {
+                return null;
+            }
             return ExcuteSqlQuery(strQuery);
         }
         public object Delete(Object Inst)
@@ -314,7 +320,6 @@ namespace CAPA_DATOS
             else
             {
                 return default(T);
-
             }
         }
 

@@ -118,6 +118,10 @@ namespace CAPA_DATOS
             }
             ColumnNames = ColumnNames.TrimEnd(',');
             Values = Values.TrimEnd(',');
+            if (Values == "")
+            {
+                return null;
+            }
             string QUERY = "INSERT INTO " + entityProps[0].TABLE_SCHEMA + "." + Inst.GetType().Name + "(" + ColumnNames + ") VALUES(" + Values + ") SELECT SCOPE_IDENTITY()";
             LoggerServices.AddMessageInfo(QUERY);
             return QUERY;
@@ -147,6 +151,10 @@ namespace CAPA_DATOS
                 else continue;
             }
             Values = Values.TrimEnd(',');
+            if (Values == "")
+            {
+                return null;
+            }
             string strQuery = "UPDATE  " + entityProps[0].TABLE_SCHEMA + "." + TableName + " SET " + Values + Conditions;
             LoggerServices.AddMessageInfo(strQuery);
             return strQuery;
@@ -176,6 +184,10 @@ namespace CAPA_DATOS
                 else continue;
             }
             Values = Values.TrimEnd(',');
+            if (Values == "")
+            {
+                return null;
+            }
             string strQuery = "UPDATE  " + entityProps[0].TABLE_SCHEMA + "." + TableName + " SET " + Values + Conditions;
             LoggerServices.AddMessageInfo(strQuery);
             return strQuery;

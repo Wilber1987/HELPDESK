@@ -24,7 +24,7 @@ window.onload = () => {
                 const dataset = await new CaseTable_Case().Get();
                 const dependencias = await new Cat_Dependencias().Get();
                 DOMManager.NavigateFunction("Tab-Generales",
-                    new MainSolicitudesView(dataset, dependencias));
+                    new CaseManagerComponent(dataset, dependencias));
             }
         }, {
             id: "Tab-Solicitudes", name: "Administrador de Solicitudes",

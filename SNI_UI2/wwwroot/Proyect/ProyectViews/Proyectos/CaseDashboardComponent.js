@@ -28,7 +28,7 @@ class CaseDashboardComponent extends HTMLElement {
                     const tp = Tareas.filter(tf => tf.CaseTable_Participantes.filter(tpf => tpf.Id_Perfil == p.Id_Perfil).length > 0)
                     TareasMap.push({
                         Id_Perfil: p.Id_Perfil,
-                        Tecnico: p.Tbl_Profile.Nombres + " " + p.Tbl_Profile.Apellidos,
+                        Tecnico: (p.Tbl_Profile?.Nombres ?? "") + " " + (p.Tbl_Profile?.Apellidos ?? ""),
                         Proceso: tp.filter(tf => tf.Estado == "Proceso").length,
                         Finalizado: tp.filter(tf => tf.Estado == "Finalizado").length,
                         Espera: tp.filter(tf => tf.Estado == "Espera").length
@@ -112,7 +112,7 @@ class CaseDashboardComponent extends HTMLElement {
             Dataset: MapDataset,
             EvalValue: "val",
             AttNameEval: "Estado",
-            groupParams: [ "Servicio", "Mes"]
+            groupParams: ["Servicio", "Mes"]
         });
         const MapDatasetAperturaCasos = this.Dataset.map(c => ({
             Estado: c.Estado,

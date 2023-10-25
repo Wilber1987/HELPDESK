@@ -95,7 +95,7 @@ class CaseDashboardComponent extends HTMLElement {
         const MapDataset = this.Dataset.filter(c => !c.Estado.includes("Pendiente") && !c.Estado.includes("Solicitado")
         ).map(c => ({
             Estado: c.Estado,
-            Servicio: c.Tbl_Servicios.Descripcion_Servicio,
+            Servicio: c.Tbl_Servicios?.Descripcion_Servicio ?? "",
             Caso: "Caso",
             Mes: c.Fecha_Inicial.getMonthFormatEs(),
             val: 1

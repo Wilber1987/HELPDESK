@@ -15,7 +15,7 @@ builder.Services.AddControllers().AddJsonOptions(JsonOptions =>
 builder.Services.AddControllersWithViews();
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(40);
+    options.IdleTimeout = TimeSpan.FromMinutes(600);
 });
 
 builder.Services.AddCronJob<CreateAutomaticsCaseSchedulerJob>(options =>

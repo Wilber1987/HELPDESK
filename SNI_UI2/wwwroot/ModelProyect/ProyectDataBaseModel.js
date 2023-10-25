@@ -312,7 +312,7 @@ class Cat_Dependencias extends EntityClass {
     Id_Dependencia = { type: 'number', primary: true };
     Descripcion = { type: 'text' };
     Username = { type: 'email' };
-    Password = { type: 'text', hiddenInTable: true };
+    Password = { type: 'text', hiddenInTable: true, require: false };
     Host = { type: 'text' };
     //Cat_Dependencia = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Dependencias(), require: false };
     Cat_Dependencias_Hijas = { type: 'Multiselect', hiddenFilter: true, ModelObject: () => new Cat_Dependencias(), require: false };

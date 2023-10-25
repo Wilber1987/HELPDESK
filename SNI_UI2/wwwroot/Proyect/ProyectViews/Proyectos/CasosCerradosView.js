@@ -1,5 +1,6 @@
 
 
+import { caseGeneralData } from './CaseDetailComponent.js';
 import { CaseSearcherToVinculate } from '../../../AppComponents/CaseSearcherToVinculate.js';
 import { priorityStyles } from '../../../AppComponents/Styles.js';
 import { CaseOwModel } from '../../../ModelProyect/CaseOwModel.js';
@@ -87,18 +88,7 @@ class CasosCerradosView extends HTMLElement {
                         { tagName: 'button', className: 'Btn-Mini', innerText: "Detalle", onclick: async () => await this.actividadDetail(actividad) },
                         { tagName: 'button', className: 'Btn-Mini', innerText: 'Reabrir Caso', onclick: () => this.Reabrir(actividad) }
                     ]
-                }, {
-                    className: "propiedades", children: [
-                        { tagName: 'label', innerText: "Estado: " + actividad.Estado },
-                        {
-                            tagName: 'label', className: "prioridad_" + (actividad.Case_Priority != null ? actividad.Case_Priority : undefined),
-                            innerText: "Prioridad: " + (actividad.Case_Priority != null ? actividad.Case_Priority ?? "indefinida" : "indefinida")
-                        },
-                        { tagName: 'label', innerText: "Dependencia: " + actividad.Cat_Dependencias.Descripcion },
-                        { tagName: 'label', innerText: "Fecha inicio: " + actividad.Fecha_Inicial?.toString().toDateFormatEs() },
-                        { tagName: 'label', innerText: "Fecha de finalización: " + actividad.Fecha_Final?.toString().toDateFormatEs() },
-                    ]
-                },
+                }, caseGeneralData(actividad),
                 { tagName: 'h4', innerText: "Progreso" },
                 ControlBuilder.BuildProgressBar(actividad.Progreso,
                     actividad.CaseTable_Tareas?.filter(tarea => !tarea.Estado?.includes("Inactivo"))?.length)

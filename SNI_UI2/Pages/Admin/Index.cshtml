@@ -32,5 +32,5 @@
 }
 @if (SecurityController.HavePermission(PermissionsEnum.QUESTIONNAIRES_MANAGER.ToString(), HttpContext.Session.GetString("seassonKey")))
 {
-    <script src="~/Questionnaires/Views/AdminNavigator.js" type="module"></script>
+    @* <script src="~/Questionnaires/Views/AdminNavigator.js" type="module"></script> *@
 }

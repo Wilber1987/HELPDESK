@@ -88,10 +88,12 @@
             {
                 <a class="" id="PerfilManager" href="~/Security/PerfilManager">Administrador de perfiles</a>
             }     
+
+             @* TEST MODULE 
             @if (SecurityController.HavePermission(PermissionsEnum.QUESTIONNAIRES_MANAGER.ToString(), identify))
             {
                 <a class="" id="TestsView" href="~/Questionnaires/TestsView">Administrador de Tests</a>
-            }
+            }*@
             @* <a class="" id="VinculateCaseView" href="~/ProyectViews/VinculateCaseView">Casos vinculados</a> *@
 
         </nav>

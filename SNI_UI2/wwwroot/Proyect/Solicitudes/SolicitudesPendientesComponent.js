@@ -1,4 +1,3 @@
-
 import { priorityStyles } from '../../AppComponents/Styles.js';
 import { CaseTable_Case, CaseTable_Comments, Cat_Dependencias } from '../../ModelProyect/ProyectDataBaseModel.js';
 import { WSecurity } from '../../WDevCore/Security/WSecurity.js';
@@ -10,6 +9,7 @@ import { WModalForm } from '../../WDevCore/WComponents/WModalForm.js';
 import { WTableComponent } from '../../WDevCore/WComponents/WTableComponent.js';
 import { ComponentsManager, WRender } from '../../WDevCore/WModules/WComponentsTools.js';
 import { css } from '../../WDevCore/WModules/WStyledRender.js';
+import { caseGeneralData } from '../ProyectViews/Proyectos/CaseDetailComponent.js';
 import { simpleCaseForm } from '../ProyectViews/Proyectos/CaseManagerComponent.js';
 class SolicitudesPendientesComponent extends HTMLElement {
     /**
@@ -120,16 +120,7 @@ class SolicitudesPendientesComponent extends HTMLElement {
                         { tagName: 'button', className: 'Btn-Mini', innerText: "Detalle", onclick: async () => await this.actividadDetail(actividad) },
                         { tagName: 'button', className: 'Btn-Mini', innerText: 'Vincular Caso', onclick: () => this.Vincular(actividad) }
                     ]
-                }, {
-                    className: "propiedades", children: [
-                        { tagName: 'label', innerText: "Estado: " + actividad.Estado },
-                        { tagName: 'label', className: "prioridad_" + (actividad.Case_Priority != null ?  actividad.Case_Priority : undefined ), 
-                        innerText: "Prioridad: " + (actividad.Case_Priority != null ?  actividad.Case_Priority ?? "indefinida" : "indefinida" ) },
-                        { tagName: 'label', innerText: "Dependencia: " + actividad.Cat_Dependencias.Descripcion },
-                        { tagName: 'label', innerText: "Fecha inicio: " + actividad.Fecha_Inicial?.toString().toDateFormatEs() },
-                        { tagName: 'label', innerText: "Fecha de finalización: " + actividad.Fecha_Final?.toString().toDateFormatEs() },
-                    ]
-                }
+                }, caseGeneralData(actividad)
             ]
         })
     }

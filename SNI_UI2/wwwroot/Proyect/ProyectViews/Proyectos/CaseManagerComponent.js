@@ -1,5 +1,6 @@
 
 
+import { caseGeneralData } from './CaseDetailComponent.js';
 import { CaseSearcherToVinculate } from '../../../AppComponents/CaseSearcherToVinculate.js';
 import { priorityStyles } from '../../../AppComponents/Styles.js';
 import { CaseTable_Agenda, CaseTable_Calendario, CaseTable_Case, CaseTable_Comments, CaseTable_Tareas, CaseTable_VinculateCase, Cat_Dependencias } from '../../../ModelProyect/ProyectDataBaseModel.js';
@@ -64,16 +65,7 @@ class CaseManagerComponent extends HTMLElement {
                         { tagName: 'button', className: 'Btn-Mini', innerText: "Detalle", onclick: async () => await this.actividadDetail(actividad) },
                         { tagName: 'button', className: 'Btn-Mini', innerText: 'Vincular Caso', onclick: () => this.Vincular(actividad) }
                     ]
-                }, {
-                    className: "propiedades", children: [
-                        { tagName: 'label', innerText: "Estado: " + actividad.Estado },
-                        { tagName: 'label', className: "prioridad_" + (actividad.Case_Priority != null ?  actividad.Case_Priority : undefined ), 
-                        innerText: "Prioridad: " + (actividad.Case_Priority != null ?  actividad.Case_Priority ?? "indefinida" : "indefinida" ) },
-                        { tagName: 'label', innerText: "Dependencia: " + actividad.Cat_Dependencias.Descripcion },
-                        { tagName: 'label', innerText: "Fecha inicio: " + actividad.Fecha_Inicial?.toString().toDateFormatEs() },
-                        { tagName: 'label', innerText: "Fecha de finalización: " + actividad.Fecha_Final?.toString().toDateFormatEs() },
-                    ]
-                },
+                },caseGeneralData(actividad),
                 { tagName: 'h4', innerText: "Progreso" },
                 ControlBuilder.BuildProgressBar(actividad.Progreso,
                     actividad.CaseTable_Tareas?.filter(tarea => !tarea.Estado?.includes("Inactivo"))?.length)

@@ -9,6 +9,7 @@ import { WFilterOptions } from "../../WDevCore/WComponents/WFilterControls.js";
 import { WCommentsComponent } from '../../WDevCore/WComponents/WCommentsComponent.js';
 import { WSecurity } from '../../WDevCore/Security/WSecurity.js';
 import { priorityStyles } from '../../AppComponents/Styles.js';
+import { caseGeneralData } from '../ProyectViews/Proyectos/CaseDetailComponent.js';
 
 const OnLoad = async () => {
     const Solicitudes = await new CaseTable_Case().GetOwSolicitudesPendientesAprobar();
@@ -45,7 +46,7 @@ class MainSolicitudesView extends HTMLElement {
     connectedCallback() { }
     DrawMainSolicitudesView = async () => {
         //this.OptionContainer.append(WRender.Create({ tagName: 'input', type: 'button', className: 'Block-Basic', value: 'Estadística', onclick: this.dashBoardView }))
-        this.OptionContainer.append(WRender.Create({ tagName: 'input', type: 'button', className: 'Block-Alert', value: 'Casos Pendientes de Aprobación', onclick: this.actividadesManager }))
+        this.OptionContainer.append(WRender.Create({ tagName: 'input', type: 'button', className: 'Block-Alert', value: 'Lista de casos', onclick: this.actividadesManager }))
         this.OptionContainer.append(WRender.Create({ tagName: 'input', type: 'button', className: 'Block-Success', value: 'Nuevo Caso', onclick: this.nuevoCaso }))
 
         this.shadowRoot.append(this.OptionContainer, this.TabContainer);
@@ -71,16 +72,7 @@ class MainSolicitudesView extends HTMLElement {
         return WRender.Create({
             className: "actividad", object: actividad, children: [
                 { tagName: 'h4', innerText: `#${actividad.Id_Case} - ${actividad.Titulo} (${actividad.Tbl_Servicios?.Descripcion_Servicio ?? ""})` },
-                {
-                    className: "propiedades", children: [
-                        { tagName: 'label', innerText: "Estado: " + actividad.Estado },
-                        { tagName: 'label', className: "prioridad_" + (actividad.Case_Priority != null ?  actividad.Case_Priority : undefined ), 
-                        innerText: "Prioridad: " + (actividad.Case_Priority != null ?  actividad.Case_Priority ?? "indefinida" : "indefinida" ) },
-                        { tagName: 'label', innerText: "Dependencia: " + actividad.Cat_Dependencias.Descripcion },
-                        { tagName: 'label', innerText: "Fecha inicio: " + actividad.Fecha_Inicial?.toString().toDateFormatEs() },
-                        { tagName: 'label', innerText: "Fecha de finalización: " + actividad.Fecha_Final?.toString().toDateFormatEs() },
-                    ]
-                }, {
+               caseGeneralData(actividad), {
                     className: "options", children: [
                         {
                             tagName: 'button', className: 'Btn-Mini', innerText: "Detalle",

@@ -179,18 +179,7 @@ class CaseDetailComponent extends HTMLElement {
                             { tagName: 'button', className: 'Btn-Mini', innerText: 'Reabrir Caso', onclick: () => this.Reabrir(actividad) } :
                             { tagName: 'button', className: 'Btn-Mini', innerText: 'Cerrar Caso', onclick: () => this.CerrarCaso(actividad) }
                     ]
-                }, {
-                    className: "propiedades", children: [
-                        { tagName: 'label', innerText: "Estado: " + actividad.Estado },
-                        {
-                            tagName: 'label', className: "prioridad_" + (actividad.Case_Priority != null ? actividad.Case_Priority : undefined),
-                            innerText: "Prioridad: " + (actividad.Case_Priority != null ? actividad.Case_Priority ?? "indefinida" : "indefinida")
-                        },
-                        { tagName: 'label', innerText: "Dependencia: " + actividad.Cat_Dependencias.Descripcion },
-                        { tagName: 'label', innerText: "Fecha inicio: " + actividad.Fecha_Inicial?.toString().toDateFormatEs() },
-                        { tagName: 'label', innerText: "Fecha de finalización: " + actividad.Fecha_Final?.toString().toDateFormatEs() },
-                    ]
-                },
+                }, caseGeneralData(actividad),
                 { tagName: 'h4', innerText: "Progreso" },
                 ControlBuilder.BuildProgressBar(actividad.Progreso,
                     actividad.CaseTable_Tareas?.filter(tarea => !tarea.Estado?.includes("Inactivo"))?.length)
@@ -333,3 +322,20 @@ class CaseDetailComponent extends HTMLElement {
 }
 customElements.define('w-case-detail', CaseDetailComponent);
 export { CaseDetailComponent };
+const caseGeneralData = (actividad) => {
+    return {
+        className: "propiedades", children: [
+            { tagName: 'label', innerText: "Solicitante: " + (actividad.Mail ?? "") },
+            { tagName: 'label', innerText: "Estado: " + actividad.Estado },
+            {
+                tagName: 'label', className: "prioridad_" + (actividad.Case_Priority != null ? actividad.Case_Priority : undefined),
+                innerText: "Prioridad: " + (actividad.Case_Priority != null ? actividad.Case_Priority ?? "indefinida" : "indefinida")
+            },
+            { tagName: 'label', innerText: "Dependencia: " + (actividad.Cat_Dependencias.Descripcion ?? "") },
+            { tagName: 'label', innerText: "Fecha inicio: " + (actividad.Fecha_Inicial?.toString().toDateFormatEs() ?? "" )},
+            { tagName: 'label', innerText: "Fecha de finalización: " + (actividad.Fecha_Final?.toString().toDateFormatEs() ?? "") },
+        ]
+    };
+}
+
+export { caseGeneralData };

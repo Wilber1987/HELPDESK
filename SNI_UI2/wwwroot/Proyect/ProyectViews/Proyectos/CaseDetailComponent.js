@@ -332,7 +332,7 @@ const caseGeneralData = (actividad) => {
                 innerText: "Prioridad: " + (actividad.Case_Priority != null ? actividad.Case_Priority ?? "indefinida" : "indefinida")
             },
             { tagName: 'label', innerText: "Dependencia: " + (actividad.Cat_Dependencias.Descripcion ?? "") },
-            { tagName: 'label', innerText: "Fecha inicio: " + (actividad.Fecha_Inicial?.toString().toDateFormatEs() ?? "" )},
+            { tagName: 'label', innerText: "Fecha inicio: " + (actividad.Fecha_Inicio?.toString().toDateFormatEs() ?? "" )},
             { tagName: 'label', innerText: "Fecha de finalización: " + (actividad.Fecha_Final?.toString().toDateFormatEs() ?? "") },
         ]
     };

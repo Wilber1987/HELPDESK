@@ -187,7 +187,7 @@ class DetailDayClass extends HTMLElement {
                 hour.className = "hourDetail hourH";
                 let Reservable = true;
                 reservaciones.forEach(reserva => {
-                    const fecha1R = new Date(reserva.fecha_Inicial);
+                    const fecha1R = new Date(reserva.Fecha_Inicio);
                     const fecha2R = new Date(reserva.fecha_Final);
                     if (fecha1.toString() == fecha1R.toString()
                         && fecha2.toString() == fecha2R.toString()) {
@@ -214,7 +214,7 @@ class DetailDayClass extends HTMLElement {
                         //console.log(new Date(new Date(`${DateParam.date} ${element}`)), new Date(`${DateParam.date} ${element.replace(":00", ":59")}`))
                         const dataPost = {
                             id: `${DateParam.date} ${element}`,
-                            Fecha_Inicial: `${DateParam.date}T${element}:00.000Z`,
+                            Fecha_Inicio: `${DateParam.date}T${element}:00.000Z`,
                             Fecha_Final: `${DateParam.date}T${element.replace(":00", ":59")}:00.000Z`
                         }
                         Reservaciones.push(dataPost);

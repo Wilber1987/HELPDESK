@@ -105,11 +105,10 @@ class CaseTable_Case extends EntityClass {
     }
     Id_Case = { type: 'number', primary: true };
     Id_Vinculate = { type: 'number', hidden: true };
-
-    Titulo = { type: 'text' };
+    
     Tbl_Servicios = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Tbl_Servicios() };
-    Fecha_Inicial = { type: 'date' };
-
+    Fecha_Inicio = { type: 'date' };
+    Titulo = { type: 'text' };
     Cat_Dependencias = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Dependencias() };
     Estado = { type: "Select", Dataset: ["Activo", "Espera", "Pendiente", "Finalizado"] };
     Case_Priority = { type: "Select", Dataset: ["Alta", "Media", "Baja"], label: "Prioridad" };
@@ -244,7 +243,7 @@ class CaseTable_Calendario extends EntityClass {
     Id_Dependencia = { type: 'number', hidden: true };
     IdCalendario = { type: 'number', primary: true };
     Estado = { type: "Select", Dataset: ["Activo", "Inactivo"] };
-    Fecha_Inicial = { type: 'date' };
+    Fecha_Inicio = { type: 'date' };
     Fecha_Final = { type: 'date' };
 }
 export { CaseTable_Calendario }

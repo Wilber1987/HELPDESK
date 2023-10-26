@@ -229,7 +229,7 @@ const simpleCaseForm = (entity, dependencias, action) => {
             Id_Vinculate: { type: "text", hidden: true },
             Titulo: { type: "text", hidden: true },
             Tbl_Servicios: { type: "text", hidden: true },
-            Fecha_Inicial: { type: "text", hidden: true },
+            Fecha_Inicio: { type: "text", hidden: true },
             Estado: { type: "text", hidden: true },
             Fecha_Final: { type: "text", hidden: true },
             Descripcion: { type: "text", hidden: true },

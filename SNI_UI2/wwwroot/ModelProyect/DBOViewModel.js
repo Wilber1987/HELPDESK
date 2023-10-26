@@ -33,7 +33,7 @@ class ViewCalendarioByDependencia extends EntityClass {
    }
    Id_Case = { type: 'number' };
    Id_TareaPadre = { type: 'number' };
-   Fecha_Inicial = { type: 'date' };
+   Fecha_Inicio = { type: 'date' };
    Fecha_Final = { type: 'date' };
    Estado = { type: 'text' };
    IdCalendario = { type: 'number' };

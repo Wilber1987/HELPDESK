@@ -14,9 +14,9 @@ window.onload = () => {
         Inicialize: true,
         Elements: [{
             id: "Tab-dasboard", name: "Dashboard", action: async (ev) => {
-                const dataset = await new CaseTable_Case().GetOwCase();
+                //const dataset = await new CaseTable_Case().GetOwCase();
                 //const dependencias = await new Cat_Dependencias().GetOwDependencies();
-                DOMManager.NavigateFunction("Tab-dasboard", new CaseDashboardComponent(dataset));
+                DOMManager.NavigateFunction("Tab-dasboard", new CaseDashboardComponent());
             }
         }, {
             id: "Tab-Generales", name: "Administrador de Casos",

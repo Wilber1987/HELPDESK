@@ -19,7 +19,7 @@ namespace DataBaseModel {
    public class ViewCalendarioByDependencia : EntityClass {
        public int? Id_Case { get; set; }
        public int? Id_TareaPadre { get; set; }
-       public DateTime? Fecha_Inicial { get; set; }
+       public DateTime? Fecha_Inicio { get; set; }
        public DateTime? Fecha_Final { get; set; }
        public string? Estado { get; set; }
        public int? IdCalendario { get; set; }

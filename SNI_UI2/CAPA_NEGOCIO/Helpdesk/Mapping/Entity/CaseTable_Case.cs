@@ -21,7 +21,7 @@ namespace CAPA_NEGOCIO.MAPEO
         public int? Id_Perfil { get; set; }
         public string? Estado { get; set; }
         public int? Id_Dependencia { get; set; }
-        public DateTime? Fecha_Inicial { get; set; }
+        public DateTime? Fecha_Inicio { get; set; }
         public DateTime? Fecha_Final { get; set; }
         public int? Id_Servicio { get; set; }
         public int? Id_Vinculate { get; set; }
@@ -83,7 +83,7 @@ namespace CAPA_NEGOCIO.MAPEO
                     Titulo = mail.Subject.ToUpper();
                     Descripcion = mail.Body;
                     Estado = Case_Estate.Solicitado.ToString();
-                    Fecha_Inicial = mail.Date;
+                    Fecha_Inicio = mail.Date;
                     Id_Dependencia = dependencia.Id_Dependencia;
                     Mail = mail.From.Address;
                     Save();
@@ -199,11 +199,10 @@ namespace CAPA_NEGOCIO.MAPEO
 
         public List<CaseTable_Case> GetOwSolicitudes(string? identity, Case_Estate case_Estate)
         {
-            return new CaseTable_Case()
-            {
-                Id_Perfil = AuthNetCore.User(identity).UserId,
-                Estado = case_Estate.ToString()
-            }.Get<CaseTable_Case>();
+
+            Id_Perfil = AuthNetCore.User(identity).UserId;
+            Estado = case_Estate.ToString();
+            return Get<CaseTable_Case>();
         }
 
         public List<CaseTable_Case> GetSolicitudesPendientesAprobar(string? identity, Case_Estate case_Estate)
@@ -215,14 +214,12 @@ namespace CAPA_NEGOCIO.MAPEO
             throw new Exception("no tienes permisos para aprobar casos");
         }
 
-        private static List<CaseTable_Case> getCaseByDependencia(string? identity, Case_Estate? case_Estate)
+        private List<CaseTable_Case> getCaseByDependencia(string? identity, Case_Estate? case_Estate)
         {
-            return new CaseTable_Case()
-            {
-                Estado = case_Estate?.ToString()
-            }.Get_WhereIN<CaseTable_Case>("Id_Dependencia",
-           new CaseTable_Dependencias_Usuarios() { Id_Perfil = AuthNetCore.User(identity).UserId }
-           .Get<CaseTable_Dependencias_Usuarios>().Select(p => p.Id_Dependencia.ToString()).ToArray());
+            Estado = case_Estate?.ToString();
+            return Get_WhereIN<CaseTable_Case>("Id_Dependencia", new CaseTable_Dependencias_Usuarios()
+            { Id_Perfil = AuthNetCore.User(identity).UserId }
+               .Get<CaseTable_Dependencias_Usuarios>().Select(p => p.Id_Dependencia.ToString()).ToArray());
         }
         internal object AprobarSolicitud(string identity)
         {

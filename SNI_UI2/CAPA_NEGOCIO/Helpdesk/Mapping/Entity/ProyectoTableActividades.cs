@@ -276,7 +276,7 @@ namespace CAPA_NEGOCIO.MAPEO
         public int? Id_Tarea { get; set; }
         public int? Id_Dependencia { get; set; }
         public string? Estado { get; set; }
-        public DateTime? Fecha_Inicial { get; set; }
+        public DateTime? Fecha_Inicio { get; set; }
         public DateTime? Fecha_Final { get; set; }
         [ManyToOne(TableName = "CaseTable_Tareas", KeyColumn = "Id_Tarea", ForeignKeyColumn = "Id_Tarea")]
         public CaseTable_Tareas? CaseTable_Tareas { get; set; }
@@ -365,8 +365,8 @@ namespace CAPA_NEGOCIO.MAPEO
             {
                 var user = AuthNetCore.User(identity);
                 BeginGlobalTransaction();
-                List<DateTime?> fechasIniciales = this.CaseTable_Calendario.Select(c => c.Fecha_Inicial).ToList();
-                List<DateTime?> fechasFinales = this.CaseTable_Calendario.Select(c => c.Fecha_Inicial).ToList();
+                List<DateTime?> fechasIniciales = this.CaseTable_Calendario.Select(c => c.Fecha_Inicio).ToList();
+                List<DateTime?> fechasFinales = this.CaseTable_Calendario.Select(c => c.Fecha_Inicio).ToList();
                 Fecha_Inicio = fechasIniciales.Min();
                 Fecha_Finalizacion = fechasFinales.Max();
                 var comment = new CaseTable_Comments()

@@ -1,3 +1,4 @@
+import { LogErrorView } from "../Admin/LogErrorView.js";
 import { Cat_Cargos_Dependencias, Cat_Dependencias, Cat_Paises, Cat_Tipo_Evidencia, Cat_Tipo_Participaciones, Cat_Tipo_Servicio, Tbl_Servicios } from "../ModelProyect/ProyectDataBaseModel.js";
 import { StylesControlsV2 } from "../WDevCore/StyleModules/WStyleComponents.js";
 import { WAppNavigator } from "../WDevCore/WComponents/WAppNavigator.js";
@@ -18,12 +19,16 @@ window.addEventListener("load", async () => {
                     Elements: [
                         ElementTab(DOMManager, new Cat_Dependencias()),
                         ElementTab(DOMManager, new Tbl_Servicios()),
-                        ElementTab(DOMManager, new Cat_Tipo_Servicio()),                        
-                        ElementTab(DOMManager, new Cat_Cargos_Dependencias()),                        
+                        ElementTab(DOMManager, new Cat_Tipo_Servicio()),
+                        ElementTab(DOMManager, new Cat_Cargos_Dependencias()),
                         //ElementTab(DOMManager, new Cat_Tipo_Evidencia()),
                         //ElementTab(DOMManager, new Cat_Tipo_Participaciones()),
                         ElementTab(DOMManager, new Cat_Paises())
                     ]
+                }
+            }, {
+                name: WOrtograficValidation.es("Log de errores"), action: async () => {
+                    DOMManager.NavigateFunction("error-log", new LogErrorView());
                 }
             }]
         }));
@@ -34,7 +39,7 @@ function ElementTab(DOMManager, Model) {
         name: WOrtograficValidation.es(Model.constructor.name), url: "#",
         action: async (ev) => {
             const response = await WAjaxTools.PostRequest("../api/ApiEntityHelpdesk/get" + Model.constructor.name, {});
-            if ( Model.constructor.name == "Cat_Dependencias") {
+            if (Model.constructor.name == "Cat_Dependencias") {
                 response.forEach(e => {
                     e.Password = undefined;
                 });

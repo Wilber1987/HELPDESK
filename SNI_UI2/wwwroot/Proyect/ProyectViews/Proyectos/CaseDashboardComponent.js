@@ -1,24 +1,74 @@
 
 
+//@ts-check
 import { CaseTable_Case, CaseTable_Participantes, CaseTable_Tareas } from '../../../ModelProyect/ProyectDataBaseModel.js';
+import { StylesControlsV2 } from '../../../WDevCore/StyleModules/WStyleComponents.js';
 import { ColumChart, RadialChart } from '../../../WDevCore/WComponents/WChartJSComponents.js';
 import { WFilterOptions } from '../../../WDevCore/WComponents/WFilterControls.js';
+import { WModalForm } from '../../../WDevCore/WComponents/WModalForm.js';
+import { WReportComponent } from '../../../WDevCore/WComponents/WReportComponent.js';
 import { WTableComponent } from '../../../WDevCore/WComponents/WTableComponent.js';
 import { WArrayF, WRender } from '../../../WDevCore/WModules/WComponentsTools.js';
 import { css } from '../../../WDevCore/WModules/WStyledRender.js';
 
 class CaseDashboardComponent extends HTMLElement {
+    /**
+     * @param {undefined} [Dataset]
+     */
     constructor(Dataset) {
         //console.log(Dataset);
         super();
         this.Dataset = [];
         this.attachShadow({ mode: 'open' });
-        this.shadowRoot.append(this.WStyle)
+        this.shadowRoot?.append(this.WStyle);
         this.DrawCaseDashboardComponent();
+        this.OptionContainer = WRender.Create({ className: "options-container" });
+        this.shadowRoot?.append(this.OptionContainer, StylesControlsV2.cloneNode(true))
     }
     connectedCallback() { }
     DrawCaseDashboardComponent = async () => {
         this.dashBoardView();
+    }
+
+    SetOptions = (/** @type {Array} */ datasetMap,
+        /** @type {Array} */ MapDataset,
+        /** @type {Array} */ MapDatasetAperturaCasos) => {
+
+        const title1 = "Casos por dependencia";
+        const title2 = "Estado de los Casos";
+        const title3 = "Cumplimiento del SLA por mes";
+        const title4 = "Frecuencia de solicitudes por mes";
+        const title5 = "Estado de los Casos por dependencia";
+        this.OptionContainer.innerHTML = "";
+        this.OptionContainer.append(WRender.Create({
+            tagName: 'input', type: 'button',
+            className: 'Btn-Mini', value: title1, onclick: () =>
+                this.drawReport(WArrayF.GroupBy(datasetMap, "Dependencia"), title1)
+        }))
+        this.OptionContainer.append(WRender.Create({
+            tagName: 'input', type: 'button',
+            className: 'Btn-Mini', value: title2, onclick: () =>
+                this.drawReport(WArrayF.GroupBy(this.Dataset, "Estado"), title2)
+        }))
+        this.OptionContainer.append(WRender.Create({
+            tagName: 'input', type: 'button',
+            className: 'Btn-Mini', value: title3, onclick: () =>
+                this.drawReport(MapDataset, title3)
+        }))
+        console.log(MapDatasetAperturaCasos);
+        this.OptionContainer.append(WRender.Create({
+            tagName: 'input', type: 'button',
+            className: 'Btn-Mini', value: title4, onclick: () =>
+                this.drawReport(MapDatasetAperturaCasos, title4)
+        }))
+        this.OptionContainer.append(WRender.Create({
+            tagName: 'input', type: 'button',
+            className: 'Btn-Mini', value: title5, onclick: () =>
+                this.drawReport(datasetMap, title5)
+        }))
+    }
+    drawReport = (/** @type {any[]} */ MapData, /**@type {String} */ title) => {
+        this.shadowRoot?.append(new WModalForm({ title: title, ObjectModal: new WReportComponent({ Dataset: MapData }) }))
     }
     dashBoardView = async () => {
         this.Modelcase = new CaseTable_Case();
@@ -45,9 +95,9 @@ class CaseDashboardComponent extends HTMLElement {
             },
             Display: true,
             AutoFilter: false,
-            FilterFunction: async (FilterData) => {
-                this.Dataset = await new CaseTable_Case({ FilterData: FilterData}).GetOwCase();
-                this.TareasDataset = await new CaseTable_Tareas({ FilterData: FilterData}).Get();
+            FilterFunction: async (/** @type {any} */ FilterData) => {
+                this.Dataset = await new CaseTable_Case({ FilterData: FilterData }).GetOwCase();
+                this.TareasDataset = await new CaseTable_Tareas({ FilterData: FilterData }).Get();
                 const { columChart, radialChartDependencias, columChartAperturaCasos, columChartMonth, radialChart } = this.buildCharts();
                 const tableTareas = await this.taskData();
                 dasboardContainer.innerHTML = "";
@@ -59,7 +109,7 @@ class CaseDashboardComponent extends HTMLElement {
                     radialChart);
             }
         });
-        this.shadowRoot.append(this.FilterOptions, dasboardContainer);
+        this.shadowRoot?.append(this.FilterOptions, dasboardContainer);
     }
     WStyle = css`
         .dashBoardView{
@@ -74,16 +124,16 @@ class CaseDashboardComponent extends HTMLElement {
 
     async taskData() {
         const TareasMap = [];
-        this.TareasDataset.forEach(/**@type {CaseTable_Tareas} */ /**@type {CaseTable_Tareas} */ t => {
-            t.CaseTable_Participantes.forEach(/**@type {CaseTable_Participantes} */ /**@type {CaseTable_Participantes} */ p => {
+        this.TareasDataset?.forEach(t => {
+            t.CaseTable_Participantes.forEach((p) => {
                 if (TareasMap.find(f => f.Id_Perfil == p.Id_Perfil) == null) {
-                    const tp = this.TareasDataset.filter(tf => tf.CaseTable_Participantes.filter(tpf => tpf.Id_Perfil == p.Id_Perfil).length > 0);
+                    const tp = this.TareasDataset?.filter(tf => tf.CaseTable_Participantes.filter((tpf) => tpf.Id_Perfil == p.Id_Perfil).length > 0);
                     TareasMap.push({
                         Id_Perfil: p.Id_Perfil,
                         Tecnico: (p.Tbl_Profile?.Nombres ?? "") + " " + (p.Tbl_Profile?.Apellidos ?? ""),
-                        Proceso: tp.filter(tf => tf.Estado == "Proceso").length,
-                        Finalizado: tp.filter(tf => tf.Estado == "Finalizado").length,
-                        Espera: tp.filter(tf => tf.Estado == "Espera").length
+                        Proceso: tp?.filter(tf => tf.Estado == "Proceso").length,
+                        Finalizado: tp?.filter(tf => tf.Estado == "Finalizado").length,
+                        Espera: tp?.filter(tf => tf.Estado == "Espera").length
                     });
                 }
             });
@@ -123,9 +173,11 @@ class CaseDashboardComponent extends HTMLElement {
             Mes: c.Fecha_Inicio.getMonthFormatEs(),
             val: 1
         }));
-
+        console.log(MapDatasetAperturaCasos);
+        this.SetOptions(datasetMap, MapDataset, MapDatasetAperturaCasos)
 
         const columChart = new ColumChart({
+            // @ts-ignore
             Title: "Estado de los Casos por dependencia",
             Dataset: datasetMap, percentCalc: true,
             EvalValue: "val",
@@ -134,14 +186,15 @@ class CaseDashboardComponent extends HTMLElement {
         });
         columChart.id = "ColumnCasosPorDependencia";
         const radialChartDependencias = new RadialChart({
+            // @ts-ignore
             Title: "Casos por dependencia",
             Dataset: WArrayF.GroupBy(datasetMap, "Dependencia"), EvalValue: "count", AttNameEval: "Dependencia"
         });
         const radialChart = new RadialChart({
+            // @ts-ignore
             Title: "Estado de los Casos",
             Dataset: WArrayF.GroupBy(this.Dataset, "Estado"), EvalValue: "count", AttNameEval: "Estado"
         });
-        console.log(MapDataset);
         // const MapDatasetAll = this.Dataset.map(c => ({
         //     Estado: c.Estado,
         //     Caso: "Caso",
@@ -149,6 +202,7 @@ class CaseDashboardComponent extends HTMLElement {
         //     val: 1
         // }));
         const columChartMonth = new ColumChart({
+            // @ts-ignore
             Title: "Cumplimiento del SLA por mes",
             //TypeChart: "Line",
             Dataset: MapDataset,
@@ -158,6 +212,7 @@ class CaseDashboardComponent extends HTMLElement {
         });
         const columChartAperturaCasos = new ColumChart({
             Title: "Frecuencia de solicitudes por mes",
+            // @ts-ignore
             TypeChart: "Line",
             Dataset: MapDatasetAperturaCasos,
             EvalValue: "val",

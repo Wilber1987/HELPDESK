@@ -48,8 +48,9 @@ namespace CAPA_NEGOCIO.Services
                 return true;
 
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
+                LoggerServices.AddMessageError("Error en chargeAutomaticCase:" + ex.Message, ex);
                 throw;
             }
 

@@ -13,8 +13,12 @@ const OnLoad = async () => {
                 { tagName: "h1", innerText: element.Descripcion },
                 { tagName: "label", innerText: element.Username },
                 {
-                    className: "cont-mini-cards", children: element.Tbl_Servicios?.map(s =>
-                        WRender.Create({ className: "mini-card", children: [{ tagName: "IMG", src: "data:image/png;base64,"  + s.Cat_Tipo_Servicio.Icon }, s.Descripcion_Servicio] }))
+                    className: "cont-mini-cards", children: (element.Tbl_Servicios?.map(s =>
+                        WRender.Create({
+                            className: "mini-card", children:
+                                [{ tagName: "IMG", src: "data:image/png;base64," + s.Cat_Tipo_Servicio.Icon },
+                                s.Descripcion_Servicio]
+                        }))) ?? []
                 }
             ]
         })
@@ -56,10 +60,12 @@ const cssCus = css`
         color: #444;
         margin: 10px 0px;
         display: flex;
-        flex-wrap: wrap;
         height: 21px;
         align-items: center;
         gap:5px;
+    }
+    .mini-card label{
+        display: block;
     }
     .mini-card img{ 
         height: 20px;

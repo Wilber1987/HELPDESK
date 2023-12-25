@@ -1,19 +1,7 @@
 ﻿using CAPA_DATOS;
-using CAPA_NEGOCIO.MAPEO;
-using CAPA_DATOS.Security;
-using CAPA_NEGOCIO.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using API.Controllers;
-using AE.Net.Mail;
-using System.Text.Json.Serialization;
-using System.Net;
-using System.Collections.Generic;
-using System.Collections;
 using CAPA_DATOS.Services;
+using MimeKit;
 
 namespace CAPA_NEGOCIO.MAPEO
 {
@@ -115,19 +103,19 @@ namespace CAPA_NEGOCIO.MAPEO
     public class CaseTable_Mails : EntityClass
     {
         public CaseTable_Mails() { }
-        public CaseTable_Mails(MailMessage mail)
+        public CaseTable_Mails(MimeMessage mail)
         {
             Subject = mail.Subject;
-            MessageID = mail.MessageID;
+            MessageID = mail.MessageId;
             Sender = mail.Sender?.Address;
-            FromAdress = mail.From?.Address;
-            ReplyTo = mail.ReplyTo?.Select(r => r.Address).ToList();
-            Bcc = mail.Bcc?.Select(r => r.Address).ToList();
-            Cc = mail.Cc?.Select(r => r.Address).ToList();
-            ToAdress = mail.To?.Select(r => r.Address).ToList();
-            Date = mail.Date;
-            Uid = mail.Uid;
-            Body = mail.Body;
+            FromAdress = mail.From.ToString();
+            ReplyTo = mail.ReplyTo?.Select(r => r.ToString()).ToList();
+            Bcc = mail.Bcc?.Select(r => r.ToString()).ToList();
+            Cc = mail.Cc?.Select(r => r.ToString()).ToList();
+            ToAdress = mail.To?.Select(r => r.ToString()).ToList();
+            Date = mail.Date.DateTime;
+            Uid = mail.MessageId;
+            Body = mail.HtmlBody;
             Estado = MailState.RECIBIDO.ToString();
             Flags = Flags?.ToString();
         }
@@ -149,7 +137,7 @@ namespace CAPA_NEGOCIO.MAPEO
         [JsonProp]
         public List<String>? ToAdress { get; set; }
         [JsonProp]
-        public List<ModelFiles> Attach_Files { get; set; }
+        public List<ModelFiles>? Attach_Files { get; set; }
         //public int? Size { get; set; }
         public String? Flags { get; set; }
         //public string[] RawFlags { get; set; }
@@ -171,53 +159,7 @@ namespace CAPA_NEGOCIO.MAPEO
         [OneToMany(TableName = "CaseTable_Dependencias_Usuarios", KeyColumn = "Id_Cargo", ForeignKeyColumn = "Id_Cargo")]
         public List<CaseTable_Dependencias_Usuarios>? CaseTable_Dependencias_Usuarios { get; set; }
     }
-    public class Cat_Dependencias : EntityClass
-    {
-        [PrimaryKey(Identity = true)]
-        public int? Id_Dependencia { get; set; }
-        public string? Descripcion { get; set; }
-        public string? Username { get; set; }
-        public string? Password { get; set; }
-        public string? Host { get; set; }
-        public int? Id_Dependencia_Padre { get; set; }
-        public int? Id_Institucion { get; set; }
-        [ManyToOne(TableName = "Cat_Dependencias", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia_Padre")]
-        public Cat_Dependencias? Cat_Dependencia { get; set; }
-        [OneToMany(TableName = "Cat_Dependencias", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia_Padre")]
-        public List<Cat_Dependencias>? Cat_Dependencias_Hijas { get; set; }
-        //[OneToMany(TableName = "CaseTable_Case", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
-        // public List<CaseTable_Case>? CaseTable_Case { get; set; }
-        [OneToMany(TableName = "CaseTable_Agenda", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
-        public List<CaseTable_Agenda>? CaseTable_Agenda { get; set; }
-        [OneToMany(TableName = "CaseTable_Dependencias_Usuarios", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
-        public List<CaseTable_Dependencias_Usuarios>? CaseTable_Dependencias_Usuarios { get; set; }
-        public List<Cat_Dependencias> GetOwDependencies(string identity)
-        {
-            if (AuthNetCore.User(identity).isAdmin)
-            {
-                return new Cat_Dependencias().Get<Cat_Dependencias>();
-            }
-            CaseTable_Dependencias_Usuarios Inst = new CaseTable_Dependencias_Usuarios()
-            {
-                Id_Perfil = AuthNetCore.User(identity).UserId
-            };
-            return new Cat_Dependencias().Get_WhereIN<Cat_Dependencias>(
-                "Id_Dependencia", Inst.Get<CaseTable_Dependencias_Usuarios>().Select(p => p.Id_Dependencia.ToString()).ToArray()
-            );
-        }
-        [OneToMany(TableName = "Tbl_Servicios", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
-        public List<Tbl_Servicios>? Tbl_Servicios { get; set; }
-
-        internal List<Cat_Dependencias> GetDependencias<T>()
-        {
-            return new Cat_Dependencias().Get<Cat_Dependencias>().Select(m =>
-            {
-                m.Password = "PROTECTED";
-                return m;
-            }).ToList();
-        }
-    }
-    public class Cat_Tipo_Participaciones : EntityClass
+     public class Cat_Tipo_Participaciones : EntityClass
     {
         [PrimaryKey(Identity = true)]
         public int? Id_Tipo_Participacion { get; set; }

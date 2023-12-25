@@ -23,3 +23,17 @@ ALTER TABLE HELPDESK.helpdesk.CaseTable_Mails ADD Attach_Files varchar(MAX) NULL
 
 
 ALTER TABLE HELPDESK.helpdesk.CaseTable_Case ADD Case_Priority varchar(50) NULL;
+
+
+
+--  HOST
+ALTER TABLE HELPDESK.helpdesk.Cat_Dependencias ADD
+ AutenticationType  varchar(MAX) NULL;
+ALTER TABLE HELPDESK.helpdesk.Cat_Dependencias ADD
+ TENAT  varchar(MAX) NULL;
+ALTER TABLE HELPDESK.helpdesk.Cat_Dependencias ADD
+ CLIENT  varchar(MAX) NULL;
+ALTER TABLE HELPDESK.helpdesk.Cat_Dependencias ADD
+ OBJECTID  varchar(MAX) NULL;
+ALTER TABLE HELPDESK.helpdesk.Cat_Dependencias ADD
+ CLIENT_SECRET  varchar(MAX) NULL;

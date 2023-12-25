@@ -1,8 +1,8 @@
 using CAPA_DATOS;
 using CAPA_DATOS.Security;
 using API.Controllers;
-using AE.Net.Mail;
 using CAPA_DATOS.Services;
+using MimeKit;
 
 namespace CAPA_NEGOCIO.MAPEO
 {
@@ -38,7 +38,7 @@ namespace CAPA_NEGOCIO.MAPEO
         //[OneToMany(TableName = "CaseTable_Comments", KeyColumn = "Id_Case", ForeignKeyColumn = "Id_Case")]
         public List<CaseTable_Comments>? CaseTable_Comments { get; set; }
 
-        public bool CreateAutomaticCase(MailMessage mail, Cat_Dependencias dependencia)
+        public bool CreateAutomaticCase(MimeMessage mail, Cat_Dependencias dependencia)
         {
             try
             {
@@ -56,7 +56,7 @@ namespace CAPA_NEGOCIO.MAPEO
                     {
                         if (mail?.Attachments != null)
                         {
-                            foreach (Attachment attach in mail.Attachments)
+                            foreach (MimeEntity attach in mail.Attachments)
                             {
                                 ModelFiles Response = FileService.ReceiveFiles("Upload\\", attach);
                                 Attach.Add(Response);
@@ -64,48 +64,29 @@ namespace CAPA_NEGOCIO.MAPEO
                         }
                         //new CaseTable_Mails(mail) { Id_Case = findCase.Id_Case }.Save();
                         new CaseTable_Mails(mail) { Id_Case = findCase.Id_Case, Attach_Files = Attach }.Save();
-                        new CaseTable_Comments()
-                        {
-                            Id_Case = findCase.Id_Case,
-                            Body = mail.Body,
-                            NickName = $"{mail.From.DisplayName} ({mail.From.Address})",
-                            Fecha = mail.Date,
-                            Estado = CommetsState.Pendiente.ToString(),
-                            Mail = mail.From.Address,
-                            Attach_Files = Attach
-
-                        }.Save();
+                        saveMessage(mail, Attach, findCase);
                     }
                 }
                 else if (mail.Subject.ToUpper().Contains("TAREA ASIGNADA:")) { }
                 else
                 {
                     Titulo = mail.Subject.ToUpper();
-                    Descripcion = mail.Body;
+                    Descripcion = mail.HtmlBody;
                     Estado = Case_Estate.Solicitado.ToString();
-                    Fecha_Inicio = mail.Date;
+                    Fecha_Inicio = mail.Date.DateTime;
                     Id_Dependencia = dependencia.Id_Dependencia;
-                    Mail = mail.From.Address;
+                    Mail = mail.From.ToString();
                     Save();
                     //new CaseTable_Mails(mail) { Id_Case = this.Id_Case }.Save();
                     if (mail?.Attachments != null)
                     {
-                        foreach (Attachment attach in mail.Attachments)
+                        foreach (MimeEntity attach in mail.Attachments)
                         {
                             ModelFiles Response = FileService.ReceiveFiles("Upload\\", attach);
                             Attach.Add(Response);
                         }
                         new CaseTable_Mails(mail) { Id_Case = this.Id_Case, Attach_Files = Attach }.Save();
-                        new CaseTable_Comments()
-                        {
-                            Id_Case = this.Id_Case,
-                            Body = mail.Body,
-                            NickName = $"{mail.From.DisplayName} ({mail.From.Address})",
-                            Fecha = mail.Date,
-                            Estado = CommetsState.Pendiente.ToString(),
-                            Mail = mail.From.Address,
-                            Attach_Files = Attach
-                        }.Save();
+                        saveMessage(mail, Attach, this);
                     }
                     else
                     {
@@ -123,6 +104,22 @@ namespace CAPA_NEGOCIO.MAPEO
             }
 
         }
+
+        private static void saveMessage(MimeMessage mail, List<ModelFiles> Attach, CaseTable_Case? findCase)
+        {
+            new CaseTable_Comments()
+            {
+                Id_Case = findCase?.Id_Case,
+                Body = mail.HtmlBody,
+                NickName = $"{mail.From}",
+                Fecha = mail.Date.DateTime,
+                Estado = CommetsState.Pendiente.ToString(),
+                Mail = mail.From.ToString(),
+                Attach_Files = Attach
+
+            }.Save();
+        }
+
         public bool SaveActividades(string identity)
         {
             this.Id_Perfil = AuthNetCore.User(identity).UserId;
@@ -322,7 +319,6 @@ namespace CAPA_NEGOCIO.MAPEO
             }
             throw new Exception("no tienes permisos para vincular casos");
         }
-
         internal List<CaseTable_Case> GetVinculateCase(string? identity)
         {
             if (Id_Vinculate != null)
@@ -332,10 +328,8 @@ namespace CAPA_NEGOCIO.MAPEO
             else
             {
                 return new List<CaseTable_Case>();
-
             }
         }
-
         internal List<CaseTable_Case> GetSolicitudesPendientesAprobarAdmin(string? identity)
         {
             if (AuthNetCore.HavePermission(PermissionsEnum.ADMIN_ACCESS.ToString(), identity))

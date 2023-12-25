@@ -11,7 +11,7 @@ namespace API.Controllers
 	{
 		[HttpGet]
 		public object getMailData(){
-			return new IMAPServices().GetData2();
+			return null;
 		}
 		[HttpGet]
 		public object getMailData2(){

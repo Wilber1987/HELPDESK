@@ -12,12 +12,13 @@ namespace CAPA_NEGOCIO.Services
     public class IMAPCaseServices
     {
 
-        public async void chargeAutomaticCase()
+        public async Task<bool> chargeAutomaticCase()
         {
-            try
+
+            List<Cat_Dependencias> dependencias = new Cat_Dependencias().Get<Cat_Dependencias>();
+            foreach (var dependencia in dependencias)
             {
-                List<Cat_Dependencias> dependencias = new Cat_Dependencias().Get<Cat_Dependencias>();
-                foreach (var dependencia in dependencias)
+                try
                 {
                     if (dependencia.Host != null && dependencia.Username != null && dependencia.Password != null)
                     {
@@ -35,14 +36,13 @@ namespace CAPA_NEGOCIO.Services
                         messages.ForEach(m => new CaseTable_Case().CreateAutomaticCase(m, dependencia));
                     }
                 }
+                catch (System.Exception ex)
+                {                    
+                    LoggerServices.AddMessageError($"error obteniendo mensjes de la dependencia: {dependencia.Descripcion}", ex);
+                }
 
             }
-            catch (System.Exception ex)
-            {
-                LoggerServices.AddMessageError("Error en chargeAutomaticCase:" + ex.Message, ex);
-                throw;
-            }
-
+            return true;
         }
     }
 }

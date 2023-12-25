@@ -96,11 +96,12 @@ namespace CAPA_NEGOCIO.MAPEO
                 CommitGlobalTransaction();
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 Console.Write("error al guardar");
                 RollBackGlobalTransaction();
-                throw;
+                LoggerServices.AddMessageError($"error al crear el caso de: {mail.From}, {mail.Subject}", ex);
+                return false;
             }
 
         }

@@ -21,6 +21,8 @@ public class Cat_Dependencias : EntityClass
     public string? CLIENT { get; set; }
     public string? OBJECTID { get; set; }
     public string? CLIENT_SECRET { get; set; }
+    public string? SMTPHOST { get; set; }
+
 
 
     [ManyToOne(TableName = "Cat_Dependencias", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia_Padre")]
@@ -49,7 +51,7 @@ public class Cat_Dependencias : EntityClass
     }
     [OneToMany(TableName = "Tbl_Servicios", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
     public List<Tbl_Servicios>? Tbl_Servicios { get; set; }
-
+    
     internal List<Cat_Dependencias> GetDependencias<T>()
     {
         return new Cat_Dependencias().Get<Cat_Dependencias>().Select(m =>

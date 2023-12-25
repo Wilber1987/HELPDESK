@@ -21,30 +21,38 @@ namespace CAPA_NEGOCIO.Services
                 }.Get<CaseTable_Mails>();
 
                 foreach (var item in caseMail)
-                {                     
+                {
                     var Tcase = new CaseTable_Case() { Id_Case = item.Id_Case }.Find<CaseTable_Case>();
-                    SMTPMailServices.SendMail(item.FromAdress,
+                    var send = await SMTPMailServices.SendMail(item.FromAdress,
                     item.ToAdress,
                     item.Subject,
                     item.Body,
                     item.Attach_Files,
                     new MailConfig()
                     {
-                        HOST = Tcase?.Cat_Dependencias?.Host,
+                        HOST = Tcase?.Cat_Dependencias?.SMTPHOST,
                         PASSWORD = Tcase?.Cat_Dependencias?.Password,
-                        USERNAME = Tcase?.Cat_Dependencias?.Username
+                        USERNAME = Tcase?.Cat_Dependencias?.Username,
+                        CLIENT = Tcase?.Cat_Dependencias?.CLIENT,
+                        CLIENT_SECRET = Tcase?.Cat_Dependencias?.CLIENT_SECRET,
+                        AutenticationType = Tcase?.Cat_Dependencias?.AutenticationType,
+                        TENAT = Tcase?.Cat_Dependencias?.TENAT,
+                        OBJECTID = Tcase?.Cat_Dependencias?.OBJECTID
                     });
-                    item.Estado = MailState.ENVIADO.ToString();
-                    item.Update();
-                    await Task.Delay(5000);
+                    if (send)
+                    {
+                        item.Estado = MailState.ENVIADO.ToString();
+                        item.Update();
+                    }
 
+                    await Task.Delay(5000);
                 }
                 return true;
 
             }
             catch (System.Exception)
             {
-                throw;
+                return false;
             }
 
         }

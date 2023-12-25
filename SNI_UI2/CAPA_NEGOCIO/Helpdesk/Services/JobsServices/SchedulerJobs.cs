@@ -42,24 +42,24 @@ namespace BackgroundJob.Cron.Jobs
             _log = log;
         }
 
-        protected override Task DoWork(CancellationToken stoppingToken)
+        protected override async Task<Task> DoWork(CancellationToken stoppingToken)
         {
             _log.LogInformation(":::::::::::Running... CreateAutomaticsCaseSchedulerJob at {0}", DateTime.UtcNow);
             //CARGA AUTOMATICA DE CASOS
             try
             {
-                new IMAPCaseServices().chargeAutomaticCase();
+                await new IMAPCaseServices().chargeAutomaticCase();
+                await new SMTPCaseServices().sendCaseMailNotificationsAsync();
             }
             catch (System.Exception ex)
             {
                 _log.LogInformation(":::::::::::ERROR... at {0}", ex);
             }
-
             return Task.CompletedTask;
         }
     }
 
-     public class SendMailNotificationsSchedulerJob : CronBackgroundJob
+    public class SendMailNotificationsSchedulerJob : CronBackgroundJob
     {
         private readonly ILogger<SendMailNotificationsSchedulerJob> _log;
 
@@ -69,13 +69,13 @@ namespace BackgroundJob.Cron.Jobs
             _log = log;
         }
 
-        protected override Task DoWork(CancellationToken stoppingToken)
+        protected override async Task<Task> DoWork(CancellationToken stoppingToken)
         {
             _log.LogInformation(":::::::::::Running...  SendMailNotificationsSchedulerJob at {0}", DateTime.UtcNow);
             //CARGA AUTOMATICA DE CASOS
             try
             {
-                new SMTPCaseServices().sendCaseMailNotificationsAsync();
+                await new SMTPCaseServices().sendCaseMailNotificationsAsync();
             }
             catch (Exception ex)
             {

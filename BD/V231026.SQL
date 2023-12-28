@@ -46,3 +46,6 @@ ALTER TABLE HELPDESK.helpdesk.CaseTable_Case
 ALTER COLUMN Mail nvarchar(MAX) COLLATE Modern_Spanish_CI_AS NULL;
 
 ALTER TABLE HELPDESK.helpdesk.Cat_Dependencias ADD SMTPHOST varchar(500) NULL;
+
+EXEC HELPDESK.sys.sp_rename N'HELPDESK.dbo.LogError', N'Log', 'OBJECT';
+

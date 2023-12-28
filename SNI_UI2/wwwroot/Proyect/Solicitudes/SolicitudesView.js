@@ -10,6 +10,7 @@ import { WCommentsComponent } from '../../WDevCore/WComponents/WCommentsComponen
 import { WSecurity } from '../../WDevCore/Security/WSecurity.js';
 import { priorityStyles } from '../../AppComponents/Styles.js';
 import { caseGeneralData } from '../ProyectViews/Proyectos/CaseDetailComponent.js';
+import { activityStyle } from '../style.js';
 
 const OnLoad = async () => {
     const Solicitudes = await new CaseTable_Case().GetOwSolicitudesPendientesAprobar();
@@ -72,7 +73,7 @@ class MainSolicitudesView extends HTMLElement {
         return WRender.Create({
             className: "actividad", object: actividad, children: [
                 { tagName: 'h4', innerText: `#${actividad.Id_Case} - ${actividad.Titulo} (${actividad.Tbl_Servicios?.Descripcion_Servicio ?? ""})` },
-               caseGeneralData(actividad), {
+                caseGeneralData(actividad), {
                     className: "options", children: [
                         {
                             tagName: 'button', className: 'Btn-Mini', innerText: "Detalle",
@@ -116,38 +117,7 @@ class MainSolicitudesView extends HTMLElement {
     }
 
 
-    WStyle = css`
-        .dashBoardView{
-            display: grid;
-            grid-template-columns: auto auto ;  
-            grid-gap: 20px          
-        }
-        .OptionContainer {
-            margin: 0 0 20px 0;
-        }
-        .dashBoardView w-colum-chart { 
-            grid-column: span 2;
-        }
-        .actividad {
-            border: 1px solid #d9d6d6;
-            padding: 15px;
-            margin-bottom: 10px;           
-            color: #0a2542;
-            border-radius: 15px;
-        }
-        .actividad h4 {
-            margin: 5px 0px;
-         }
-        .actividad .propiedades {
-            font-size: 14px;
-            display: flex;
-            gap: 20px;
-        }
-        .actividad .options {
-            display: flex;
-            justify-content: flex-end;            
-        }
-    `
+    WStyle = activityStyle.cloneNode(true);
 
     mapCaseToPaginatorElement(Dataset) {
         return Dataset.map(actividad => {

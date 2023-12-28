@@ -27,7 +27,7 @@ body {
 #AdminTemplate {
     display: grid;
     grid-template-rows: 50px calc(100vh - 50px);
-    grid-template-columns: 280px calc(100% - 280px);
+    grid-template-columns: 200px calc(100% - 200px);
     padding: 0px;
     margin: 0px;
     font-family: "Poppins", sans-serif;
@@ -76,7 +76,7 @@ body {
     top: 0px;
     outline: 0px;
     left: 0px;
-    width: 280px;
+    width: 200px;
     position: relative;
     height: 100%;
     overflow: hidden;
@@ -97,17 +97,15 @@ body {
 }
 
 #Aside a {
-    padding: 10px 10px 10px 30px;
+    padding: 8px 8px 8px 20px;
     display: block;
     color: var(--font-fourth-color);
     cursor: pointer;
     text-decoration: none;
     font-weight: 600;
     text-transform: uppercase;
-
     margin: 0px;
-    font-weight: 500;
-    font-size: 11px;
+    font-size: 9px;
     line-height: 1.43;
     display: block;
     white-space: nowrap;
@@ -159,7 +157,7 @@ body {
 }
 
 .logo-container {
-    height: 150px;
+    height: 120px;
     display: flex;
     justify-content: center;
     align-items: center;

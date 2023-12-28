@@ -72,7 +72,7 @@ class LogError extends EntityClass {
         }
     }
     message = { type: 'textarea'};
-    body = { type: 'model', ModelObject: new ErrorEx()};
+    body = { type: 'textarea', ModelObject: new ErrorEx()};
     Fecha= { type: 'Date'};
 }
 class ErrorEx{

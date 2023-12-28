@@ -12,6 +12,7 @@ import { WTableComponent } from "../../../WDevCore/WComponents/WTableComponent.j
 import { ComponentsManager, WRender } from '../../../WDevCore/WModules/WComponentsTools.js';
 import { ControlBuilder } from '../../../WDevCore/WModules/WControlBuilder.js';
 import { css } from '../../../WDevCore/WModules/WStyledRender.js';
+import { activityStyle } from '../../style.js';
 
 class CaseManagerComponent extends HTMLElement {
     /**
@@ -59,13 +60,15 @@ class CaseManagerComponent extends HTMLElement {
         this.shadowRoot.append(priorityStyles.cloneNode(true));
         return WRender.Create({
             className: "actividad", object: actividad, children: [
-                { tagName: 'h4', innerText: `#${actividad.Id_Case} - ${actividad.Titulo} (${actividad.Tbl_Servicios?.Descripcion_Servicio ?? ""})` },
-                {
-                    className: "options", children: [
-                        { tagName: 'button', className: 'Btn-Mini', innerText: "Detalle", onclick: async () => await this.actividadDetail(actividad) },
-                        { tagName: 'button', className: 'Btn-Mini', innerText: 'Vincular Caso', onclick: () => this.Vincular(actividad) }
-                    ]
-                },caseGeneralData(actividad),
+                { tagName: 'h4', innerText: `#${actividad.Id_Case} - ${actividad.Titulo} (${actividad.Tbl_Servicios?.Descripcion_Servicio ?? ""})` , children: [
+                    {
+                        className: "options", children: [
+                            { tagName: 'button', className: 'Btn-Mini', innerText: "Detalle", onclick: async () => await this.actividadDetail(actividad) },
+                            { tagName: 'button', className: 'Btn-Mini', innerText: 'Vincular Caso', onclick: () => this.Vincular(actividad) }
+                        ]
+                    }
+                ] },
+                ,caseGeneralData(actividad),
                 { tagName: 'h4', innerText: "Progreso" },
                 ControlBuilder.BuildProgressBar(actividad.Progreso,
                     actividad.CaseTable_Tareas?.filter(tarea => !tarea.Estado?.includes("Inactivo"))?.length)
@@ -120,53 +123,7 @@ class CaseManagerComponent extends HTMLElement {
 
 
 
-    WStyle = css`
-        .dashBoardView{
-            display: grid;
-            grid-template-columns: auto auto ;  
-            grid-gap: 20px          
-        }
-        .OptionContainer {
-            margin: 0 0 20px 0;
-        }
-        .actividadDetailView {
-            display: grid;
-            grid-template-columns: calc(100% - 520px) 500px;
-            grid-template-rows: 150px 50px auto;
-            gap: 0px 20px;
-        }
-        w-coment-component {
-            grid-row: span 3;
-        }
-        .dashBoardView w-colum-chart { 
-            grid-column: span 2;
-        }
-        .actividad {
-            border: 1px solid #d9d6d6;
-            padding: 15px;
-            margin-bottom: 10px;           
-            color: #0a2542;
-            border-radius: 15px;
-            display: grid;
-            grid-template-columns: calc(100% - 180px) 100px;
-        }
-        .actividad h4 {
-            margin: 5px 0px;
-            font-size: 13px;
-         }
-        .actividad .propiedades {
-            font-size: 12px;
-            display: flex;
-            gap: 10px;
-        }
-        .actividad .options {
-            display: flex;
-            flex-direction: column;
-            gap: 10;
-            grid-row: span 4; 
-            justify-content: space-around           
-        }
-    `
+    WStyle = activityStyle.cloneNode(true)
 }
 customElements.define('w-case-manager', CaseManagerComponent);
 export { CaseManagerComponent };

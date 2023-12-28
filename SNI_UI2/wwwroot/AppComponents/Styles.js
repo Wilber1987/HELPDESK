@@ -15,10 +15,10 @@ const priorityStyles = css`
         content: " ";
         display: block;
         border-radius: 50%;
-        min-height: 25px;
-        height: 20px;
-        min-width: 25px;
-        width: 25px;
+        min-height: 15px;
+        height: 15px;
+        min-width: 15px;
+        width: 15px;
         background-color: #fff;
         position: absolute;
         left: -30px;

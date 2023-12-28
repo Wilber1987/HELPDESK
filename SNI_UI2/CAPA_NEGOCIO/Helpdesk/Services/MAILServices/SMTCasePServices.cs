@@ -13,15 +13,19 @@ namespace CAPA_NEGOCIO.Services
     {
         public async Task<bool> sendCaseMailNotificationsAsync()
         {
-            try
-            {
-                List<CaseTable_Mails> caseMail = new CaseTable_Mails()
-                {
-                    Estado = MailState.PENDIENTE.ToString()
-                }.Get<CaseTable_Mails>();
 
-                foreach (var item in caseMail)
+
+            List<CaseTable_Mails> caseMail = new CaseTable_Mails()
+            {
+                Estado = MailState.PENDIENTE.ToString()
+            }.Get<CaseTable_Mails>();
+
+            foreach (var item in caseMail)
+            {
+                try
                 {
+                    await Task.Delay(5000);
+                    item.BeginGlobalTransaction();
                     var Tcase = new CaseTable_Case() { Id_Case = item.Id_Case }.Find<CaseTable_Case>();
                     var send = await SMTPMailServices.SendMail(item.FromAdress,
                     item.ToAdress,
@@ -44,17 +48,17 @@ namespace CAPA_NEGOCIO.Services
                         item.Estado = MailState.ENVIADO.ToString();
                         item.Update();
                     }
-
-                    await Task.Delay(5000);
+                    item.CommitGlobalTransaction();                   
                 }
-                return true;
+                catch (System.Exception ex)
+                {                    
+                    item.RollBackGlobalTransaction();
+                    LoggerServices.AddMessageError($"error al enviar el correo {item.Uid}", ex);
+                }
 
             }
-            catch (System.Exception)
-            {
-                return false;
-            }
 
+            return true;
         }
     }
 }

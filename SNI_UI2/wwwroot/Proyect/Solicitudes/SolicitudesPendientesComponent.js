@@ -11,6 +11,7 @@ import { ComponentsManager, WRender } from '../../WDevCore/WModules/WComponentsT
 import { css } from '../../WDevCore/WModules/WStyledRender.js';
 import { caseGeneralData } from '../ProyectViews/Proyectos/CaseDetailComponent.js';
 import { simpleCaseForm } from '../ProyectViews/Proyectos/CaseManagerComponent.js';
+import { activityStyle } from '../style.js';
 class SolicitudesPendientesComponent extends HTMLElement {
     /**
      * 
@@ -114,13 +115,15 @@ class SolicitudesPendientesComponent extends HTMLElement {
         this.shadowRoot.append(priorityStyles.cloneNode(true));
         return WRender.Create({
             className: "actividad", object: actividad, children: [
-                { tagName: 'h4', innerText: `#${actividad.Id_Case} - ${actividad.Titulo} (${actividad.Tbl_Servicios?.Descripcion_Servicio ?? ""})` },
-               {
-                    className: "options", children: [
-                        { tagName: 'button', className: 'Btn-Mini', innerText: "Detalle", onclick: async () => await this.actividadDetail(actividad) },
-                        { tagName: 'button', className: 'Btn-Mini', innerText: 'Vincular Caso', onclick: () => this.Vincular(actividad) }
-                    ]
-                }, caseGeneralData(actividad)
+                { tagName: 'h4', innerText: `#${actividad.Id_Case} - ${actividad.Titulo} (${actividad.Tbl_Servicios?.Descripcion_Servicio ?? ""})`, children : [
+                    {
+                        className: "options", children: [
+                            { tagName: 'button', className: 'Btn-Mini', innerText: "Detalle", onclick: async () => await this.actividadDetail(actividad) },
+                            { tagName: 'button', className: 'Btn-Mini', innerText: 'Vincular Caso', onclick: () => this.Vincular(actividad) }
+                        ]
+                    }
+                ]}
+               , caseGeneralData(actividad)
             ]
         })
     }
@@ -204,38 +207,7 @@ class SolicitudesPendientesComponent extends HTMLElement {
     ]
 
 
-    WStyle = css`
-        .dashBoardView{
-            display: grid;
-            grid-template-columns: auto auto ;  
-            grid-gap: 20px          
-        }
-        .OptionContainer {
-            margin: 0 0 20px 0;
-        }
-        .dashBoardView w-colum-chart { 
-            grid-column: span 2;
-        }
-        .actividad {
-            border: 1px solid #d9d6d6;
-            padding: 15px;
-            margin-bottom: 10px;           
-            color: #0a2542;
-            border-radius: 15px;
-        }
-        .actividad h4 {
-            margin: 5px 0px;
-         }
-        .actividad .propiedades {
-            font-size: 14px;
-            display: flex;
-            gap: 20px;
-        }
-        .actividad .options {
-            display: flex;
-            justify-content: flex-end;            
-        }
-    `
+    WStyle = activityStyle.cloneNode(true)
 
     mapCaseToPaginatorElement(Dataset) {
         return Dataset.map(actividad => {

@@ -193,6 +193,7 @@ class TaskManagers extends HTMLElement {
             padding: 10px;
             gap: 10px;
             width: fit-content;
+            height: 500px;
             max-width: calc(100% - 50px);
         } 
         .panel-options {
@@ -205,40 +206,40 @@ class TaskManagers extends HTMLElement {
             border-radius: 0px 10px 10px 0px;
             background-color: #eee;        
             border: 1px solid #d6d3d3;
-            height: 540px;
+            height: 500px;
             display: grid;
-            grid-template-columns: 40px fit-content(340px);
+            grid-template-columns: 30px fit-content(340px);
             
         }
         .BtnDinamictT {
             font-weight: bold;
             border: none;
-            padding: 5px;
+            padding: 0px;
             margin: 5px;
             outline: none;
             text-align: center;
             display: inline-block;
-            font-size: 12px;
+            font-size: 10px;
             cursor: pointer;
             background-color: #4894aa;
             color: #fff;
             border-radius: 0.2cm;
             width: 15px;
             height: 15px;
-            background-color:#4894aa;
+            background-color: #4894aa;
             font-family: monospace;
         }
         .panel {          
-            padding: 15px;  
+            padding: 5px;  
             overflow-y: auto;    
             height: calc(100% - 40px);
             transition: all 0.4s;   
             width: 310px;           
         }
         .panel-inact {          
-            padding: 15px;  
+            padding: 5px;  
             overflow: hidden;    
-            width: calc(100px); 
+            width: calc(200pxpx); 
             font-size: 14px;
             transition: all 0.4s; 
         }

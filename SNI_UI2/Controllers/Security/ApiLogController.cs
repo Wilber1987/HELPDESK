@@ -9,10 +9,10 @@ namespace API.Controllers
     public class ApiLogController : ControllerBase
     {
         [HttpPost]
-         [AuthController]
-        public object getLogError(LogError Inst)
+        [AuthController]
+        public object getLogError(Log Inst)
         {           
-            return Inst.Get<LogError>();
+            return Inst.Get<Log>();
         }
 
     }

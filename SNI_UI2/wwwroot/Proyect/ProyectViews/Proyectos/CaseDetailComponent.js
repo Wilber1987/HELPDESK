@@ -16,6 +16,7 @@ import { WTableComponent } from "../../../WDevCore/WComponents/WTableComponent.j
 import { ComponentsManager, WRender } from '../../../WDevCore/WModules/WComponentsTools.js';
 import { ControlBuilder } from '../../../WDevCore/WModules/WControlBuilder.js';
 import { css } from '../../../WDevCore/WModules/WStyledRender.js';
+import { activityStyle } from '../../style.js';
 import { TaskManagers } from './TaskManager.js';
 
 class CaseDetailComponent extends HTMLElement {
@@ -28,7 +29,7 @@ class CaseDetailComponent extends HTMLElement {
         super();
         this.Actividad = Actividad;
         this.attachShadow({ mode: 'open' });
-        this.shadowRoot.append(this.WStyle, StylesControlsV2.cloneNode(true), StylesControlsV3.cloneNode(true));
+        this.shadowRoot.append(this.WStyle, this.CustomStyle, StylesControlsV2.cloneNode(true), StylesControlsV3.cloneNode(true));
         this.TabContainer = WRender.createElement({ type: 'div', props: { class: 'TabContainer', id: "TabContainer" } });
         this.TabManager = new ComponentsManager({ MainContainer: this.TabContainer });
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });
@@ -114,55 +115,55 @@ class CaseDetailComponent extends HTMLElement {
         const taskNav = new WAppNavigator({
             //NavStyle: "tab",
             Inicialize: true,
-            Elements: [{
+            Elements: [/*{
                 name: "Bandeja de entrada", action: async (ev) => {
                     tabManager.NavigateFunction("bandeja", commentsContainer)
                 }
-            }, {
-                name: "Vista de panel", action: async (ev) => {
-                    tabManager.NavigateFunction("taskManager", this.taskManager)
-                }
-            },
-            { name: "Vista de progreso", action: async (ev) => { tabManager.NavigateFunction("ganttChart", this.ganttChart) } },
-            //{ name: "Vista de detalles", action: async (ev) => { tabManager.NavigateFunction("taskTable", this.tasktable) } },
-            {
-                name: "Nueva Tarea", action: async (ev) => {
-                    this.shadowRoot.append(new WModalForm({
-                        ModelObject: taskModel,
-                        AutoSave: true,
-                        title: "Nueva Tarea",
-                        ObjectOptions: {
-                            SaveFunction: (task) => {
-                                this.update();
-                            }
-                        }
-                    }))
-                }
-            },
-            //actividad.Id_Vinculate != null ? 
-            {
-                name: "Vinculaciones", action: async (ev) => {
-                    const modelVinculate = new CaseTable_Case({ Id_Vinculate: actividad.Id_Vinculate });
-                    console.log(modelVinculate);
-                    const vinculateTable = new WTableComponent({
-                        Dataset: await modelVinculate.GetVinculateCase(),
-                        ModelObject: new CaseTable_Case(),
-                        AddItemsFromApi: false,
-                        Options: {
-                            UserActions: [{
-                                name: "Desvincular caso", action: (caso) => {
-                                    this.Desvincular(caso, vinculateTable, modelVinculate);
+            },*/ {
+                    name: "Vista de panel", action: async (ev) => {
+                        tabManager.NavigateFunction("taskManager", this.taskManager)
+                    }
+                },
+                { name: "Vista de progreso", action: async (ev) => { tabManager.NavigateFunction("ganttChart", this.ganttChart) } },
+                //{ name: "Vista de detalles", action: async (ev) => { tabManager.NavigateFunction("taskTable", this.tasktable) } },
+                {
+                    name: "Nueva Tarea", action: async (ev) => {
+                        this.shadowRoot.append(new WModalForm({
+                            ModelObject: taskModel,
+                            AutoSave: true,
+                            title: "Nueva Tarea",
+                            ObjectOptions: {
+                                SaveFunction: (task) => {
+                                    this.update();
                                 }
-                            }]
-                        }
-                    })
-                    tabManager.NavigateFunction("vinculaciones", vinculateTable)
+                            }
+                        }))
+                    }
+                },
+                //actividad.Id_Vinculate != null ? 
+                {
+                    name: "Vinculaciones", action: async (ev) => {
+                        const modelVinculate = new CaseTable_Case({ Id_Vinculate: actividad.Id_Vinculate });
+                        console.log(modelVinculate);
+                        const vinculateTable = new WTableComponent({
+                            Dataset: await modelVinculate.GetVinculateCase(),
+                            ModelObject: new CaseTable_Case(),
+                            AddItemsFromApi: false,
+                            Options: {
+                                UserActions: [{
+                                    name: "Desvincular caso", action: (caso) => {
+                                        this.Desvincular(caso, vinculateTable, modelVinculate);
+                                    }
+                                }]
+                            }
+                        })
+                        tabManager.NavigateFunction("vinculaciones", vinculateTable)
+                    }
                 }
-            }
             ]
         });
 
-        this.actividadDetailView.append(taskNav, taskContainer)
+        this.actividadDetailView.append(commentsContainer, taskNav, taskContainer)
         this.TabManager.NavigateFunction("Tab-Actividades-Viewer" + actividad.Id_Case, this.actividadDetailView);
     }
 
@@ -171,15 +172,19 @@ class CaseDetailComponent extends HTMLElement {
         this.shadowRoot.append(priorityStyles.cloneNode(true));
         return WRender.Create({
             className: "actividad", object: actividad, children: [
-                { tagName: 'h4', innerText: `#${actividad.Id_Case} - ${actividad.Titulo} (${actividad.Tbl_Servicios?.Descripcion_Servicio ?? ""})` },
                 {
-                    className: "options", children: [
-                        { tagName: 'button', className: 'Btn-Mini', innerText: "Editar", onclick: async () => this.editCase() },
-                        actividad.Estado == "Finalizado" ?
-                            { tagName: 'button', className: 'Btn-Mini', innerText: 'Reabrir Caso', onclick: () => this.Reabrir(actividad) } :
-                            { tagName: 'button', className: 'Btn-Mini', innerText: 'Cerrar Caso', onclick: () => this.CerrarCaso(actividad) }
+                    tagName: 'h4', innerText: `#${actividad.Id_Case} - ${actividad.Titulo} (${actividad.Tbl_Servicios?.Descripcion_Servicio ?? ""})`, children: [
+                        {
+                            className: "options", children: [
+                                { tagName: 'button', className: 'Btn-Mini', innerText: "Editar", onclick: async () => this.editCase() },
+                                actividad.Estado == "Finalizado" ?
+                                    { tagName: 'button', className: 'Btn-Mini', innerText: 'Reabrir Caso', onclick: () => this.Reabrir(actividad) } :
+                                    { tagName: 'button', className: 'Btn-Mini', innerText: 'Cerrar Caso', onclick: () => this.CerrarCaso(actividad) }
+                            ]
+                        }
                     ]
-                }, caseGeneralData(actividad),
+                },
+                , caseGeneralData(actividad),
                 { tagName: 'h4', innerText: "Progreso" },
                 ControlBuilder.BuildProgressBar(actividad.Progreso,
                     actividad.CaseTable_Tareas?.filter(tarea => !tarea.Estado?.includes("Inactivo"))?.length)
@@ -272,51 +277,16 @@ class CaseDetailComponent extends HTMLElement {
         this.ganttChart.Animate();
     }
 
-    WStyle = css`
-        .dashBoardView{
-            display: grid;
-            grid-template-columns: auto auto ;  
-            grid-gap: 20px          
-        }
-        .OptionContainer {
-            margin: 0 0 20px 0;
-        }
-        .actividadDetailView {
-            display: grid;
-            /* grid-template-columns: calc(100% - 520px) 500px; */
-            grid-template-rows: 150px 50px auto;
-            gap: 0px 20px;
-        }
+    WStyle = activityStyle.cloneNode(true)
+    CustomStyle = css`
         w-coment-component {
             grid-row: span 3;
         }
-        .dashBoardView w-colum-chart { 
-            grid-column: span 2;
-        }
-        .actividad {
-            border: 1px solid #d9d6d6;
-            padding: 15px;
-            margin-bottom: 10px;           
-            color: #0a2542;
-            border-radius: 15px;
+       .actividadDetailView {
             display: grid;
-            grid-template-columns: calc(100% - 180px) 100px;
-        }
-        .actividad h4 {
-            margin: 5px 0px;
-            font-size: 13px;
-         }
-        .actividad .propiedades {
-            font-size: 12px;
-            display: flex;
-            gap: 10px;
-        }
-        .actividad .options {
-            display: flex;
-            flex-direction: column;
-            gap: 10;
-            grid-row: span 4; 
-            justify-content: space-around           
+            grid-template-columns: calc(100% - 620px) 600px;
+            grid-template-rows: auto 50px auto;
+            gap: 0px 20px;
         }
     `
 }
@@ -332,7 +302,7 @@ const caseGeneralData = (actividad) => {
                 innerText: "Prioridad: " + (actividad.Case_Priority != null ? actividad.Case_Priority ?? "indefinida" : "indefinida")
             },
             { tagName: 'label', innerText: "Dependencia: " + (actividad.Cat_Dependencias.Descripcion ?? "") },
-            { tagName: 'label', innerText: "Fecha inicio: " + (actividad.Fecha_Inicio?.toString().toDateFormatEs() ?? "" )},
+            { tagName: 'label', innerText: "Fecha inicio: " + (actividad.Fecha_Inicio?.toString().toDateFormatEs() ?? "") },
             { tagName: 'label', innerText: "Fecha de finalización: " + (actividad.Fecha_Final?.toString().toDateFormatEs() ?? "") },
         ]
     };

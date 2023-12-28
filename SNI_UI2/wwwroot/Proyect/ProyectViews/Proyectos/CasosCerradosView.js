@@ -21,6 +21,7 @@ import { ComponentsManager, WRender } from '../../../WDevCore/WModules/WComponen
 import { ControlBuilder } from '../../../WDevCore/WModules/WControlBuilder.js';
 import { css } from '../../../WDevCore/WModules/WStyledRender.js';
 import { TaskManagers } from './TaskManager.js';
+import { activityStyle } from '../../style.js';
 
 /**
  * @typedef {Object} ComponentConfig
@@ -43,8 +44,8 @@ class CasosCerradosView extends HTMLElement {
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });
         this.ModelObject = new CaseTable_Case({
             CaseTable_Tareas: undefined, Estado: undefined, Cat_Dependencias: {
-                type: "WSELECT",  hiddenFilter: true, ModelObject: () => new Cat_Dependencias()
-            }, Get : async ()=> {
+                type: "WSELECT", hiddenFilter: true, ModelObject: () => new Cat_Dependencias()
+            }, Get: async () => {
                 return await this.ModelObject.GetData("Proyect/GetOwCloseCase");
             }
         });
@@ -70,7 +71,7 @@ class CasosCerradosView extends HTMLElement {
         this.TabManager.NavigateFunction("Tab-Actividades-Manager",
             WRender.Create({ className: "actividadesView", children: [this.FilterOptions, this.paginator] }));
     }
-    generatePaginatorList = (Dataset)=>{
+    generatePaginatorList = (Dataset) => {
         return Dataset.filter(x => x.Estado != "Vinculado").map(actividad => {
             actividad.Dependencia = actividad.Cat_Dependencias?.Descripcion;
             actividad.Progreso = actividad.CaseTable_Tareas?.filter(tarea => tarea.Estado?.includes("Finalizado")).length;
@@ -82,11 +83,15 @@ class CasosCerradosView extends HTMLElement {
         this.shadowRoot.append(priorityStyles.cloneNode(true));
         return WRender.Create({
             className: "actividad", object: actividad, children: [
-                { tagName: 'h4', innerText: `#${actividad.Id_Case} - ${actividad.Titulo} (${actividad.Tbl_Servicios?.Descripcion_Servicio ?? ""})` },
                 {
-                    className: "options", children: [
-                        { tagName: 'button', className: 'Btn-Mini', innerText: "Detalle", onclick: async () => await this.actividadDetail(actividad) },
-                        { tagName: 'button', className: 'Btn-Mini', innerText: 'Reabrir Caso', onclick: () => this.Reabrir(actividad) }
+                    tagName: 'h4', innerText: `#${actividad.Id_Case} - ${actividad.Titulo} (${actividad.Tbl_Servicios?.Descripcion_Servicio ?? ""})`,
+                    children: [
+                        {
+                            className: "options", children: [
+                                { tagName: 'button', className: 'Btn-Mini', innerText: "Detalle", onclick: async () => await this.actividadDetail(actividad) },
+                                { tagName: 'button', className: 'Btn-Mini', innerText: 'Reabrir Caso', onclick: () => this.Reabrir(actividad) }
+                            ]
+                        }
                     ]
                 }, caseGeneralData(actividad),
                 { tagName: 'h4', innerText: "Progreso" },
@@ -138,54 +143,14 @@ class CasosCerradosView extends HTMLElement {
         }, "¿Está seguro que desea reabrir este caso?"))
 
     }
-
-
-    WStyle = css`
-        .dashBoardView{
-            display: grid;
-            grid-template-columns: auto auto ;  
-            grid-gap: 20px          
-        }
-        .OptionContainer {
-            margin: 0 0 20px 0;
-        }
-        .actividadDetailView {
-            display: grid;
-            grid-template-columns: calc(100% - 520px) 500px;
-            grid-template-rows: 150px 50px auto;
-            gap: 0px 20px;
-        }
+    WActivityStyle = activityStyle.cloneNode(true);
+    WStyle = css`        
         w-coment-component {
             grid-row: span 3;
         }
         .dashBoardView w-colum-chart { 
             grid-column: span 2;
-        }
-        .actividad {
-            border: 1px solid #d9d6d6;
-            padding: 15px;
-            margin-bottom: 10px;           
-            color: #0a2542;
-            border-radius: 15px;
-            display: grid;
-            grid-template-columns: calc(100% - 180px) 100px;
-        }
-        .actividad h4 {
-            margin: 5px 0px;
-            font-size: 13px;
-         }
-        .actividad .propiedades {
-            font-size: 12px;
-            display: flex;
-            gap: 10px;
-        }
-        .actividad .options {
-            display: flex;
-            flex-direction: column;
-            gap: 10;
-            grid-row: span 4; 
-            justify-content: space-around           
-        }
+        }        
     `
 }
 customElements.define('w-caos-cerrados-view', CasosCerradosView);

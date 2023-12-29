@@ -20,24 +20,22 @@ namespace CAPA_NEGOCIO.Services
             {
                 try
                 {
-                    if (dependencia.Host != null && dependencia.Username != null && dependencia.Password != null)
+                    var messages = await new IMAPServices().GetMessages(new MailConfig()
                     {
-                        var messages = await new IMAPServices().GetMessages(new MailConfig()
-                        {
-                            HOST = dependencia.Host,
-                            PASSWORD = dependencia.Password,
-                            USERNAME = dependencia.Username,
-                            CLIENT = dependencia.CLIENT,
-                            CLIENT_SECRET = dependencia.CLIENT_SECRET,
-                            AutenticationType = dependencia.AutenticationType,
-                            TENAT = dependencia.TENAT,
-                            OBJECTID = dependencia.OBJECTID
-                        });
-                        messages.ForEach(m => new CaseTable_Case().CreateAutomaticCase(m, dependencia));
-                    }
+                        HOST = dependencia.Host,
+                        PASSWORD = dependencia.Password,
+                        USERNAME = dependencia.Username,
+                        CLIENT = dependencia.CLIENT,
+                        CLIENT_SECRET = dependencia.CLIENT_SECRET,
+                        AutenticationType = Enum.Parse<AutenticationTypeEnum>(dependencia.AutenticationType),
+                        TENAT = dependencia.TENAT,
+                        OBJECTID = dependencia.OBJECTID,
+                        HostService = Enum.Parse<HostServices>(dependencia?.HostService)
+                    });
+                    messages.ForEach(async m => await new CaseTable_Case().CreateAutomaticCase(m, dependencia));
                 }
                 catch (System.Exception ex)
-                {                    
+                {
                     LoggerServices.AddMessageError($"error obteniendo mensjes de la dependencia: {dependencia.Descripcion}", ex);
                 }
 

@@ -313,6 +313,14 @@ class Cat_Dependencias extends EntityClass {
     Username = { type: 'email' };
     Password = { type: 'text', hiddenInTable: true, require: false };
     Host = { type: 'text' };
+    HostService = { type: 'select', Dataset: ["OUTLOOK", 'GMAIL'], hiddenInTable: true, require: false };
+    AutenticationType = { type: 'select', Dataset: ["AUTH2", "BASIC"], hiddenInTable: true, require: false };
+    TENAT = { type: 'text', hiddenInTable: true, require: false };
+    CLIENT = { type: 'text', hiddenInTable: true, require: false };
+    OBJECTID = { type: 'text', hiddenInTable: true, require: false };
+    CLIENT_SECRET = { type: 'text', hiddenInTable: true, require: false };
+    SMTPHOST = { type: 'text', hiddenInTable: true, require: false };
+
     //Cat_Dependencia = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Dependencias(), require: false };
     Cat_Dependencias_Hijas = { type: 'Multiselect', hiddenFilter: true, ModelObject: () => new Cat_Dependencias(), require: false };
     CaseTable_Agenda = { type: 'MasterDetail', ModelObject: () => new CaseTable_Agenda() };

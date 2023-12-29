@@ -38,7 +38,7 @@ namespace CAPA_NEGOCIO.MAPEO
         //[OneToMany(TableName = "CaseTable_Comments", KeyColumn = "Id_Case", ForeignKeyColumn = "Id_Case")]
         public List<CaseTable_Comments>? CaseTable_Comments { get; set; }
 
-        public bool CreateAutomaticCase(MimeMessage mail, Cat_Dependencias dependencia)
+        public async Task<bool>  CreateAutomaticCase(MimeMessage mail, Cat_Dependencias dependencia)
         {
             try
             {

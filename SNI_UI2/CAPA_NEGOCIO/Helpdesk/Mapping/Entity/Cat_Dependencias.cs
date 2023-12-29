@@ -15,7 +15,8 @@ public class Cat_Dependencias : EntityClass
     public string? Host { get; set; }
     public int? Id_Dependencia_Padre { get; set; }
     public int? Id_Institucion { get; set; }
-    public AutenticationTypeEnum? AutenticationType { get; set; }
+    public string? AutenticationType { get; set; }
+    public string? HostService { get; set; }
     //AUTH 2.0
     public string? TENAT { get; set; }
     public string? CLIENT { get; set; }

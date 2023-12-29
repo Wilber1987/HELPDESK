@@ -39,19 +39,20 @@ namespace CAPA_NEGOCIO.Services
                         USERNAME = Tcase?.Cat_Dependencias?.Username,
                         CLIENT = Tcase?.Cat_Dependencias?.CLIENT,
                         CLIENT_SECRET = Tcase?.Cat_Dependencias?.CLIENT_SECRET,
-                        AutenticationType = Tcase?.Cat_Dependencias?.AutenticationType,
+                        AutenticationType = Enum.Parse<AutenticationTypeEnum>(Tcase?.Cat_Dependencias?.AutenticationType),
                         TENAT = Tcase?.Cat_Dependencias?.TENAT,
-                        OBJECTID = Tcase?.Cat_Dependencias?.OBJECTID
+                        OBJECTID = Tcase?.Cat_Dependencias?.OBJECTID,
+                        HostService = Enum.Parse<HostServices>(Tcase?.Cat_Dependencias?.HostService)
                     });
                     if (send)
                     {
                         item.Estado = MailState.ENVIADO.ToString();
                         item.Update();
                     }
-                    item.CommitGlobalTransaction();                   
+                    item.CommitGlobalTransaction();
                 }
                 catch (System.Exception ex)
-                {                    
+                {
                     item.RollBackGlobalTransaction();
                     LoggerServices.AddMessageError($"error al enviar el correo {item.Uid}", ex);
                 }

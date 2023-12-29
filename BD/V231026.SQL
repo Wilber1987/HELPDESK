@@ -37,7 +37,12 @@ ADD OBJECTID varchar(MAX) NULL;
 ALTER TABLE HELPDESK.helpdesk.Cat_Dependencias
 ADD CLIENT_SECRET varchar(MAX) NULL;
 ALTER TABLE HELPDESK.helpdesk.Cat_Dependencias
+ADD HostService varchar(MAX) NULL;
+ALTER TABLE HELPDESK.helpdesk.Cat_Dependencias
 ADD default bit;
+
+
+-- comments
 ALTER TABLE HELPDESK.helpdesk.CaseTable_Comments
 ALTER COLUMN NickName nvarchar(MAX) COLLATE Modern_Spanish_CI_AS NULL;
 ALTER TABLE HELPDESK.helpdesk.CaseTable_Comments

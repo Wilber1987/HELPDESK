@@ -1,32 +1,33 @@
 import { Cat_Dependencias } from "./ModelProyect/ProyectDataBaseModel.js";
+import { AppDashboardComponentView } from "./Proyect/Dasboards/AppDashboardComponentView.js";
 import { WRender } from "./WDevCore/WModules/WComponentsTools.js";
 import { css } from "./WDevCore/WModules/WStyledRender.js";
 
 const ColorsList = ["#044fa2", "#0088ce", "#f6931e", "#eb1c24", "#01c0f4", "#00bff3", "#e63da4", "#6a549f"];
 
 const OnLoad = async () => {
-    const dep = await new Cat_Dependencias().Get();
+   //const dep = await new Cat_Dependencias().Get();
     const container = WRender.Create({ className: "dep-container" });
-    dep.forEach((element, index) => {
-        const cont = WRender.Create({
-            className: "card", style: { backgroundColor: ColorsList[index] }, children: [
-                { tagName: "h1", innerText: element.Descripcion },
-                { tagName: "label", innerText: element.Username },
-                {
-                    className: "cont-mini-cards", children: (element.Tbl_Servicios?.map(s =>
-                        WRender.Create({
-                            className: "mini-card", children:
-                                [{ tagName: "IMG", src: "data:image/png;base64," + s.Cat_Tipo_Servicio.Icon },
-                                s.Descripcion_Servicio]
-                        }))) ?? []
-                }
-            ]
-        })
-
-
-        container.append(cont)
-    });
-    Main.append(cssCus, container);
+    const mainComponent = new AppDashboardComponentView();
+    container.appendChild(mainComponent);  
+    // dep.forEach((element, index) => {
+    //     const cont = WRender.Create({
+    //         className: "card", style: { backgroundColor: ColorsList[index] }, children: [
+    //             { tagName: "h1", innerText: element.Descripcion },
+    //             { tagName: "label", innerText: element.Username },
+    //             {
+    //                 className: "cont-mini-cards", children: (element.Tbl_Servicios?.map(s =>
+    //                     WRender.Create({
+    //                         className: "mini-card", children:
+    //                             [{ tagName: "IMG", src: "data:image/png;base64," + s.Cat_Tipo_Servicio.Icon },
+    //                             s.Descripcion_Servicio]
+    //                     }))) ?? []
+    //             }
+    //         ]
+    //     })
+    //     container.append(cont)
+    // });
+    Main.append( container);
 }
 const cssCus = css`
     .dep-container{

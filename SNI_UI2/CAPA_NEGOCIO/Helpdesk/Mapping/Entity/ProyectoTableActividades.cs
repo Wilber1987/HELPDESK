@@ -93,6 +93,12 @@ namespace CAPA_NEGOCIO.MAPEO
             }
 
         }
+        internal List<CaseTable_Comments> GetOwComments(List<CaseTable_Case> caseTables)
+        {
+            return new CaseTable_Comments().Get_WhereIN<CaseTable_Comments>(
+                "Id_Case", caseTables.Select(c => c.Id_Case.ToString()).ToArray());
+
+        }
     }
 
     public enum Case_Estate
@@ -159,7 +165,7 @@ namespace CAPA_NEGOCIO.MAPEO
         [OneToMany(TableName = "CaseTable_Dependencias_Usuarios", KeyColumn = "Id_Cargo", ForeignKeyColumn = "Id_Cargo")]
         public List<CaseTable_Dependencias_Usuarios>? CaseTable_Dependencias_Usuarios { get; set; }
     }
-     public class Cat_Tipo_Participaciones : EntityClass
+    public class Cat_Tipo_Participaciones : EntityClass
     {
         [PrimaryKey(Identity = true)]
         public int? Id_Tipo_Participacion { get; set; }

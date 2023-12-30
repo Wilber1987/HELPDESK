@@ -38,7 +38,7 @@ namespace CAPA_NEGOCIO.MAPEO
         //[OneToMany(TableName = "CaseTable_Comments", KeyColumn = "Id_Case", ForeignKeyColumn = "Id_Case")]
         public List<CaseTable_Comments>? CaseTable_Comments { get; set; }
 
-        public async Task<bool>  CreateAutomaticCase(MimeMessage mail, Cat_Dependencias dependencia)
+        public async Task<bool> CreateAutomaticCase(MimeMessage mail, Cat_Dependencias dependencia)
         {
             try
             {
@@ -182,6 +182,13 @@ namespace CAPA_NEGOCIO.MAPEO
                 && c.Estado != Case_Estate.Finalizado.ToString()).ToList();
             }
             throw new Exception("no tienes permisos para gestionar casos");
+        }
+        public List<CaseTable_Case> GetOwParticipantCase(string identity)
+        {
+            return getCaseByDependencia(identity, null)
+            .Where(c => c.Estado != Case_Estate.Rechazado.ToString()
+            && c.Estado != Case_Estate.Solicitado.ToString()
+            && c.Estado != Case_Estate.Finalizado.ToString()).ToList();
         }
         public List<CaseTable_Case> GetOwCloseCase(string identity)
         {

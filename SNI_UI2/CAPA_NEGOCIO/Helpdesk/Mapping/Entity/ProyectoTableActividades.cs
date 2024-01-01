@@ -101,6 +101,20 @@ namespace CAPA_NEGOCIO.MAPEO
         }
     }
 
+    public class CaseTable_Comments_Tasks : CaseTable_Comments
+    {
+        public int? Id_Tarea { get; set; }
+        internal List<CaseTable_Comments_Tasks> GetOwComments(List<CaseTable_Tareas> caseTables)
+        {
+            return new CaseTable_Comments_Tasks().Get_WhereIN<CaseTable_Comments_Tasks>(
+                "Id_Tarea", caseTables.Select(c => c.Id_Tarea.ToString()).ToArray());
+        }
+        internal new List<CaseTable_Comments_Tasks> GetComments()
+        {
+            return Get<CaseTable_Comments_Tasks>();
+        }
+    }
+
     public enum Case_Estate
     {
         Solicitado, Pendiente, Activo, Finalizado, Espera, Rechazado, Vinculado

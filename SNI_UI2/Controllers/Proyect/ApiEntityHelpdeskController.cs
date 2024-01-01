@@ -31,6 +31,24 @@ namespace API.Controllers
         {
             return inst.Update();
         }
+         [HttpPost]
+        [AuthController]
+        public List<CaseTable_Comments_Tasks> getCaseTable_Comments_Tasks(CaseTable_Comments_Tasks Inst)
+        {
+            return Inst.GetComments();
+        }
+        [HttpPost]
+        [AuthController]
+        public object? saveCaseTable_Comments_Tasks(CaseTable_Comments_Tasks inst)
+        {
+            return inst.SaveComment(HttpContext.Session.GetString("seassonKey"));
+        }
+        [HttpPost]
+        [AuthController]
+        public object? updateCaseTable_Comments_Tasks(CaseTable_Comments_Tasks inst)
+        {
+            return inst.Update();
+        }
         //Cat_Tipo_Evento
 
         [HttpPost]

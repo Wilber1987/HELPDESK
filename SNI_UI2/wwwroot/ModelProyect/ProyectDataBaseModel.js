@@ -101,11 +101,12 @@ class CaseTable_Case extends EntityClass {
         super(props, 'EntityHelpdesk');
         for (const prop in props) {
             this[prop] = props[prop];
-        }
+        };
+        this.Mail = undefined;
     }
     Id_Case = { type: 'number', primary: true };
     Id_Vinculate = { type: 'number', hidden: true };
-    
+
     Tbl_Servicios = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Tbl_Servicios() };
     Fecha_Inicio = { type: 'date' };
     Titulo = { type: 'text' };
@@ -230,9 +231,17 @@ class CaseTable_Comments extends EntityClass {
     Body = { type: "textarea", label: "Mensaje" };
     Id_Case = { type: "text", hidden: true };
 }
-
-
 export { CaseTable_Comments }
+class CaseTable_Comments_Tasks extends CaseTable_Comments {
+    constructor(props) {
+        super(props, 'EntityHelpdesk');
+        for (const prop in props) {
+            this[prop] = props[prop];
+        }
+    }
+    Id_Tarea = { type: "text", hidden: true };
+}
+export { CaseTable_Comments_Tasks }
 class CaseTable_Calendario extends EntityClass {
     constructor(props) {
         super(props, 'EntityHelpdesk');
@@ -250,9 +259,11 @@ export { CaseTable_Calendario }
 class CaseTable_Tareas extends EntityClass {
     constructor(props) {
         super(props, 'EntityHelpdesk');
+        this.Fecha_Inicio = undefined;
+        this.CaseTable_Case = undefined;
         for (const prop in props) {
             this[prop] = props[prop];
-        }
+        };
     }
     Id_Tarea = { type: 'number', primary: true };
     Titulo = { type: 'text' };
@@ -306,7 +317,9 @@ class Cat_Dependencias extends EntityClass {
         super(props, 'EntityHelpdesk');
         for (const prop in props) {
             this[prop] = props[prop];
-        }
+        };
+        this.NCasos = undefined;
+        this.NCasosFinalizados = undefined;
     }
     Id_Dependencia = { type: 'number', primary: true };
     Descripcion = { type: 'text' };

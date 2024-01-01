@@ -20,7 +20,7 @@ namespace API.Controllers
             var caseTable = new CaseTable_Case().GetOwParticipantCase(token);
             return new
             {
-                dependencies = new Cat_Dependencias().GetOwDependencies(token),
+                dependencies = new Cat_Dependencias().GetOwDependenciesConsolidados(token),
                 caseTickets = caseTable,
                 task = new CaseTable_Tareas().GetOwParticipations(token),
                 comments = new CaseTable_Comments().GetOwComments(caseTable)

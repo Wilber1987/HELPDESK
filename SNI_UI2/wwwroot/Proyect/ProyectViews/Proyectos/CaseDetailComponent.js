@@ -33,9 +33,9 @@ class CaseDetailComponent extends HTMLElement {
         this.TabContainer = WRender.createElement({ type: 'div', props: { class: 'TabContainer', id: "TabContainer" } });
         this.TabManager = new ComponentsManager({ MainContainer: this.TabContainer });
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });
-        this.OptionContainer.append(WRender.Create({
-            tagName: 'a', className: 'Block-Alert', innerText: 'Lista de Casos', href: "/ProyectViews/Proyectos"
-        }))
+        // this.OptionContainer.append(WRender.Create({
+        //     tagName: 'a', className: 'Block-Alert', innerText: 'Lista de Casos', href: "/ProyectViews/Proyectos"
+        // }))
 
         this.shadowRoot.append(this.OptionContainer, this.TabContainer);
         this.DrawCaseDetailComponent(this.Actividad);
@@ -62,36 +62,36 @@ class CaseDetailComponent extends HTMLElement {
                 }, require: true
             }
         });
-        this.tasktable = new WTableComponent({
-            Dataset: tareasActividad,
-            maxElementByPage: 6,
-            ModelObject: taskModel, Options: {
-                //Add: true, UrlAdd: "../api/ApiEntityDBO/saveCaseTable_Tareas",
-                //Edit: true, UrlUpdate: "../api/ApiEntityDBO/updateCaseTable_Tareas",
-                //Search: true, UrlSearch: "../api/ApiEntityDBO/getCaseTable_Tareas",
-                UserActions: [{
-                    name: "Nueva Evidencia", action: (Tarea) => {
-                        this.actividadDetailView.append(new WModalForm({
-                            ModelObject: new CaseTable_Evidencias({ Id_Tarea: Tarea.Id_Tarea }),
-                            StyleForm: "columnX1"
-                        }))
-                    }
-                }, {
-                    name: "Ver Evidencias", action: async (Tarea) => {
-                        const response = await new CaseTable_Evidencias({ Id_Tarea: Tarea.Id_Tarea }).Get();
-                        this.actividadDetailView.append(new WModalForm({
-                            ObjectModal: new DocumentViewer({
-                                Actividad: response.map((e, index) => ({
-                                    TypeDocuement: e.Cat_Tipo_Evidencia?.Descripcion,
-                                    Description: e.Descripcion ?? "document " + (index + 1),
-                                    Document: e.Data
-                                }))
-                            })
-                        }))
-                    }
-                }]
-            }
-        })
+        // this.tasktable = new WTableComponent({
+        //     Dataset: tareasActividad,
+        //     maxElementByPage: 6,
+        //     ModelObject: taskModel, Options: {
+        //         //Add: true, UrlAdd: "../api/ApiEntityDBO/saveCaseTable_Tareas",
+        //         //Edit: true, UrlUpdate: "../api/ApiEntityDBO/updateCaseTable_Tareas",
+        //         //Search: true, UrlSearch: "../api/ApiEntityDBO/getCaseTable_Tareas",
+        //         UserActions: [{
+        //             name: "Nueva Evidencia", action: (Tarea) => {
+        //                 this.actividadDetailView.append(new WModalForm({
+        //                     ModelObject: new CaseTable_Evidencias({ Id_Tarea: Tarea.Id_Tarea }),
+        //                     StyleForm: "columnX1"
+        //                 }))
+        //             }
+        //         }, {
+        //             name: "Ver Evidencias", action: async (Tarea) => {
+        //                 const response = await new CaseTable_Evidencias({ Id_Tarea: Tarea.Id_Tarea }).Get();
+        //                 this.actividadDetailView.append(new WModalForm({
+        //                     ObjectModal: new DocumentViewer({
+        //                         Actividad: response.map((e, index) => ({
+        //                             TypeDocuement: e.Cat_Tipo_Evidencia?.Descripcion,
+        //                             Description: e.Descripcion ?? "document " + (index + 1),
+        //                             Document: e.Data
+        //                         }))
+        //                     })
+        //                 }))
+        //             }
+        //         }]
+        //     }
+        // })
         const taskContainer = WRender.Create({ className: "" });
         this.ganttChart = new GanttChart({ Dataset: tareasActividad ?? [], EvalValue: "date" });
         const tabManager = new ComponentsManager({ MainContainer: taskContainer });
@@ -103,6 +103,7 @@ class CaseDetailComponent extends HTMLElement {
             User: WSecurity.UserData,
             UserIdProp: "Id_User",
             CommentsIdentify: actividad.Id_Case,
+            CommentsIdentifyName: "Id_Case",
             UrlSearch: "../api/ApiEntityHelpdesk/getCaseTable_Comments",
             UrlAdd: "../api/ApiEntityHelpdesk/saveCaseTable_Comments"
         });
@@ -256,8 +257,6 @@ class CaseDetailComponent extends HTMLElement {
         // for (const prop in task) {
         //     find[prop] = task[prop]
         // }
-
-
         const dataTask = await new CaseTable_Tareas({ Id_Case: this.Actividad.Id_Case }).Get();
         console.log(dataTask);
         this.ganttChart.Dataset = dataTask;
@@ -285,7 +284,7 @@ class CaseDetailComponent extends HTMLElement {
        .actividadDetailView {
             display: grid;
             grid-template-columns: calc(100% - 620px) 600px;
-            grid-template-rows: auto 50px auto;
+            grid-template-rows: 180px 50px auto;
             gap: 0px 20px;
         }
     `

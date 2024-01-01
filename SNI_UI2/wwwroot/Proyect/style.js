@@ -15,6 +15,7 @@ const activityStyle = css`
         .actividadDetail{
             container-type: inline-size;
             container-name: details;
+            max-height: 240px;
         }
         .actividad {
             border: 1px solid #d9d6d6;

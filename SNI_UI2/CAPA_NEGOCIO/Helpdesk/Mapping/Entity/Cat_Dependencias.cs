@@ -52,7 +52,7 @@ public class Cat_Dependencias : EntityClass
     }
     [OneToMany(TableName = "Tbl_Servicios", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
     public List<Tbl_Servicios>? Tbl_Servicios { get; set; }
-    
+
     internal List<Cat_Dependencias> GetDependencias<T>()
     {
         return new Cat_Dependencias().Get<Cat_Dependencias>().Select(m =>
@@ -60,5 +60,21 @@ public class Cat_Dependencias : EntityClass
             m.Password = "PROTECTED";
             return m;
         }).ToList();
+    }
+
+    internal object GetOwDependenciesConsolidados(string token)
+    {
+        return GetOwDependencies(token).Select(
+            D =>
+                new
+                {
+                    D.Id_Dependencia,
+                    D.Descripcion,
+                    D.Username,
+                    D.CaseTable_Dependencias_Usuarios,
+                    NCasos = new CaseTable_Case { Id_Dependencia = D.Id_Dependencia, Estado = Case_Estate.Activo.ToString() }.Get<CaseTable_Case>().Count,
+                    NCasosFinalizados = new CaseTable_Case { Id_Dependencia = D.Id_Dependencia, Estado = Case_Estate.Finalizado.ToString() }.Get<CaseTable_Case>().Count
+                }
+        ).ToList();
     }
 }

@@ -258,7 +258,7 @@ class CaseDetailComponent extends HTMLElement {
         //     find[prop] = task[prop]
         // }
         const dataTask = await new CaseTable_Tareas({ Id_Case: this.Actividad.Id_Case }).Get();
-        console.log(dataTask);
+        //console.log(dataTask);
         this.ganttChart.Dataset = dataTask;
         this.Actividad.CaseTable_Tareas = dataTask;
 

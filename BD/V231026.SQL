@@ -67,3 +67,5 @@ CREATE TABLE HELPDESK.helpdesk.CaseTable_Comments_Tasks (
 	Attach_Files nvarchar(MAX) COLLATE Modern_Spanish_CI_AS NULL,
 	CONSTRAINT PK_CaseTable_Coments_Tasks PRIMARY KEY (Id_Comentario)
 );
+
+EXEC HELPDESK.sys.sp_rename N'HELPDESK.helpdesk.CaseTable_Calendario.Fecha_Inicial' , N'Fecha_Inicio', 'COLUMN';

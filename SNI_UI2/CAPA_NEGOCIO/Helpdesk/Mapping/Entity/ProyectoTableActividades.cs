@@ -24,7 +24,7 @@ namespace CAPA_NEGOCIO.MAPEO
         public int? Id_User { get; set; }
         public DateTime? Fecha { get; set; }
 
-        public object? SaveComment(string identity)
+        public object? SaveComment(string identity, Boolean withMail = true )
         {
             try
             {
@@ -41,8 +41,12 @@ namespace CAPA_NEGOCIO.MAPEO
                     file.Type = Response.Type;
                 }
                 Save();
+                if (withMail)
+                {
+                       CreateMailForComment(user);
+                }
 
-                CreateMailForComment(user);
+             
 
                 CommitGlobalTransaction();
                 return this;

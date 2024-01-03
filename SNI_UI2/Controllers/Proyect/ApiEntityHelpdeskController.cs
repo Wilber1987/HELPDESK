@@ -41,7 +41,7 @@ namespace API.Controllers
         [AuthController]
         public object? saveCaseTable_Comments_Tasks(CaseTable_Comments_Tasks inst)
         {
-            return inst.SaveComment(HttpContext.Session.GetString("seassonKey"));
+            return inst.SaveComment(HttpContext.Session.GetString("seassonKey"), false);
         }
         [HttpPost]
         [AuthController]

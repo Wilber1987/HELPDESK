@@ -223,7 +223,8 @@ class CaseTable_Comments extends EntityClass {
         super(props, 'EntityHelpdesk');
         for (const prop in props) {
             this[prop] = props[prop];
-        }
+        };
+        this.Id_Tarea = undefined;
     }
     Id_Comentario = { type: "number", primary: true };
     Estado = { type: "text", hidden: true };

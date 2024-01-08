@@ -69,3 +69,13 @@ CREATE TABLE HELPDESK.helpdesk.CaseTable_Comments_Tasks (
 );
 
 EXEC HELPDESK.sys.sp_rename N'HELPDESK.helpdesk.CaseTable_Calendario.Fecha_Inicial' , N'Fecha_Inicio', 'COLUMN';
+
+-- helpdesk.ViewCalendarioByDependencia source
+
+alter VIEW [helpdesk].[ViewCalendarioByDependencia]
+AS
+SELECT        helpdesk.CaseTable_Tareas.Id_Case, helpdesk.CaseTable_Tareas.Id_TareaPadre,  helpdesk.CaseTable_Calendario.Fecha_Inicio , helpdesk.CaseTable_Calendario.Estado, 
+                         helpdesk.CaseTable_Calendario.IdCalendario, helpdesk.CaseTable_Calendario.Id_Tarea, helpdesk.CaseTable_Case.Id_Dependencia
+FROM            helpdesk.CaseTable_Case INNER JOIN
+                         helpdesk.CaseTable_Tareas ON helpdesk.CaseTable_Case.Id_Case = helpdesk.CaseTable_Tareas.Id_Case INNER JOIN
+                         helpdesk.CaseTable_Calendario ON helpdesk.CaseTable_Tareas.Id_Tarea = helpdesk.CaseTable_Calendario.Id_Tarea;

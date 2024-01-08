@@ -24,7 +24,7 @@ namespace CAPA_NEGOCIO.MAPEO
         public int? Id_User { get; set; }
         public DateTime? Fecha { get; set; }
 
-        public object? SaveComment(string identity, Boolean withMail = true )
+        public object? SaveComment(string identity, Boolean withMail = true)
         {
             try
             {
@@ -43,10 +43,10 @@ namespace CAPA_NEGOCIO.MAPEO
                 Save();
                 if (withMail)
                 {
-                       CreateMailForComment(user);
+                    CreateMailForComment(user);
                 }
 
-             
+
 
                 CommitGlobalTransaction();
                 return this;
@@ -278,13 +278,22 @@ namespace CAPA_NEGOCIO.MAPEO
 
         public List<CaseTable_Tareas> GetOwParticipations(string identity)
         {
-
-
             Tbl_Profile? profile = new Tbl_Profile() { IdUser = AuthNetCore.User(identity).UserId }.Find<Tbl_Profile>();
             CaseTable_Participantes Inst = new CaseTable_Participantes() { Id_Perfil = profile?.Id_Perfil };
             return new CaseTable_Tareas().Get_WhereIN<CaseTable_Tareas>(
                 "Id_Tarea", Inst.Get<CaseTable_Participantes>().Select(p => p.Id_Tarea.ToString()).ToArray()
             );
+        }
+        public List<CaseTable_Tareas> GetOwActiveParticipations(string identity)
+        {
+            Tbl_Profile? profile = new Tbl_Profile() { IdUser = AuthNetCore.User(identity).UserId }.Find<Tbl_Profile>();
+            CaseTable_Participantes Inst = new CaseTable_Participantes { Id_Perfil = profile?.Id_Perfil };
+            return new CaseTable_Tareas()
+            {
+                filterData = new List<FilterData> {
+                    FilterData.NotIn("Estado", new List<string?> { TareasState.Finalizado.ToString(), TareasState.Inactivo.ToString() }),
+                    FilterData.In( "Id_Tarea", new CaseTable_Participantes().Get<CaseTable_Participantes>().Select(p => p.Id_Tarea.ToString()).ToList())}
+            }.Get<CaseTable_Tareas>();
         }
 
         public object? UpdateTarea()

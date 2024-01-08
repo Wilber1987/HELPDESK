@@ -476,10 +476,16 @@ class AppDashboardComponentView extends HTMLElement {
         return WRender.Create({
             className: "case-dependencie cookieCard", children: [
                 { tagName: "p", className: "cookieHeading", innerHTML: element.NickName },
-                { tagName: "p", className: "cookieDescription", innerHTML: element.Body?.replaceAll("<br>", "") },
+                { tagName: "p", className: "cookieDescription", innerHTML: element.Body?.replaceAll("<br>", "") ?? "adjunto" },
                 {
                     tagName: 'input', type: 'button', className: 'acceptButton', value: 'ver', onclick: async () => {
-                        //code.....
+                        //const find = await new CaseTable_Tareas({ Id_Tarea: element.Id_Tarea }).Get()
+                        //const CaseDetail = new TareaDetailView({ Task: find[0] });
+                        //this.Manager.NavigateFunction("Detail" + element.Id_Tarea, CaseDetail)
+
+                        const find = await new CaseTable_Case({ Id_Case: element.Id_Case }).Get()
+                        const CaseDetail = new CaseDetailComponent(find[0]);
+                        this.Manager.NavigateFunction("Detail" + element.Id_Case, CaseDetail)
                     }
                 }, css`
                         .cookieCard {

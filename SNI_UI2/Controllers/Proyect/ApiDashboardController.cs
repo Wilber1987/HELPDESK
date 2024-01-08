@@ -22,7 +22,7 @@ namespace API.Controllers
             {
                 dependencies = new Cat_Dependencias().GetOwDependenciesConsolidados(token),
                 caseTickets = caseTable,
-                task = new CaseTable_Tareas().GetOwParticipations(token),
+                task = new CaseTable_Tareas().GetOwActiveParticipations(token),
                 comments = new CaseTable_Comments().GetOwComments(caseTable)
             };
         }

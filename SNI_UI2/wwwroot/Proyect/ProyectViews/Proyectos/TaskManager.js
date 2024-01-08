@@ -5,6 +5,7 @@ import { WDetailObject } from '../../../WDevCore/WComponents/WDetailObject.js';
 import { WModalForm } from '../../../WDevCore/WComponents/WModalForm.js';
 import { ComponentsManager, WRender } from '../../../WDevCore/WModules/WComponentsTools.js';
 import { css } from '../../../WDevCore/WModules/WStyledRender.js';
+import { TareaDetailView } from './TareaDetailView.js';
 
 class TaskManagers extends HTMLElement {
     /**
@@ -84,10 +85,10 @@ class TaskManagers extends HTMLElement {
                 children: [panelOptions, Panel]
             }));
         });
-        this.TabContainer.append(StatePanelContainer);
+        //this.TabContainer.append(StatePanelContainer);
+        this.TabManager.NavigateFunction("main-task", StatePanelContainer);
     }
     taskCard = (task) => {
-
         return WRender.Create({
             className: "task-card",
             draggable: true,
@@ -153,14 +154,14 @@ class TaskManagers extends HTMLElement {
     * @param {CaseTable_Tareas} task 
     */
     taskDetail = async (task) => {
+        const find = await new CaseTable_Tareas({ Id_Tarea: task.Id_Tarea }).Get()
+        const CaseDetail = new TareaDetailView({ Task: find[0] });
+       //this.TabManager.NavigateFunction("Detail" + task.Id_Tarea, CaseDetail)
         this.shadowRoot?.append(new WModalForm({
             title: "Detalle",
-            ImageUrlPath: this.Config.ImageUrlPath,
-            ObjectModal: new WDetailObject({
-                ObjectDetail: task,
-                ImageUrlPath: this.Config.ImageUrlPath,
-                ModelObject: new CaseTable_Tareas()
-            }),
+            StyleForm: "FullScreen",
+            ImageUrlPath: this.Config?.ImageUrlPath,
+            ObjectModal:  CaseDetail,
         }));
     }
     /**

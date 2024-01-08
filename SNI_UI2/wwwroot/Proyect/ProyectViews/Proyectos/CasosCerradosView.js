@@ -1,27 +1,17 @@
 
 
-import { caseGeneralData } from './CaseDetailComponent.js';
-import { CaseSearcherToVinculate } from '../../../AppComponents/CaseSearcherToVinculate.js';
 import { priorityStyles } from '../../../AppComponents/Styles.js';
-import { CaseOwModel } from '../../../ModelProyect/CaseOwModel.js';
-import { ViewCalendarioByDependencia } from '../../../ModelProyect/DBOViewModel.js';
-import { CaseTable_Agenda, CaseTable_Calendario, CaseTable_Case, CaseTable_Comments, CaseTable_Evidencias, CaseTable_Tareas, CaseTable_VinculateCase, Cat_Dependencias } from '../../../ModelProyect/ProyectDataBaseModel.js';
-import { WSecurity } from '../../../WDevCore/Security/WSecurity.js';
+import { CaseTable_Case, Cat_Dependencias } from '../../../ModelProyect/ProyectDataBaseModel.js';
 import { StylesControlsV2, StylesControlsV3 } from "../../../WDevCore/StyleModules/WStyleComponents.js";
-import { WAppNavigator } from '../../../WDevCore/WComponents/WAppNavigator.js';
-import { GanttChart } from '../../../WDevCore/WComponents/WChartJSComponents.js';
-import { WCommentsComponent } from '../../../WDevCore/WComponents/WCommentsComponent.js';
-import { DocumentViewer } from '../../../WDevCore/WComponents/WDocumentViewer.js';
 import { WFilterOptions } from '../../../WDevCore/WComponents/WFilterControls.js';
-import { ModalMessege, ModalVericateAction, WForm } from "../../../WDevCore/WComponents/WForm.js";
-import { WModalForm } from '../../../WDevCore/WComponents/WModalForm.js';
+import { ModalMessege, ModalVericateAction } from "../../../WDevCore/WComponents/WForm.js";
 import { WPaginatorViewer } from '../../../WDevCore/WComponents/WPaginatorViewer.js';
 import { WTableComponent } from "../../../WDevCore/WComponents/WTableComponent.js";
 import { ComponentsManager, WRender } from '../../../WDevCore/WModules/WComponentsTools.js';
 import { ControlBuilder } from '../../../WDevCore/WModules/WControlBuilder.js';
 import { css } from '../../../WDevCore/WModules/WStyledRender.js';
-import { TaskManagers } from './TaskManager.js';
 import { activityStyle } from '../../style.js';
+import { caseGeneralData } from './CaseDetailComponent.js';
 
 /**
  * @typedef {Object} ComponentConfig
@@ -54,7 +44,7 @@ class CasosCerradosView extends HTMLElement {
     connectedCallback() { }
     DrawCaseManagerComponent = async () => {
         //this.OptionContainer.append(WRender.Create({ tagName: 'input', type: 'button', className: 'Block-Basic', value: 'Estadística', onclick: this.dashBoardView }))
-        this.shadowRoot?.append(this.OptionContainer, this.TabContainer);
+        this.shadowRoot?.append(this.WActivityStyle, this.OptionContainer, this.TabContainer);
         //this.dashBoardView();
         this.actividadesManager();
     }
@@ -159,4 +149,4 @@ window.onload = async () => {
     const dataset = await new CaseTable_Case().GetOwCloseCase();
     Main.appendChild(new CasosCerradosView(dataset, dependencias));
 }
-export { CasosCerradosView }
+export { CasosCerradosView };

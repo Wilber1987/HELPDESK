@@ -280,9 +280,11 @@ namespace CAPA_NEGOCIO.MAPEO
         {
             Tbl_Profile? profile = new Tbl_Profile() { IdUser = AuthNetCore.User(identity).UserId }.Find<Tbl_Profile>();
             CaseTable_Participantes Inst = new CaseTable_Participantes() { Id_Perfil = profile?.Id_Perfil };
-            return new CaseTable_Tareas().Get_WhereIN<CaseTable_Tareas>(
-                "Id_Tarea", Inst.Get<CaseTable_Participantes>().Select(p => p.Id_Tarea.ToString()).ToArray()
-            );
+            return new CaseTable_Tareas()
+            {
+                filterData = new List<FilterData> {
+                    FilterData.In( "Id_Tarea", new CaseTable_Participantes().Get<CaseTable_Participantes>().Select(p => p.Id_Tarea.ToString()).ToList())}
+            }.Get<CaseTable_Tareas>();
         }
         public List<CaseTable_Tareas> GetOwActiveParticipations(string identity)
         {

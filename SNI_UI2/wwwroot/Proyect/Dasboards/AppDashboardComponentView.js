@@ -122,7 +122,7 @@ class AppDashboardComponentView extends HTMLElement {
                         <span class="regular-text">Casos finalizados</span>
                     </div>
                     <div class="item">
-                        <span class="big-text">${element.CaseTable_Dependencias_Usuarios.length}</span>
+                        <span class="big-text">${element.CaseTable_Dependencias_Usuarios?.length ?? 0}</span>
                         <span class="regular-text">Miembros activos</span>
                     </div>
                 </div>

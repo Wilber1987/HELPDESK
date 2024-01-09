@@ -43,6 +43,7 @@ class CasosCerradosView extends HTMLElement {
     }
     connectedCallback() { }
     DrawCaseManagerComponent = async () => {
+        this.shadowRoot.innerHTML= "";
         //this.OptionContainer.append(WRender.Create({ tagName: 'input', type: 'button', className: 'Block-Basic', value: 'Estadística', onclick: this.dashBoardView }))
         this.shadowRoot?.append(this.WActivityStyle, this.OptionContainer, this.TabContainer);
         //this.dashBoardView();
@@ -121,17 +122,27 @@ class CasosCerradosView extends HTMLElement {
             WRender.Create({ className: "CaseFormView", children: [CaseForm(undefined, this.Dependencias)] }));
     }
     Reabrir = async (actividad) => {
-        this.shadowRoot.append(ModalVericateAction(async () => {
+        const modal = ModalVericateAction(async () => {
             actividad.Estado = "Activo"
             const response = await new CaseTable_Case(actividad).Update();
             if (response.status == 200) {
-                this.shadowRoot.append(ModalMessege("Caso reabierto exitosamente"));
-                this.update();
+                this.shadowRoot.append(ModalMessege("Caso reabierto exitosamente")); 
+                this.shadowRoot.removeChild(modal)   
+                //this.update()           
             } else {
                 this.append(ModalMessege(response.message))
             }
-        }, "¿Está seguro que desea reabrir este caso?"))
-
+        }, "¿Está seguro que desea reabrir este caso?")
+        this.shadowRoot.append(modal)
+       
+    }
+    update = async () => {
+        // const find = actividad.CaseTable_Tareas.find(t => t.Id_Tarea == task.Id_Tarea);
+        // for (const prop in task) {
+        //     find[prop] = task[prop]
+        // }
+       
+        this.DrawCaseManagerComponent();
     }
     WActivityStyle = activityStyle.cloneNode(true);
     WStyle = css`        

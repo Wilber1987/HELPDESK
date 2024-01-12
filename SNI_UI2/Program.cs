@@ -3,7 +3,8 @@ using CAPA_DATOS;
 using CAPA_DATOS.Cron.Jobs;
 
 
-SqlADOConexion.IniciarConexion();
+//SqlADOConexion.IniciarConexion(".", "sa", "zaxscd", "HELPDESK");
+SqlADOConexion.IniciarConexion(".", "sa", "Helpdesk2023", "HELPDESK");
 //AppGenerate.Program.Main(); //generador de codigo
 var builder = WebApplication.CreateBuilder(args);
 

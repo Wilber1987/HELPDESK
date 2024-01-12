@@ -280,22 +280,18 @@ namespace CAPA_NEGOCIO.MAPEO
         {
             Tbl_Profile? profile = new Tbl_Profile() { IdUser = AuthNetCore.User(identity).UserId }.Find<Tbl_Profile>();
             CaseTable_Participantes Inst = new CaseTable_Participantes() { Id_Perfil = profile?.Id_Perfil };
-            return new CaseTable_Tareas()
-            {
-                filterData = new List<FilterData> {
-                    FilterData.In( "Id_Tarea", new CaseTable_Participantes().Get<CaseTable_Participantes>().Select(p => p.Id_Tarea.ToString()).ToList())}
-            }.Get<CaseTable_Tareas>();
+            return new CaseTable_Tareas().Where<CaseTable_Tareas>(
+                FilterData.In("Id_Tarea", new CaseTable_Participantes().Get<CaseTable_Participantes>().Select(p => p.Id_Tarea.ToString()).ToArray())
+            );
         }
         public List<CaseTable_Tareas> GetOwActiveParticipations(string identity)
         {
             Tbl_Profile? profile = new Tbl_Profile() { IdUser = AuthNetCore.User(identity).UserId }.Find<Tbl_Profile>();
             CaseTable_Participantes Inst = new CaseTable_Participantes { Id_Perfil = profile?.Id_Perfil };
-            return new CaseTable_Tareas()
-            {
-                filterData = new List<FilterData> {
-                    FilterData.NotIn("Estado", new List<string?> { TareasState.Finalizado.ToString(), TareasState.Inactivo.ToString() }),
-                    FilterData.In( "Id_Tarea", new CaseTable_Participantes().Get<CaseTable_Participantes>().Select(p => p.Id_Tarea.ToString()).ToList())}
-            }.Get<CaseTable_Tareas>();
+            return new CaseTable_Tareas().Where<CaseTable_Tareas>(
+                FilterData.NotIn("Estado",  TareasState.Finalizado.ToString(), TareasState.Inactivo.ToString() ),
+                FilterData.In( "Id_Tarea", new CaseTable_Participantes().Get<CaseTable_Participantes>().Select(p => p.Id_Tarea.ToString()).ToArray())
+            );
         }
 
         public object? UpdateTarea()
@@ -318,10 +314,11 @@ namespace CAPA_NEGOCIO.MAPEO
 
         internal void NotificarTecnicos(CaseTable_Case caseTable_Case, UserModel user)
         {
-            foreach (var participante in CaseTable_Participantes)
-            {
-                List<String?>? toMails = new List<string?>();
-                toMails.Add(participante.Tbl_Profile.Correo_institucional);
+            CaseTable_Participantes?.ForEach(participante =>{
+                 List<String?>? toMails = new()
+                {
+                    participante?.Tbl_Profile?.Correo_institucional
+                };
                 new CaseTable_Mails()
                 {
                     Id_Case = caseTable_Case?.Id_Case,
@@ -331,9 +328,9 @@ namespace CAPA_NEGOCIO.MAPEO
                     Estado = MailState.PENDIENTE.ToString(),
                     Date = DateTime.Now,
                     Attach_Files = null,
-                    ToAdress = toMails.Where(m => m != null && m != user.mail).ToList().Distinct().ToList()
+                    ToAdress = toMails?.Where(m => m != null && m != user.mail).ToList()?.Distinct()?.ToList() 
                 }.Save();
-            }
+            });
         }
 
         internal object? SaveTarea(string identity)

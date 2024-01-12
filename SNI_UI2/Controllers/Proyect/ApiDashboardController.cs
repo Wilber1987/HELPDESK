@@ -13,7 +13,6 @@ namespace API.Controllers
     public class ApiDashboardController : ControllerBase
     {
         [HttpPost]
-        [AuthController]
         public object getDashboard()
         {
             string? token = HttpContext.Session.GetString("seassonKey");

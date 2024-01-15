@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Controllers;
 using CAPA_NEGOCIO.MAPEO;
+using CAPA_NEGOCIO.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -13,7 +14,7 @@ namespace API.Controllers
     public class ApiDashboardController : ControllerBase
     {
         [HttpPost]
-        public object getDashboard()
+        public object getDashboard(ProfileTransaction Inst)
         {
             string? token = HttpContext.Session.GetString("seassonKey");
             var caseTable = new CaseTable_Case().GetOwParticipantCase(token);

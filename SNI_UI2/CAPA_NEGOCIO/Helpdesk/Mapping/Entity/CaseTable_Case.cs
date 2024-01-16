@@ -186,9 +186,7 @@ namespace CAPA_NEGOCIO.MAPEO
         public List<CaseTable_Case> GetOwParticipantCase(string identity)
         {
             return getCaseByDependencia(identity, null)
-            .Where(c => c.Estado != Case_Estate.Rechazado.ToString()
-            && c.Estado != Case_Estate.Solicitado.ToString()
-            && c.Estado != Case_Estate.Finalizado.ToString()).ToList();
+            .Where(c => c.Estado != Case_Estate.Rechazado.ToString()).ToList();
         }
         public List<CaseTable_Case> GetOwCloseCase(string identity)
         {

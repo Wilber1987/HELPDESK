@@ -130,6 +130,19 @@ namespace API.Controllers
                 comments = new CaseTable_Comments().GetOwComments(caseTable)
             };
         }
+        [HttpGet]
+        public object getDashboardgET()
+        {
+            string? token = HttpContext.Session.GetString("seassonKey");
+            var caseTable = new CaseTable_Case().GetOwParticipantCase(token);
+            return new
+            {
+                dependencies = new Cat_Dependencias().GetOwDependenciesConsolidados(token),
+                caseTickets = caseTable,
+                task = new CaseTable_Tareas().GetOwActiveParticipations(token),
+                comments = new CaseTable_Comments().GetOwComments(caseTable)
+            };
+        }
 
     }
 }

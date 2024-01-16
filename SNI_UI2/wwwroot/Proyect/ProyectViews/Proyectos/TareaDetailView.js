@@ -109,7 +109,6 @@ class TareaDetailView extends HTMLElement {
             }}
         ]}),            
             css`
-             @import url(https://fonts.googleapis.com/css?family=Roboto);
              @import url('https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css');
             /*Just the background stuff*/
             .container {

@@ -7,6 +7,7 @@ import { ColumChart } from "../../WDevCore/WComponents/WChartJSComponents.js";
 import { CaseDetailComponent } from "../ProyectViews/Proyectos/CaseDetailComponent.js";
 import { CaseTable_Case, CaseTable_Tareas } from "../../ModelProyect/ProyectDataBaseModel.js";
 import { TareaDetailView } from "../ProyectViews/Proyectos/TareaDetailView.js";
+import { WPaginatorViewer } from "../../WDevCore/WComponents/WPaginatorViewer.js";
 /**
  * @typedef {Object} ComponentConfig
  * * @property {Object} [propierty]
@@ -47,7 +48,7 @@ class AppDashboardComponentView extends HTMLElement {
     async MainComponent() {
         /**@type {Dashboard} */
         // @ts-ignore
-        const data = await new Dashboard().Get();
+        const data = await new Dashboard().GetDasboard();
         const component = WRender.Create({ className: "dashboard-component" });
 
         const dependencies = WRender.Create({ className: "dashboard-dependencies" });
@@ -66,9 +67,10 @@ class AppDashboardComponentView extends HTMLElement {
             ]
         });
 
-        data.caseTickets.forEach(element => {
-            caseList.append(this.caseView(element));
-        });
+        const dataCase = data.caseTickets.map(element => this.caseView(element))
+        // @ts-ignore
+        const paginator = new WPaginatorViewer({ Dataset:  dataCase });
+        caseList.append(paginator)
         // @ts-ignore
         data.caseTickets.forEach(t => t.Dependencia = t.Cat_Dependencias.Descripcion);
         chartCase.append(new ColumChart({
@@ -380,6 +382,8 @@ class AppDashboardComponentView extends HTMLElement {
                             background: #fff;
                             position: relative;
                             z-index: 1;
+                            max-width: 360px;
+                            overflow: hidden;
                         }
                         .blog-card .description h1,
                         .blog-card .description h2 {
@@ -423,6 +427,9 @@ class AppDashboardComponentView extends HTMLElement {
                             text-overflow: ellipsis;
                             white-space: nowrap;
                             overflow: hidden;
+                            max-height: 80px;
+                            font-size: 9px !important;
+                            text-transform: lowercase !important;
                         }                       
                         .blog-card p:first-of-type:before {
                             content: "";
@@ -735,8 +742,6 @@ class AppDashboardComponentView extends HTMLElement {
         });
     }
     CustomStyle = css`
-        @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:500);
-        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css');
         .dashboard-component{
            display: grid;
            grid-template-columns: 400px calc(100% - 800px) 350px;

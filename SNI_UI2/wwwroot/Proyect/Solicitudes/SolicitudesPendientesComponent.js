@@ -34,12 +34,22 @@ class SolicitudesPendientesComponent extends HTMLElement {
             }, Estado: {
                 type: "text", hidden: true
             }, Cat_Dependencias: {
-                type: "WSELECT",  hiddenFilter: true, ModelObject: () => new Cat_Dependencias()
+                type: "WSELECT", hiddenFilter: true, ModelObject: () => new Cat_Dependencias()
             }
         });
+        this.nIntervId == null
         this.DrawSolicitudesPendientesComponent();
     }
-    connectedCallback() { }
+    connectedCallback() {
+        if (this.nIntervId == null) {
+            this.nIntervId = setInterval(this.update, 10000);
+        }        
+    }
+    disconnectedCallback() {
+        clearInterval(this.nIntervId);
+        // liberar nuestro inervalId de la variable
+        this.nIntervId = null;
+    }
     DrawSolicitudesPendientesComponent = async () => {
         this.OptionContainer.append(WRender.Create({ tagName: 'input', type: 'button', className: 'Block-Alert', value: 'Casos Pendientes de Aprobación', onclick: this.actividadesManager }))
         this.OptionContainer.append(WRender.Create({ tagName: 'input', type: 'button', className: 'Block-Success', value: 'Nuevo Caso', onclick: this.nuevoCaso }))
@@ -115,15 +125,17 @@ class SolicitudesPendientesComponent extends HTMLElement {
         this.shadowRoot.append(priorityStyles.cloneNode(true));
         return WRender.Create({
             className: "actividad", object: actividad, children: [
-                { tagName: 'h4', innerText: `#${actividad.Id_Case} - ${actividad.Titulo} (${actividad.Tbl_Servicios?.Descripcion_Servicio ?? ""})`, children : [
-                    {
-                        className: "options", children: [
-                            { tagName: 'button', className: 'Btn-Mini', innerText: "Detalle", onclick: async () => await this.actividadDetail(actividad) },
-                            { tagName: 'button', className: 'Btn-Mini', innerText: 'Vincular Caso', onclick: () => this.Vincular(actividad) }
-                        ]
-                    }
-                ]}
-               , caseGeneralData(actividad)
+                {
+                    tagName: 'h4', innerText: `#${actividad.Id_Case} - ${actividad.Titulo} (${actividad.Tbl_Servicios?.Descripcion_Servicio ?? ""})`, children: [
+                        {
+                            className: "options", children: [
+                                { tagName: 'button', className: 'Btn-Mini', innerText: "Detalle", onclick: async () => await this.actividadDetail(actividad) },
+                                { tagName: 'button', className: 'Btn-Mini', innerText: 'Vincular Caso', onclick: () => this.Vincular(actividad) }
+                            ]
+                        }
+                    ]
+                }
+                , caseGeneralData(actividad)
             ]
         })
     }
@@ -187,7 +199,7 @@ class SolicitudesPendientesComponent extends HTMLElement {
                     ObjectModal: simpleCaseForm(element,
                         dependencias.filter(d => d.Id_Dependencia != element.Id_Dependencia),
                         async (table_case) => {
-                            
+
                             this.shadowRoot.append(ModalVericateAction(async () => {
                                 const response =
                                     await new CaseTable_Case().RemitirCasos(this.mainTable.selectedItems,

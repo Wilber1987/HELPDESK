@@ -8,6 +8,7 @@ import { CaseDetailComponent } from "../ProyectViews/Proyectos/CaseDetailCompone
 import { CaseTable_Case, CaseTable_Tareas } from "../../ModelProyect/ProyectDataBaseModel.js";
 import { TareaDetailView } from "../ProyectViews/Proyectos/TareaDetailView.js";
 import { WPaginatorViewer } from "../../WDevCore/WComponents/WPaginatorViewer.js";
+import { WFilterOptions } from "../../WDevCore/WComponents/WFilterControls.js";
 /**
  * @typedef {Object} ComponentConfig
  * * @property {Object} [propierty]
@@ -48,9 +49,38 @@ class AppDashboardComponentView extends HTMLElement {
     async MainComponent() {
         /**@type {Dashboard} */
         // @ts-ignore
-        const data = await new Dashboard().GetDasboard();
+        let data = await new Dashboard().GetDasboard({
+            // @ts-ignore
+            Desde: new Date().toISO(),
+            // @ts-ignore
+            Hasta: new Date().subtractDays(30).toISO()
+        });
         const component = WRender.Create({ className: "dashboard-component" });
+        this.FilterOptions = new WFilterOptions({
+            Dataset: [],
+            AutoFilter: false,
+            ModelObject: {
+                FilterData : [],
+                // @ts-ignore
+                Fechas: { type: "DATE", defaultValue: new Date().toISO() },
+            },
+            FilterFunction: async (/** @type {Array | undefined} */ DFilt) => {
+                //console.log({Desde: DFilt[0]?.Values[0], Hasta: DFilt[0]?.Values[1] });
+                // @ts-ignore
+                data = await new Dashboard().GetDasboard({Desde: DFilt[0]?.Values[0], Hasta: DFilt[0]?.Values[1] });
+                this.update(component, data);
 
+            }
+        });
+
+        this.update(component, data);
+        this.OptionContainer?.append(this.FilterOptions)       
+        return component;
+    }
+
+
+    update(component, data) {
+        component.innerHTML = "";
         const dependencies = WRender.Create({ className: "dashboard-dependencies" });
         const chartCase = WRender.Create({ className: "dashboard-chart-case" });
         const comment = WRender.Create({
@@ -67,10 +97,10 @@ class AppDashboardComponentView extends HTMLElement {
             ]
         });
 
-        const dataCase = data.caseTickets.map(element => this.caseView(element))
+        const dataCase = data.caseTickets.map(element => this.caseView(element));
         // @ts-ignore
-        const paginator = new WPaginatorViewer({ Dataset:  dataCase });
-        caseList.append(paginator)
+        const paginator = new WPaginatorViewer({ Dataset: dataCase });
+        caseList.append(paginator);
         // @ts-ignore
         data.caseTickets.forEach(t => t.Dependencia = t.Cat_Dependencias.Descripcion);
         chartCase.append(new ColumChart({
@@ -79,7 +109,7 @@ class AppDashboardComponentView extends HTMLElement {
             groupParams: ["Dependencia"],
             Title: "Estado de los casos",
             //TypeChart: "Line",
-        }))
+        }));
 
         data.comments.forEach(element => {
             comment.append(this.chatView(element));
@@ -92,11 +122,9 @@ class AppDashboardComponentView extends HTMLElement {
         data.dependencies.forEach(element => {
             dependencies.append(this.dependencieCards(element));
         });
-
         component.append(dependencies, chartCase, comment, caseList, taskContainer);
-        return component;
+        //return { dependencies, chartCase, comment, caseList, taskContainer };
     }
-
 
     /**
      * @param {import("../../ModelProyect/ProyectDataBaseModel.js").Cat_Dependencias} element
@@ -748,6 +776,9 @@ class AppDashboardComponentView extends HTMLElement {
            grid-template-rows: 350px 350px;
            gap: 20px;
         }  
+        w-filter-option {
+            grid-column: span 3;
+        }
         .dashboard-component h2{
             font-size:16px;
             margin: 8px 0px;

@@ -130,19 +130,33 @@ namespace API.Controllers
                 comments = new CaseTable_Comments().GetOwComments(caseTable)
             };
         }
-        [HttpGet]
-        public object getDashboardgET()
+        [HttpPost]
+        public object getDashboardgET(DateFilter dateFilter)
         {
             string? token = HttpContext.Session.GetString("seassonKey");
-            var caseTable = new CaseTable_Case().GetOwParticipantCase(token);
+            var caseTable = new CaseTable_Case
+            {
+                filterData = new List<FilterData> { FilterData.Between("Fecha_Inicio", dateFilter.Desde, dateFilter.Hasta) }
+            }.GetOwParticipantCase(token);
             return new
             {
                 dependencies = new Cat_Dependencias().GetOwDependenciesConsolidados(token),
                 caseTickets = caseTable,
-                task = new CaseTable_Tareas().GetOwActiveParticipations(token),
-                comments = new CaseTable_Comments().GetOwComments(caseTable)
+                task = new CaseTable_Tareas()
+                {
+                    filterData = new List<FilterData> { FilterData.Between("Fecha_Inicio", dateFilter.Desde, dateFilter.Hasta) }
+                }.GetOwActiveParticipations(token),
+                comments = new CaseTable_Comments()
+                {
+                    filterData = new List<FilterData> { FilterData.Between("Fecha", dateFilter.Desde, dateFilter.Hasta) }
+                }.GetOwComments(caseTable)
             };
         }
 
+    }
+    public class DateFilter
+    {
+        public DateTime Desde { get; set; }
+        public DateTime Hasta { get; set; }
     }
 }

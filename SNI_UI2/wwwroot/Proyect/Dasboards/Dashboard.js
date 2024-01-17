@@ -14,8 +14,8 @@ class Dashboard extends EntityClass {
     /**@type {Array<CaseTable_Tareas>} */ task;
     /**@type {Array<CaseTable_Comments>} */ comments;
 
-    GetDasboard = async () => {
-        return await WAjaxTools.GetRequest("/api/Proyect/getDashboardgET");
+    GetDasboard = async (object) => {
+        return await WAjaxTools.PostRequest("/api/Proyect/getDashboardgET", object);
     }
 }
 export { Dashboard }

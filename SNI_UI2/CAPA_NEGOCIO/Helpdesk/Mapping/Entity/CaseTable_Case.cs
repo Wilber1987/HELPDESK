@@ -220,9 +220,12 @@ namespace CAPA_NEGOCIO.MAPEO
         private List<CaseTable_Case> getCaseByDependencia(string? identity, Case_Estate? case_Estate)
         {
             Estado = case_Estate?.ToString();
-            return Get_WhereIN<CaseTable_Case>("Id_Dependencia", new CaseTable_Dependencias_Usuarios()
-            { Id_Perfil = AuthNetCore.User(identity).UserId }
-               .Get<CaseTable_Dependencias_Usuarios>().Select(p => p.Id_Dependencia.ToString()).ToArray());
+
+            return Where<CaseTable_Case>(
+                FilterData.In("Id_Dependencia", new CaseTable_Dependencias_Usuarios()
+                { Id_Perfil = AuthNetCore.User(identity).UserId }
+                    .Get<CaseTable_Dependencias_Usuarios>().Select(p => p.Id_Dependencia.ToString()).ToArray())
+            );
         }
         internal object AprobarSolicitud(string identity)
         {

@@ -337,30 +337,30 @@ namespace CAPA_NEGOCIO.MAPEO
         {
             try
             {
-                var user = AuthNetCore.User(identity);
-                BeginGlobalTransaction();
-                List<DateTime?> fechasIniciales = this.CaseTable_Calendario.Select(c => c.Fecha_Inicio).ToList();
-                List<DateTime?> fechasFinales = this.CaseTable_Calendario.Select(c => c.Fecha_Inicio).ToList();
-                Fecha_Inicio = fechasIniciales.Min();
-                Fecha_Finalizacion = fechasFinales.Max();
+                UserModel user = AuthNetCore.User(identity) ?? new();
+                //BeginGlobalTransaction();
+                List<DateTime?>? fechasIniciales = this.CaseTable_Calendario?.Select(c => c.Fecha_Inicio).ToList();
+                List<DateTime?>? fechasFinales = this.CaseTable_Calendario?.Select(c => c.Fecha_Inicio).ToList();
+                Fecha_Inicio = fechasIniciales?.Min() ?? DateTime.Now;
+                Fecha_Finalizacion = fechasFinales?.Max() ?? DateTime.Now;
                 var comment = new CaseTable_Comments()
                 {
                     Id_Case = this.Id_Case,
                     Body = $"Se a creado una nueva tarea: {this.Descripcion}",
-                    NickName = $"{user.UserData.Nombres} ({user.mail})",
+                    NickName = $"{user.UserData?.Nombres} ({user?.mail})",
                     Fecha = DateTime.Now,
                     Estado = CommetsState.Pendiente.ToString(),
-                    Mail = user.mail
+                    Mail = user?.mail
                 };
                 comment.Save();
                 comment.CreateMailForComment(user);
                 var response = this.Save();
-                CommitGlobalTransaction();
+                //CommitGlobalTransaction();
                 return response;
             }
             catch (System.Exception)
             {
-                RollBackGlobalTransaction();
+                //RollBackGlobalTransaction();
                 throw;
             }
 

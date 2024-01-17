@@ -187,6 +187,7 @@ class SolicitudesPendientesComponent extends HTMLElement {
                     ObjectModal: simpleCaseForm(element,
                         dependencias.filter(d => d.Id_Dependencia != element.Id_Dependencia),
                         async (table_case) => {
+                            
                             this.shadowRoot.append(ModalVericateAction(async () => {
                                 const response =
                                     await new CaseTable_Case().RemitirCasos(this.mainTable.selectedItems,

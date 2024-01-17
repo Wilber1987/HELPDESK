@@ -8,13 +8,11 @@ namespace CAPA_NEGOCIO.Services
 {
     public class CaseBlock : TransactionalClass
     {
-        private Cat_Dependencias? dependencia { get; set; }
+        public Cat_Dependencias? dependencia { get; set; }
         public List<CaseTable_Comments>? comentarios { get; set; }
         public List<CaseTable_Case> caseTable_Cases { get; set; }
-
         public object AprobarSolicitudes(string? v)
         {
-
             try
             {
                 BeginGlobalTransaction();

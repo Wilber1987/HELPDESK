@@ -253,6 +253,7 @@ class CaseDetailComponent extends HTMLElement {
 
     }
     update = async () => {
+        console.log("update");
         // const find = actividad.CaseTable_Tareas.find(t => t.Id_Tarea == task.Id_Tarea);
         // for (const prop in task) {
         //     find[prop] = task[prop]
@@ -263,14 +264,15 @@ class CaseDetailComponent extends HTMLElement {
         this.Actividad.CaseTable_Tareas = dataTask;
 
 
-        this.tasktable.Dataset = dataTask;
+        //this.tasktable.Dataset = dataTask;
         this.taskManager.Dataset = dataTask;
+        console.log(dataTask);
 
         this.Actividad.Progreso = this.Actividad.CaseTable_Tareas?.filter(tarea => tarea.Estado?.includes("Finalizado")).length;
         this.actividadDetailView.querySelector(".actividadDetail").innerHTML = "";
         this.actividadDetailView.querySelector(".actividadDetail").append(this.actividadElementDetail(this.Actividad));
 
-        this.tasktable.DrawTable();
+        //this.tasktable.DrawTable();
         this.taskManager.DrawTaskManagers();
         this.ganttChart.DrawComponent();
         this.ganttChart.Animate();

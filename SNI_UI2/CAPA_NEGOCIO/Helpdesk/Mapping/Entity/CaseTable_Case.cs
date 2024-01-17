@@ -248,6 +248,13 @@ namespace CAPA_NEGOCIO.MAPEO
                 Estado = CommetsState.Pendiente.ToString(),
                 Mail = user.mail
             };
+            new CaseTable_Tareas()
+            {
+                Titulo = "Ejecución y resolución del caso",
+                Descripcion = $"Ejecución y resolución del caso: #{this.Id_Case}",
+                Id_Case = this.Id_Case,
+                Estado = TareasState.Proceso.ToString()
+            }.SaveTarea(identity);
             if (CaseTable_Tareas != null)
             {
                 foreach (var task in CaseTable_Tareas)

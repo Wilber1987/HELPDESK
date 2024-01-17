@@ -28,11 +28,15 @@ class TaskManagers extends HTMLElement {
         this.TabManager = new ComponentsManager({ MainContainer: this.TabContainer });
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });
         this.shadowRoot?.append(this.TabContainer);
+        this.StatePanelContainer = WRender.Create({
+            className: "panelContainer",
+            style: " grid-template-columns: repeat(" + this.TaskModel.Estado.Dataset.length + ", auto);"
+        })
         this.DrawTaskManagers();
     }
     connectedCallback() { }
-    DrawTaskManagers = async () => {
-        this.TabContainer.innerHTML = "";     
+    DrawTaskManagers = async () => { 
+        this.StatePanelContainer.innerHTML = ""; 
         this.TaskManager(this.Dataset);
     }
     /**
@@ -40,10 +44,7 @@ class TaskManagers extends HTMLElement {
      * @param {Array<Object>} DatasetData 
      */
     TaskManager = (DatasetData = this.Dataset) => {
-        const StatePanelContainer = WRender.Create({
-            className: "panelContainer",
-            style: " grid-template-columns: repeat(" + this.TaskModel.Estado.Dataset.length + ", auto);"
-        })
+        
         this.TaskModel.Estado.Dataset.forEach(state => {
             const Dataset = DatasetData.filter(t => t.Estado == state);
             const Panel = WRender.Create({
@@ -80,13 +81,12 @@ class TaskManagers extends HTMLElement {
 
                     }]
             });
-            StatePanelContainer.appendChild(WRender.Create({
+            this.StatePanelContainer.appendChild(WRender.Create({
                 className: "panel-container",
                 children: [panelOptions, Panel]
             }));
         });
-        //this.TabContainer.append(StatePanelContainer);
-        this.TabManager.NavigateFunction("main-task", StatePanelContainer);
+        this.TabManager.NavigateFunction("main-task", this.StatePanelContainer);
     }
     taskCard = (task) => {
         return WRender.Create({
@@ -144,7 +144,7 @@ class TaskManagers extends HTMLElement {
         this.TaskModel.CaseTable_Calendario = CalendarModel;
         this.shadowRoot?.append(new WModalForm({
             EditObject: task,
-            ImageUrlPath: this.Config.ImageUrlPath,
+            ImageUrlPath: this.Config?.ImageUrlPath,
             AutoSave: true,
             ModelObject: this.TaskModel
         }))

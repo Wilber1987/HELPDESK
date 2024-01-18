@@ -30,9 +30,9 @@ class CaseDashboardComponent extends HTMLElement {
         this.dashBoardView();
     }
 
-    SetOptions = (/** @type {Array} */ datasetMap,
-        /** @type {Array} */ MapDataset,
-        /** @type {Array} */ MapDatasetAperturaCasos) => {
+    SetOptions = (/** @type {Array} */ casosMap,
+        /** @type {Array} */ casosProcesados,
+        /** @type {Array} */ casosEtiquetadosPorMes) => {
 
         const title1 = "Casos por dependencia";
         const title2 = "Estado de los Casos";
@@ -43,32 +43,49 @@ class CaseDashboardComponent extends HTMLElement {
         this.OptionContainer.append(WRender.Create({
             tagName: 'input', type: 'button',
             className: 'Btn-Mini', value: title1, onclick: () =>
-                this.drawReport(WArrayF.GroupBy(datasetMap, "Dependencia"), title1)
+                this.drawReport(WArrayF.GroupBy(casosMap, "Dependencia"), title1, new CaseTable_Case({
+                    Dependencia: { type: "text" },
+                    val: { type: "number" }
+                }))
         }))
         this.OptionContainer.append(WRender.Create({
             tagName: 'input', type: 'button',
             className: 'Btn-Mini', value: title2, onclick: () =>
-                this.drawReport(WArrayF.GroupBy(this.Dataset, "Estado"), title2)
+                this.drawReport(WArrayF.GroupBy(this.Dataset, "Estado"), title2, new CaseTable_Case())
         }))
-        this.OptionContainer.append(WRender.Create({
-            tagName: 'input', type: 'button',
-            className: 'Btn-Mini', value: title3, onclick: () =>
-                this.drawReport(MapDataset, title3)
-        }))
-        console.log(MapDatasetAperturaCasos);
+        // this.OptionContainer.append(WRender.Create({
+        //     tagName: 'input', type: 'button',
+        //     className: 'Btn-Mini', value: title3, onclick: () =>
+        //         this.drawReport(casosProcesados, title3, new CaseTable_Case({
+        //             Estado: { type: "text" },
+        //             Servicio: { type: "text" },
+        //             Caso: { type: "text" },
+        //             Mes: { type: "text" },
+        //             val: { type: "number" },
+        //         }))
+        // }))
+        console.log(casosEtiquetadosPorMes);
         this.OptionContainer.append(WRender.Create({
             tagName: 'input', type: 'button',
             className: 'Btn-Mini', value: title4, onclick: () =>
-                this.drawReport(MapDatasetAperturaCasos, title4)
+                this.drawReport(casosEtiquetadosPorMes, title4, new CaseTable_Case({
+                    Estado: { type: "text" },
+                    Caso: { type: "text" },
+                    Mes: { type: "text" },
+                    val: { type: "number" },
+                }))
         }))
         this.OptionContainer.append(WRender.Create({
             tagName: 'input', type: 'button',
             className: 'Btn-Mini', value: title5, onclick: () =>
-                this.drawReport(datasetMap, title5)
+                this.drawReport(casosMap, title5, new CaseTable_Case({
+                    Dependencia: { type: "text" },
+                    val: { type: "number" }
+                }))
         }))
     }
-    drawReport = (/** @type {any[]} */ MapData, /**@type {String} */ title) => {
-        this.shadowRoot?.append(new WModalForm({ title: title, ObjectModal: new WReportComponent({ Dataset: MapData }) }))
+    drawReport = (/** @type {any[]} */ MapData, /**@type {String} */ title, /**@type {Object} */ model) => {
+        this.shadowRoot?.append(new WModalForm({ title: title, ObjectModal: new WReportComponent({ Dataset: MapData, ModelObject: model }) }))
     }
     dashBoardView = async () => {
         this.Modelcase = new CaseTable_Case();
@@ -125,9 +142,9 @@ class CaseDashboardComponent extends HTMLElement {
     async taskData() {
         const TareasMap = [];
         this.TareasDataset?.forEach(t => {
-            t.CaseTable_Participantes.forEach((p) => {
+            t.CaseTable_Participantes?.forEach((p) => {
                 if (TareasMap.find(f => f.Id_Perfil == p.Id_Perfil) == null) {
-                    const tp = this.TareasDataset?.filter(tf => tf.CaseTable_Participantes.filter((tpf) => tpf.Id_Perfil == p.Id_Perfil).length > 0);
+                    const tp = this.TareasDataset?.filter(tf => tf.CaseTable_Participantes?.filter((tpf) => tpf.Id_Perfil == p.Id_Perfil).length > 0);
                     TareasMap.push({
                         Id_Perfil: p.Id_Perfil,
                         Tecnico: (p.Tbl_Profile?.Nombres ?? "") + " " + (p.Tbl_Profile?.Apellidos ?? ""),
@@ -154,12 +171,12 @@ class CaseDashboardComponent extends HTMLElement {
     }
 
     buildCharts() {
-        const datasetMap = this.Dataset.map(x => {
+        const casosMap = this.Dataset.map(x => {
             x.Dependencia = x.Cat_Dependencias.Descripcion;
             x.val = 1;
             return x;
         });
-        const MapDataset = this.Dataset.filter(c => !c.Estado.includes("Pendiente") && !c.Estado.includes("Solicitado")
+        const casosProcesados = this.Dataset.filter(c => !c.Estado.includes("Pendiente") && !c.Estado.includes("Solicitado")
         ).map(c => ({
             Estado: c.Estado,
             Servicio: c.Tbl_Servicios?.Descripcion_Servicio ?? "",
@@ -167,19 +184,19 @@ class CaseDashboardComponent extends HTMLElement {
             Mes: c.Fecha_Inicio.getMonthFormatEs(),
             val: 1
         }));
-        const MapDatasetAperturaCasos = this.Dataset.map(c => ({
+        const casosEtiquetadosPorMes = this.Dataset.map(c => ({
             Estado: c.Estado,
             Caso: "Caso",
             Mes: c.Fecha_Inicio.getMonthFormatEs(),
             val: 1
         }));
-        console.log(MapDatasetAperturaCasos);
-        this.SetOptions(datasetMap, MapDataset, MapDatasetAperturaCasos)
+        console.log(casosEtiquetadosPorMes);
+        this.SetOptions(casosMap, casosProcesados, casosEtiquetadosPorMes)
 
         const columChart = new ColumChart({
             // @ts-ignore
             Title: "Estado de los Casos por dependencia",
-            Dataset: datasetMap, percentCalc: true,
+            Dataset: casosMap, percentCalc: true,
             EvalValue: "val",
             AttNameEval: "Estado",
             groupParams: ["Dependencia"]
@@ -188,14 +205,14 @@ class CaseDashboardComponent extends HTMLElement {
         const radialChartDependencias = new RadialChart({
             // @ts-ignore
             Title: "Casos por dependencia",
-            Dataset: WArrayF.GroupBy(datasetMap, "Dependencia"), EvalValue: "count", AttNameEval: "Dependencia"
+            Dataset: WArrayF.GroupBy(casosMap, "Dependencia"), EvalValue: "count", AttNameEval: "Dependencia"
         });
         const radialChart = new RadialChart({
             // @ts-ignore
             Title: "Estado de los Casos",
             Dataset: WArrayF.GroupBy(this.Dataset, "Estado"), EvalValue: "count", AttNameEval: "Estado"
         });
-        // const MapDatasetAll = this.Dataset.map(c => ({
+        // const casosProcesadosAll = this.Dataset.map(c => ({
         //     Estado: c.Estado,
         //     Caso: "Caso",
         //     Mes: c.Fecha_Inicio.getMonthFormatEs(),
@@ -205,7 +222,7 @@ class CaseDashboardComponent extends HTMLElement {
             // @ts-ignore
             Title: "Cumplimiento del SLA por mes",
             //TypeChart: "Line",
-            Dataset: MapDataset,
+            Dataset: casosProcesados,
             EvalValue: "val",
             AttNameEval: "Estado",
             groupParams: ["Servicio", "Mes"]
@@ -214,7 +231,7 @@ class CaseDashboardComponent extends HTMLElement {
             Title: "Frecuencia de solicitudes por mes",
             // @ts-ignore
             TypeChart: "Line",
-            Dataset: MapDatasetAperturaCasos,
+            Dataset: casosEtiquetadosPorMes,
             EvalValue: "val",
             AttNameEval: "Caso",
             groupParams: ["Mes"]

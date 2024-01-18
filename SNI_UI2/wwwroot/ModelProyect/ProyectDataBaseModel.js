@@ -322,18 +322,18 @@ class Cat_Dependencias extends EntityClass {
         this.NCasos = undefined;
         this.NCasosFinalizados = undefined;
     }
-    Id_Dependencia = { type: 'number', primary: true };
+    Id_Dependencia = { type: 'number', primary: true, hiddenFilter: true };
     Descripcion = { type: 'text' };
     Username = { type: 'email' };
-    Password = { type: 'text', hiddenInTable: true, require: false };
+    Password = { type: 'text', hiddenInTable: true, require: false, hiddenFilter: true };
     Host = { type: 'text' };
     HostService = { type: 'select', Dataset: ["OUTLOOK", 'GMAIL'], hiddenInTable: true, require: false };
-    AutenticationType = { type: 'select', Dataset: ["AUTH2", "BASIC"], hiddenInTable: true, require: false };
-    TENAT = { type: 'text', hiddenInTable: true, require: false };
-    CLIENT = { type: 'text', hiddenInTable: true, require: false };
-    OBJECTID = { type: 'text', hiddenInTable: true, require: false };
-    CLIENT_SECRET = { type: 'text', hiddenInTable: true, require: false };
-    SMTPHOST = { type: 'text', hiddenInTable: true, require: false };
+    AutenticationType = { type: 'select', Dataset: ["AUTH2", "BASIC"], hiddenInTable: true, require: false, hiddenFilter: true };
+    TENAT = { type: 'text', hiddenInTable: true, require: false, hiddenFilter: true };
+    CLIENT = { type: 'text', hiddenInTable: true, require: false, hiddenFilter: true };
+    OBJECTID = { type: 'text', hiddenInTable: true, require: false, hiddenFilter: true };
+    CLIENT_SECRET = { type: 'text', hiddenInTable: true, require: false, hiddenFilter: true };
+    SMTPHOST = { type: 'text', hiddenInTable: true, require: false, hiddenFilter: true };
 
     //Cat_Dependencia = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Dependencias(), require: false };
     Cat_Dependencias_Hijas = { type: 'Multiselect', hiddenFilter: true, ModelObject: () => new Cat_Dependencias(), require: false };

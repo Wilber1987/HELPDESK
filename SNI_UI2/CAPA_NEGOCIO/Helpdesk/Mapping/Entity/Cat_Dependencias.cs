@@ -55,7 +55,7 @@ public class Cat_Dependencias : EntityClass
 
     internal List<Cat_Dependencias> GetDependencias<T>()
     {
-        return new Cat_Dependencias().Get<Cat_Dependencias>().Select(m =>
+        return Get<Cat_Dependencias>().Select(m =>
         {
             m.Password = "PROTECTED";
             return m;

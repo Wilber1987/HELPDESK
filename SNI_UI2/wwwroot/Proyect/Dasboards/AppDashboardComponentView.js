@@ -56,25 +56,28 @@ class AppDashboardComponentView extends HTMLElement {
             Hasta: new Date().subtractDays(30).toISO()
         });
         const component = WRender.Create({ className: "dashboard-component" });
-        this.FilterOptions = new WFilterOptions({
-            Dataset: [],
-            AutoFilter: false,
-            ModelObject: {
-                FilterData : [],
-                // @ts-ignore
-                Fechas: { type: "DATE", defaultValue: new Date().toISO() },
-            },
-            FilterFunction: async (/** @type {Array | undefined} */ DFilt) => {
-                //console.log({Desde: DFilt[0]?.Values[0], Hasta: DFilt[0]?.Values[1] });
-                // @ts-ignore
-                data = await new Dashboard().GetDasboard({Desde: DFilt[0]?.Values[0], Hasta: DFilt[0]?.Values[1] });
-                this.update(component, data);
 
-            }
-        });
 
         this.update(component, data);
-        this.OptionContainer?.append(this.FilterOptions)       
+        if (this.FilterOptions == undefined) {
+            this.FilterOptions = new WFilterOptions({
+                Dataset: [],
+                AutoFilter: false,
+                Display: true,
+                ModelObject: {
+                    FilterData: [],
+                    // @ts-ignore
+                    Fechas: { type: "DATE", defaultValue: new Date().toISO() },
+                },
+                FilterFunction: async (/** @type {Array | undefined} */ DFilt) => {
+                    //console.log({Desde: DFilt[0]?.Values[0], Hasta: DFilt[0]?.Values[1] });
+                    // @ts-ignore
+                    data = await new Dashboard().GetDasboard({ Desde: DFilt[0]?.Values[0], Hasta: DFilt[0]?.Values[1] });
+                    this.update(component, data);
+                }
+            });
+            this.OptionContainer?.append(this.FilterOptions)
+        }
         return component;
     }
 
@@ -770,14 +773,17 @@ class AppDashboardComponentView extends HTMLElement {
         });
     }
     CustomStyle = css`
+        .OptionContainer{
+            display: flex;
+        }
         .dashboard-component{
            display: grid;
            grid-template-columns: 400px calc(100% - 800px) 350px;
-           grid-template-rows: 350px 350px;
+           grid-template-rows: 340px 320px;
            gap: 20px;
         }  
         w-filter-option {
-            grid-column: span 3;
+            min-width: calc(100% - 160px);
         }
         .dashboard-component h2{
             font-size:16px;

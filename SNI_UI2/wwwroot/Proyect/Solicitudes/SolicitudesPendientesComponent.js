@@ -42,7 +42,7 @@ class SolicitudesPendientesComponent extends HTMLElement {
     }
     connectedCallback() {
         if (this.nIntervId == null) {
-            this.nIntervId = setInterval(this.update, 10000);
+            this.nIntervId = setInterval(this.update, 20000);
         }        
     }
     disconnectedCallback() {
@@ -76,8 +76,9 @@ class SolicitudesPendientesComponent extends HTMLElement {
         this.FilterOptions = new WFilterOptions({
             Dataset: this.Dataset,
             ModelObject: this.ModelObject,
+            AutoFilter: false,
             FilterFunction: (DFilt) => {
-                this.mainTable?.DrawTable(DFilt);
+                this.update(DFilt);
             }
         });
         this.TabManager.NavigateFunction("Tab-Actividades-Manager",
@@ -94,8 +95,8 @@ class SolicitudesPendientesComponent extends HTMLElement {
         this.TabManager.NavigateFunction("Tab-nuevoCasoView",
             WRender.Create({ className: "nuevoCasoView", children: [form] }));
     }
-    update = async () => {
-        const Solicitudes = await new CaseTable_Case().GetSolicitudesPendientesAprobar();
+    update = async (inst = {}) => {
+        const Solicitudes = await new CaseTable_Case({FilterData: inst}).GetSolicitudesPendientesAprobar();
         this.mainTable?.DrawTable(Solicitudes);
     }
 

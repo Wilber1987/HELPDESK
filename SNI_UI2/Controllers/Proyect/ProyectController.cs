@@ -36,7 +36,6 @@ namespace API.Controllers
         }
         public List<CaseTable_Case> GetVinculateCase(CaseTable_Case inst)
         {
-
             return inst.GetVinculateCase(HttpContext.Session.GetString("seassonKey"));
         }
         public List<Cat_Dependencias> GetOwDependencies()
@@ -44,36 +43,30 @@ namespace API.Controllers
             return new Cat_Dependencias().GetOwDependencies(HttpContext.Session.GetString("seassonKey"));
         }
         //Pendiente, Solicitado, Activo, Finalizado, Espera
-        public List<CaseTable_Case> GetOwSolicitudesPendientesAprobar()
+        public List<CaseTable_Case> GetOwSolicitudesPendientesAprobar(CaseTable_Case inst)
         {
-            return new CaseTable_Case()
-            .GetOwSolicitudes(HttpContext.Session.GetString("seassonKey"), Case_Estate.Solicitado);
+            return inst.GetOwSolicitudes(HttpContext.Session.GetString("seassonKey"), Case_Estate.Solicitado);
         }
 
-        public List<CaseTable_Case> GetOwSolicitudesPendientes()
+        public List<CaseTable_Case> GetOwSolicitudesPendientes(CaseTable_Case inst)
         {
-            return new CaseTable_Case()
-            .GetOwSolicitudes(HttpContext.Session.GetString("seassonKey"), Case_Estate.Pendiente);
+            return inst.GetOwSolicitudes(HttpContext.Session.GetString("seassonKey"), Case_Estate.Pendiente);
         }
-        public List<CaseTable_Case> GetSolicitudesPendientesAprobar()
+        public List<CaseTable_Case> GetSolicitudesPendientesAprobar(CaseTable_Case inst)
         {
-            return new CaseTable_Case()
-            .GetSolicitudesPendientesAprobar(HttpContext.Session.GetString("seassonKey"), Case_Estate.Solicitado);
+            return inst.GetSolicitudesPendientesAprobar(HttpContext.Session.GetString("seassonKey"), Case_Estate.Solicitado);
         }
-        public List<CaseTable_Case> GetSolicitudesPendientesAprobarAdmin()
+        public List<CaseTable_Case> GetSolicitudesPendientesAprobarAdmin(CaseTable_Case inst)
         {
-            return new CaseTable_Case()
-            .GetSolicitudesPendientesAprobarAdmin(HttpContext.Session.GetString("seassonKey"));
+            return inst.GetSolicitudesPendientesAprobarAdmin(HttpContext.Session.GetString("seassonKey"));
         }
-        public List<CaseTable_Case> GetOwSolicitudesProceso()
+        public List<CaseTable_Case> GetOwSolicitudesProceso(CaseTable_Case inst)
         {
-            return new CaseTable_Case()
-            .GetOwSolicitudes(HttpContext.Session.GetString("seassonKey"), Case_Estate.Activo);
+            return inst.GetOwSolicitudes(HttpContext.Session.GetString("seassonKey"), Case_Estate.Activo);
         }
-        public List<CaseTable_Case> GetOwSolicitudesEspera()
+        public List<CaseTable_Case> GetOwSolicitudesEspera(CaseTable_Case inst)
         {
-            return new CaseTable_Case()
-            .GetOwSolicitudes(HttpContext.Session.GetString("seassonKey"), Case_Estate.Espera);
+            return inst.GetOwSolicitudes(HttpContext.Session.GetString("seassonKey"), Case_Estate.Espera);
         }
         public object RechazarSolicitud(CaseTable_Case caseTable_Case)
         {

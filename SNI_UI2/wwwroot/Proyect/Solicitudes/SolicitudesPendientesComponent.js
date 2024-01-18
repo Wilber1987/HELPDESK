@@ -37,7 +37,8 @@ class SolicitudesPendientesComponent extends HTMLElement {
                 type: "WSELECT", hiddenFilter: true, ModelObject: () => new Cat_Dependencias()
             }
         });
-        this.nIntervId == null
+        this.filterD = [];
+        this.nIntervId == null;
         this.DrawSolicitudesPendientesComponent();
     }
     connectedCallback() {
@@ -78,7 +79,8 @@ class SolicitudesPendientesComponent extends HTMLElement {
             ModelObject: this.ModelObject,
             AutoFilter: false,
             FilterFunction: (DFilt) => {
-                this.update(DFilt);
+                this.filterD = DFilt;
+                this.update(this.filterD);
             }
         });
         this.TabManager.NavigateFunction("Tab-Actividades-Manager",
@@ -95,7 +97,7 @@ class SolicitudesPendientesComponent extends HTMLElement {
         this.TabManager.NavigateFunction("Tab-nuevoCasoView",
             WRender.Create({ className: "nuevoCasoView", children: [form] }));
     }
-    update = async (inst = {}) => {
+    update = async (inst = this.filterD) => {
         const Solicitudes = await new CaseTable_Case({FilterData: inst}).GetSolicitudesPendientesAprobar();
         this.mainTable?.DrawTable(Solicitudes);
     }

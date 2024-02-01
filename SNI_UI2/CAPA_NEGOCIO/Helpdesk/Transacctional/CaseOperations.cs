@@ -78,6 +78,7 @@ namespace CAPA_NEGOCIO.Services
 				{
 					item.Cat_Dependencias = dependencia;
 					item.Tbl_Servicios = servicio;
+					item.CreateAsignationsByService();
 					item.Update();
 				}
 				CommitGlobalTransaction();

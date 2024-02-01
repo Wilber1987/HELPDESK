@@ -31,36 +31,7 @@ class CaseTable_Evidencias extends EntityClass {
 export { CaseTable_Evidencias }
 
 
-class Tbl_Profile extends EntityClass {
-    constructor(props) {
-        super(props, 'EntityHelpdesk');
-        for (const prop in props) {
-            this[prop] = props[prop];
-        }
-    }
-    Id_Perfil = { type: 'number', primary: true };
-    Nombres = { type: 'text' };
-    Apellidos = { type: 'text' };
-    FechaNac = { type: 'date', label: "fecha de nacimiento" };
-    Sexo = { type: "Select", Dataset: ["Masculino", "Femenino"] };
-    Foto = { type: 'img' };
-    DNI = { type: 'text' };
-    Correo_institucional = { type: 'text', label: "correo", disabled: true };
-    Estado = { type: "Select", Dataset: ["ACTIVO", "INACTIVO"] };
-    CaseTable_Dependencias_Usuarios = { type: 'Multiselect', hiddenFilter: true, ModelObject: () => new Cat_Dependencias() }
-    /**
-      * @param {Array<Tbl_Profile>} perfiles
-      * @param {Cat_Dependencias} dependencia
-      * @returns {Object}
-      */
-    AsignarDependencias = async (perfiles, dependencia) => {
-        return await WAjaxTools.PostRequest("/api/Proyect/AsignarDependencias", {
-            perfiles: perfiles,
-            dependencia: dependencia
-        });
-    }
-}
-export { Tbl_Profile }
+
 
 class Cat_Tipo_Servicio extends EntityClass {
     constructor(props) {
@@ -88,7 +59,7 @@ class Tbl_Servicios extends EntityClass {
     Descripcion_Servicio = { type: 'text' };
     //Visibilidad = { type: 'text' };
     Estado = { type: "Select", Dataset: ["Activo", "Inactivo"] };
-    Cat_Tipo_Servicio = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Tipo_Servicio() };
+    //Cat_Tipo_Servicio = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Tipo_Servicio() };
     Cat_Dependencias = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Dependencias() }
     //Fecha_Inicio = { type: 'date' };
     //Fecha_Finalizacion = { type: 'date' };
@@ -187,11 +158,12 @@ class CaseTable_Case extends EntityClass {
     }
     /**
     * @param {Array<CaseTable_Case>} element
+    * @param {CaseTable_Case} table_case
     * @returns {Object}
     */
-    AprobarCaseList = async (element) => {
+    AprobarCaseList = async (element, table_case) => {
         return await WAjaxTools.PostRequest("/api/Proyect/AprobarCaseList",
-            { caseTable_Cases: element });
+            { caseTable_Cases: element, servicio:  table_case.Tbl_Servicios});
     }
     /**
        * @param {Array<CaseTable_Case>} element
@@ -207,6 +179,7 @@ class CaseTable_Case extends EntityClass {
     /**
        * @param {Array<CaseTable_Case>} element
        * @param {CaseTable_Comments} dependencia
+       * @param {CaseTable_Case} table_case
        * @param {Array<CaseTable_Comments>} comentarios
        * @returns {Object}
        */
@@ -214,7 +187,8 @@ class CaseTable_Case extends EntityClass {
         return await WAjaxTools.PostRequest("/api/Proyect/RemitirCasos", {
             caseTable_Cases: element,
             dependencia: dependencia,
-            comentarios: comentarios
+            comentarios: comentarios,
+            servicio: table_case.Tbl_Servicios
         });
     }
 }

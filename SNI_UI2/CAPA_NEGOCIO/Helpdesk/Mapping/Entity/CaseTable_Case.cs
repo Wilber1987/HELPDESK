@@ -70,7 +70,7 @@ namespace CAPA_NEGOCIO.MAPEO
                 else if (mail.Subject.ToUpper().Contains("TAREA ASIGNADA:")) { }
                 else
                 {
-                    Titulo = mail.Subject.ToUpper() + $"({ mail.From})";
+                    Titulo = mail.Subject.ToUpper() + $" ({mail.From})";
                     Descripcion = mail.HtmlBody;
                     Estado = Case_Estate.Solicitado.ToString();
                     Fecha_Inicio = mail.Date.DateTime;
@@ -173,10 +173,16 @@ namespace CAPA_NEGOCIO.MAPEO
         }
         public List<CaseTable_Case> GetOwCase(string identity)
         {
-            if (AuthNetCore.HavePermission(PermissionsEnum.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identity)
-             || AuthNetCore.HavePermission(PermissionsEnum.TECNICO_CASOS_DEPENDENCIA.ToString(), identity))
+            if (AuthNetCore.HavePermission(PermissionsEnum.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identity))
             {
                 return getCaseByDependencia(identity, null)
+                .Where(c => c.Estado != Case_Estate.Rechazado.ToString()
+                && c.Estado != Case_Estate.Solicitado.ToString()
+                && c.Estado != Case_Estate.Finalizado.ToString()).ToList();
+            }
+            if (AuthNetCore.HavePermission(PermissionsEnum.TECNICO_CASOS_DEPENDENCIA.ToString(), identity))
+            {
+                return getCaseByAsignacion(identity, null)
                 .Where(c => c.Estado != Case_Estate.Rechazado.ToString()
                 && c.Estado != Case_Estate.Solicitado.ToString()
                 && c.Estado != Case_Estate.Finalizado.ToString()).ToList();
@@ -185,15 +191,28 @@ namespace CAPA_NEGOCIO.MAPEO
         }
         public List<CaseTable_Case> GetOwParticipantCase(string identity)
         {
-            return getCaseByDependencia(identity, null)
-            .Where(c => c.Estado != Case_Estate.Rechazado.ToString()).ToList();
+            if (AuthNetCore.HavePermission(PermissionsEnum.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identity))
+            {
+                return getCaseByDependencia(identity, null)
+                .Where(c => c.Estado != Case_Estate.Rechazado.ToString()).ToList();
+            }
+            if (AuthNetCore.HavePermission(PermissionsEnum.TECNICO_CASOS_DEPENDENCIA.ToString(), identity))
+            {
+                return getCaseByAsignacion(identity, null)
+                .Where(c => c.Estado != Case_Estate.Rechazado.ToString()).ToList();
+            }
+            throw new Exception("no tienes permisos para gestionar casos");
         }
         public List<CaseTable_Case> GetOwCloseCase(string identity)
         {
-            if (AuthNetCore.HavePermission(PermissionsEnum.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identity)
-             || AuthNetCore.HavePermission(PermissionsEnum.TECNICO_CASOS_DEPENDENCIA.ToString(), identity))
+            if (AuthNetCore.HavePermission(PermissionsEnum.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identity))
             {
                 return getCaseByDependencia(identity, null)
+                .Where(c => c.Estado == Case_Estate.Finalizado.ToString()).ToList();
+            }
+            if (AuthNetCore.HavePermission(PermissionsEnum.TECNICO_CASOS_DEPENDENCIA.ToString(), identity))
+            {
+                return getCaseByAsignacion(identity, null)
                 .Where(c => c.Estado == Case_Estate.Finalizado.ToString()).ToList();
             }
             throw new Exception("no tienes permisos para gestionar casos");
@@ -220,11 +239,19 @@ namespace CAPA_NEGOCIO.MAPEO
         private List<CaseTable_Case> getCaseByDependencia(string? identity, Case_Estate? case_Estate)
         {
             Estado = case_Estate?.ToString();
-
             return Where<CaseTable_Case>(
                 FilterData.In("Id_Dependencia", new CaseTable_Dependencias_Usuarios()
                 { Id_Perfil = AuthNetCore.User(identity).UserId }
                     .Get<CaseTable_Dependencias_Usuarios>().Select(p => p.Id_Dependencia.ToString()).ToArray())
+            );
+        }
+        private List<CaseTable_Case> getCaseByAsignacion(string? identity, Case_Estate? case_Estate)
+        {
+            Estado = case_Estate?.ToString();
+            return Where<CaseTable_Case>(
+                FilterData.In("Id_Case", new Tbl_Profile_CasosAsignados()
+                { Id_Perfil = AuthNetCore.User(identity).UserId }
+                    .Get<Tbl_Profile_CasosAsignados>().Select(p => p.Id_Case.ToString()).ToArray())
             );
         }
         internal object AprobarSolicitud(string identity)
@@ -242,6 +269,8 @@ namespace CAPA_NEGOCIO.MAPEO
             Estado = Case_Estate.Activo.ToString();
 
             var response = Update();
+            CreateAsignationsByService();
+
             var comment = new CaseTable_Comments()
             {
                 Id_Case = this.Id_Case,
@@ -270,6 +299,22 @@ namespace CAPA_NEGOCIO.MAPEO
             comment.CreateMailForComment(user);
             //CommitGlobalTransaction();
             return response;
+        }
+
+        public void CreateAsignationsByService()
+        {
+            if (this.Tbl_Servicios != null)
+            {
+                new Tbl_Servicios_Profile { Id_Servicio = this.Tbl_Servicios?.Id_Servicio }.Get<Tbl_Servicios_Profile>().ForEach(sp =>
+                {
+                    new Tbl_Profile_CasosAsignados
+                    {
+                        Id_Case = this.Id_Case,
+                        Id_Perfil = sp.Id_Perfil,
+                        Fecha = DateTime.Now
+                    }.Save();
+                });
+            }
         }
 
         internal object RechazarSolicitud(string identity)

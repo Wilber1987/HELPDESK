@@ -44,7 +44,7 @@ class SolicitudesPendientesComponent extends HTMLElement {
     connectedCallback() {
         if (this.nIntervId == null) {
             this.nIntervId = setInterval(this.update, 20000);
-        }        
+        }
     }
     disconnectedCallback() {
         clearInterval(this.nIntervId);
@@ -100,7 +100,7 @@ class SolicitudesPendientesComponent extends HTMLElement {
             WRender.Create({ className: "nuevoCasoView", children: [form] }));
     }
     update = async (inst = this.filterD) => {
-        const Solicitudes = await new CaseTable_Case({FilterData: inst}).GetSolicitudesPendientesAprobar();
+        const Solicitudes = await new CaseTable_Case({ FilterData: inst }).GetSolicitudesPendientesAprobar();
         this.mainTable?.DrawTable(Solicitudes);
     }
 
@@ -163,25 +163,21 @@ class SolicitudesPendientesComponent extends HTMLElement {
                 //     //modal.close();
                 // }, "Esta seguro que desea aprobar estas solicitudes"));
                 const dependencias = await new Cat_Dependencias().Get();
-                const servicios = await new Tbl_Servicios({Id_Dependencia : this.mainTable.selectedItems[0]?.Cat_Dependencias?.Id_Dependencia}).Get();
+                const servicios = await new Tbl_Servicios({ Id_Dependencia: this.mainTable.selectedItems[0]?.Cat_Dependencias?.Id_Dependencia }).Get();
                 const modal = new WModalForm({
                     ObjectModal: simpleCaseForm(element,
                         dependencias.filter(d => d.Id_Dependencia == this.mainTable.selectedItems[0]?.Cat_Dependencias?.Id_Dependencia),
                         servicios,
                         async (table_case) => {
-
-                            this.shadowRoot.append(ModalVericateAction(async () => {
-                                const response =
-                                    await new CaseTable_Case().RemitirCasos(this.mainTable.selectedItems,
-                                        table_case.Cat_Dependencias, table_case.CaseTable_Comments);
-                                if (response.status == 200) {
-                                    this.shadowRoot.append(ModalMessege("Solicitud remitida"));
-                                    this.update();
-                                } else {
-                                    this.shadowRoot.append(ModalMessege("Error"));
-                                }
-                                modal.close();
-                            }, "Esta seguro que desea remitir esta solicitud"))
+                            const response = await new CaseTable_Case()
+                                .AprobarCaseList(this.mainTable.selectedItems, table_case);
+                            if (response.status == 200) {
+                                this.shadowRoot.append(ModalMessege("Solicitudes aprobadas"));
+                                this.update();
+                            } else {
+                                this.shadowRoot.append(ModalMessege("Error"));
+                            }
+                            //modal.close();
                         })
                 });
                 this.shadowRoot.append(modal);
@@ -223,17 +219,17 @@ class SolicitudesPendientesComponent extends HTMLElement {
                     return;
                 }
                 const dependencias = await new Cat_Dependencias().Get();
-                const servicios = await new Tbl_Servicios({Id_Dependencia : this.mainTable.selectedItems[0]?.Cat_Dependencias?.Id_Dependencia}).Get();
+                const filterDepend = dependencias.filter(d => d.Id_Dependencia != this.mainTable.selectedItems[0]?.Cat_Dependencias?.Id_Dependencia)
+                const servicios = await new Tbl_Servicios({ Id_Dependencia: filterDepend[0]?.Id_Dependencia }).Get();
                 const modal = new WModalForm({
                     ObjectModal: simpleCaseForm(element,
-                        dependencias.filter(d => d.Id_Dependencia != element.Id_Dependencia),
+                        filterDepend,
                         servicios,
                         async (table_case) => {
-
                             this.shadowRoot.append(ModalVericateAction(async () => {
                                 const response =
                                     await new CaseTable_Case().RemitirCasos(this.mainTable.selectedItems,
-                                        table_case.Cat_Dependencias, table_case.CaseTable_Comments);
+                                        table_case.Cat_Dependencias, table_case.CaseTable_Comments, table_case);
                                 if (response.status == 200) {
                                     this.shadowRoot.append(ModalMessege("Solicitud remitida"));
                                     this.update();

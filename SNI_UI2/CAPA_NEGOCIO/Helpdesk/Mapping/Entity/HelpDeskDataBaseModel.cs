@@ -31,7 +31,7 @@ namespace CAPA_NEGOCIO.MAPEO
         public string? Descripcion { get; set; }
     }
 
-    public class Tbl_Profile : EntityClass
+    public class Tbl_Profile : CAPA_DATOS.Security.Tbl_Profile
     {
         [PrimaryKey(Identity = true)]
         public int? Id_Perfil { get; set; }
@@ -57,8 +57,12 @@ namespace CAPA_NEGOCIO.MAPEO
         public List<CaseTable_Agenda>? CaseTable_Agenda { get; set; }
         [OneToMany(TableName = "CaseTable_Dependencias_Usuarios", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
         public List<CaseTable_Dependencias_Usuarios>? CaseTable_Dependencias_Usuarios { get; set; }
+
+        [OneToMany(TableName = "Tbl_Servicios_Profile", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
+        public List<Tbl_Servicios_Profile>? Tbl_Servicios_Profile { get; set; }
         //[OneToMany(TableName = "CaseTable_Participantes", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
         public List<CaseTable_Participantes>? CaseTable_Participantes { get; set; }
+
 
         public List<CaseTable_Dependencias_Usuarios> TakeDepCoordinaciones()
         {
@@ -115,7 +119,7 @@ namespace CAPA_NEGOCIO.MAPEO
                     new CaseTable_Dependencias_Usuarios() { Id_Perfil = Id_Perfil }.Delete();
                     foreach (var item in CaseTable_Dependencias_Usuarios)
                     {
-                        item.Id_Perfil  = Id_Perfil;
+                        item.Id_Perfil = Id_Perfil;
                         item.Save();
                     }
                     this.Update();
@@ -172,6 +176,35 @@ namespace CAPA_NEGOCIO.MAPEO
         }
     }
 
+    public class Tbl_Servicios_Profile : EntityClass
+    {
+        [PrimaryKey(Identity = false)]
+        public int? Id_Perfil { get; set; }
+
+        [PrimaryKey(Identity = false)]
+        public int? Id_Servicio { get; set; }
+
+        [ManyToOne(TableName = "Tbl_Profile", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
+        public Tbl_Profile? Tbl_Profile { get; set; }
+
+        [ManyToOne(TableName = "Tbl_Servicios", KeyColumn = "Id_Servicio", ForeignKeyColumn = "Id_Servicio")]
+        public Tbl_Servicios? Tbl_Servicios { get; set; }
+    }
+     public class Tbl_Profile_CasosAsignados : EntityClass
+    {
+        [PrimaryKey(Identity = false)]
+        public int? Id_Perfil { get; set; }
+
+        [PrimaryKey(Identity = false)]
+        public int? Id_Case { get; set; }
+        public DateTime? Fecha { get; set; }
+
+        [ManyToOne(TableName = "Tbl_Profile", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
+        public Tbl_Profile? Tbl_Profile { get; set; }
+
+        [ManyToOne(TableName = "CaseTable_Case", KeyColumn = "Id_Case", ForeignKeyColumn = "Id_Case")]
+        public CaseTable_Case? CaseTable_Case { get; set; }
+    }
 
     public class Cat_Tipo_Servicio : EntityClass
     {

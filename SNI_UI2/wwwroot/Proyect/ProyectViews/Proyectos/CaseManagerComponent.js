@@ -180,7 +180,7 @@ const CaseForm = (entity, dependencias, action) => {
  * @returns {WForm}
  */
 const simpleCaseForm = (entity, dependencias, servicios, action) => {
-    servicios = servicios.map(s => {
+    servicios = servicios?.map(s => {
         s.Descripcion = s.Descripcion_Servicio;
         return s;
     })
@@ -194,18 +194,20 @@ const simpleCaseForm = (entity, dependencias, servicios, action) => {
             Titulo: { type: "text", hidden: true },
             Tbl_Servicios: {
                 type: "wselect", ModelObject: new Cat_Dependencias(),
-                Dataset: servicios
+                Dataset: servicios, required: false
             },
             Fecha_Inicio: { type: "text", hidden: true },
             Estado: { type: "text", hidden: true },
             Fecha_Final: { type: "text", hidden: true },
             Descripcion: { type: "text", hidden: true },
-            CaseTable_Comments: { type: "MasterDetail", ModelObject: new CaseTable_Comments(), label: "Comentario" },
+            CaseTable_Comments: { type: "MasterDetail", ModelObject: new CaseTable_Comments(), label: "Comentario", hidden: true },
             Cat_Dependencias: {
                 type: "WSELECT", hiddenFilter: true, ModelObject: new Cat_Dependencias(),
                 Dataset: dependencias,
-                action: (caso) => {
-
+                action: async (caso) => {
+                    const servicios = await new Tbl_Servicios({ Id_Dependencia: caso.Cat_Dependencias?.Id_Dependencia }).Get();
+                    form.ModelObject.Tbl_Servicios.Dataset = servicios;
+                    form.DrawComponent();
                 }
             },
         })

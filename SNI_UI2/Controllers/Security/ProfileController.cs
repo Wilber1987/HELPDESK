@@ -11,7 +11,7 @@ namespace API.Controllers
         [HttpPost]
         [AuthController]
         //Save
-        public object? SaveProfile(Tbl_Profile Inst)
+        public object? SaveProfile(CAPA_NEGOCIO.MAPEO.Tbl_Profile Inst)
         {
             Inst.Id_Perfil = AuthNetCore.User(HttpContext.Session.GetString("seassonKey")).UserId;
             return Inst.SaveProfile();
@@ -19,7 +19,7 @@ namespace API.Controllers
         [HttpPost]
         [AuthController]
         //Save
-        public object? TakeProfile(Tbl_Profile Inst)
+        public object? TakeProfile(CAPA_NEGOCIO.MAPEO.Tbl_Profile Inst)
         {
             Inst.Id_Perfil = null;
             Inst.IdUser = AuthNetCore.User(HttpContext.Session.GetString("seassonKey")).UserId;
@@ -31,7 +31,7 @@ namespace API.Controllers
         //Save
         public object? TakeProfile2()
         {
-            Tbl_Profile Inst = new()
+            CAPA_NEGOCIO.MAPEO.Tbl_Profile Inst = new()
             {
                 IdUser = AuthNetCore.User(HttpContext.Session.GetString("seassonKey")).UserId
             };

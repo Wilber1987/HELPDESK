@@ -14,33 +14,33 @@ namespace API.Controllers
     {
         [HttpPost]
         #region INVESTIGADOR
-        public Object TakePostulantes(Tbl_Profile inv)
+        public Object TakePostulantes(CAPA_NEGOCIO.MAPEO.Tbl_Profile inv)
         {
             inv.Estado = "POSTULANTE";
-            return inv.Get<Tbl_Profile>();
+            return inv.Get<CAPA_NEGOCIO.MAPEO.Tbl_Profile>();
         }
-        public Object AdmitirPostulante(Tbl_Profile inv)
+        public Object AdmitirPostulante(CAPA_NEGOCIO.MAPEO.Tbl_Profile inv)
         {
             inv.Estado = "ACTIVO";
             //TODO enviar correo
             //CrearUser
             return inv.AdmitirPostulante();
         }
-        public Object RechazarPostulante(Tbl_Profile inv)
+        public Object RechazarPostulante(CAPA_NEGOCIO.MAPEO.Tbl_Profile inv)
         {
             inv.Estado = "RECHAZADO";
             //TODO enviar correo
             return inv.Update("Id_Perfil");
         }
-        public Object TakeInvestigadores(Tbl_Profile inv)
+        public Object TakeInvestigadores(CAPA_NEGOCIO.MAPEO.Tbl_Profile inv)
         {
             inv.Estado = "ACTIVO";
-            return inv.Get<Tbl_Profile>();
+            return inv.Get<CAPA_NEGOCIO.MAPEO.Tbl_Profile>();
         }
-        public Object TakeRechazados(Tbl_Profile inv)
+        public Object TakeRechazados(CAPA_NEGOCIO.MAPEO.Tbl_Profile inv)
         {
             inv.Estado = "RECHAZADO";
-            return inv.Get<Tbl_Profile>();
+            return inv.Get<CAPA_NEGOCIO.MAPEO.Tbl_Profile>();
         }
         #endregion
         #region CATALOGOS

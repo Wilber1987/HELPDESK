@@ -110,13 +110,14 @@ class CaseTable_Case extends EntityClass {
     Tbl_Servicios = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Tbl_Servicios() };
     Fecha_Inicio = { type: 'date' };
     Titulo = { type: 'text' };
+    Descripcion = { type: 'textarea', hiddenInTable: false, hiddenFilter: true };
     Cat_Dependencias = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Dependencias() };
     Estado = { type: "Select", Dataset: ["Activo", "Espera", "Pendiente", "Finalizado"] };
     Case_Priority = { type: "Select", Dataset: ["Alta", "Media", "Baja"], label: "Prioridad" };
 
     Fecha_Final = { type: 'date' , hiddenFilter: true };
 
-    Descripcion = { type: 'textarea', hiddenInTable: true, hiddenFilter: true };
+    
     CaseTable_Tareas = { type: 'MasterDetail', ModelObject: () => new CaseTable_Tareas() };
     /**
      * @returns {Array<CaseTable_Case>}

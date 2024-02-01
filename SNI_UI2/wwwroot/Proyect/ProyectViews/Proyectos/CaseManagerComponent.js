@@ -3,7 +3,7 @@
 import { caseGeneralData } from './CaseDetailComponent.js';
 import { CaseSearcherToVinculate } from '../../../AppComponents/CaseSearcherToVinculate.js';
 import { priorityStyles } from '../../../AppComponents/Styles.js';
-import { CaseTable_Agenda, CaseTable_Calendario, CaseTable_Case, CaseTable_Comments, CaseTable_Tareas, CaseTable_VinculateCase, Cat_Dependencias } from '../../../ModelProyect/ProyectDataBaseModel.js';
+import { CaseTable_Agenda, CaseTable_Calendario, CaseTable_Case, CaseTable_Comments, CaseTable_Tareas, CaseTable_VinculateCase, Cat_Dependencias, Tbl_Servicios } from '../../../ModelProyect/ProyectDataBaseModel.js';
 import { StylesControlsV2, StylesControlsV3 } from "../../../WDevCore/StyleModules/WStyleComponents.js";
 import { ModalVericateAction, WForm } from "../../../WDevCore/WComponents/WForm.js";
 import { WModalForm } from '../../../WDevCore/WComponents/WModalForm.js';
@@ -60,15 +60,17 @@ class CaseManagerComponent extends HTMLElement {
         this.shadowRoot.append(priorityStyles.cloneNode(true));
         return WRender.Create({
             className: "actividad", object: actividad, children: [
-                { tagName: 'h4', innerText: `#${actividad.Id_Case} - ${actividad.Titulo} (${actividad.Tbl_Servicios?.Descripcion_Servicio ?? ""})` , children: [
-                    {
-                        className: "options", children: [
-                            { tagName: 'button', className: 'Btn-Mini', innerText: "Detalle", onclick: async () => await this.actividadDetail(actividad) },
-                            { tagName: 'button', className: 'Btn-Mini', innerText: 'Vincular Caso', onclick: () => this.Vincular(actividad) }
-                        ]
-                    }
-                ] },
-                ,caseGeneralData(actividad),
+                {
+                    tagName: 'h4', innerText: `#${actividad.Id_Case} - ${actividad.Titulo} (${actividad.Tbl_Servicios?.Descripcion_Servicio ?? ""})`, children: [
+                        {
+                            className: "options", children: [
+                                { tagName: 'button', className: 'Btn-Mini', innerText: "Detalle", onclick: async () => await this.actividadDetail(actividad) },
+                                { tagName: 'button', className: 'Btn-Mini', innerText: 'Vincular Caso', onclick: () => this.Vincular(actividad) }
+                            ]
+                        }
+                    ]
+                },
+                , caseGeneralData(actividad),
                 { tagName: 'h4', innerText: "Progreso" },
                 ControlBuilder.BuildProgressBar(actividad.Progreso,
                     actividad.CaseTable_Tareas?.filter(tarea => !tarea.Estado?.includes("Inactivo"))?.length)
@@ -82,7 +84,7 @@ class CaseManagerComponent extends HTMLElement {
             ]
         })
     }
-    
+
     actividadDetail = async (actividad = (new CaseTable_Case())) => {
         sessionStorage.setItem("detailCase", JSON.stringify(actividad));
         window.location = "/ProyectViews/CaseDetail"
@@ -157,7 +159,7 @@ const CaseForm = (entity, dependencias, action) => {
                 type: 'MasterDetail',
                 ModelObject: () => new CaseTable_Tareas({ CaseTable_Calendario: ModelCalendar })
             }, Cat_Dependencias: {
-                type: "WSELECT",  hiddenFilter: true, ModelObject: new Cat_Dependencias(),
+                type: "WSELECT", hiddenFilter: true, ModelObject: new Cat_Dependencias(),
                 Dataset: dependencias,
                 action: (caso) => {
                     caso.CaseTable_Tareas
@@ -173,10 +175,15 @@ const CaseForm = (entity, dependencias, action) => {
 /**
  * @param {CaseTable_Case} [entity] 
  * @param {Array<Cat_Dependencias>} [dependencias] 
+ * @param {Array<Tbl_Servicios>} [servicios] 
  * @param {Function} [action] 
  * @returns {WForm}
  */
-const simpleCaseForm = (entity, dependencias, action) => {
+const simpleCaseForm = (entity, dependencias, servicios, action) => {
+    servicios = servicios.map(s => {
+        s.Descripcion = s.Descripcion_Servicio;
+        return s;
+    })
     const form = new WForm({
         EditObject: entity,
         SaveFunction: action,
@@ -185,14 +192,17 @@ const simpleCaseForm = (entity, dependencias, action) => {
             CaseTable_Tareas: { type: "text", hidden: true },
             Id_Vinculate: { type: "text", hidden: true },
             Titulo: { type: "text", hidden: true },
-            Tbl_Servicios: { type: "text", hidden: true },
+            Tbl_Servicios: {
+                type: "wselect", ModelObject: new Cat_Dependencias(),
+                Dataset: servicios
+            },
             Fecha_Inicio: { type: "text", hidden: true },
             Estado: { type: "text", hidden: true },
             Fecha_Final: { type: "text", hidden: true },
             Descripcion: { type: "text", hidden: true },
             CaseTable_Comments: { type: "MasterDetail", ModelObject: new CaseTable_Comments(), label: "Comentario" },
             Cat_Dependencias: {
-                type: "WSELECT",  hiddenFilter: true, ModelObject: new Cat_Dependencias(),
+                type: "WSELECT", hiddenFilter: true, ModelObject: new Cat_Dependencias(),
                 Dataset: dependencias,
                 action: (caso) => {
 

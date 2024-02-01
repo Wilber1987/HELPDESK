@@ -67,8 +67,8 @@ class TareaDetailView extends HTMLElement {
                     <h3> Estado: (${this.Task.Estado})</h3>                    
                     <div class="authores">
                         ${
-                            this.Task?.CaseTable_Participantes.map(I => `<div class="author"><img src="${I.Tbl_Profile?.Foto}" />
-                                <h2>${I.Tbl_Profile?.Nombres} ${I.Tbl_Profile?.Apellidos ?? ""}</h2></div>`).join("")
+                            this.Task?.CaseTable_Participantes?.map(I => `<div class="author"><img src="${I.Tbl_Profile?.Foto}" />
+                                <h2>${I.Tbl_Profile?.Nombres} ${I.Tbl_Profile?.Apellidos ?? ""}</h2></div>`)?.join("") ?? "Sin Participantes"
                         }
                     </div>
                     <div class="separator"></div>
@@ -78,7 +78,7 @@ class TareaDetailView extends HTMLElement {
                         ${
                             this.Task?.CaseTable_Calendario?.map(H => `<div class="horario">
                                del ${H.Fecha_Inicio?.toDateFormatEs()} hasta ${H.Fecha_Final?.toDateFormatEs()}
-                            </div>`).join("")
+                            </div>`)?.join("") ?? "Sin horario"
                         }
                     </div>
                 </div>

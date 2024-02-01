@@ -62,10 +62,7 @@
             </div>
             <h3>TRANSACCIONES</h3>
             <a class="" id="Home" href="/">HOME</a>
-            @if (SecurityController.HavePermission(PermissionsEnum.GENERADOR_SOLICITUDES.ToString(), identify))
-            {
-                <a class="" id="SolicitudesRealizadas" href="~/ProyectViews/SolicitudesRealizadas">Solicitudes Realizadas</a>
-            }
+            
             @if (SecurityController.HavePermission(PermissionsEnum.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identify))
             {
                 <a class="" id="SolicitudesPendientes" href="~/ProyectViews/SolicitudesPendientes">Solicitudes Pendientes</a>
@@ -87,7 +84,11 @@
              @if (SecurityController.HavePermission(PermissionsEnum.ADMINISTRAR_USUARIOS.ToString(), identify))
             {
                 <a class="" id="PerfilManager" href="~/Security/PerfilManager">Administrador de perfiles</a>
-            }     
+            }   
+            @if (SecurityController.HavePermission(PermissionsEnum.GENERADOR_SOLICITUDES.ToString(), identify))
+            {
+                <a class="" id="SolicitudesRealizadas" href="~/ProyectViews/SolicitudesRealizadas">Solicitudes Realizadas</a>
+            }  
 
              @* TEST MODULE 
             @if (SecurityController.HavePermission(PermissionsEnum.QUESTIONNAIRES_MANAGER.ToString(), identify))

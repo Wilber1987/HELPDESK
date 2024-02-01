@@ -1,5 +1,5 @@
 import { priorityStyles } from '../../AppComponents/Styles.js';
-import { CaseTable_Case, CaseTable_Comments, Cat_Dependencias } from '../../ModelProyect/ProyectDataBaseModel.js';
+import { CaseTable_Case, CaseTable_Comments, Cat_Dependencias, Tbl_Servicios } from '../../ModelProyect/ProyectDataBaseModel.js';
 import { WSecurity } from '../../WDevCore/Security/WSecurity.js';
 import { StylesControlsV2, StylesControlsV3 } from "../../WDevCore/StyleModules/WStyleComponents.js";
 import { WCommentsComponent } from '../../WDevCore/WComponents/WCommentsComponent.js';
@@ -71,13 +71,15 @@ class SolicitudesPendientesComponent extends HTMLElement {
             AddItemsFromApi: false,
             ModelObject: this.ModelObject, userStyles: [StylesControlsV2],
             Options: {
-                MultiSelect: true
+                MultiSelect: true,
+                Show: true
             }
         });
         this.FilterOptions = new WFilterOptions({
             Dataset: this.Dataset,
             ModelObject: this.ModelObject,
             AutoFilter: false,
+            Display: true,
             FilterFunction: (DFilt) => {
                 this.filterD = DFilt;
                 this.update(this.filterD);
@@ -149,17 +151,40 @@ class SolicitudesPendientesComponent extends HTMLElement {
                     this.shadowRoot.append(ModalMessege("Seleccione solicitudes"));
                     return;
                 }
-                this.shadowRoot.append(ModalVericateAction(async () => {
-                    const response = await new CaseTable_Case()
-                        .AprobarCaseList(this.mainTable.selectedItems);
-                    if (response.status == 200) {
-                        this.shadowRoot.append(ModalMessege("Solicitudes aprobadas"));
-                        this.update();
-                    } else {
-                        this.shadowRoot.append(ModalMessege("Error"));
-                    }
-                    //modal.close();
-                }, "Esta seguro que desea aprobar estas solicitudes"));
+                // this.shadowRoot.append(ModalVericateAction(async () => {
+                //     const response = await new CaseTable_Case()
+                //         .AprobarCaseList(this.mainTable.selectedItems);
+                //     if (response.status == 200) {
+                //         this.shadowRoot.append(ModalMessege("Solicitudes aprobadas"));
+                //         this.update();
+                //     } else {
+                //         this.shadowRoot.append(ModalMessege("Error"));
+                //     }
+                //     //modal.close();
+                // }, "Esta seguro que desea aprobar estas solicitudes"));
+                const dependencias = await new Cat_Dependencias().Get();
+                const servicios = await new Tbl_Servicios({Id_Dependencia : this.mainTable.selectedItems[0]?.Cat_Dependencias?.Id_Dependencia}).Get();
+                const modal = new WModalForm({
+                    ObjectModal: simpleCaseForm(element,
+                        dependencias.filter(d => d.Id_Dependencia == this.mainTable.selectedItems[0]?.Cat_Dependencias?.Id_Dependencia),
+                        servicios,
+                        async (table_case) => {
+
+                            this.shadowRoot.append(ModalVericateAction(async () => {
+                                const response =
+                                    await new CaseTable_Case().RemitirCasos(this.mainTable.selectedItems,
+                                        table_case.Cat_Dependencias, table_case.CaseTable_Comments);
+                                if (response.status == 200) {
+                                    this.shadowRoot.append(ModalMessege("Solicitud remitida"));
+                                    this.update();
+                                } else {
+                                    this.shadowRoot.append(ModalMessege("Error"));
+                                }
+                                modal.close();
+                            }, "Esta seguro que desea remitir esta solicitud"))
+                        })
+                });
+                this.shadowRoot.append(modal);
             }
         }, {
             name: "Rechazar", action: async (/**@type {CaseTable_Case}*/element) => {
@@ -198,9 +223,11 @@ class SolicitudesPendientesComponent extends HTMLElement {
                     return;
                 }
                 const dependencias = await new Cat_Dependencias().Get();
+                const servicios = await new Tbl_Servicios({Id_Dependencia : this.mainTable.selectedItems[0]?.Cat_Dependencias?.Id_Dependencia}).Get();
                 const modal = new WModalForm({
                     ObjectModal: simpleCaseForm(element,
                         dependencias.filter(d => d.Id_Dependencia != element.Id_Dependencia),
+                        servicios,
                         async (table_case) => {
 
                             this.shadowRoot.append(ModalVericateAction(async () => {

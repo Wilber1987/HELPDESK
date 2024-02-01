@@ -69,7 +69,7 @@ class TaskManagers extends HTMLElement {
             const panelOptions = WRender.Create({
                 className: "panel-options", children: [
                     {//display
-                        tagName: 'input', style: 'transform: rotate(90deg)', class: 'BtnDinamictT', value: '>', onclick: async (ev) => {
+                        tagName: 'input', style: 'transform: rotate(90deg)', type: "button", class: 'BtnDinamictT', value: '>', onclick: async (ev) => {
                             if (Panel.className == "panel") {
                                 ev.target.style["transform"] = "inherit";
                                 Panel.className = "panel-inact";
@@ -102,10 +102,10 @@ class TaskManagers extends HTMLElement {
                 { tagName: "label", class: "task-detail", innerText: task.CaseTable_Case?.Titulo },
                 //{ tagName: "p", class: "p-title", innerText: task.Descripcion },
                 {
-                    class: "p-participantes", children: task.CaseTable_Participantes?.map(I => ({
+                    class: "p-participantes", children: task?.CaseTable_Participantes?.map(I => ({
                         tagName: 'img', className: "img-participantes",
                         src: "" + I.Tbl_Profile?.Foto
-                    }))
+                    })) ?? []
                 }, {
                     class: "card-options", children: [{
                         tagName: "buttom", class: "Btn-Mini", innerText: "Editar",
@@ -224,8 +224,8 @@ class TaskManagers extends HTMLElement {
             background-color: #4894aa;
             color: #fff;
             border-radius: 0.2cm;
-            width: 15px;
-            height: 15px;
+            width: 25px;
+            height: 25px;
             background-color: #4894aa;
             font-family: monospace;
         }

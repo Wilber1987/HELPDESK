@@ -70,7 +70,7 @@ namespace CAPA_NEGOCIO.MAPEO
                 else if (mail.Subject.ToUpper().Contains("TAREA ASIGNADA:")) { }
                 else
                 {
-                    Titulo = mail.Subject.ToUpper();
+                    Titulo = mail.Subject.ToUpper() + $"({ mail.From})";
                     Descripcion = mail.HtmlBody;
                     Estado = Case_Estate.Solicitado.ToString();
                     Fecha_Inicio = mail.Date.DateTime;

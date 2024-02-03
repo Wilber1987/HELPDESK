@@ -13,7 +13,7 @@ namespace API.Controllers
         //Save
         public object? SaveProfile(CAPA_NEGOCIO.MAPEO.Tbl_Profile Inst)
         {
-            Inst.Id_Perfil = AuthNetCore.User(HttpContext.Session.GetString("seassonKey")).UserId;
+            Inst.IdUser = AuthNetCore.User(HttpContext.Session.GetString("seassonKey")).UserId;
             return Inst.SaveProfile();
         }
         [HttpPost]

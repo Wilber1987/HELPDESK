@@ -223,6 +223,7 @@ namespace API.Controllers
         [AuthController]
         public object? updateTbl_Profile(Tbl_Profile inst)
         {
+            inst.IdUser = AuthNetCore.User(HttpContext.Session.GetString("seassonKey")).UserId;
             return inst.SaveProfile();
         }
 

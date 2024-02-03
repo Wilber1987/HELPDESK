@@ -2,7 +2,7 @@ import { ComponentsManager, WAjaxTools, WRender, WArrayF } from "../WDevCore/WMo
 import { WCssClass } from "../WDevCore/WModules/WStyledRender.js";
 import { WModalForm } from "../WDevCore/WComponents/WModalForm.js";
 import { WDetailObject } from "../WDevCore/WComponents/WDetailObject.js";
-import { Tbl_Profile } from "../ModelProyect/ProyectDataBaseModel.js";
+import { Tbl_Profile } from "../WDevCore/Security/Tbl_Profile.js";
 
 class HomeClass extends HTMLElement {
     constructor(response) {

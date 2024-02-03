@@ -1,3 +1,4 @@
+import { Tbl_Profile } from "../WDevCore/Security/Tbl_Profile.js";
 import { EntityClass } from "../WDevCore/WModules/EntityClass.js";
 import { WAjaxTools } from "../WDevCore/WModules/WComponentsTools.js";
 

@@ -31,7 +31,7 @@ namespace CAPA_NEGOCIO.MAPEO
         public string? Descripcion { get; set; }
     }
 
-    public class Tbl_Profile : CAPA_DATOS.Security.Tbl_Profile
+    public class Tbl_Profile : EntityClass
     {
         [PrimaryKey(Identity = true)]
         public int? Id_Perfil { get; set; }
@@ -110,7 +110,7 @@ namespace CAPA_NEGOCIO.MAPEO
                 }
                 if (this.Id_Perfil == null)
                 {
-                    this.Id_Perfil = (Int32?)this.Save();
+                    this.Save();
                 }
                 else
                 {

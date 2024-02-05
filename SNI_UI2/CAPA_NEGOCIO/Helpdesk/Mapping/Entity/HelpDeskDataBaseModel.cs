@@ -183,7 +183,7 @@ namespace CAPA_NEGOCIO.MAPEO
                 string password = Guid.NewGuid().ToString();
                 user.Password = EncrypterServices.Encrypt(password);
                 user.Update();
-                SMTPMailServices.SendMail("heldesk@password.recovery",
+                _ = SMTPMailServices.SendMail("heldesk@password.recovery",
                  new List<string> { user.Mail },
                  "Recuperación de contraseña",
                  $"nueva contraseña: {password}", null, null);

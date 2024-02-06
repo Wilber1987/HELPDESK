@@ -163,9 +163,7 @@ namespace CAPA_NEGOCIO.MAPEO
             var Security_Users_List = this.Get<Security_Users>();
             foreach (Security_Users User in Security_Users_List)
             {
-                User.Security_Users_Roles =
-                    (new Security_Users_Roles()).Get_WhereIN<Security_Users_Roles>(
-                         "Id_User", new string?[] { User.Id_User.ToString() });
+                User.Tbl_Profile = User.Tbl_Profile?.Find<Tbl_Profile>();
             }
             return Security_Users_List;
         }

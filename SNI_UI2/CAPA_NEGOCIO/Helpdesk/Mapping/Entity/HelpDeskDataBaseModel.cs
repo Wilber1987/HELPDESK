@@ -99,7 +99,7 @@ namespace CAPA_NEGOCIO.MAPEO
                         }).body;
                         Tbl_Profile.Foto = pic?.Value?.Replace("wwwroot", "");
                         Tbl_Profile.IdUser = Id_User;
-                        Tbl_Profile.Save();
+                        //Tbl_Profile.Save();
                         Tbl_Profile?.SaveDependenciesAndservices();
                     }
                     else

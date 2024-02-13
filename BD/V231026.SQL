@@ -79,3 +79,9 @@ SELECT        helpdesk.CaseTable_Tareas.Id_Case, helpdesk.CaseTable_Tareas.Id_Ta
 FROM            helpdesk.CaseTable_Case INNER JOIN
                          helpdesk.CaseTable_Tareas ON helpdesk.CaseTable_Case.Id_Case = helpdesk.CaseTable_Tareas.Id_Case INNER JOIN
                          helpdesk.CaseTable_Calendario ON helpdesk.CaseTable_Tareas.Id_Tarea = helpdesk.CaseTable_Calendario.Id_Tarea;
+
+
+
+
+ALTER TABLE HELPDESK.helpdesk.CaseTable_Comments ADD Mails varchar(MAX) NULL;
+ALTER TABLE HELPDESK.helpdesk.CaseTable_Comments_Tasks ADD Mails varchar(MAX) NULL;

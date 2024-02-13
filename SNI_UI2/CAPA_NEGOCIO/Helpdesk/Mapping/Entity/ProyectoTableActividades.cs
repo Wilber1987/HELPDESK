@@ -20,6 +20,8 @@ namespace CAPA_NEGOCIO.MAPEO
         public string? Body { get; set; }
         [JsonProp]
         public List<ModelFiles>? Attach_Files { get; set; }
+        [JsonProp]
+        public List<string>? Mails { get; set; }
         public int? Id_Case { get; set; }
         public int? Id_User { get; set; }
         public DateTime? Fecha { get; set; }
@@ -34,6 +36,11 @@ namespace CAPA_NEGOCIO.MAPEO
                 Id_User = user.UserId;
                 NickName = user.UserData?.Nombres;
                 Mail = user.mail;
+                CaseTable_Case? caseTable_Case = new CaseTable_Case() { Id_Case = Id_Case }.Find<CaseTable_Case>();
+                if (Mails == null || Mails.Count == 0)
+                {
+                    Mails?.AddRange(caseTable_Case?.CaseTable_Comments?.Select(c => c.Mail?.ToString()).ToList());
+                }
                 foreach (var file in Attach_Files ?? new List<ModelFiles>())
                 {
                     ModelFiles Response = (ModelFiles)FileService.upload("Attach\\", file).body;
@@ -43,11 +50,8 @@ namespace CAPA_NEGOCIO.MAPEO
                 Save();
                 if (withMail)
                 {
-                    CreateMailForComment(user);
+                    CreateMailForComment(user, caseTable_Case);
                 }
-
-
-
                 CommitGlobalTransaction();
                 return this;
             }
@@ -59,14 +63,11 @@ namespace CAPA_NEGOCIO.MAPEO
 
         }
 
-        public void CreateMailForComment(UserModel user)
+        public void CreateMailForComment(UserModel user, CaseTable_Case caseTable_Case)
         {
             List<String?>? toMails = new List<string?>();
-            CaseTable_Case? caseTable_Case = new CaseTable_Case() { Id_Case = Id_Case }.Find<CaseTable_Case>();
-            if (caseTable_Case?.CaseTable_Comments != null)
-            {
-                toMails.AddRange(caseTable_Case?.CaseTable_Comments?.Select(c => c.Mail).ToList());
-            }
+            //CaseTable_Case? caseTable_Case = new CaseTable_Case() { Id_Case = Id_Case }.Find<CaseTable_Case>();           
+            toMails.AddRange(Mails);
             toMails.Add(caseTable_Case?.Mail);
             new CaseTable_Mails()
             {
@@ -289,8 +290,8 @@ namespace CAPA_NEGOCIO.MAPEO
             Tbl_Profile? profile = new Tbl_Profile() { IdUser = AuthNetCore.User(identity).UserId }.Find<Tbl_Profile>();
             CaseTable_Participantes Inst = new CaseTable_Participantes { Id_Perfil = profile?.Id_Perfil };
             return new CaseTable_Tareas().Where<CaseTable_Tareas>(
-                FilterData.NotIn("Estado",  TareasState.Finalizado.ToString(), TareasState.Inactivo.ToString() ),
-                FilterData.In( "Id_Tarea", new CaseTable_Participantes().Get<CaseTable_Participantes>().Select(p => p.Id_Tarea.ToString()).ToArray())
+                FilterData.NotIn("Estado", TareasState.Finalizado.ToString(), TareasState.Inactivo.ToString()),
+                FilterData.In("Id_Tarea", new CaseTable_Participantes().Get<CaseTable_Participantes>().Select(p => p.Id_Tarea.ToString()).ToArray())
             );
         }
 
@@ -314,8 +315,9 @@ namespace CAPA_NEGOCIO.MAPEO
 
         internal void NotificarTecnicos(CaseTable_Case caseTable_Case, UserModel user)
         {
-            CaseTable_Participantes?.ForEach(participante =>{
-                 List<String?>? toMails = new()
+            CaseTable_Participantes?.ForEach(participante =>
+            {
+                List<String?>? toMails = new()
                 {
                     participante?.Tbl_Profile?.Correo_institucional
                 };
@@ -328,7 +330,7 @@ namespace CAPA_NEGOCIO.MAPEO
                     Estado = MailState.PENDIENTE.ToString(),
                     Date = DateTime.Now,
                     Attach_Files = null,
-                    ToAdress = toMails?.Where(m => m != null && m != user.mail).ToList()?.Distinct()?.ToList() 
+                    ToAdress = toMails?.Where(m => m != null && m != user.mail).ToList()?.Distinct()?.ToList()
                 }.Save();
             });
         }
@@ -353,7 +355,7 @@ namespace CAPA_NEGOCIO.MAPEO
                     Mail = user?.mail
                 };
                 comment.Save();
-                comment.CreateMailForComment(user);
+                comment.CreateMailForComment(user, CaseTable_Case);
                 var response = this.Save();
                 //CommitGlobalTransaction();
                 return response;

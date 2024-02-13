@@ -296,7 +296,7 @@ namespace CAPA_NEGOCIO.MAPEO
             }
 
             comment.Save();
-            comment.CreateMailForComment(user);
+            comment.CreateMailForComment(user, this);
             //CommitGlobalTransaction();
             return response;
         }

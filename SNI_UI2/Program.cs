@@ -1,12 +1,17 @@
 using BackgroundJob.Cron.Jobs;
 using CAPA_DATOS;
 using CAPA_DATOS.Cron.Jobs;
+using SNI_UI2;
 
 
 SqlADOConexion.IniciarConexion("sa", "zaxscd", ".", "HELPDESK");
 //SqlADOConexion.IniciarConexion( "sa", "Helpdesk2023",".", "HELPDESK");
 //AppGenerate.Program.Main(); //generador de codigo
 var builder = WebApplication.CreateBuilder(args);
+
+//var test = new sptest{Parameters = new List<object> {1 , 1}}.Get<sptest>();
+
+//var test2 = new sptest2().Get<sptest>();
 
 // Add services to the container.
 builder.Services.AddRazorPages();

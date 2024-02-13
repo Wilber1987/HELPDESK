@@ -177,7 +177,7 @@ class SolicitudesPendientesComponent extends HTMLElement {
                             } else {
                                 this.shadowRoot.append(ModalMessege("Error"));
                             }
-                            //modal.close();
+                            modal.close();
                         })
                 });
                 this.shadowRoot.append(modal);
@@ -205,7 +205,7 @@ class SolicitudesPendientesComponent extends HTMLElement {
                                 } else {
                                     this.shadowRoot.append(ModalMessege("Error"));
                                 }
-                                // modal.close();
+                                modal.close();
                             }, "Esta seguro que desea rechazar estas solicitudes"));
                         }
                     }

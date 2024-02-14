@@ -106,6 +106,7 @@ class CaseDashboardComponent extends HTMLElement {
         });
         this.FilterOptions = new WFilterOptions({
             Dataset: this.Dataset,
+            AutoSetDate: true,
             ModelObject: {
                 Fecha_Inicio: { type: 'date' },
                 Estado: { type: "Select", Dataset: ["Activo", "Espera", "Pendiente", "Finalizado"] }

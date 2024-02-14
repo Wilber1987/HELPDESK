@@ -37,6 +37,7 @@ class LogErrorView extends HTMLElement {
         });
         this.FilterOptions = new WFilterOptions({
             Dataset: this.Dataset,
+            AutoSetDate: true,
             ModelObject: this.ModelComponent,
             FilterFunction: (/** @type {Array | undefined} */ DFilt) => {
                 this.MainComponent?.DrawTable(DFilt);

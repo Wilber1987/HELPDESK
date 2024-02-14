@@ -41,6 +41,7 @@ const CaseSearcherToVinculate = (caseToVinculate, actionName = null, action = nu
     const FilterOptions = new WFilterOptions({
         Dataset: [],
         ModelObject: model,
+        AutoSetDate: true,
         Display: true,
         FilterFunction: (DFilt) => {
             TableComponent.Dataset = DFilt;

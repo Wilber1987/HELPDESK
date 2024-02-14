@@ -247,11 +247,12 @@ namespace CAPA_NEGOCIO.MAPEO
         }
         private List<CaseTable_Case> getCaseByAsignacion(string? identity, Case_Estate? case_Estate)
         {
+            UserModel user = AuthNetCore.User(identity);
+            Tbl_Profile? profile = new Tbl_Profile { IdUser = user.UserId }.Find<Tbl_Profile>();
+            var asignaciones = new Tbl_Profile_CasosAsignados() { Id_Perfil = profile?.Id_Perfil }.Get<Tbl_Profile_CasosAsignados>();
             Estado = case_Estate?.ToString();
             return Where<CaseTable_Case>(
-                FilterData.In("Id_Case", new Tbl_Profile_CasosAsignados()
-                { Id_Perfil = AuthNetCore.User(identity).UserId }
-                    .Get<Tbl_Profile_CasosAsignados>().Select(p => p.Id_Case.ToString()).ToArray())
+                FilterData.In("Id_Case", asignaciones.Select(p => p.Id_Case.ToString()).ToArray())
             );
         }
         internal object AprobarSolicitud(string identity)
@@ -285,7 +286,8 @@ namespace CAPA_NEGOCIO.MAPEO
                 Titulo = "Ejecución y resolución del caso",
                 Descripcion = $"Ejecución y resolución del caso: #{this.Id_Case}",
                 Id_Case = this.Id_Case,
-                Estado = TareasState.Proceso.ToString()
+                Estado = TareasState.Proceso.ToString(),
+                CaseTable_Case = this
             }.SaveTarea(identity);
             if (CaseTable_Tareas != null)
             {

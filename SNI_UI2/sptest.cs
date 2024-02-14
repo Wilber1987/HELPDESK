@@ -15,4 +15,8 @@ namespace SNI_UI2
     {
         public string? column1 { get; set; }
     }
+    public class sptest3: StoreProcedureClass
+    {
+        
+    }
 }

@@ -49,6 +49,7 @@ class TareasComponentView extends HTMLElement {
         const tasksManager = new TaskManagers(tasks);
         const filterOptions = new WFilterOptions({
             Dataset: tasks,
+            AutoSetDate: true,
             ModelObject: this.Model,
             //DisplayFilts: [],
             FilterFunction: (DFilt) => {

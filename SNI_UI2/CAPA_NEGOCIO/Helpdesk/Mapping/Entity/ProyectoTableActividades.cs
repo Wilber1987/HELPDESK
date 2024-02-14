@@ -37,10 +37,6 @@ namespace CAPA_NEGOCIO.MAPEO
                 NickName = user.UserData?.Nombres;
                 Mail = user.mail;
                 CaseTable_Case? caseTable_Case = new CaseTable_Case() { Id_Case = Id_Case }.Find<CaseTable_Case>();
-                if (Mails == null || Mails.Count == 0)
-                {
-                    Mails?.AddRange(caseTable_Case?.CaseTable_Comments?.Select(c => c.Mail?.ToString()).ToList());
-                }
                 foreach (var file in Attach_Files ?? new List<ModelFiles>())
                 {
                     ModelFiles Response = (ModelFiles)FileService.upload("Attach\\", file).body;
@@ -66,8 +62,17 @@ namespace CAPA_NEGOCIO.MAPEO
         public void CreateMailForComment(UserModel user, CaseTable_Case caseTable_Case)
         {
             List<String?>? toMails = new List<string?>();
-            //CaseTable_Case? caseTable_Case = new CaseTable_Case() { Id_Case = Id_Case }.Find<CaseTable_Case>();           
-            toMails.AddRange(Mails);
+            CaseTable_Case? caseTable_CaseWithComments = new CaseTable_Case() { Id_Case = Id_Case }.Find<CaseTable_Case>();
+            if (Mails?.Count == 0 && caseTable_CaseWithComments?.CaseTable_Comments != null)
+            {
+                Mails = new List<string>();
+                Mails?.AddRange(caseTable_CaseWithComments?.CaseTable_Comments?.Select(c => c.Mail?.ToString()).ToList());
+
+            }
+            if (Mails != null)
+            {
+                toMails.AddRange(Mails);
+            }
             toMails.Add(caseTable_Case?.Mail);
             new CaseTable_Mails()
             {

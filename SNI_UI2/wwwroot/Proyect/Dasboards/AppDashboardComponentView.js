@@ -64,6 +64,7 @@ class AppDashboardComponentView extends HTMLElement {
                 Dataset: [],
                 AutoFilter: false,
                 Display: true,
+                AutoSetDate: true,
                 ModelObject: {
                     FilterData: [],
                     // @ts-ignore

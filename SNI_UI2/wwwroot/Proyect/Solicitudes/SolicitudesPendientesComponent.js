@@ -79,6 +79,7 @@ class SolicitudesPendientesComponent extends HTMLElement {
             Dataset: this.Dataset,
             ModelObject: this.ModelObject,
             AutoFilter: false,
+            AutoSetDate: true,
             Display: true,
             FilterFunction: (DFilt) => {
                 this.filterD = DFilt;

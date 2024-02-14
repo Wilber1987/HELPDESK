@@ -73,6 +73,7 @@ class MainProyect extends HTMLElement {
         const tasksManager = new TaskManagers(tasks);
         const filterOptions = new WFilterOptions({
             Dataset: tasks,
+            AutoSetDate: true,
             ModelObject: new CaseTable_Tareas(),
             //DisplayFilts: [],
             FilterFunction: (DFilt) => {

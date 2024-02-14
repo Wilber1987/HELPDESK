@@ -56,6 +56,7 @@ function ElementTab(DOMManager, Model) {
             const FilterOptions = new WFilterOptions({
                 Dataset: response,
                 ModelObject: Model,
+                AutoSetDate: true,
                 Display: true,
                 FilterFunction: (DFilt) => {
                     Table?.DrawTable(DFilt);

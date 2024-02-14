@@ -58,6 +58,7 @@ class MainSolicitudesView extends HTMLElement {
         const paginator = new WPaginatorViewer({ Dataset: this.mapCaseToPaginatorElement(this.Dataset), userStyles: [StylesControlsV2] });
         this.FilterOptions = new WFilterOptions({
             Dataset: this.Dataset,
+            AutoSetDate: true,
             ModelObject: this.ModelObject,
             Display: true,
             FilterFunction: (DFilt) => {

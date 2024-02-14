@@ -54,6 +54,7 @@ class CasosCerradosView extends HTMLElement {
         this.paginator = new WPaginatorViewer({ Dataset: datasetMap, userStyles: [StylesControlsV2] });
         this.FilterOptions = new WFilterOptions({
             Dataset: this.Dataset,
+            AutoSetDate: true,
             ModelObject: this.ModelObject,
             FilterFunction: (DFilt) => {
                 this.paginator?.Draw(this.generatePaginatorList(DFilt));

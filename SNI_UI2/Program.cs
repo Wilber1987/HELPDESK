@@ -9,7 +9,7 @@ SqlADOConexion.IniciarConexion("sa", "zaxscd", ".", "HELPDESK");
 //AppGenerate.Program.Main(); //generador de codigo
 var builder = WebApplication.CreateBuilder(args);
 
-//var test = new sptest{Parameters = new List<object> {1 , 1}}.Get<sptest>();
+//var test3 = new sptest3{Parameters = new List<object> {1 , 1}}.Execute();
 
 //var test2 = new sptest2().Get<sptest>();
 

@@ -52,6 +52,7 @@ const ChargeTasks = (tasks) => {
     const filterOptions = new WFilterOptions({
         Dataset: tasks,
         Display: true,
+        AutoSetDate: true,
         ModelObject: new CaseTable_Tareas(),
         //DisplayFilts: [],
         FilterFunction: (DFilt) => {

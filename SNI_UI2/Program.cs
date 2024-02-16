@@ -4,8 +4,8 @@ using CAPA_DATOS.Cron.Jobs;
 using SNI_UI2;
 
 
-SqlADOConexion.IniciarConexion("sa", "zaxscd", ".", "HELPDESK");
-//SqlADOConexion.IniciarConexion( "sa", "Helpdesk2023",".", "HELPDESK");
+//SqlADOConexion.IniciarConexion("sa", "zaxscd", ".", "HELPDESK");
+SqlADOConexion.IniciarConexion( "sa", "Helpdesk2023",".", "HELPDESK");
 //AppGenerate.Program.Main(); //generador de codigo
 var builder = WebApplication.CreateBuilder(args);
 

@@ -240,9 +240,10 @@ namespace CAPA_NEGOCIO.MAPEO
         {
             Estado = case_Estate?.ToString();
             return Where<CaseTable_Case>(
-                FilterData.In("Id_Dependencia", new CaseTable_Dependencias_Usuarios()
-                { Id_Perfil = AuthNetCore.User(identity).UserId }
-                    .Get<CaseTable_Dependencias_Usuarios>().Select(p => p.Id_Dependencia.ToString()).ToArray())
+                FilterData.In("Id_Dependencia",
+                    new CaseTable_Dependencias_Usuarios() { Id_Perfil = AuthNetCore.User(identity).UserId }
+                        .Get<CaseTable_Dependencias_Usuarios>().Select(p => p.Id_Dependencia.ToString()).ToArray()
+                )
             );
         }
         private List<CaseTable_Case> getCaseByAsignacion(string? identity, Case_Estate? case_Estate)

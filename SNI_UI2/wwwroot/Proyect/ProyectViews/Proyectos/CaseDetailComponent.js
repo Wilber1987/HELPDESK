@@ -105,7 +105,8 @@ class CaseDetailComponent extends HTMLElement {
             CommentsIdentify: actividad.Id_Case,
             CommentsIdentifyName: "Id_Case",
             UrlSearch: "../api/ApiEntityHelpdesk/getCaseTable_Comments",
-            UrlAdd: "../api/ApiEntityHelpdesk/saveCaseTable_Comments"
+            UrlAdd: "../api/ApiEntityHelpdesk/saveCaseTable_Comments",
+            AddObject: true
         });
         this.taskManager = new TaskManagers(tareasActividad,
             taskModel, {

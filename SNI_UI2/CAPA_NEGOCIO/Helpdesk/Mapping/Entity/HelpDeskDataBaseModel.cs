@@ -128,7 +128,9 @@ namespace CAPA_NEGOCIO.MAPEO
                         {
                             Tbl_Profile.IdUser = Id_User;
                             Tbl_Profile.Save();
-                        } else {
+                        }
+                        else
+                        {
                             Tbl_Profile.Update();
                         }
                         Tbl_Profile?.SaveDependenciesAndservices();
@@ -307,11 +309,15 @@ namespace CAPA_NEGOCIO.MAPEO
                 {
                     Correo_institucional = null;
                     IdUser = null;
-                    new CaseTable_Dependencias_Usuarios() { Id_Perfil = Id_Perfil }.Delete();
-                    foreach (var item in CaseTable_Dependencias_Usuarios)
+                    if (CaseTable_Dependencias_Usuarios != null)
                     {
-                        item.Id_Perfil = Id_Perfil;
-                        item.Save();
+                        new CaseTable_Dependencias_Usuarios() { Id_Perfil = Id_Perfil }.Delete();
+                        // foreach (var item in CaseTable_Dependencias_Usuarios)
+                        // {
+                        //     item.Id_Perfil = Id_Perfil;
+                        //     item.Save();
+                        // }
+
                     }
                     this.Update();
                 }

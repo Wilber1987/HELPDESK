@@ -77,4 +77,28 @@ public class Cat_Dependencias : EntityClass
                 }
         ).ToList();
     }
+
+    internal object? UpdateDependencies()
+    {
+        if (CaseTable_Agenda != null && CaseTable_Agenda.Count > 0)
+        {
+            new CaseTable_Agenda { Id_Dependencia = this.Id_Dependencia }.Delete();
+            foreach (var item in CaseTable_Agenda)
+            {
+                item.IdAgenda = null;
+            }
+        }
+        if (CaseTable_Dependencias_Usuarios != null && CaseTable_Dependencias_Usuarios.Count > 0)
+        {
+            new CaseTable_Dependencias_Usuarios { Id_Dependencia = this.Id_Dependencia }.Delete();
+            foreach (var item in CaseTable_Dependencias_Usuarios)
+            {
+                item.Cat_Dependencias = null;
+                item.Id_Dependencia = null;
+                item.Id_Cargo = null;
+                item.Id_Perfil = null;
+            }
+        }
+        return this.Update();
+    }
 }

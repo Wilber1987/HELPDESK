@@ -19,7 +19,7 @@ window.addEventListener("load", async () => {
                     Elements: [
                         ElementTab(DOMManager, new Cat_Dependencias()),
                         ElementTab(DOMManager, new Tbl_Servicios()),
-                        ElementTab(DOMManager, new Cat_Tipo_Servicio()),
+                        //ElementTab(DOMManager, new Cat_Tipo_Servicio()),
                         ElementTab(DOMManager, new Cat_Cargos_Dependencias()),
                         //ElementTab(DOMManager, new Cat_Tipo_Evidencia()),
                         //ElementTab(DOMManager, new Cat_Tipo_Participaciones()),

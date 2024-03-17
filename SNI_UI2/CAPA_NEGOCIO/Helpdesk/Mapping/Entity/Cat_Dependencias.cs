@@ -42,9 +42,10 @@ public class Cat_Dependencias : EntityClass
         {
             return new Cat_Dependencias().Get<Cat_Dependencias>();
         }
+        Tbl_Profile? profile = new Tbl_Profile() { IdUser = AuthNetCore.User(identity).UserId }.Find<Tbl_Profile>();
         CaseTable_Dependencias_Usuarios Inst = new CaseTable_Dependencias_Usuarios()
         {
-            Id_Perfil = AuthNetCore.User(identity).UserId
+            Id_Perfil = Tbl_Profile.GetUserProfile(identity)?.Id_Perfil
         };
         return new Cat_Dependencias().Get_WhereIN<Cat_Dependencias>(
             "Id_Dependencia", Inst.Get<CaseTable_Dependencias_Usuarios>().Select(p => p.Id_Dependencia.ToString()).ToArray()

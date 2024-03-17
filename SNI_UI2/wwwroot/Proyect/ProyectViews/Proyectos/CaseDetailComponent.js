@@ -3,7 +3,7 @@
 import { priorityStyles } from '../../../AppComponents/Styles.js';
 import { CaseOwModel } from '../../../ModelProyect/CaseOwModel.js';
 import { ViewCalendarioByDependencia } from '../../../ModelProyect/DBOViewModel.js';
-import { CaseTable_Agenda, CaseTable_Case, CaseTable_Comments, CaseTable_Evidencias, CaseTable_Tareas, CaseTable_VinculateCase, Cat_Dependencias } from '../../../ModelProyect/ProyectDataBaseModel.js';
+import { CaseTable_Agenda, CaseTable_Case, CaseTable_Comments, CaseTable_Evidencias, CaseTable_Tareas, CaseTable_VinculateCase, Cat_Dependencias, Tbl_Servicios } from '../../../ModelProyect/ProyectDataBaseModel.js';
 import { WSecurity } from '../../../WDevCore/Security/WSecurity.js';
 import { StylesControlsV2, StylesControlsV3 } from "../../../WDevCore/StyleModules/WStyleComponents.js";
 import { WAppNavigator } from '../../../WDevCore/WComponents/WAppNavigator.js';
@@ -17,6 +17,7 @@ import { ComponentsManager, WRender } from '../../../WDevCore/WModules/WComponen
 import { ControlBuilder } from '../../../WDevCore/WModules/WControlBuilder.js';
 import { css } from '../../../WDevCore/WModules/WStyledRender.js';
 import { activityStyle } from '../../style.js';
+import { simpleCaseForm } from './CaseManagerComponent.js';
 import { TaskManagers } from './TaskManager.js';
 
 class CaseDetailComponent extends HTMLElement {
@@ -181,7 +182,12 @@ class CaseDetailComponent extends HTMLElement {
                                 { tagName: 'button', className: 'Btn-Mini', innerText: "Editar", onclick: async () => this.editCase() },
                                 actividad.Estado == "Finalizado" ?
                                     { tagName: 'button', className: 'Btn-Mini', innerText: 'Reabrir Caso', onclick: () => this.Reabrir(actividad) } :
-                                    { tagName: 'button', className: 'Btn-Mini', innerText: 'Cerrar Caso', onclick: () => this.CerrarCaso(actividad) }
+                                    (
+                                        actividad.Estado == "Solicitado" ?
+                                            { tagName: 'button', className: 'Btn-Mini', innerText: 'Aprobar Caso', onclick: () => this.AprobarCaso(actividad) } :
+                                            { tagName: 'button', className: 'Btn-Mini', innerText: 'Cerrar Caso', onclick: () => this.CerrarCaso(actividad) }
+                                    )
+
                             ]
                         }
                     ]
@@ -239,6 +245,30 @@ class CaseDetailComponent extends HTMLElement {
 
         }, "¿Está seguro que desea cerrar este caso?"))
 
+    }
+    AprobarCaso = async (actividad) => {
+        const dependencias = await new Cat_Dependencias().Get();
+        const servicios = await new Tbl_Servicios({ Id_Dependencia: actividad?.Cat_Dependencias?.Id_Dependencia }).Get();
+        console.log( dependencias.filter(d => d.Id_Dependencia == actividad?.Cat_Dependencias?.Id_Dependencia));
+        console.log(actividad);
+        const modal = new WModalForm({
+            ObjectModal: simpleCaseForm(actividad,
+                dependencias.filter(d => d.Id_Dependencia == actividad?.Cat_Dependencias?.Id_Dependencia),
+                servicios,
+                async (table_case) => {
+                    const response = await new CaseTable_Case()
+                        .AprobarCaseList([actividad], table_case);
+                    if (response.status == 200) {
+                        this.shadowRoot.append(ModalMessege("Solicitud aprobada"));
+                        actividad.Estado = "Activa";
+                        this.update();
+                    } else {
+                        this.shadowRoot.append(ModalMessege("Error"));
+                    }
+                    modal.close();
+                })
+        });
+        this.shadowRoot.append(modal);
     }
     Reabrir = async (actividad) => {
         this.shadowRoot.append(ModalVericateAction(async () => {

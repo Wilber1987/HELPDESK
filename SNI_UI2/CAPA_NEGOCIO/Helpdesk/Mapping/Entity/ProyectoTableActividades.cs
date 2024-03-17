@@ -145,7 +145,7 @@ namespace CAPA_NEGOCIO.MAPEO
             ToAdress = mail.To?.Select(r => r.ToString()).ToList();
             Date = mail.Date.DateTime;
             Uid = mail.MessageId;
-            Body = mail.HtmlBody;
+            Body = this.Body ?? mail.HtmlBody;
             Estado = MailState.RECIBIDO.ToString();
             Flags = Flags?.ToString();
         }

@@ -165,6 +165,7 @@ namespace CAPA_NEGOCIO.MAPEO
             var Security_Users_List = this.Get<Security_Users>();
             foreach (Security_Users User in Security_Users_List)
             {
+                User.Password = null;
                 User.Tbl_Profile = User.Tbl_Profile?.Find<Tbl_Profile>();
             }
             return Security_Users_List;
@@ -207,6 +208,9 @@ namespace CAPA_NEGOCIO.MAPEO
 
     public class Tbl_Profile : EntityClass
     {
+        public static Tbl_Profile? GetUserProfile(string identity){
+             return new Tbl_Profile() { IdUser = AuthNetCore.User(identity).UserId }.Find<Tbl_Profile>();
+        }
         [PrimaryKey(Identity = true)]
         public int? Id_Perfil { get; set; }
         public string? Nombres { get; set; }

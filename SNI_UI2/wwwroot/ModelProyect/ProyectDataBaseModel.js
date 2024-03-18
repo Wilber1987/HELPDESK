@@ -74,7 +74,7 @@ class CaseTable_Case extends EntityClass {
         for (const prop in props) {
             this[prop] = props[prop];
         };
-        this.Mail = undefined;
+        //this.Mail = undefined;
     }
     Id_Case = { type: 'number', primary: true };
     Id_Vinculate = { type: 'number', hidden: true };
@@ -82,6 +82,7 @@ class CaseTable_Case extends EntityClass {
     Tbl_Servicios = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Tbl_Servicios() };
     Fecha_Inicio = { type: 'date' };
     Titulo = { type: 'text' };
+    Mail = { type: 'text' , hidden: true};
     Descripcion = { type: 'textarea', hiddenInTable: false, hiddenFilter: true };
     Cat_Dependencias = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Dependencias() };
     Estado = { type: "Select", Dataset: ["Activo", "Espera", "Pendiente", "Finalizado"] };

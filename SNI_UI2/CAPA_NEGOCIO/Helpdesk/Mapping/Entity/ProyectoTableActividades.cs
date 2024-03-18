@@ -286,7 +286,7 @@ namespace CAPA_NEGOCIO.MAPEO
         {
             Tbl_Profile? profile = new Tbl_Profile() { IdUser = AuthNetCore.User(identity).UserId }.Find<Tbl_Profile>();
             CaseTable_Participantes Inst = new CaseTable_Participantes() { Id_Perfil = profile?.Id_Perfil };
-            return new CaseTable_Tareas().Where<CaseTable_Tareas>(
+            return Where<CaseTable_Tareas>(
                 FilterData.In("Id_Tarea", new CaseTable_Participantes().Get<CaseTable_Participantes>().Select(p => p.Id_Tarea.ToString()).ToArray())
             );
         }
@@ -294,7 +294,7 @@ namespace CAPA_NEGOCIO.MAPEO
         {
             Tbl_Profile? profile = new Tbl_Profile() { IdUser = AuthNetCore.User(identity).UserId }.Find<Tbl_Profile>();
             CaseTable_Participantes Inst = new CaseTable_Participantes { Id_Perfil = profile?.Id_Perfil };
-            return new CaseTable_Tareas().Where<CaseTable_Tareas>(
+            return Where<CaseTable_Tareas>(
                 FilterData.NotIn("Estado", TareasState.Finalizado.ToString(), TareasState.Inactivo.ToString()),
                 FilterData.In("Id_Tarea", new CaseTable_Participantes().Get<CaseTable_Participantes>().Select(p => p.Id_Tarea.ToString()).ToArray())
             );

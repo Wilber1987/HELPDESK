@@ -22,9 +22,9 @@ namespace API.Controllers
         {
             return Inst.Get<Cat_Tipo_Servicio>();
         }
-        public List<CaseTable_Tareas> GetOwParticipations()
+        public List<CaseTable_Tareas> GetOwParticipations(CaseTable_Tareas inst)
         {
-            return new CaseTable_Tareas().GetOwParticipations(HttpContext.Session.GetString("seassonKey"));
+            return inst.GetOwParticipations(HttpContext.Session.GetString("seassonKey"));
         }
         public List<CaseTable_Case> GetOwCase(CaseTable_Case inst)
         {
@@ -38,9 +38,9 @@ namespace API.Controllers
         {
             return inst.GetVinculateCase(HttpContext.Session.GetString("seassonKey"));
         }
-        public List<Cat_Dependencias> GetOwDependencies()
+        public List<Cat_Dependencias> GetOwDependencies(Cat_Dependencias inst)
         {
-            return new Cat_Dependencias().GetOwDependencies(HttpContext.Session.GetString("seassonKey"));
+            return inst.GetOwDependencies(HttpContext.Session.GetString("seassonKey"));
         }
         //Pendiente, Solicitado, Activo, Finalizado, Espera
         public List<CaseTable_Case> GetOwSolicitudesPendientesAprobar(CaseTable_Case inst)

@@ -191,6 +191,9 @@ namespace CAPA_NEGOCIO.MAPEO
         }
         public List<CaseTable_Case> GetOwCase(string identity)
         {
+            if (AuthNetCore.HavePermission(PermissionsEnum.ADMIN_ACCESS.ToString(), identity)){
+                return Get<CaseTable_Case>();
+            }
             if (AuthNetCore.HavePermission(PermissionsEnum.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identity))
             {
                 return getCaseByDependencia(identity, null)
@@ -256,7 +259,7 @@ namespace CAPA_NEGOCIO.MAPEO
 
         private List<CaseTable_Case> getCaseByDependencia(string? identity, Case_Estate? case_Estate)
         {
-            Estado = case_Estate?.ToString();
+            Estado = case_Estate?.ToString();            
             return Where<CaseTable_Case>(
                 FilterData.In("Id_Dependencia",
                     new CaseTable_Dependencias_Usuarios() { Id_Perfil = Tbl_Profile.GetUserProfile(identity)?.Id_Perfil }

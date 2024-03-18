@@ -28,7 +28,7 @@ class TareasComponentView extends HTMLElement {
             this.TabContainer
         );
         this.Model = new CaseTable_Tareas({ Get: async ()=> {
-            this.Model.GetOwParticipations();
+            return this.Model.GetOwParticipations();
         }});
         this.Draw();
     }
@@ -50,10 +50,12 @@ class TareasComponentView extends HTMLElement {
         const filterOptions = new WFilterOptions({
             Dataset: tasks,
             AutoSetDate: true,
+            Display: true,
             ModelObject: this.Model,
             //DisplayFilts: [],
             FilterFunction: (DFilt) => {
-                tasksManager.DrawTaskManagers(DFilt);
+                tasksManager.Dataset = DFilt;
+                tasksManager.DrawTaskManagers();
             }
         })
         return WRender.Create({ className: "task-container", children: [filterOptions, tasksManager] })

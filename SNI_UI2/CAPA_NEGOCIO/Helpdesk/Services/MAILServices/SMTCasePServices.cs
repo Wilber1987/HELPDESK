@@ -24,8 +24,8 @@ namespace CAPA_NEGOCIO.Services
             {
                 try
                 {
-                    await Task.Delay(5000);
-                    item.BeginGlobalTransaction();
+                    await Task.Delay(100);
+
                     var Tcase = new CaseTable_Case() { Id_Case = item.Id_Case }.Find<CaseTable_Case>();
                     var send = await SMTPMailServices.SendMail(item.FromAdress,
                     item.ToAdress,
@@ -46,14 +46,23 @@ namespace CAPA_NEGOCIO.Services
                     });
                     if (send)
                     {
-                        item.Estado = MailState.ENVIADO.ToString();
-                        item.Update();
+                        try
+                        {
+                            item.BeginGlobalTransaction();
+                            item.Estado = MailState.ENVIADO.ToString();
+                            item.Update();
+                            item.CommitGlobalTransaction();
+                        }
+                        catch (System.Exception ex)
+                        {
+
+                            item.RollBackGlobalTransaction();
+                            LoggerServices.AddMessageError($"correo enviado, error al actualizar estado del correo {item.Uid}", ex);
+                        }
                     }
-                    item.CommitGlobalTransaction();
                 }
                 catch (System.Exception ex)
                 {
-                    item.RollBackGlobalTransaction();
                     LoggerServices.AddMessageError($"error al enviar el correo {item.Uid}", ex);
                 }
 

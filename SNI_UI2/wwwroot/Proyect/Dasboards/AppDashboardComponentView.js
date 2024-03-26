@@ -1,5 +1,5 @@
 //@ts-check
-import { WRender, ComponentsManager, WAjaxTools, WArrayF } from "../../WDevCore/WModules/WComponentsTools.js";
+import { WRender, ComponentsManager, WAjaxTools, WArrayF, html } from "../../WDevCore/WModules/WComponentsTools.js";
 import { StylesControlsV2, StylesControlsV3, StyleScrolls } from "../../WDevCore/StyleModules/WStyleComponents.js"
 import { css } from "../../WDevCore/WModules/WStyledRender.js";
 import { Dashboard } from "./Dashboard.js";
@@ -31,7 +31,7 @@ class AppDashboardComponentView extends HTMLElement {
             StylesControlsV3.cloneNode(true),
             this.OptionContainer,
             this.TabContainer
-        );
+        );        
         this.Draw();
     }
 
@@ -45,6 +45,8 @@ class AppDashboardComponentView extends HTMLElement {
             onclick: async () => this.Manager.NavigateFunction("id", await this.MainComponent())
         }))
         this.Manager.NavigateFunction("id", await this.MainComponent());
+       
+       
     }
     async MainComponent() {
         /**@type {Dashboard} */
@@ -56,9 +58,7 @@ class AppDashboardComponentView extends HTMLElement {
             Hasta: new Date().toISO()
         });
         const component = WRender.Create({ className: "dashboard-component" });
-
-
-        this.update(component, data);
+      
         if (this.FilterOptions == undefined) {
             this.FilterOptions = new WFilterOptions({
                 Dataset: [],
@@ -71,7 +71,6 @@ class AppDashboardComponentView extends HTMLElement {
                     Fechas: { type: "DATE", defaultValue: new Date().toISO() },
                 },
                 FilterFunction: async (/** @type {Array | undefined} */ DFilt) => {
-                    //console.log({Desde: DFilt[0]?.Values[0], Hasta: DFilt[0]?.Values[1] });
                     // @ts-ignore
                     data = await new Dashboard().GetDasboard({ Desde: DFilt[0]?.Values[0], Hasta: DFilt[0]?.Values[1] });
                     this.update(component, data);
@@ -79,10 +78,9 @@ class AppDashboardComponentView extends HTMLElement {
             });
             this.OptionContainer?.append(this.FilterOptions)
         }
+        this.update(component, data);
         return component;
     }
-
-
     update(component, data) {
         component.innerHTML = "";
         const dependencies = WRender.Create({ className: "dashboard-dependencies" });
@@ -103,7 +101,7 @@ class AppDashboardComponentView extends HTMLElement {
 
         const dataCase = data.caseTickets.map(element => this.caseView(element));
         // @ts-ignore
-        const paginator = new WPaginatorViewer({ Dataset: dataCase });
+        const paginator = new WPaginatorViewer({ Dataset: dataCase, maxElementByPage: 1 });
         caseList.append(paginator);
         // @ts-ignore
         data.caseTickets.forEach(t => t.Dependencia = t.Cat_Dependencias.Descripcion);
@@ -122,11 +120,16 @@ class AppDashboardComponentView extends HTMLElement {
         data.task.forEach(element => {
             task.append(this.taskView(element));
         });
-
+        dependencies.innerHTML = "";
         data.dependencies.forEach(element => {
             dependencies.append(this.dependencieCards(element));
         });
-        component.append(dependencies, chartCase, comment, caseList, taskContainer);
+       
+        if (this.OptionContainer.querySelector(".dashboard-dependencies") == null) {
+            this.OptionContainer.append(dependencies);
+        }
+       
+        component.append(chartCase,caseList, comment, taskContainer);
         //return { dependencies, chartCase, comment, caseList, taskContainer };
     }
 
@@ -134,15 +137,8 @@ class AppDashboardComponentView extends HTMLElement {
      * @param {import("../../ModelProyect/ProyectDataBaseModel.js").Cat_Dependencias} element
      */
     dependencieCards(element) {
-        const card = WRender.CreateStringNode(`<div class="card card-style">
+        const card = html`<div class="card card-style">
             <div class="top-section">
-                <div class="border"></div>
-                <div class="icons">
-                    <div class="logo">
-                    
-                    </div>
-                </div>
-                </div>
                 <div class="bottom-section">
                 <span class="title">${element.Descripcion}</span>
                 <span class="subtitle">${element.Username}</span>
@@ -161,27 +157,18 @@ class AppDashboardComponentView extends HTMLElement {
                     </div>
                 </div>
             </div>
-        </div>`);
+        </div>`;
         card.append(css`
             .card, .card-style {
-                width: 400px;
                 border-radius: 20px;
                 background: #1b233d;
                 padding: 5px;
                 overflow: hidden;
                 box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 20px 0px;
                 transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                max-height: 300px;
-            }
-
-            .card .top-section {
-                height: 40px;
-                border-radius: 15px;
-                display: flex;
-                flex-direction: column;
-                background: linear-gradient(45deg, rgb(4, 159, 187) 0%, rgb(80, 246, 255) 100%);
-                position: relative;
-            }
+                max-height: 110px;
+                min-width: 290px;
+            }          
 
             .card .top-section .border {
                 border-bottom-right-radius: 10px;
@@ -254,16 +241,14 @@ class AppDashboardComponentView extends HTMLElement {
             }
 
             .card .bottom-section {
-                margin-top: 8px;
                 padding: 10px 5px;
             }
 
             .card .bottom-section .title {
                 display: block;
-                font-size: 17px;
+                font-size: 12px;
                 font-weight: bolder;
                 color: white;
-                text-align: center;
                 letter-spacing: 2px;
             }
             .card .bottom-section .subtitle {
@@ -271,8 +256,10 @@ class AppDashboardComponentView extends HTMLElement {
                 font-size: 9px;
                 font-weight: 400;
                 color: white;
-                text-align: center;
                 letter-spacing: 2px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }           
 
             .card .bottom-section .row {
@@ -310,16 +297,16 @@ class AppDashboardComponentView extends HTMLElement {
     caseView(element) {
         return WRender.Create({
             className: "case-detail blog-card", children: [
-                WRender.CreateStringNode(`<div class="meta">
+                html`<div class="meta">
                             <div class="photo" style="background-image: url(https://storage.googleapis.com/chydlx/codepen/blog-cards/image-1.jpg)"></div>
                             <ul class="details">
                                 <li class="author">${element.Mail}</li>
                                 <li class="date">${element.Fecha_Inicio}</li>                          
                             </ul>
-                    </div>`), {
+                    </div>`, {
                     className: "description", children: [
-                        { tagName: "h1", innerHTML: element.Titulo },
-                        { tagName: "h2", innerHTML: element.Cat_Dependencias.Descripcion },
+                        { tagName: "h1", innerHTML: `CASO #${element.Id_Case} - ${element.Titulo}` },
+                        { tagName: "h2", innerHTML: element.Cat_Dependencias.Descripcion, class: "h2" },
                         { tagName: "p", innerHTML: element.Descripcion },
                         {
                             tagName: "a", innerHTML: "Ver detalles", onclick: async () => {
@@ -343,7 +330,7 @@ class AppDashboardComponentView extends HTMLElement {
                             z-index: 0;
                             position: relative;
                             font-size: 11px;
-                            height: 150px;
+                            height: 200px;
                             min-height: 150px;
                         }
                         .blog-card a {
@@ -414,7 +401,6 @@ class AppDashboardComponentView extends HTMLElement {
                             background: #fff;
                             position: relative;
                             z-index: 1;
-                            max-width: 360px;
                             overflow: hidden;
                         }
                         .blog-card .description h1,
@@ -426,12 +412,13 @@ class AppDashboardComponentView extends HTMLElement {
                             margin: 0;
                             font-size: 13px;
                         }
-                        .blog-card .description h2 {
+                        .blog-card .description .h2 {
                             font-size: 12px;
                             font-weight: 300;
                             text-transform: uppercase;
                             color: #a2a2a2;
                             margin: 5px 0px;
+                            border-bottom: #357aa5 solid 1px;
 
                         }
                         .blog-card .description .read-more {
@@ -459,10 +446,26 @@ class AppDashboardComponentView extends HTMLElement {
                             text-overflow: ellipsis;
                             white-space: nowrap;
                             overflow: hidden;
-                            max-height: 80px;
+                            max-height: 120px;
+                            padding: 0 10px;
                             font-size: 9px !important;
                             text-transform: lowercase !important;
-                        }                       
+                            overflow-y: auto;
+                        }  
+                        .blog-card p *:not(img):not(style) { 
+                            width: 100% !important;
+                            display: flex;
+                            font-size: 12px !important;
+                            flex-direction: column;
+                            background: none !important;
+                            margin: 0 !important;
+                            padding: 0 !important;
+                            position: relative !important;
+                            gap:2px;
+                        }
+                        .blog-card p style { 
+                            width: unset !important;
+                        }
                         .blog-card p:first-of-type:before {
                             content: "";
                             height: 5px;
@@ -478,14 +481,13 @@ class AppDashboardComponentView extends HTMLElement {
                         @media (min-width: 640px) {
                             .blog-card {
                                 flex-direction: row;
-                                max-width: 700px;
                             }
                             .blog-card .meta {
-                                flex-basis: 40%;
+                                flex-basis: 20%;
                                 height: auto;
                             }
                             .blog-card .description {
-                                flex-basis: 60%;
+                                flex-basis: 80%;
                             }                            
                             .blog-card.alt {
                                 flex-direction: row-reverse;
@@ -514,14 +516,13 @@ class AppDashboardComponentView extends HTMLElement {
     chatView(element) {
         return WRender.Create({
             className: "case-dependencie cookieCard", children: [
-                { tagName: "p", className: "cookieHeading", innerHTML: element.NickName },
-                { tagName: "p", className: "cookieDescription", innerHTML: element.Body?.replaceAll("<br>", "") ?? "adjunto" },
+                { tagName: "p", className: "cookieHeading", innerHTML: `Mensaje de: ${element.NickName} CASO: #${element.Id_Case}`},
+               // { tagName: "p", className: "cookieDescription", innerHTML: element.Body?.replaceAll("<br>", "") ?? "adjunto" },
                 {
                     tagName: 'input', type: 'button', className: 'acceptButton', value: 'ver', onclick: async () => {
                         //const find = await new CaseTable_Tareas({ Id_Tarea: element.Id_Tarea }).Get()
                         //const CaseDetail = new TareaDetailView({ Task: find[0] });
                         //this.Manager.NavigateFunction("Detail" + element.Id_Tarea, CaseDetail)
-
                         const find = await new CaseTable_Case({ Id_Case: element.Id_Case }).Get()
                         const CaseDetail = new CaseDetailComponent(find[0]);
                         this.Manager.NavigateFunction("Detail" + element.Id_Case, CaseDetail)
@@ -530,8 +531,7 @@ class AppDashboardComponentView extends HTMLElement {
                         .cookieCard {
                             width: 300px;
                             height:120px;
-                            min-height:80px;
-                            background: linear-gradient(to right,rgb(137, 104, 255),rgb(175, 152, 255));
+                            min-height:80px;                           
                             display: flex;
                             flex-direction: column;
                             align-items: flex-start;
@@ -542,9 +542,15 @@ class AppDashboardComponentView extends HTMLElement {
                             overflow: hidden;
                             position: relative;
                             border-radius: 5px;
+                            background-color: #fff;
+                            padding: 1rem;
+                            border-radius: 8px;
+                            box-shadow: rgba(99, 99, 99, 0.1) 0px 2px 8px 0px;
+                            border: solid 1PX #e1e1e1;
                         }
 
                         .cookieCard::before {
+                            opacity: 0.5;
                             width: 150px;
                             height: 150px;
                             content: "";
@@ -554,20 +560,20 @@ class AppDashboardComponentView extends HTMLElement {
                             border-radius: 50%;
                             right: -25%;
                             top: -25%;
-                            }
+                        }
 
                         .cookieHeading {
                             font-size: 12px;
                             padding: 0px;
                             margin: 5px;
                             font-weight: 600;
-                            color: rgb(241, 241, 241);
+                            color: #505050;
                             z-index: 2;
-                            }
+                        }
 
                         .cookieDescription {
                             font-size: 0.9em;
-                            color: rgb(241, 241, 241);
+                            color:#505050;
                             z-index: 2;
                             padding: 0px;
                             margin: 0px;
@@ -575,7 +581,7 @@ class AppDashboardComponentView extends HTMLElement {
                             white-space: nowrap;
                             overflow: hidden;
                             width: calc(100% - 40px);
-                            }
+                        }
 
                         .cookieDescription *{
                             appearance: none;
@@ -602,7 +608,8 @@ class AppDashboardComponentView extends HTMLElement {
                             position: absolute;
                             right: 10px;
                             bottom: 10px;
-                            }
+                            width: 100px !important;
+                        }
 
                         .acceptButton:hover {
                             background-color: #714aff;
@@ -775,12 +782,17 @@ class AppDashboardComponentView extends HTMLElement {
     }
     CustomStyle = css`
         .OptionContainer{
-            display: flex;
+            display: grid;
+            grid-template-columns: 100px auto auto;
+            gap: 20px;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: solid #d5d5d5;
         }
         .dashboard-component{
            display: grid;
            grid-template-columns: 400px calc(100% - 800px) 350px;
-           grid-template-rows: 340px 320px;
+           grid-template-rows: 330px 270px;
            gap: 20px;
         }  
         w-filter-option {
@@ -801,13 +813,19 @@ class AppDashboardComponentView extends HTMLElement {
             overflow: auto;
             max-height: 350px;
         } 
+        w-paginator {
+            height: 350px;
+        }
         .dashboard-task-container {
             grid-column: span 2;
         }
         .dashboard-dependencies{
             flex-direction: row;
-            flex-wrap: wrap;
-        }    
+        }   
+        .dashboard-comment {
+            grid-row: span 2;
+            max-height: 650px;
+        } 
         .dashboard-task{
             flex-direction: row;
             flex-wrap: wrap;

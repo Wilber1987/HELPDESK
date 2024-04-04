@@ -783,7 +783,7 @@ class AppDashboardComponentView extends HTMLElement {
     CustomStyle = css`
         .OptionContainer{
             display: grid;
-            grid-template-columns: 100px auto auto;
+            grid-template-columns: 100px 400px auto;
             gap: 20px;
             margin-bottom: 10px;
             padding-bottom: 10px;

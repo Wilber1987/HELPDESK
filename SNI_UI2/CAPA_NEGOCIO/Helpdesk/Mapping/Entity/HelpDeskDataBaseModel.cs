@@ -128,7 +128,9 @@ namespace CAPA_NEGOCIO.MAPEO
                         {
                             Tbl_Profile.IdUser = Id_User;
                             Tbl_Profile.Save();
-                        } else {
+                        }
+                        else
+                        {
                             Tbl_Profile.Update();
                         }
                         Tbl_Profile?.SaveDependenciesAndservices();
@@ -163,6 +165,7 @@ namespace CAPA_NEGOCIO.MAPEO
             var Security_Users_List = this.Get<Security_Users>();
             foreach (Security_Users User in Security_Users_List)
             {
+                User.Password = null;
                 User.Tbl_Profile = User.Tbl_Profile?.Find<Tbl_Profile>();
             }
             return Security_Users_List;
@@ -205,6 +208,9 @@ namespace CAPA_NEGOCIO.MAPEO
 
     public class Tbl_Profile : EntityClass
     {
+        public static Tbl_Profile? GetUserProfile(string identity){
+             return new Tbl_Profile() { IdUser = AuthNetCore.User(identity).UserId }.Find<Tbl_Profile>();
+        }
         [PrimaryKey(Identity = true)]
         public int? Id_Perfil { get; set; }
         public string? Nombres { get; set; }
@@ -307,11 +313,15 @@ namespace CAPA_NEGOCIO.MAPEO
                 {
                     Correo_institucional = null;
                     IdUser = null;
-                    new CaseTable_Dependencias_Usuarios() { Id_Perfil = Id_Perfil }.Delete();
-                    foreach (var item in CaseTable_Dependencias_Usuarios)
+                    if (CaseTable_Dependencias_Usuarios != null)
                     {
-                        item.Id_Perfil = Id_Perfil;
-                        item.Save();
+                        new CaseTable_Dependencias_Usuarios() { Id_Perfil = Id_Perfil }.Delete();
+                        // foreach (var item in CaseTable_Dependencias_Usuarios)
+                        // {
+                        //     item.Id_Perfil = Id_Perfil;
+                        //     item.Save();
+                        // }
+
                     }
                     this.Update();
                 }

@@ -42,9 +42,10 @@ public class Cat_Dependencias : EntityClass
         {
             return new Cat_Dependencias().Get<Cat_Dependencias>();
         }
+        Tbl_Profile? profile = new Tbl_Profile() { IdUser = AuthNetCore.User(identity).UserId }.Find<Tbl_Profile>();
         CaseTable_Dependencias_Usuarios Inst = new CaseTable_Dependencias_Usuarios()
         {
-            Id_Perfil = AuthNetCore.User(identity).UserId
+            Id_Perfil = Tbl_Profile.GetUserProfile(identity)?.Id_Perfil
         };
         return new Cat_Dependencias().Get_WhereIN<Cat_Dependencias>(
             "Id_Dependencia", Inst.Get<CaseTable_Dependencias_Usuarios>().Select(p => p.Id_Dependencia.ToString()).ToArray()
@@ -76,5 +77,29 @@ public class Cat_Dependencias : EntityClass
                     NCasosFinalizados = new CaseTable_Case { Id_Dependencia = D.Id_Dependencia, Estado = Case_Estate.Finalizado.ToString() }.Get<CaseTable_Case>().Count
                 }
         ).ToList();
+    }
+
+    internal object? UpdateDependencies()
+    {
+        if (CaseTable_Agenda != null && CaseTable_Agenda.Count > 0)
+        {
+            new CaseTable_Agenda { Id_Dependencia = this.Id_Dependencia }.Delete();
+            foreach (var item in CaseTable_Agenda)
+            {
+                item.IdAgenda = null;
+            }
+        }
+        if (CaseTable_Dependencias_Usuarios != null && CaseTable_Dependencias_Usuarios.Count > 0)
+        {
+            new CaseTable_Dependencias_Usuarios { Id_Dependencia = this.Id_Dependencia }.Delete();
+            foreach (var item in CaseTable_Dependencias_Usuarios)
+            {
+                item.Cat_Dependencias = null;
+                item.Id_Dependencia = null;
+                item.Id_Cargo = null;
+                item.Id_Perfil = null;
+            }
+        }
+        return this.Update();
     }
 }

@@ -74,20 +74,21 @@ class CaseTable_Case extends EntityClass {
         for (const prop in props) {
             this[prop] = props[prop];
         };
-        this.Mail = undefined;
+        //this.Mail = undefined;
     }
     Id_Case = { type: 'number', primary: true };
     Id_Vinculate = { type: 'number', hidden: true };
 
-    Tbl_Servicios = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Tbl_Servicios() };
-    Fecha_Inicio = { type: 'date' };
+    Tbl_Servicios = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Tbl_Servicios(), hiddenInTable: true };
     Titulo = { type: 'text' };
-    Descripcion = { type: 'textarea', hiddenInTable: false, hiddenFilter: true };
+    Fecha_Inicio = { type: 'date', hiddenInTable: true, };   
+    Mail = { type: 'text' , hidden: true};
+    Descripcion = { type: 'textarea',  hiddenFilter: true };
     Cat_Dependencias = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Dependencias() };
     Estado = { type: "Select", Dataset: ["Activo", "Espera", "Pendiente", "Finalizado"] };
-    Case_Priority = { type: "Select", Dataset: ["Alta", "Media", "Baja"], label: "Prioridad" };
+    Case_Priority = { type: "Select", Dataset: ["Alta", "Media", "Baja"], label: "Prioridad" , hiddenInTable: true};
 
-    Fecha_Final = { type: 'date' , hiddenFilter: true };
+    Fecha_Final = { type: 'date' , hiddenFilter: true, hiddenInTable: true };
 
     
     CaseTable_Tareas = { type: 'MasterDetail', ModelObject: () => new CaseTable_Tareas() };

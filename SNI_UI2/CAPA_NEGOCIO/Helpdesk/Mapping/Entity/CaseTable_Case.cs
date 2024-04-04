@@ -44,6 +44,13 @@ namespace CAPA_NEGOCIO.MAPEO
             {
                 BeginGlobalTransaction();
                 List<ModelFiles> Attach = new List<ModelFiles>();
+                Descripcion = mail?.HtmlBody;
+                Titulo = mail?.Subject.ToUpper() + $" ({mail?.From})";
+                Estado = Case_Estate.Solicitado.ToString();
+                Fecha_Inicio = mail?.Date.DateTime;
+                Id_Dependencia = dependencia.Id_Dependencia;
+                Mail = mail.From.ToString();
+                RecoveryEmbebedCidImages(mail);
 
                 if (mail.Subject.ToUpper().Contains("RE:"))
                 {
@@ -62,7 +69,7 @@ namespace CAPA_NEGOCIO.MAPEO
                                 Attach.Add(Response);
                             }
                         }
-                        //new CaseTable_Mails(mail) { Id_Case = findCase.Id_Case }.Save();
+
                         new CaseTable_Mails(mail) { Id_Case = findCase.Id_Case, Attach_Files = Attach }.Save();
                         saveMessage(mail, Attach, findCase);
                     }
@@ -70,14 +77,7 @@ namespace CAPA_NEGOCIO.MAPEO
                 else if (mail.Subject.ToUpper().Contains("TAREA ASIGNADA:")) { }
                 else
                 {
-                    Titulo = mail.Subject.ToUpper() + $" ({mail.From})";
-                    Descripcion = mail.HtmlBody;
-                    Estado = Case_Estate.Solicitado.ToString();
-                    Fecha_Inicio = mail.Date.DateTime;
-                    Id_Dependencia = dependencia.Id_Dependencia;
-                    Mail = mail.From.ToString();
-                    Save();
-                    //new CaseTable_Mails(mail) { Id_Case = this.Id_Case }.Save();
+                    Save();                    
                     if (mail?.Attachments != null)
                     {
                         foreach (MimeEntity attach in mail.Attachments)
@@ -90,7 +90,7 @@ namespace CAPA_NEGOCIO.MAPEO
                     }
                     else
                     {
-                        new CaseTable_Mails(mail) { Id_Case = this.Id_Case }.Save();
+                        new CaseTable_Mails(mail) { Id_Case = this.Id_Case, Body = Descripcion }.Save();
                     }
                 }
                 CommitGlobalTransaction();
@@ -106,12 +106,30 @@ namespace CAPA_NEGOCIO.MAPEO
 
         }
 
-        private static void saveMessage(MimeMessage mail, List<ModelFiles> Attach, CaseTable_Case? findCase)
+        private void RecoveryEmbebedCidImages(MimeMessage mail)
+        {
+            foreach (var part in mail.BodyParts)
+            {
+                if (part is MimePart mimePart)
+                {
+                    if (mimePart.ContentId != null && mimePart.ContentType.MediaType.Equals("image"))
+                    {
+                        ModelFiles Response = FileService.ReceiveFiles("Upload\\", part);
+                        // Es una imagen embebida con formato CID
+                        var cid = mimePart.ContentId.TrimStart('<').TrimEnd('>');
+                        var src = $"cid:{cid}";
+                        Descripcion = Descripcion?.Replace(src, Response?.Value?.Replace("wwwroot", ""));
+                    }
+                }
+            }
+        }
+
+        private void saveMessage(MimeMessage mail, List<ModelFiles> Attach, CaseTable_Case? findCase)
         {
             new CaseTable_Comments()
             {
                 Id_Case = findCase?.Id_Case,
-                Body = mail.HtmlBody,
+                Body = Descripcion ?? mail.HtmlBody,
                 NickName = $"{mail.From}",
                 Fecha = mail.Date.DateTime,
                 Estado = CommetsState.Pendiente.ToString(),
@@ -173,6 +191,9 @@ namespace CAPA_NEGOCIO.MAPEO
         }
         public List<CaseTable_Case> GetOwCase(string identity)
         {
+            if (AuthNetCore.HavePermission(PermissionsEnum.ADMIN_ACCESS.ToString(), identity)){
+                return Get<CaseTable_Case>();
+            }
             if (AuthNetCore.HavePermission(PermissionsEnum.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identity))
             {
                 return getCaseByDependencia(identity, null)
@@ -222,7 +243,7 @@ namespace CAPA_NEGOCIO.MAPEO
         public List<CaseTable_Case> GetOwSolicitudes(string? identity, Case_Estate case_Estate)
         {
 
-            Id_Perfil = AuthNetCore.User(identity).UserId;
+            Id_Perfil = Tbl_Profile.GetUserProfile(identity)?.Id_Perfil;
             Estado = case_Estate.ToString();
             return Get<CaseTable_Case>();
         }
@@ -238,10 +259,10 @@ namespace CAPA_NEGOCIO.MAPEO
 
         private List<CaseTable_Case> getCaseByDependencia(string? identity, Case_Estate? case_Estate)
         {
-            Estado = case_Estate?.ToString();
+            Estado = case_Estate?.ToString();            
             return Where<CaseTable_Case>(
                 FilterData.In("Id_Dependencia",
-                    new CaseTable_Dependencias_Usuarios() { Id_Perfil = AuthNetCore.User(identity).UserId }
+                    new CaseTable_Dependencias_Usuarios() { Id_Perfil = Tbl_Profile.GetUserProfile(identity)?.Id_Perfil }
                         .Get<CaseTable_Dependencias_Usuarios>().Select(p => p.Id_Dependencia.ToString()).ToArray()
                 )
             );
@@ -308,6 +329,7 @@ namespace CAPA_NEGOCIO.MAPEO
         {
             if (this.Tbl_Servicios != null)
             {
+                new Tbl_Profile_CasosAsignados{ Id_Case = Id_Case}.Delete();
                 new Tbl_Servicios_Profile { Id_Servicio = this.Tbl_Servicios?.Id_Servicio }.Get<Tbl_Servicios_Profile>().ForEach(sp =>
                 {
                     new Tbl_Profile_CasosAsignados

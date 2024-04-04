@@ -9,7 +9,7 @@ import { WModalForm } from '../../WDevCore/WComponents/WModalForm.js';
 import { WTableComponent } from '../../WDevCore/WComponents/WTableComponent.js';
 import { ComponentsManager, WRender } from '../../WDevCore/WModules/WComponentsTools.js';
 import { css } from '../../WDevCore/WModules/WStyledRender.js';
-import { caseGeneralData } from '../ProyectViews/Proyectos/CaseDetailComponent.js';
+import { CaseDetailComponent, caseGeneralData } from '../ProyectViews/Proyectos/CaseDetailComponent.js';
 import { simpleCaseForm } from '../ProyectViews/Proyectos/CaseManagerComponent.js';
 import { activityStyle } from '../style.js';
 class SolicitudesPendientesComponent extends HTMLElement {
@@ -27,7 +27,7 @@ class SolicitudesPendientesComponent extends HTMLElement {
         this.TabContainer = WRender.createElement({ type: 'div', props: { class: 'TabContainer', id: "TabContainer" } });
         this.TabManager = new ComponentsManager({ MainContainer: this.TabContainer });
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });
-        this.OptionContainer2 = WRender.Create({ className: "OptionContainer" });
+        this.OptionContainer2 = WRender.Create({ className: "OptionContainer2" });
         this.ModelObject = new CaseTable_Case({
             CaseTable_Tareas: {
                 type: "text", hidden: true
@@ -66,31 +66,43 @@ class SolicitudesPendientesComponent extends HTMLElement {
     }
 
     actividadesManager = async () => {
-        this.mainTable = new WTableComponent({
-            Dataset: this.Dataset,
-            AddItemsFromApi: false,
-            ModelObject: this.ModelObject, userStyles: [StylesControlsV2],
-            Options: {
-                MultiSelect: true,
-                Show: true
-            }
-        });
-        this.FilterOptions = new WFilterOptions({
-            Dataset: this.Dataset,
-            ModelObject: this.ModelObject,
-            AutoFilter: false,
-            AutoSetDate: true,
-            Display: true,
-            FilterFunction: (DFilt) => {
-                this.filterD = DFilt;
-                this.update(this.filterD);
-            }
-        });
-        this.TabManager.NavigateFunction("Tab-Actividades-Manager",
-            WRender.Create({
-                className: "actividadesView", children:
-                    [this.FilterOptions, this.OptionContainer2, this.mainTable]
-            }));
+        if (this.mainTable == undefined) {
+            this.mainTable = new WTableComponent({
+                Dataset: this.Dataset,
+                AddItemsFromApi: false,
+                ModelObject: this.ModelObject, userStyles: [StylesControlsV2],
+                Options: {
+                    MultiSelect: true,
+                    UserActions: [{
+                        name: "ver detalles", action: async (element) => {
+                            const find = await new CaseTable_Case({ Id_Case: element.Id_Case }).Get()
+                            const CaseDetail = new CaseDetailComponent(find[0]);
+                            this.TabManager.NavigateFunction("Detail" + element.Id_Case, CaseDetail)
+                        }
+                    }]
+                }
+            });
+            this.FilterOptions = new WFilterOptions({
+                Dataset: this.Dataset,
+                ModelObject: this.ModelObject,
+                AutoFilter: false,
+                AutoSetDate: true,
+                Display: true,
+                FilterFunction: (DFilt) => {
+                    this.filterD = DFilt;
+                    this.update(this.filterD);
+                }
+            });
+
+            this.TabManager.NavigateFunction("Tab-Actividades-Manager",
+                WRender.Create({
+                    className: "actividadesView", children:
+                        [this.FilterOptions, this.OptionContainer2, this.mainTable]
+                }));
+        } else {
+            this.TabManager.NavigateFunction("Tab-Actividades-Manager");
+        }
+
     }
 
     nuevoCaso = async () => {

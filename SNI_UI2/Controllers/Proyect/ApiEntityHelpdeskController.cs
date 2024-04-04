@@ -105,7 +105,7 @@ namespace API.Controllers
         [AuthController]
         public object? updateCat_Dependencias(Cat_Dependencias inst)
         {
-            return inst.Update();
+            return inst.UpdateDependencies();
         }
         //Cat_Tipo_Participaciones
         [HttpPost]

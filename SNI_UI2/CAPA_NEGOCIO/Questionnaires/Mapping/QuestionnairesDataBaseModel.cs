@@ -10,7 +10,7 @@ namespace DataBaseModel
     public class Cat_Categorias_Test : EntityClass
     {
         [PrimaryKey(Identity = true)]
-        public int? id_categoria { get; set; }
+        public int? Id_categoria { get; set; }
         public string? descripcion { get; set; }
         public string? imagen { get; set; }
         public string? estado { get; set; }

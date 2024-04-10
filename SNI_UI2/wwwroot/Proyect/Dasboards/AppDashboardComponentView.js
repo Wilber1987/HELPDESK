@@ -783,7 +783,7 @@ class AppDashboardComponentView extends HTMLElement {
     CustomStyle = css`
         .OptionContainer{
             display: grid;
-            grid-template-columns: 100px 400px auto;
+            grid-template-columns: 100px 430px auto;
             gap: 20px;
             margin-bottom: 10px;
             padding-bottom: 10px;
@@ -796,7 +796,7 @@ class AppDashboardComponentView extends HTMLElement {
            gap: 20px;
         }  
         w-filter-option {
-            min-width: calc(100% - 160px);
+            min-width: 440px;
         }
         .dashboard-component h2{
             font-size:16px;

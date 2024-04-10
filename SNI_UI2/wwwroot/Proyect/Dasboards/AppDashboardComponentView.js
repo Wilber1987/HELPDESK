@@ -792,7 +792,7 @@ class AppDashboardComponentView extends HTMLElement {
         .dashboard-component{
            display: grid;
            grid-template-columns: 400px calc(100% - 800px) 350px;
-           grid-template-rows: 330px 270px;
+           grid-template-rows: 335px 270px;
            gap: 20px;
         }  
         w-filter-option {
@@ -829,7 +829,7 @@ class AppDashboardComponentView extends HTMLElement {
         .dashboard-task{
             flex-direction: row;
             flex-wrap: wrap;
-            max-height: 300px;
+            max-height: 240px;
         }    
         .dashboard-comment h2 {
             position: sticky;

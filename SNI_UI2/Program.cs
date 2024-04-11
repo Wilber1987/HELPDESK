@@ -1,3 +1,4 @@
+using AppGenerate;
 using BackgroundJob.Cron.Jobs;
 using CAPA_DATOS;
 using CAPA_DATOS.Cron.Jobs;
@@ -6,7 +7,7 @@ using SNI_UI2;
 
 SqlADOConexion.IniciarConexion("sa", "zaxscd", ".", "HELPDESK");
 //SqlADOConexion.IniciarConexion( "sa", "Helpdesk2023",".", "HELPDESK");
-//AppGenerate.Program.Main(); //generador de codigo
+//AppGeneratorProgram.Main(); //generador de codigo
 var builder = WebApplication.CreateBuilder(args);
 
 //var test3 = new sptest3{Parameters = new List<object> {1 , 1}}.Execute();

@@ -9,7 +9,7 @@ class Security_Permissions extends EntityClass {
    }
    Id_Permission = { type: 'number', primary: true };
    Descripcion = { type: 'text' };
-   Estado = { type: 'text' };
+   Estado = { type: 'SELECT', Dataset: ["ACTIVO", "INACTIVO"]  };
 }
 export { Security_Permissions }
 class Security_Permissions_Roles extends EntityClass {
@@ -19,7 +19,7 @@ class Security_Permissions_Roles extends EntityClass {
            this[prop] = props[prop];
        }
    }
-   Estado = { type: 'text' };
+   Estado = { type: 'SELECT', Dataset: ["ACTIVO", "INACTIVO"]  };
 }
 export { Security_Permissions_Roles }
 class Security_Roles extends EntityClass {
@@ -31,7 +31,7 @@ class Security_Roles extends EntityClass {
    }
    Id_Role = { type: 'number', primary: true };
    Descripcion = { type: 'text' };
-   Estado = { type: 'text' };
+   Estado = { type: 'SELECT', Dataset: ["ACTIVO", "INACTIVO"]  };
 }
 export { Security_Roles }
 class Security_Users extends EntityClass {
@@ -43,7 +43,7 @@ class Security_Users extends EntityClass {
    }
    Id_User = { type: 'number', primary: true };
    Nombres = { type: 'text' };
-   Estado = { type: 'text' };
+   Estado = { type: 'SELECT', Dataset: ["ACTIVO", "INACTIVO"]  };
    Descripcion = { type: 'text' };
    Password = { type: 'text' };
    Mail = { type: 'text' };
@@ -59,6 +59,6 @@ class Security_Users_Roles extends EntityClass {
            this[prop] = props[prop];
        }
    }
-   Estado = { type: 'text' };
+   Estado = { type: 'SELECT', Dataset: ["ACTIVO", "INACTIVO"]  };
 }
 export { Security_Users_Roles }

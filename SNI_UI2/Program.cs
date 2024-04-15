@@ -3,9 +3,14 @@ using BackgroundJob.Cron.Jobs;
 using CAPA_DATOS;
 using CAPA_DATOS.Cron.Jobs;
 using SNI_UI2;
+using SNI_UI2.CAPA_NEGOCIO;
 
 
 SqlADOConexion.IniciarConexion("sa", "zaxscd", ".", "HELPDESK");
+//PostgresADOConexion.IniciarConexion("postgres", "zaxscd", "localhost", "pst", 5432);
+//var customers = new Customer { MTConnection = PostgresADOConexion.SQLM }.Get<Customer>();
+//var AGENCY = new Structure_agency {  }.Get<Structure_agency>();
+
 //SqlADOConexion.IniciarConexion( "sa", "Helpdesk2023",".", "HELPDESK");
 //AppGeneratorProgram.Main(); //generador de codigo
 var builder = WebApplication.CreateBuilder(args);

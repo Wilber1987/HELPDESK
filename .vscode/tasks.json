@@ -1,41 +1,21 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "build",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "build",
-                "${workspaceFolder}/SNI_PROYECT.sln",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "publish",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "publish",
-                "${workspaceFolder}/SNI_PROYECT.sln",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "watch",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "watch",
-                "run",
-                "--project",
-                "${workspaceFolder}/SNI_PROYECT.sln"
-            ],
-            "problemMatcher": "$msCompile"
-        }
-    ]
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "msbuild",
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"group": "build",
+			"label": "Build: UI.csproj",
+			"detail": "Build the UI.csproj project using dotnet build"
+		},
+		{
+			"type": "dotnet",
+			"task": "watch CAPA_DATOS",
+			"file": "C:\\Users\\wilbe\\repos\\HELPDESK\\CAPA_DATOS\\CAPA_DATOS.csproj",
+			"problemMatcher": [],
+			"label": "dotnet: watch CAPA_DATOS"
+		}
+	]
 }

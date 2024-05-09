@@ -18,9 +18,9 @@ class ViewParticipantesServicios extends EntityClass {
    Visibilidad = { type: 'text' };
    Cargo = { type: 'text' };
    Descripcion = { type: 'text' };
-   Estado = { type: 'text' };
+   Estado = { type: 'SELECT', Dataset: ["ACTIVO", "INACTIVO"]  };
    Nombre_Proyecto = { type: 'text' };
-   Estado = { type: 'text' };
+   Estado = { type: 'SELECT', Dataset: ["ACTIVO", "INACTIVO"]  };
 }
 export { ViewParticipantesServicios }
 
@@ -35,7 +35,7 @@ class ViewCalendarioByDependencia extends EntityClass {
    Id_TareaPadre = { type: 'number' };
    Fecha_Inicio = { type: 'date' };
    Fecha_Final = { type: 'date' };
-   Estado = { type: 'text' };
+   Estado = { type: 'SELECT', Dataset: ["ACTIVO", "INACTIVO"]  };
    IdCalendario = { type: 'number' };
    Id_Tarea = { type: 'number' };
    Id_Dependencia = { type: 'number' };
@@ -51,7 +51,7 @@ class ViewActividadesParticipantes extends EntityClass {
    Id_Case = { type: 'number' };
    Titulo = { type: 'text' };
    Descripcion = { type: 'text' };
-   Estado = { type: 'text' };
+   Estado = { type: 'SELECT', Dataset: ["ACTIVO", "INACTIVO"]  };
    Id_Perfil = { type: 'number' };
 }
 export { ViewActividadesParticipantes }

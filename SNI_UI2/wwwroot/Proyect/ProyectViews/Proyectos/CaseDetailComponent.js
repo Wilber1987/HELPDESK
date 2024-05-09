@@ -249,7 +249,7 @@ class CaseDetailComponent extends HTMLElement {
     AprobarCaso = async (actividad) => {
         const dependencias = await new Cat_Dependencias().Get();
         const servicios = await new Tbl_Servicios({ Id_Dependencia: actividad?.Cat_Dependencias?.Id_Dependencia }).Get();
-        console.log( dependencias.filter(d => d.Id_Dependencia == actividad?.Cat_Dependencias?.Id_Dependencia));
+        console.log(dependencias.filter(d => d.Id_Dependencia == actividad?.Cat_Dependencias?.Id_Dependencia));
         console.log(actividad);
         const modal = new WModalForm({
             ObjectModal: simpleCaseForm(actividad,
@@ -320,6 +320,40 @@ class CaseDetailComponent extends HTMLElement {
             grid-template-rows: 180px 50px auto;
             gap: 0px 20px;
         }
+        @media(max-width: 1400px){
+            .actividadDetailView {
+                display: grid;
+                grid-template-columns: calc(100% - 20px);
+                grid-template-rows: 180px 50px auto;
+                gap: 0px 20px;
+            }
+            w-coment-component {
+                grid-row: span 3;
+                position: fixed;
+                z-index: 1000;
+                background: #fff;
+                width: 700px;
+                background-color: #fff;
+                bottom: 0;
+                right: 10px;
+                display: block;
+                padding: 10px;
+                border: solid 1px #eee;
+                height: 80vh;
+                box-shadow: 0 0 5px 0 #999;
+                max-height:20px;
+                transition: all 0.5s;
+            }
+            w-coment-component::before{
+                content: "comentarios";
+                height: 30px;
+                display: block;                
+                cursor: pointer;
+            } 
+            w-coment-component:hover {
+                max-height: 100vh;
+            }
+        }      
     `
 }
 customElements.define('w-case-detail', CaseDetailComponent);

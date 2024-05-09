@@ -4,9 +4,9 @@ import { StylesControlsV2, StyleScrolls } from "../../../WDevCore/StyleModules/W
 import { WTableComponent } from "../../../WDevCore/WComponents/WTableComponent.js";
 import { WFilterOptions } from "../../../WDevCore/WComponents/WFilterControls.js";
 import { css } from "../../../WDevCore/WModules/WStyledRender.js";
-import { Tests_ModelComponent } from "../../Model/QuestionnairesComponentsModel.js";
-import { Tests } from "../../Model/QuestionnairesDataBaseModel.js";
 import { WRender } from "../../../WDevCore/WModules/WComponentsTools.js";
+import { Tests_ModelComponent } from "../../FrontModel/ModelComponent/Tests_ModelComponent.js";
+import { Tests } from "../../FrontModel/Tests.js";
 
 /**
  * @typedef {Object} ComponentConfig
@@ -35,24 +35,24 @@ class TestsViewManager extends HTMLElement {
             Dataset: this.Dataset, Options: {
                 Add: true,
                 Edit: true,
-                Search: true,
+                Filter: true,
                 //UserActions: [{ name: "action", action: (entity) => {/*action*/ }}]
             }
         });
-        this.FilterOptions = new WFilterOptions({
-            Dataset: this.Dataset,
-            AutoSetDate: true,
-            ModelObject: this.ModelComponent,
-            FilterFunction: (/** @type {Array | undefined} */ DFilt) => {
-                this.MainComponent?.DrawTable(DFilt);
-            }
-        });
+        // this.FilterOptions = new WFilterOptions({
+        //     Dataset: this.Dataset,
+        //     AutoSetDate: true,
+        //     ModelObject: this.ModelComponent,
+        //     FilterFunction: (/** @type {Array | undefined} */ DFilt) => {
+        //         this.MainComponent?.DrawTable(DFilt);
+        //     }
+        // });
         this.TabContainer.append(this.MainComponent);
         this.append(
             StylesControlsV2.cloneNode(true),
             StyleScrolls.cloneNode(true),
             this.CustomStyle,
-            this.FilterOptions,
+            //this.FilterOptions,
             this.TabContainer
         );
     };

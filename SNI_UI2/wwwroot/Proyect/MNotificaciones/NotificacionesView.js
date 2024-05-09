@@ -1,4 +1,4 @@
-import { WRender, WAjaxTools, GenerateColor, ComponentsManager } from '../../WDevCore/WModules/WComponentsTools.js';
+import { WRender, WAjaxTools, ComponentsManager } from '../../WDevCore/WModules/WComponentsTools.js';
 import { css, WCssClass, WStyledRender } from '../../WDevCore/WModules/WStyledRender.js';
 import "../../WDevCore/WComponents/WTableComponent.js";
 import { basicButtons, StylesControlsV2 } from "../../WDevCore/StyleModules/WStyleComponents.js";

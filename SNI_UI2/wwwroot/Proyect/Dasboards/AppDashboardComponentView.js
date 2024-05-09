@@ -783,7 +783,7 @@ class AppDashboardComponentView extends HTMLElement {
     CustomStyle = css`
         .OptionContainer{
             display: grid;
-            grid-template-columns: 100px auto auto;
+            grid-template-columns: 100px 430px auto;
             gap: 20px;
             margin-bottom: 10px;
             padding-bottom: 10px;
@@ -792,11 +792,11 @@ class AppDashboardComponentView extends HTMLElement {
         .dashboard-component{
            display: grid;
            grid-template-columns: 400px calc(100% - 800px) 350px;
-           grid-template-rows: 330px 270px;
+           grid-template-rows: 335px 270px;
            gap: 20px;
         }  
         w-filter-option {
-            min-width: calc(100% - 160px);
+            min-width: 440px;
         }
         .dashboard-component h2{
             font-size:16px;
@@ -829,7 +829,7 @@ class AppDashboardComponentView extends HTMLElement {
         .dashboard-task{
             flex-direction: row;
             flex-wrap: wrap;
-            max-height: 300px;
+            max-height: 240px;
         }    
         .dashboard-comment h2 {
             position: sticky;

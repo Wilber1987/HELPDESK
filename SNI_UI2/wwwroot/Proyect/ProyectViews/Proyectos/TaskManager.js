@@ -247,6 +247,7 @@ class TaskManagers extends HTMLElement {
             background-color: #fff;
             height: 130px;
             border-radius: 10px;
+            padding-bottom: 10px;
             display: flex;
             flex-direction: column;
             overflow: hidden;

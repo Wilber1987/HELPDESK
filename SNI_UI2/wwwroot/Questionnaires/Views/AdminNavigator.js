@@ -5,8 +5,10 @@ import { WFilterOptions } from "../../WDevCore/WComponents/WFilterControls.js";
 import { WTableComponent } from "../../WDevCore/WComponents/WTableComponent.js";
 import { ComponentsManager, WAjaxTools, WRender } from '../../WDevCore/WModules/WComponentsTools.js';
 import { WOrtograficValidation } from "../../WDevCore/WModules/WOrtograficValidation.js";
-import { Cat_Categorias_Test_ModelComponent, Cat_Tipo_Preguntas_ModelComponent } from "../Model/QuestionnairesComponentsModel.js";
-import { Cat_Categorias_Test, Cat_Tipo_Preguntas } from "../Model/QuestionnairesDataBaseModel.js";
+import { Cat_Categorias_Test } from "../FrontModel/Cat_Categorias_Test.js";
+import { Cat_Tipo_Preguntas } from "../FrontModel/Cat_Tipo_Preguntas.js";
+import { Cat_Categorias_Test_ModelComponent } from "../FrontModel/ModelComponent/Cat_Categorias_Test_ModelComponent.js";
+import { Cat_Tipo_Preguntas_ModelComponent } from "../FrontModel/ModelComponent/Cat_Tipo_Preguntas_ModelComponent.js";
 window.addEventListener("load", async () => {
     setTimeout(async () => {
         // @ts-ignore

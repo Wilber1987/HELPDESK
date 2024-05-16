@@ -1,11 +1,11 @@
-import { CaseTable_Case, Cat_Dependencias, Tbl_Servicios } from "./ProyectDataBaseModel.js";
+import { Tbl_Case, Cat_Dependencias, Tbl_Servicios } from "./ProyectDataBaseModel.js";
 
 const CaseOwModel = async ()=> {
     const dep = await new Cat_Dependencias().GetOwDependencies();
     const tbl_servicios = dep.flatMap(d => d.Tbl_Servicios);
     console.log(tbl_servicios);
-    const ModelObject = new CaseTable_Case({
-        CaseTable_Tareas: {
+    const ModelObject = new Tbl_Case({
+        Tbl_Tareas: {
             type: "text",  hidden: true
         }, Estado: {
             type: "text",  hidden: true

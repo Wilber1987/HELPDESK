@@ -22,19 +22,19 @@ namespace API.Controllers
         {
             return Inst.Get<Cat_Tipo_Servicio>();
         }
-        public List<CaseTable_Tareas> GetOwParticipations(CaseTable_Tareas inst)
+        public List<Tbl_Tareas> GetOwParticipations(Tbl_Tareas inst)
         {
             return inst.GetOwParticipations(HttpContext.Session.GetString("seassonKey"));
         }
-        public List<CaseTable_Case> GetOwCase(CaseTable_Case inst)
+        public List<Tbl_Case> GetOwCase(Tbl_Case inst)
         {
             return inst.GetOwCase(HttpContext.Session.GetString("seassonKey"));
         }
-        public List<CaseTable_Case> GetOwCloseCase(CaseTable_Case inst)
+        public List<Tbl_Case> GetOwCloseCase(Tbl_Case inst)
         {
             return inst.GetOwCloseCase(HttpContext.Session.GetString("seassonKey"));
         }
-        public List<CaseTable_Case> GetVinculateCase(CaseTable_Case inst)
+        public List<Tbl_Case> GetVinculateCase(Tbl_Case inst)
         {
             return inst.GetVinculateCase(HttpContext.Session.GetString("seassonKey"));
         }
@@ -43,56 +43,56 @@ namespace API.Controllers
             return inst.GetOwDependencies(HttpContext.Session.GetString("seassonKey"));
         }
         //Pendiente, Solicitado, Activo, Finalizado, Espera
-        public List<CaseTable_Case> GetOwSolicitudesPendientesAprobar(CaseTable_Case inst)
+        public List<Tbl_Case> GetOwSolicitudesPendientesAprobar(Tbl_Case inst)
         {
             return inst.GetOwSolicitudes(HttpContext.Session.GetString("seassonKey"), Case_Estate.Solicitado);
         }
 
-        public List<CaseTable_Case> GetOwSolicitudesPendientes(CaseTable_Case inst)
+        public List<Tbl_Case> GetOwSolicitudesPendientes(Tbl_Case inst)
         {
             return inst.GetOwSolicitudes(HttpContext.Session.GetString("seassonKey"), Case_Estate.Pendiente);
         }
-        public List<CaseTable_Case> GetSolicitudesPendientesAprobar(CaseTable_Case inst)
+        public List<Tbl_Case> GetSolicitudesPendientesAprobar(Tbl_Case inst)
         {
             return inst.GetSolicitudesPendientesAprobar(HttpContext.Session.GetString("seassonKey"), Case_Estate.Solicitado);
         }
-        public List<CaseTable_Case> GetSolicitudesPendientesAprobarAdmin(CaseTable_Case inst)
+        public List<Tbl_Case> GetSolicitudesPendientesAprobarAdmin(Tbl_Case inst)
         {
             return inst.GetSolicitudesPendientesAprobarAdmin(HttpContext.Session.GetString("seassonKey"));
         }
-        public List<CaseTable_Case> GetOwSolicitudesProceso(CaseTable_Case inst)
+        public List<Tbl_Case> GetOwSolicitudesProceso(Tbl_Case inst)
         {
             return inst.GetOwSolicitudes(HttpContext.Session.GetString("seassonKey"), Case_Estate.Activo);
         }
-        public List<CaseTable_Case> GetOwSolicitudesEspera(CaseTable_Case inst)
+        public List<Tbl_Case> GetOwSolicitudesEspera(Tbl_Case inst)
         {
             return inst.GetOwSolicitudes(HttpContext.Session.GetString("seassonKey"), Case_Estate.Espera);
         }
-        public object RechazarSolicitud(CaseTable_Case caseTable_Case)
+        public object RechazarSolicitud(Tbl_Case Tbl_Case)
         {
-            return caseTable_Case.RechazarSolicitud(HttpContext.Session.GetString("seassonKey"));
+            return Tbl_Case.RechazarSolicitud(HttpContext.Session.GetString("seassonKey"));
         }
 
-        public object AprobarSolicitud(CaseTable_Case caseTable_Case)
+        public object AprobarSolicitud(Tbl_Case Tbl_Case)
         {
-            return caseTable_Case.AprobarSolicitud(HttpContext.Session.GetString("seassonKey"));
+            return Tbl_Case.AprobarSolicitud(HttpContext.Session.GetString("seassonKey"));
         }
-        public object CerrarCaso(CaseTable_Case caseTable_Case)
+        public object CerrarCaso(Tbl_Case Tbl_Case)
         {
-            return caseTable_Case.CerrarCaso(HttpContext.Session.GetString("seassonKey"));
+            return Tbl_Case.CerrarCaso(HttpContext.Session.GetString("seassonKey"));
         }
         //CASOS VINCULADOS      
-        public object VincularCaso(CaseTable_VinculateCase inst)
+        public object VincularCaso(Tbl_VinculateCase inst)
         {
             return inst.VincularCaso();
         }
-        public object DesvincularCaso(CaseTable_VinculateCase inst)
+        public object DesvincularCaso(Tbl_VinculateCase inst)
         {
             return inst.DesvincularCaso(inst.Casos_Vinculados.FirstOrDefault());
         }
-        public List<CaseTable_Case> GetCasosToVinculate(CaseTable_Case Inst)
+        public List<Tbl_Case> GetCasosToVinculate(Tbl_Case Inst)
         {
-            return new CaseTable_Case()
+            return new Tbl_Case()
             .GetCasosToVinculate(HttpContext.Session.GetString("seassonKey"), Inst);
         }
         public object AprobarCaseList(CaseBlock Inst)
@@ -114,20 +114,20 @@ namespace API.Controllers
         public object getDashboard(ProfileTransaction Inst)
         {
             string? token = HttpContext.Session.GetString("seassonKey");
-            var caseTable = new CaseTable_Case().GetOwParticipantCase(token);
+            var caseTable = new Tbl_Case().GetOwParticipantCase(token);
             return new
             {
                 dependencies = new Cat_Dependencias().GetOwDependenciesConsolidados(token),
                 caseTickets = caseTable,
-                task = new CaseTable_Tareas().GetOwActiveParticipations(token),
-                comments = new CaseTable_Comments().GetOwComments(caseTable)
+                task = new Tbl_Tareas().GetOwActiveParticipations(token),
+                comments = new Tbl_Comments().GetOwComments(caseTable)
             };
         }
         [HttpPost]
         public object getDashboardgET(DateFilter dateFilter)
         {
             string? token = HttpContext.Session.GetString("seassonKey");
-            var caseTable = new CaseTable_Case
+            var caseTable = new Tbl_Case
             {
                 filterData = new List<FilterData> { FilterData.Between("Fecha_Inicio", dateFilter.Desde, dateFilter.Hasta) }
             }.GetOwParticipantCase(token);
@@ -135,11 +135,11 @@ namespace API.Controllers
             {
                 dependencies = new Cat_Dependencias().GetOwDependenciesConsolidados(token),
                 caseTickets = caseTable,
-                task = new CaseTable_Tareas()
+                task = new Tbl_Tareas()
                 {
                     filterData = new List<FilterData> { FilterData.Between("Fecha_Inicio", dateFilter.Desde, dateFilter.Hasta) }
                 }.GetOwActiveParticipations(token),
-                comments = new CaseTable_Comments()
+                comments = new Tbl_Comments()
                 {
                     filterData = new List<FilterData> { FilterData.Between("Fecha", dateFilter.Desde, dateFilter.Hasta) }
                 }.GetOwComments(caseTable)

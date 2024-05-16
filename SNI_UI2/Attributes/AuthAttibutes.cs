@@ -23,7 +23,7 @@ namespace API.Controllers
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            if (!AuthNetCore.HavePermission(PermissionsEnum.ADMIN_ACCESS.ToString(), filterContext.HttpContext.Session.GetString("seassonKey")))
+            if (!AuthNetCore.HavePermission(Permissions.ADMIN_ACCESS.ToString(), filterContext.HttpContext.Session.GetString("seassonKey")))
             {
                 Authenticate Aut = new Authenticate();
                 Aut.AuthVal = false;

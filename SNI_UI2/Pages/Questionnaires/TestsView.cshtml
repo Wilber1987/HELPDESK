@@ -7,7 +7,7 @@
         Response.Redirect("../LoginView");
         return;
     }   
-    if (!SecurityController.HavePermission(PermissionsEnum.QUESTIONNAIRES_MANAGER.ToString(), HttpContext.Session.GetString("seassonKey")))
+    if (!SecurityController.HavePermission(Permissions.QUESTIONNAIRES_MANAGER.ToString(), HttpContext.Session.GetString("seassonKey")))
     {
         Response.Redirect("../Security/permission_error");
         return;

@@ -10,14 +10,14 @@ namespace CAPA_NEGOCIO.Services
 	{
 		public Cat_Dependencias? dependencia { get; set; }
 		public Tbl_Servicios? servicio { get; set; }
-		public List<CaseTable_Comments>? comentarios { get; set; }
-		public List<CaseTable_Case> caseTable_Cases { get; set; }
+		public List<Tbl_Comments>? comentarios { get; set; }
+		public List<Tbl_Case> Tbl_Cases { get; set; }
 		public object AprobarSolicitudes(string? v)
 		{
 			try
 			{
 				BeginGlobalTransaction();
-				foreach (var item in caseTable_Cases)
+				foreach (var item in Tbl_Cases)
 				{
 					item.Tbl_Servicios = servicio;
 					item.AprobarSolicitud(v);
@@ -45,9 +45,9 @@ namespace CAPA_NEGOCIO.Services
 			try
 			{
 				BeginGlobalTransaction();
-				foreach (var item in caseTable_Cases)
+				foreach (var item in Tbl_Cases)
 				{
-					item.CaseTable_Comments = comentarios;
+					item.Tbl_Comments = comentarios;
 					item.RechazarSolicitud(v);
 				}
 				CommitGlobalTransaction();
@@ -74,7 +74,7 @@ namespace CAPA_NEGOCIO.Services
 			try
 			{
 				BeginGlobalTransaction();
-				foreach (var item in caseTable_Cases)
+				foreach (var item in Tbl_Cases)
 				{
 					item.Cat_Dependencias = dependencia;
 					item.Tbl_Servicios = servicio;
@@ -114,10 +114,10 @@ namespace CAPA_NEGOCIO.Services
 				BeginGlobalTransaction();
 				foreach (var item in perfiles)
 				{
-					if (item.CaseTable_Dependencias_Usuarios
+					if (item.Tbl_Dependencias_Usuarios
 						.Where(x => x.Id_Dependencia == dependencia.Id_Dependencia).ToList().Count == 0)
 					{
-						new CaseTable_Dependencias_Usuarios()
+						new Tbl_Dependencias_Usuarios()
 						{
 							Id_Dependencia = dependencia.Id_Dependencia,
 							Id_Perfil = item.Id_Perfil

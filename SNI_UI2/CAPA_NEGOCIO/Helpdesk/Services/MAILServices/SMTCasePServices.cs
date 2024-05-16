@@ -15,10 +15,10 @@ namespace CAPA_NEGOCIO.Services
         {
 
 
-            List<CaseTable_Mails> caseMail = new CaseTable_Mails()
+            List<Tbl_Mails> caseMail = new Tbl_Mails()
             {
                 Estado = MailState.PENDIENTE.ToString()
-            }.Get<CaseTable_Mails>();
+            }.Get<Tbl_Mails>();
 
             foreach (var item in caseMail)
             {
@@ -26,7 +26,7 @@ namespace CAPA_NEGOCIO.Services
                 {
                     await Task.Delay(100);
 
-                    var Tcase = new CaseTable_Case() { Id_Case = item.Id_Case }.Find<CaseTable_Case>();
+                    var Tcase = new Tbl_Case() { Id_Case = item.Id_Case }.Find<Tbl_Case>();
                     var send = await SMTPMailServices.SendMail(item.FromAdress,
                     item.ToAdress,
                     item.Subject,

@@ -3,17 +3,18 @@ import { EntityClass } from "../../WDevCore/WModules/EntityClass.js";
 import { WAjaxTools } from "../../WDevCore/WModules/WComponentsTools.js";
 //@ts-ignore
 import { ModelProperty } from "../../WDevCore/WModules/CommonModel.js";
-import { Cat_Categorias_Test }  from './Cat_Categorias_Test.js'
-import { Pregunta_Tests }  from './Pregunta_Tests.js'
-import { Resultados_Tests }  from './Resultados_Tests.js'
+import { Cat_Categorias_Test } from './Cat_Categorias_Test.js'
+import { Pregunta_Tests } from './Pregunta_Tests.js'
+import { Resultados_Tests } from './Resultados_Tests.js'
 class Tests extends EntityClass {
+
     /** @param {Partial<Tests>} [props] */
-   constructor(props) {
-       super(props, 'EntityQuestionnaires');
-       for (const prop in props) {
-           this[prop] = props[prop];
-       }
-   }
+    constructor(props) {
+        super(props, 'EntityQuestionnaires');
+        for (const prop in props) {
+            this[prop] = props[prop];
+        }
+    }
    /**@type {Number}*/ Id_test;
    /**@type {String}*/ Titulo;
    /**@type {String}*/ Descripcion;
@@ -31,5 +32,8 @@ class Tests extends EntityClass {
    /**@type {Cat_Categorias_Test} ManyToOne*/ Cat_Categorias_Test;
    /**@type {Array<Pregunta_Tests>} OneToMany*/ Pregunta_Tests;
    /**@type {Array<Resultados_Tests>} OneToMany*/ Resultados_Tests;
+    SaveResultado() {
+       return this.SaveData("QuestionnairesTransactions/SaveResultado", this);
+    }
 }
 export { Tests }

@@ -16,7 +16,7 @@ class Cat_Tipo_Evidencia extends EntityClass {
 }
 export { Cat_Tipo_Evidencia }
 
-class CaseTable_Evidencias extends EntityClass {
+class Tbl_Evidencias extends EntityClass {
     constructor(props) {
         super(props, 'EntityHelpdesk');
         for (const prop in props) {
@@ -29,7 +29,7 @@ class CaseTable_Evidencias extends EntityClass {
     Id_Tarea = { type: 'number', hidden: true };
 
 }
-export { CaseTable_Evidencias }
+export { Tbl_Evidencias }
 
 
 
@@ -64,11 +64,11 @@ class Tbl_Servicios extends EntityClass {
     Cat_Dependencias = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Dependencias() }
     //Fecha_Inicio = { type: 'date' };
     //Fecha_Finalizacion = { type: 'date' };
-    //CaseTable_Case = { type: 'MasterDetail', ModelObject: () => new CaseTable_Case() };
+    //Tbl_Case = { type: 'MasterDetail', ModelObject: () => new Tbl_Case() };
 }
 export { Tbl_Servicios }
 
-class CaseTable_Case extends EntityClass {
+class Tbl_Case extends EntityClass {
     constructor(props) {
         super(props, 'EntityHelpdesk');
         for (const prop in props) {
@@ -91,57 +91,57 @@ class CaseTable_Case extends EntityClass {
     Fecha_Final = { type: 'date' , hiddenFilter: true, hiddenInTable: true };
 
     
-    CaseTable_Tareas = { type: 'MasterDetail', ModelObject: () => new CaseTable_Tareas() };
+    Tbl_Tareas = { type: 'MasterDetail', ModelObject: () => new Tbl_Tareas() };
     /**
-     * @returns {Array<CaseTable_Case>}
+     * @returns {Array<Tbl_Case>}
      */
     GetOwCase = async () => {
         return await this.GetData("Proyect/GetOwCase");
     }
     /**
-     * @returns {Array<CaseTable_Case>}
+     * @returns {Array<Tbl_Case>}
      */
     GetOwCloseCase = async () => {
         return await this.GetData("Proyect/GetOwCloseCase");
     }
     /**
-     * @returns {Array<CaseTable_Case>}
+     * @returns {Array<Tbl_Case>}
      */
     GetVinculateCase = async () => {
         return await this.GetData("Proyect/GetVinculateCase");
     }
     /**
-     * @returns {Array<CaseTable_Case>}
+     * @returns {Array<Tbl_Case>}
      */
     GetOwSolicitudesPendientesAprobar = async () => {
         return await this.GetData("Proyect/GetOwSolicitudesPendientesAprobar");
     }
     /**
-     * @returns {Array<CaseTable_Case>}
+     * @returns {Array<Tbl_Case>}
     */
     GetOwSolicitudesPendientes = async () => {
         return await this.GetData("Proyect/GetOwSolicitudesPendientes");
     }
     /**
-     * @returns {Array<CaseTable_Case>}
+     * @returns {Array<Tbl_Case>}
      */
     GetOwSolicitudesProceso = async () => {
         return await this.GetData("Proyect/GetOwSolicitudesProceso");
     }
     /**
-     * @returns {Array<CaseTable_Case>}
+     * @returns {Array<Tbl_Case>}
      */
     GetOwSolicitudesEspera = async () => {
         return await this.GetData("Proyect/GetOwSolicitudesEspera");
     }
     /**
-     * @returns {Array<CaseTable_Case>}
+     * @returns {Array<Tbl_Case>}
      */
     GetSolicitudesPendientesAprobar = async () => {
         return await this.GetData("Proyect/GetSolicitudesPendientesAprobar",);
     }
     /**
-     * @returns {Array<CaseTable_Case>}
+     * @returns {Array<Tbl_Case>}
      */
     GetSolicitudesPendientesAprobarAdmin = async () => {
         return await this.GetData("Proyect/GetSolicitudesPendientesAprobarAdmin");
@@ -159,43 +159,43 @@ class CaseTable_Case extends EntityClass {
         return await this.GetData("Proyect/CerrarCaso");
     }
     /**
-    * @param {Array<CaseTable_Case>} element
-    * @param {CaseTable_Case} table_case
+    * @param {Array<Tbl_Case>} element
+    * @param {Tbl_Case} table_case
     * @returns {Object}
     */
     AprobarCaseList = async (element, table_case) => {
         return await WAjaxTools.PostRequest("/api/Proyect/AprobarCaseList",
-            { caseTable_Cases: element, servicio:  table_case.Tbl_Servicios});
+            { Tbl_Cases: element, servicio:  table_case.Tbl_Servicios});
     }
     /**
-       * @param {Array<CaseTable_Case>} element
-       *  @param {CaseTable_Comments} comentario
+       * @param {Array<Tbl_Case>} element
+       *  @param {Tbl_Comments} comentario
        * @returns {Object}
        */
     RechazarCaseList = async (element, comentario) => {
         return await WAjaxTools.PostRequest("/api/Proyect/RechazarCaseList", {
-            caseTable_Cases: element,
+            Tbl_Cases: element,
             comentarios: [comentario]
         });
     }
     /**
-       * @param {Array<CaseTable_Case>} element
-       * @param {CaseTable_Comments} dependencia
-       * @param {CaseTable_Case} table_case
-       * @param {Array<CaseTable_Comments>} comentarios
+       * @param {Array<Tbl_Case>} element
+       * @param {Tbl_Comments} dependencia
+       * @param {Tbl_Case} table_case
+       * @param {Array<Tbl_Comments>} comentarios
        * @returns {Object}
        */
     RemitirCasos = async (element, dependencia, comentarios) => {
         return await WAjaxTools.PostRequest("/api/Proyect/RemitirCasos", {
-            caseTable_Cases: element,
+            Tbl_Cases: element,
             dependencia: dependencia,
             comentarios: comentarios,
             servicio: table_case.Tbl_Servicios
         });
     }
 }
-export { CaseTable_Case }
-class CaseTable_Comments extends EntityClass {
+export { Tbl_Case }
+class Tbl_Comments extends EntityClass {
     constructor(props) {
         super(props, 'EntityHelpdesk');
         for (const prop in props) {
@@ -209,8 +209,8 @@ class CaseTable_Comments extends EntityClass {
     Body = { type: "textarea", label: "Mensaje" };
     Id_Case = { type: "text", hidden: true };
 }
-export { CaseTable_Comments }
-class CaseTable_Comments_Tasks extends CaseTable_Comments {
+export { Tbl_Comments }
+class Tbl_Comments_Tasks extends Tbl_Comments {
     constructor(props) {
         super(props, 'EntityHelpdesk');
         for (const prop in props) {
@@ -219,8 +219,8 @@ class CaseTable_Comments_Tasks extends CaseTable_Comments {
     }
     Id_Tarea = { type: "text", hidden: true };
 }
-export { CaseTable_Comments_Tasks }
-class CaseTable_Calendario extends EntityClass {
+export { Tbl_Comments_Tasks }
+class Tbl_Calendario extends EntityClass {
     constructor(props) {
         super(props, 'EntityHelpdesk');
         for (const prop in props) {
@@ -233,12 +233,12 @@ class CaseTable_Calendario extends EntityClass {
     Fecha_Inicio = { type: 'date' };
     Fecha_Final = { type: 'date' };
 }
-export { CaseTable_Calendario }
-class CaseTable_Tareas extends EntityClass {
+export { Tbl_Calendario }
+class Tbl_Tareas extends EntityClass {
     constructor(props) {
         super(props, 'EntityHelpdesk');
         this.Fecha_Inicio = undefined;
-        this.CaseTable_Case = undefined;
+        this.Tbl_Case = undefined;
         for (const prop in props) {
             this[prop] = props[prop];
         };
@@ -247,17 +247,17 @@ class CaseTable_Tareas extends EntityClass {
     Titulo = { type: 'text' };
     Id_Case = { type: 'number', hidden: true, value: undefined };
     Descripcion = { type: 'text', hiddenInTable: true };
-    CaseTable_Tarea = {
-        type: 'WSelect', hiddenFilter: true, label: "Tarea principal", SelfChargeDataset: "CaseTable_Tareas",
-        ModelObject: () => new CaseTable_Tareas(), require: false
+    Tbl_Tarea = {
+        type: 'WSelect', hiddenFilter: true, label: "Tarea principal", SelfChargeDataset: "Tbl_Tareas",
+        ModelObject: () => new Tbl_Tareas(), require: false
     };
-    //CaseTable_TareasHijas = { type: 'MULTISELECT', hiddenFilter: true, ModelObject: () => new CaseTable_Tareas() };
+    //Tbl_TareasHijas = { type: 'MULTISELECT', hiddenFilter: true, ModelObject: () => new Tbl_Tareas() };
     Estado = { type: "Select", Dataset: ["Activo", "Proceso", "Finalizado", "Espera", "Inactivo"] };
-    CaseTable_Participantes = { type: 'MasterDetail', ModelObject: () => new CaseTable_Participantes() };
-    //CaseTable_Evidencias = { type: 'MasterDetail', require: false, ModelObject: () => new CaseTable_Evidencias() };
-    CaseTable_Calendario = {
+    Tbl_Participantes = { type: 'MasterDetail', ModelObject: () => new Tbl_Participantes() };
+    //Tbl_Evidencias = { type: 'MasterDetail', require: false, ModelObject: () => new Tbl_Evidencias() };
+    Tbl_Calendario = {
         type: 'CALENDAR',
-        ModelObject: () => new CaseTable_Calendario(),
+        ModelObject: () => new Tbl_Calendario(),
         require: true,
         hiddenInTable: true,
         CalendarFunction: () => { }
@@ -266,8 +266,8 @@ class CaseTable_Tareas extends EntityClass {
         return await this.GetData("Proyect/GetOwParticipations");
     }
 }
-export { CaseTable_Tareas }
-class CaseTable_Participantes extends EntityClass {
+export { Tbl_Tareas }
+class Tbl_Participantes extends EntityClass {
     constructor(props) {
         super(props, 'EntityHelpdesk');
         for (const prop in props) {
@@ -277,7 +277,7 @@ class CaseTable_Participantes extends EntityClass {
     Tbl_Profile = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Tbl_Profile() }
     Cat_Tipo_Participaciones = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Tipo_Participaciones() }
 }
-export { CaseTable_Participantes }
+export { Tbl_Participantes }
 class Cat_Cargos_Dependencias extends EntityClass {
     constructor(props) {
         super(props, 'EntityHelpdesk');
@@ -287,7 +287,7 @@ class Cat_Cargos_Dependencias extends EntityClass {
     }
     IdCargo = { type: 'number', primary: true };
     Descripcion = { type: 'text' };
-    //CaseTable_Dependencias_Usuarios = { type: 'MasterDetail', ModelObject: () => new CaseTable_Dependencias_Usuarios() };
+    //Tbl_Dependencias_Usuarios = { type: 'MasterDetail', ModelObject: () => new Tbl_Dependencias_Usuarios() };
 }
 export { Cat_Cargos_Dependencias }
 class Cat_Dependencias extends EntityClass {
@@ -314,8 +314,8 @@ class Cat_Dependencias extends EntityClass {
 
     //Cat_Dependencia = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Dependencias(), require: false };
     Cat_Dependencias_Hijas = { type: 'Multiselect', hiddenFilter: true, ModelObject: () => new Cat_Dependencias(), require: false };
-    CaseTable_Agenda = { type: 'MasterDetail', ModelObject: () => new CaseTable_Agenda() };
-    CaseTable_Dependencias_Usuarios = { type: 'MasterDetail', ModelObject: () => new CaseTable_Dependencias_Usuarios(), require: false };
+    Tbl_Agenda = { type: 'MasterDetail', ModelObject: () => new Tbl_Agenda() };
+    Tbl_Dependencias_Usuarios = { type: 'MasterDetail', ModelObject: () => new Tbl_Dependencias_Usuarios(), require: false };
     GetOwDependencies = async () => {
         return await this.GetData("Proyect/GetOwDependencies");
     }
@@ -330,10 +330,10 @@ class Cat_Tipo_Participaciones extends EntityClass {
     }
     Id_Tipo_Participacion = { type: 'number', primary: true };
     Descripcion = { type: 'text' };
-    CaseTable_Participantes = { type: 'MasterDetail', ModelObject: () => new CaseTable_Participantes() };
+    Tbl_Participantes = { type: 'MasterDetail', ModelObject: () => new Tbl_Participantes() };
 }
 export { Cat_Tipo_Participaciones }
-class CaseTable_Agenda extends EntityClass {
+class Tbl_Agenda extends EntityClass {
     constructor(props) {
         super(props, 'EntityHelpdesk');
         for (const prop in props) {
@@ -347,8 +347,8 @@ class CaseTable_Agenda extends EntityClass {
     Hora_Final = { type: 'HORA' };
     Fecha_Caducidad = { type: 'date' };
 }
-export { CaseTable_Agenda }
-class CaseTable_Dependencias_Usuarios extends EntityClass {
+export { Tbl_Agenda }
+class Tbl_Dependencias_Usuarios extends EntityClass {
     constructor(props) {
         super(props, 'EntityHelpdesk');
         for (const prop in props) {
@@ -358,7 +358,7 @@ class CaseTable_Dependencias_Usuarios extends EntityClass {
     Tbl_Profile = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Tbl_Profile() }
     Cat_Cargos_Dependencias = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Cargos_Dependencias() }
 }
-export { CaseTable_Dependencias_Usuarios }
+export { Tbl_Dependencias_Usuarios }
 
 class Cat_Paises extends EntityClass {
     constructor(props) {
@@ -373,7 +373,7 @@ class Cat_Paises extends EntityClass {
 }
 export { Cat_Paises }
 
-class CaseTable_VinculateCase extends EntityClass {
+class Tbl_VinculateCase extends EntityClass {
     constructor(props) {
         super(props, 'EntityHelpdesk');
         for (const prop in props) {
@@ -386,7 +386,7 @@ class CaseTable_VinculateCase extends EntityClass {
 
 
     Casos_Vinculados = {
-        type: 'MasterDetail', ModelObject: () => new CaseTable_Case(),
+        type: 'MasterDetail', ModelObject: () => new Tbl_Case(),
         require: false
     };
 
@@ -397,4 +397,4 @@ class CaseTable_VinculateCase extends EntityClass {
         return await this.GetData("Proyect/DesvincularCaso");
     }
 }
-export { CaseTable_VinculateCase }
+export { Tbl_VinculateCase }

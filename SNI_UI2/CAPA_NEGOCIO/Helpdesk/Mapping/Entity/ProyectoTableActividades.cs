@@ -10,7 +10,7 @@ namespace CAPA_NEGOCIO.MAPEO
     {
         Leido, Pendiente
     }
-    public class CaseTable_Comments : EntityClass
+    public class Tbl_Comments : EntityClass
     {
         [PrimaryKey(Identity = true)]
         public int? Id_Comentario { get; set; }
@@ -36,7 +36,7 @@ namespace CAPA_NEGOCIO.MAPEO
                 Id_User = user.UserId;
                 NickName = user.UserData?.Nombres;
                 Mail = user.mail;
-                CaseTable_Case? caseTable_Case = new CaseTable_Case() { Id_Case = Id_Case }.Find<CaseTable_Case>();
+                Tbl_Case? Tbl_Case = new Tbl_Case() { Id_Case = Id_Case }.Find<Tbl_Case>();
                 foreach (var file in Attach_Files ?? new List<ModelFiles>())
                 {
                     ModelFiles Response = (ModelFiles)FileService.upload("Attach\\", file).body;
@@ -46,7 +46,7 @@ namespace CAPA_NEGOCIO.MAPEO
                 Save();
                 if (withMail)
                 {
-                    CreateMailForComment(user, caseTable_Case);
+                    CreateMailForComment(user, Tbl_Case);
                 }
                 CommitGlobalTransaction();
                 return this;
@@ -59,25 +59,25 @@ namespace CAPA_NEGOCIO.MAPEO
 
         }
 
-        public void CreateMailForComment(UserModel user, CaseTable_Case caseTable_Case)
+        public void CreateMailForComment(UserModel user, Tbl_Case Tbl_Case)
         {
             List<String?>? toMails = new List<string?>();
-            CaseTable_Case? caseTable_CaseWithComments = new CaseTable_Case() { Id_Case = Id_Case }.Find<CaseTable_Case>();
-            if (Mails?.Count == 0 && caseTable_CaseWithComments?.CaseTable_Comments != null)
+            Tbl_Case? Tbl_CaseWithComments = new Tbl_Case() { Id_Case = Id_Case }.Find<Tbl_Case>();
+            if (Mails?.Count == 0 && Tbl_CaseWithComments?.Tbl_Comments != null)
             {
                 Mails = new List<string>();
-                Mails?.AddRange(caseTable_CaseWithComments?.CaseTable_Comments?.Select(c => c.Mail?.ToString()).ToList());
+                Mails?.AddRange(Tbl_CaseWithComments?.Tbl_Comments?.Select(c => c.Mail?.ToString()).ToList());
 
             }
             if (Mails != null)
             {
                 toMails.AddRange(Mails);
             }
-            toMails.Add(caseTable_Case?.Mail);
-            new CaseTable_Mails()
+            toMails.Add(Tbl_Case?.Mail);
+            new Tbl_Mails()
             {
-                Id_Case = caseTable_Case?.Id_Case,
-                Subject = $"RE: " + caseTable_Case?.Titulo?.ToUpper(),
+                Id_Case = Tbl_Case?.Id_Case,
+                Subject = $"RE: " + Tbl_Case?.Titulo?.ToUpper(),
                 Body = Body,
                 FromAdress = user.mail,
                 Estado = MailState.PENDIENTE.ToString(),
@@ -87,41 +87,41 @@ namespace CAPA_NEGOCIO.MAPEO
             }.Save();
         }
 
-        internal List<CaseTable_Comments> GetComments()
+        internal List<Tbl_Comments> GetComments()
         {
-            CaseTable_Case caseTable_Case = new CaseTable_Case() { Id_Case = Id_Case }.Find<CaseTable_Case>();
-            if (caseTable_Case?.Id_Vinculate != null)
+            Tbl_Case Tbl_Case = new Tbl_Case() { Id_Case = Id_Case }.Find<Tbl_Case>();
+            if (Tbl_Case?.Id_Vinculate != null)
             {
-                return new CaseTable_Comments().Get_WhereIN<CaseTable_Comments>(
+                return new Tbl_Comments().Get_WhereIN<Tbl_Comments>(
                     "Id_Case",
-                    new CaseTable_Case() { Id_Vinculate = caseTable_Case.Id_Vinculate }
-                    .Get<CaseTable_Case>().Select(c => c.Id_Case.ToString()).ToArray());
+                    new Tbl_Case() { Id_Vinculate = Tbl_Case.Id_Vinculate }
+                    .Get<Tbl_Case>().Select(c => c.Id_Case.ToString()).ToArray());
             }
             else
             {
-                return Get<CaseTable_Comments>();
+                return Get<Tbl_Comments>();
             }
 
         }
-        internal List<CaseTable_Comments> GetOwComments(List<CaseTable_Case> caseTables)
+        internal List<Tbl_Comments> GetOwComments(List<Tbl_Case> caseTables)
         {
-            return new CaseTable_Comments().Get_WhereIN<CaseTable_Comments>(
+            return new Tbl_Comments().Get_WhereIN<Tbl_Comments>(
                 "Id_Case", caseTables.Select(c => c.Id_Case.ToString()).ToArray());
 
         }
     }
 
-    public class CaseTable_Comments_Tasks : CaseTable_Comments
+    public class Tbl_Comments_Tasks : Tbl_Comments
     {
         public int? Id_Tarea { get; set; }
-        internal List<CaseTable_Comments_Tasks> GetOwComments(List<CaseTable_Tareas> caseTables)
+        internal List<Tbl_Comments_Tasks> GetOwComments(List<Tbl_Tareas> caseTables)
         {
-            return new CaseTable_Comments_Tasks().Get_WhereIN<CaseTable_Comments_Tasks>(
+            return new Tbl_Comments_Tasks().Get_WhereIN<Tbl_Comments_Tasks>(
                 "Id_Tarea", caseTables.Select(c => c.Id_Tarea.ToString()).ToArray());
         }
-        internal new List<CaseTable_Comments_Tasks> GetComments()
+        internal new List<Tbl_Comments_Tasks> GetComments()
         {
-            return Get<CaseTable_Comments_Tasks>();
+            return Get<Tbl_Comments_Tasks>();
         }
     }
 
@@ -130,10 +130,10 @@ namespace CAPA_NEGOCIO.MAPEO
         Solicitado, Pendiente, Activo, Finalizado, Espera, Rechazado, Vinculado
     }
 
-    public class CaseTable_Mails : EntityClass
+    public class Tbl_Mails : EntityClass
     {
-        public CaseTable_Mails() { }
-        public CaseTable_Mails(MimeMessage mail)
+        public Tbl_Mails() { }
+        public Tbl_Mails(MimeMessage mail)
         {
             Subject = mail.Subject;
             MessageID = mail.MessageId;
@@ -173,8 +173,8 @@ namespace CAPA_NEGOCIO.MAPEO
         //public string[] RawFlags { get; set; }
         public DateTime? Date { get; set; }
         public string? Uid { get; set; }
-        // [OneToOne(TableName = "CaseTable_Comments", KeyColumn = "Id_Mail", ForeignKeyColumn = "Id_Mail")]
-        // public CaseTable_Comments? CaseTable_Comments  { get; set; }
+        // [OneToOne(TableName = "Tbl_Comments", KeyColumn = "Id_Mail", ForeignKeyColumn = "Id_Mail")]
+        // public Tbl_Comments? Tbl_Comments  { get; set; }
     }
 
     public enum MailState
@@ -186,18 +186,18 @@ namespace CAPA_NEGOCIO.MAPEO
         [PrimaryKey(Identity = true)]
         public int? Id_Cargo { get; set; }
         public string? Descripcion { get; set; }
-        [OneToMany(TableName = "CaseTable_Dependencias_Usuarios", KeyColumn = "Id_Cargo", ForeignKeyColumn = "Id_Cargo")]
-        public List<CaseTable_Dependencias_Usuarios>? CaseTable_Dependencias_Usuarios { get; set; }
+        [OneToMany(TableName = "Tbl_Dependencias_Usuarios", KeyColumn = "Id_Cargo", ForeignKeyColumn = "Id_Cargo")]
+        public List<Tbl_Dependencias_Usuarios>? Tbl_Dependencias_Usuarios { get; set; }
     }
     public class Cat_Tipo_Participaciones : EntityClass
     {
         [PrimaryKey(Identity = true)]
         public int? Id_Tipo_Participacion { get; set; }
         public string? Descripcion { get; set; }
-        [OneToMany(TableName = "CaseTable_Participantes", KeyColumn = "Id_Tipo_Participacion", ForeignKeyColumn = "Id_Tipo_Participacion")]
-        public List<CaseTable_Participantes>? CaseTable_Participantes { get; set; }
+        [OneToMany(TableName = "Tbl_Participantes", KeyColumn = "Id_Tipo_Participacion", ForeignKeyColumn = "Id_Tipo_Participacion")]
+        public List<Tbl_Participantes>? Tbl_Participantes { get; set; }
     }
-    public class CaseTable_Agenda : EntityClass
+    public class Tbl_Agenda : EntityClass
     {
         [PrimaryKey(Identity = true)]
         public int? IdAgenda { get; set; }
@@ -212,7 +212,7 @@ namespace CAPA_NEGOCIO.MAPEO
         [ManyToOne(TableName = "Cat_Dependencias", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
         public Cat_Dependencias? Cat_Dependencias { get; set; }
     }
-    public class CaseTable_Dependencias_Usuarios : EntityClass
+    public class Tbl_Dependencias_Usuarios : EntityClass
     {
         [PrimaryKey(Identity = false)]
         public int? Id_Perfil { get; set; }
@@ -226,22 +226,22 @@ namespace CAPA_NEGOCIO.MAPEO
         [ManyToOne(TableName = "Cat_Cargos_Dependencias", KeyColumn = "Id_Cargo", ForeignKeyColumn = "Id_Cargo")]
         public Cat_Cargos_Dependencias? Cat_Cargos_Dependencias { get; set; }
     }
-    public class CaseTable_Evidencias : EntityClass
+    public class Tbl_Evidencias : EntityClass
     {
         [PrimaryKey(Identity = true)]
         public int? IdEvidencia { get; set; }
         public int? IdTipo { get; set; }
         public string? Data { get; set; }
         public int? Id_Tarea { get; set; }
-        [ManyToOne(TableName = "CaseTable_Tareas", KeyColumn = "Id_Tarea", ForeignKeyColumn = "Id_Tarea")]
-        public CaseTable_Tareas? CaseTable_Tareas { get; set; }
+        [ManyToOne(TableName = "Tbl_Tareas", KeyColumn = "Id_Tarea", ForeignKeyColumn = "Id_Tarea")]
+        public Tbl_Tareas? Tbl_Tareas { get; set; }
         [ManyToOne(TableName = "Cat_Tipo_Evidencia", KeyColumn = "IdTipo", ForeignKeyColumn = "IdTipo")]
         public Cat_Tipo_Evidencia? Cat_Tipo_Evidencia { get; set; }
 
     }
 
 
-    public class CaseTable_Calendario : EntityClass
+    public class Tbl_Calendario : EntityClass
     {
         [PrimaryKey(Identity = true)]
         public int? IdCalendario { get; set; }
@@ -250,13 +250,13 @@ namespace CAPA_NEGOCIO.MAPEO
         public string? Estado { get; set; }
         public DateTime? Fecha_Inicio { get; set; }
         public DateTime? Fecha_Final { get; set; }
-        [ManyToOne(TableName = "CaseTable_Tareas", KeyColumn = "Id_Tarea", ForeignKeyColumn = "Id_Tarea")]
-        public CaseTable_Tareas? CaseTable_Tareas { get; set; }
+        [ManyToOne(TableName = "Tbl_Tareas", KeyColumn = "Id_Tarea", ForeignKeyColumn = "Id_Tarea")]
+        public Tbl_Tareas? Tbl_Tareas { get; set; }
         [ManyToOne(TableName = "Cat_Dependencias", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
         public Cat_Dependencias? Cat_Dependencias { get; set; }
 
     }
-    public class CaseTable_Tareas : EntityClass
+    public class Tbl_Tareas : EntityClass
     {
         [PrimaryKey(Identity = true)]
         public int? Id_Tarea { get; set; }
@@ -267,36 +267,36 @@ namespace CAPA_NEGOCIO.MAPEO
         public DateTime? Fecha_Inicio { get; set; }
         public DateTime? Fecha_Finalizacion { get; set; }
         public string? Estado { get; set; }
-        [ManyToOne(TableName = "CaseTable_Tareas", KeyColumn = "Id_Tarea", ForeignKeyColumn = "Id_TareaPadre")]
-        public CaseTable_Tareas? CaseTable_Tarea { get; set; }
-        [ManyToOne(TableName = "CaseTable_Case", KeyColumn = "Id_Case", ForeignKeyColumn = "Id_Case")]
-        public CaseTable_Case? CaseTable_Case { get; set; }
-        [OneToMany(TableName = "CaseTable_Calendario", KeyColumn = "Id_Tarea", ForeignKeyColumn = "Id_Tarea")]
-        public List<CaseTable_Calendario>? CaseTable_Calendario { get; set; }
-        [OneToMany(TableName = "CaseTable_Evidencias", KeyColumn = "Id_Tarea", ForeignKeyColumn = "Id_Tarea")]
-        public List<CaseTable_Evidencias>? CaseTable_Evidencias { get; set; }
-        [OneToMany(TableName = "CaseTable_Participantes", KeyColumn = "Id_Tarea", ForeignKeyColumn = "Id_Tarea")]
-        public List<CaseTable_Participantes>? CaseTable_Participantes { get; set; }
-        [OneToMany(TableName = "CaseTable_Tareas", KeyColumn = "Id_Tarea", ForeignKeyColumn = "Id_TareaPadre")]
-        public List<CaseTable_Tareas>? CaseTable_TareasHijas { get; set; }
+        [ManyToOne(TableName = "Tbl_Tareas", KeyColumn = "Id_Tarea", ForeignKeyColumn = "Id_TareaPadre")]
+        public Tbl_Tareas? Tbl_Tarea { get; set; }
+        [ManyToOne(TableName = "Tbl_Case", KeyColumn = "Id_Case", ForeignKeyColumn = "Id_Case")]
+        public Tbl_Case? Tbl_Case { get; set; }
+        [OneToMany(TableName = "Tbl_Calendario", KeyColumn = "Id_Tarea", ForeignKeyColumn = "Id_Tarea")]
+        public List<Tbl_Calendario>? Tbl_Calendario { get; set; }
+        [OneToMany(TableName = "Tbl_Evidencias", KeyColumn = "Id_Tarea", ForeignKeyColumn = "Id_Tarea")]
+        public List<Tbl_Evidencias>? Tbl_Evidencias { get; set; }
+        [OneToMany(TableName = "Tbl_Participantes", KeyColumn = "Id_Tarea", ForeignKeyColumn = "Id_Tarea")]
+        public List<Tbl_Participantes>? Tbl_Participantes { get; set; }
+        [OneToMany(TableName = "Tbl_Tareas", KeyColumn = "Id_Tarea", ForeignKeyColumn = "Id_TareaPadre")]
+        public List<Tbl_Tareas>? Tbl_TareasHijas { get; set; }
         public DateTime? Fecha_Finalizacion_Proceso { get; private set; }
         public DateTime? Fecha_Inicio_Proceso { get; private set; }
 
-        public List<CaseTable_Tareas> GetOwParticipations(string identity)
+        public List<Tbl_Tareas> GetOwParticipations(string identity)
         {
             Tbl_Profile? profile = new Tbl_Profile() { IdUser = AuthNetCore.User(identity).UserId }.Find<Tbl_Profile>();
-            CaseTable_Participantes Inst = new CaseTable_Participantes() { Id_Perfil = profile?.Id_Perfil };
-            return Where<CaseTable_Tareas>(
-                FilterData.In("Id_Tarea", new CaseTable_Participantes().Get<CaseTable_Participantes>().Select(p => p.Id_Tarea.ToString()).ToArray())
+            Tbl_Participantes Inst = new Tbl_Participantes() { Id_Perfil = profile?.Id_Perfil };
+            return Where<Tbl_Tareas>(
+                FilterData.In("Id_Tarea", new Tbl_Participantes().Get<Tbl_Participantes>().Select(p => p.Id_Tarea.ToString()).ToArray())
             );
         }
-        public List<CaseTable_Tareas> GetOwActiveParticipations(string identity)
+        public List<Tbl_Tareas> GetOwActiveParticipations(string identity)
         {
             Tbl_Profile? profile = new Tbl_Profile() { IdUser = AuthNetCore.User(identity).UserId }.Find<Tbl_Profile>();
-            CaseTable_Participantes Inst = new CaseTable_Participantes { Id_Perfil = profile?.Id_Perfil };
-            return Where<CaseTable_Tareas>(
+            Tbl_Participantes Inst = new Tbl_Participantes { Id_Perfil = profile?.Id_Perfil };
+            return Where<Tbl_Tareas>(
                 FilterData.NotIn("Estado", TareasState.Finalizado.ToString(), TareasState.Inactivo.ToString()),
-                FilterData.In("Id_Tarea", new CaseTable_Participantes().Get<CaseTable_Participantes>().Select(p => p.Id_Tarea.ToString()).ToArray())
+                FilterData.In("Id_Tarea", new Tbl_Participantes().Get<Tbl_Participantes>().Select(p => p.Id_Tarea.ToString()).ToArray())
             );
         }
 
@@ -318,19 +318,19 @@ namespace CAPA_NEGOCIO.MAPEO
             return Update();
         }
 
-        internal void NotificarTecnicos(CaseTable_Case caseTable_Case, UserModel user)
+        internal void NotificarTecnicos(Tbl_Case Tbl_Case, UserModel user)
         {
-            CaseTable_Participantes?.ForEach(participante =>
+            Tbl_Participantes?.ForEach(participante =>
             {
                 List<String?>? toMails = new()
                 {
                     participante?.Tbl_Profile?.Correo_institucional
                 };
-                new CaseTable_Mails()
+                new Tbl_Mails()
                 {
-                    Id_Case = caseTable_Case?.Id_Case,
+                    Id_Case = Tbl_Case?.Id_Case,
                     Subject = $"TAREA ASIGNADA: - {Titulo} ",
-                    Body = $"TAREA ASIGNADA: {Titulo} - ROL: {participante.Cat_Tipo_Participaciones.Descripcion} - CASO:  {caseTable_Case?.Titulo?.ToUpper()}" + Descripcion,
+                    Body = $"TAREA ASIGNADA: {Titulo} - ROL: {participante.Cat_Tipo_Participaciones.Descripcion} - CASO:  {Tbl_Case?.Titulo?.ToUpper()}" + Descripcion,
                     FromAdress = user.mail,
                     Estado = MailState.PENDIENTE.ToString(),
                     Date = DateTime.Now,
@@ -346,11 +346,11 @@ namespace CAPA_NEGOCIO.MAPEO
             {
                 UserModel user = AuthNetCore.User(identity) ?? new();
                 //BeginGlobalTransaction();
-                List<DateTime?>? fechasIniciales = this.CaseTable_Calendario?.Select(c => c.Fecha_Inicio).ToList();
-                List<DateTime?>? fechasFinales = this.CaseTable_Calendario?.Select(c => c.Fecha_Inicio).ToList();
+                List<DateTime?>? fechasIniciales = this.Tbl_Calendario?.Select(c => c.Fecha_Inicio).ToList();
+                List<DateTime?>? fechasFinales = this.Tbl_Calendario?.Select(c => c.Fecha_Inicio).ToList();
                 Fecha_Inicio = fechasIniciales?.Min() ?? DateTime.Now;
                 Fecha_Finalizacion = fechasFinales?.Max() ?? DateTime.Now;
-                var comment = new CaseTable_Comments()
+                var comment = new Tbl_Comments()
                 {
                     Id_Case = this.Id_Case,
                     Body = $"Se a creado una nueva tarea: {this.Descripcion}",
@@ -360,7 +360,7 @@ namespace CAPA_NEGOCIO.MAPEO
                     Mail = user?.mail
                 };
                 comment.Save();
-                comment.CreateMailForComment(user, CaseTable_Case);
+                comment.CreateMailForComment(user, Tbl_Case);
                 var response = this.Save();
                 //CommitGlobalTransaction();
                 return response;
@@ -377,7 +377,7 @@ namespace CAPA_NEGOCIO.MAPEO
     {
         Activo, Proceso, Finalizado, Espera, Inactivo
     }
-    public class CaseTable_Participantes : EntityClass
+    public class Tbl_Participantes : EntityClass
     {
         [PrimaryKey(Identity = false)]
         public int? Id_Perfil { get; set; }
@@ -386,8 +386,8 @@ namespace CAPA_NEGOCIO.MAPEO
         public int? Id_Tipo_Participacion { get; set; }
         [ManyToOne(TableName = "Tbl_Profile", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
         public Tbl_Profile? Tbl_Profile { get; set; }
-        [ManyToOne(TableName = "CaseTable_Tareas", KeyColumn = "Id_Tarea", ForeignKeyColumn = "Id_Tarea")]
-        public CaseTable_Tareas? CaseTable_Tareas { get; set; }
+        [ManyToOne(TableName = "Tbl_Tareas", KeyColumn = "Id_Tarea", ForeignKeyColumn = "Id_Tarea")]
+        public Tbl_Tareas? Tbl_Tareas { get; set; }
         [ManyToOne(TableName = "Cat_Tipo_Participaciones", KeyColumn = "Id_Tipo_Participacion", ForeignKeyColumn = "Id_Tipo_Participacion")]
         public Cat_Tipo_Participaciones? Cat_Tipo_Participaciones { get; set; }
     }

@@ -1,5 +1,5 @@
 import { priorityStyles } from '../../AppComponents/Styles.js';
-import { CaseTable_Case, CaseTable_Comments, Cat_Dependencias, Tbl_Servicios } from '../../ModelProyect/ProyectDataBaseModel.js';
+import { Tbl_Case, Tbl_Comments, Cat_Dependencias, Tbl_Servicios } from '../../ModelProyect/ProyectDataBaseModel.js';
 import { WSecurity } from '../../WDevCore/Security/WSecurity.js';
 import { StylesControlsV2, StylesControlsV3 } from "../../WDevCore/StyleModules/WStyleComponents.js";
 import { WCommentsComponent } from '../../WDevCore/WComponents/WCommentsComponent.js';
@@ -15,7 +15,7 @@ import { activityStyle } from '../style.js';
 class SolicitudesPendientesComponent extends HTMLElement {
     /**
      * 
-     * @param {Array<CaseTable_Case>} Dataset 
+     * @param {Array<Tbl_Case>} Dataset 
      * @param {Array<Cat_Dependencias>} Dependencias 
      */
     constructor(Dataset) {
@@ -28,8 +28,8 @@ class SolicitudesPendientesComponent extends HTMLElement {
         this.TabManager = new ComponentsManager({ MainContainer: this.TabContainer });
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });
         this.OptionContainer2 = WRender.Create({ className: "OptionContainer2" });
-        this.ModelObject = new CaseTable_Case({
-            CaseTable_Tareas: {
+        this.ModelObject = new Tbl_Case({
+            Tbl_Tareas: {
                 type: "text", hidden: true
             }, Estado: {
                 type: "text", hidden: true
@@ -75,7 +75,7 @@ class SolicitudesPendientesComponent extends HTMLElement {
                     MultiSelect: true,
                     UserActions: [{
                         name: "ver detalles", action: async (element) => {
-                            const find = await new CaseTable_Case({ Id_Case: element.Id_Case }).Get()
+                            const find = await new Tbl_Case({ Id_Case: element.Id_Case }).Get()
                             const CaseDetail = new CaseDetailComponent(find[0]);
                             this.TabManager.NavigateFunction("Detail" + element.Id_Case, CaseDetail)
                         }
@@ -113,21 +113,21 @@ class SolicitudesPendientesComponent extends HTMLElement {
             WRender.Create({ className: "nuevoCasoView", children: [form] }));
     }
     update = async (inst = this.filterD) => {
-        const Solicitudes = await new CaseTable_Case({ FilterData: inst }).GetSolicitudesPendientesAprobar();
+        const Solicitudes = await new Tbl_Case({ FilterData: inst }).GetSolicitudesPendientesAprobar();
         this.mainTable?.DrawTable(Solicitudes);
     }
 
     actividadDetail = async (actividad) => {
         const actividadDetailView = WRender.Create({ className: "actividadDetailView", children: [this.actividadElementDetail(actividad)] });
-        const commentsDataset = await new CaseTable_Comments({ Id_Case: actividad.Id_Case }).Get();
+        const commentsDataset = await new Tbl_Comments({ Id_Case: actividad.Id_Case }).Get();
         const commentsContainer = new WCommentsComponent({
             Dataset: commentsDataset,
-            ModelObject: new CaseTable_Comments(),
+            ModelObject: new Tbl_Comments(),
             User: WSecurity.UserData,
             UserIdProp: "Id_User",
             CommentsIdentify: actividad.Id_Case,
-            UrlSearch: "../api/ApiEntityHelpdesk/getCaseTable_Comments",
-            UrlAdd: "../api/ApiEntityHelpdesk/saveCaseTable_Comments"
+            UrlSearch: "../api/ApiEntityHelpdesk/getTbl_Comments",
+            UrlAdd: "../api/ApiEntityHelpdesk/saveTbl_Comments"
         });
         actividadDetailView.append(commentsContainer)
         this.TabManager.NavigateFunction("Tab-Actividades-Viewer" + actividad.Id_Case, actividadDetailView);
@@ -159,13 +159,13 @@ class SolicitudesPendientesComponent extends HTMLElement {
     }
     UserActions = [
         {
-            name: "Aprobar", action: async (/**@type {CaseTable_Case}*/element) => {
+            name: "Aprobar", action: async (/**@type {Tbl_Case}*/element) => {
                 if (this.mainTable.selectedItems.length <= 0) {
                     this.shadowRoot.append(ModalMessege("Seleccione solicitudes"));
                     return;
                 }
                 // this.shadowRoot.append(ModalVericateAction(async () => {
-                //     const response = await new CaseTable_Case()
+                //     const response = await new Tbl_Case()
                 //         .AprobarCaseList(this.mainTable.selectedItems);
                 //     if (response.status == 200) {
                 //         this.shadowRoot.append(ModalMessege("Solicitudes aprobadas"));
@@ -182,7 +182,7 @@ class SolicitudesPendientesComponent extends HTMLElement {
                         dependencias.filter(d => d.Id_Dependencia == this.mainTable.selectedItems[0]?.Cat_Dependencias?.Id_Dependencia),
                         servicios,
                         async (table_case) => {
-                            const response = await new CaseTable_Case()
+                            const response = await new Tbl_Case()
                                 .AprobarCaseList(this.mainTable.selectedItems, table_case);
                             if (response.status == 200) {
                                 this.shadowRoot.append(ModalMessege("Solicitudes aprobadas"));
@@ -196,7 +196,7 @@ class SolicitudesPendientesComponent extends HTMLElement {
                 this.shadowRoot.append(modal);
             }
         }, {
-            name: "Rechazar", action: async (/**@type {CaseTable_Case}*/element) => {
+            name: "Rechazar", action: async (/**@type {Tbl_Case}*/element) => {
                 if (this.mainTable.selectedItems.length <= 0) {
                     this.shadowRoot.append(ModalMessege("Seleccione solicitudes"));
                     return;
@@ -206,11 +206,11 @@ class SolicitudesPendientesComponent extends HTMLElement {
                     EditObject: {
                         Id_Case: element.Id_Case,
                     },
-                    ModelObject: new CaseTable_Comments(),
+                    ModelObject: new Tbl_Comments(),
                     ObjectOptions: {
                         SaveFunction: async (comentario) => {
                             this.shadowRoot.append(ModalVericateAction(async () => {
-                                const response = await new CaseTable_Case()
+                                const response = await new Tbl_Case()
                                     .RechazarCaseList(this.mainTable.selectedItems, comentario);
                                 if (response.status == 200) {
                                     this.shadowRoot.append(ModalMessege("Solicitudes rechazadas"));
@@ -226,7 +226,7 @@ class SolicitudesPendientesComponent extends HTMLElement {
 
             }
         }, {
-            name: "Remitir a otra dependencia", action: async (/**@type {CaseTable_Case}*/element) => {
+            name: "Remitir a otra dependencia", action: async (/**@type {Tbl_Case}*/element) => {
                 if (this.mainTable.selectedItems.length <= 0) {
                     this.shadowRoot.append(ModalMessege("Seleccione solicitudes"));
                     return;
@@ -241,8 +241,8 @@ class SolicitudesPendientesComponent extends HTMLElement {
                         async (table_case) => {
                             this.shadowRoot.append(ModalVericateAction(async () => {
                                 const response =
-                                    await new CaseTable_Case().RemitirCasos(this.mainTable.selectedItems,
-                                        table_case.Cat_Dependencias, table_case.CaseTable_Comments, table_case);
+                                    await new Tbl_Case().RemitirCasos(this.mainTable.selectedItems,
+                                        table_case.Cat_Dependencias, table_case.Tbl_Comments, table_case);
                                 if (response.status == 200) {
                                     this.shadowRoot.append(ModalMessege("Solicitud remitida"));
                                     this.update();
@@ -264,7 +264,7 @@ class SolicitudesPendientesComponent extends HTMLElement {
     mapCaseToPaginatorElement(Dataset) {
         return Dataset.map(actividad => {
             actividad.Dependencia = actividad.Cat_Dependencias.Descripcion;
-            //actividad.Progreso = actividad.CaseTable_Tareas?.filter(tarea => tarea.Estado?.includes("Finalizado")).length;
+            //actividad.Progreso = actividad.Tbl_Tareas?.filter(tarea => tarea.Estado?.includes("Finalizado")).length;
             return this.actividadElement(actividad);
         });
     }

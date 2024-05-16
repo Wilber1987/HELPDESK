@@ -1,7 +1,7 @@
 
 
 //@ts-check
-import { CaseTable_Case, CaseTable_Participantes, CaseTable_Tareas } from '../../../ModelProyect/ProyectDataBaseModel.js';
+import { Tbl_Case, Tbl_Participantes, Tbl_Tareas } from '../../../ModelProyect/ProyectDataBaseModel.js';
 import { StylesControlsV2 } from '../../../WDevCore/StyleModules/WStyleComponents.js';
 import { ColumChart, RadialChart } from '../../../WDevCore/WComponents/WChartJSComponents.js';
 import { WFilterOptions } from '../../../WDevCore/WComponents/WFilterControls.js';
@@ -43,7 +43,7 @@ class CaseDashboardComponent extends HTMLElement {
         this.OptionContainer.append(WRender.Create({
             tagName: 'input', type: 'button',
             className: 'Btn-Mini', value: title1, onclick: () =>
-                this.drawReport(WArrayF.GroupBy(casosMap, "Dependencia"), title1, new CaseTable_Case({
+                this.drawReport(WArrayF.GroupBy(casosMap, "Dependencia"), title1, new Tbl_Case({
                     Dependencia: { type: "text" },
                     val: { type: "number" }
                 }))
@@ -51,12 +51,12 @@ class CaseDashboardComponent extends HTMLElement {
         this.OptionContainer.append(WRender.Create({
             tagName: 'input', type: 'button',
             className: 'Btn-Mini', value: title2, onclick: () =>
-                this.drawReport(WArrayF.GroupBy(this.Dataset, "Estado"), title2, new CaseTable_Case())
+                this.drawReport(WArrayF.GroupBy(this.Dataset, "Estado"), title2, new Tbl_Case())
         }))
         // this.OptionContainer.append(WRender.Create({
         //     tagName: 'input', type: 'button',
         //     className: 'Btn-Mini', value: title3, onclick: () =>
-        //         this.drawReport(casosProcesados, title3, new CaseTable_Case({
+        //         this.drawReport(casosProcesados, title3, new Tbl_Case({
         //             Estado: { type: "text" },
         //             Servicio: { type: "text" },
         //             Caso: { type: "text" },
@@ -68,7 +68,7 @@ class CaseDashboardComponent extends HTMLElement {
         this.OptionContainer.append(WRender.Create({
             tagName: 'input', type: 'button',
             className: 'Btn-Mini', value: title4, onclick: () =>
-                this.drawReport(casosEtiquetadosPorMes, title4, new CaseTable_Case({
+                this.drawReport(casosEtiquetadosPorMes, title4, new Tbl_Case({
                     Estado: { type: "text" },
                     Caso: { type: "text" },
                     Mes: { type: "text" },
@@ -78,7 +78,7 @@ class CaseDashboardComponent extends HTMLElement {
         this.OptionContainer.append(WRender.Create({
             tagName: 'input', type: 'button',
             className: 'Btn-Mini', value: title5, onclick: () =>
-                this.drawReport(casosMap, title5, new CaseTable_Case({
+                this.drawReport(casosMap, title5, new Tbl_Case({
                     Dependencia: { type: "text" },
                     val: { type: "number" }
                 }))
@@ -88,10 +88,10 @@ class CaseDashboardComponent extends HTMLElement {
         this.shadowRoot?.append(new WModalForm({ title: title, ObjectModal: new WReportComponent({ Dataset: MapData, ModelObject: model }) }))
     }
     dashBoardView = async () => {
-        this.Modelcase = new CaseTable_Case();
-        this.ModelTareas = new CaseTable_Tareas();
+        this.Modelcase = new Tbl_Case();
+        this.ModelTareas = new Tbl_Tareas();
         this.Dataset = await this.Modelcase.GetOwCase();
-        this.TareasDataset = await new CaseTable_Tareas().Get();
+        this.TareasDataset = await new Tbl_Tareas().Get();
         const { columChart, radialChartDependencias, columChartAperturaCasos, columChartMonth, radialChart } = this.buildCharts();
         const tableTareas = await this.taskData();
 
@@ -114,8 +114,8 @@ class CaseDashboardComponent extends HTMLElement {
             Display: true,
             AutoFilter: false,
             FilterFunction: async (/** @type {any} */ FilterData) => {
-                this.Dataset = await new CaseTable_Case({ FilterData: FilterData }).GetOwCase();
-                this.TareasDataset = await new CaseTable_Tareas({ FilterData: FilterData }).Get();
+                this.Dataset = await new Tbl_Case({ FilterData: FilterData }).GetOwCase();
+                this.TareasDataset = await new Tbl_Tareas({ FilterData: FilterData }).Get();
                 const { columChart, radialChartDependencias, columChartAperturaCasos, columChartMonth, radialChart } = this.buildCharts();
                 const tableTareas = await this.taskData();
                 dasboardContainer.innerHTML = "";
@@ -143,9 +143,9 @@ class CaseDashboardComponent extends HTMLElement {
     async taskData() {
         const TareasMap = [];
         this.TareasDataset?.forEach(t => {
-            t.CaseTable_Participantes?.forEach((p) => {
+            t.Tbl_Participantes?.forEach((p) => {
                 if (TareasMap.find(f => f.Id_Perfil == p.Id_Perfil) == null) {
-                    const tp = this.TareasDataset?.filter(tf => tf.CaseTable_Participantes?.filter((tpf) => tpf.Id_Perfil == p.Id_Perfil).length > 0);
+                    const tp = this.TareasDataset?.filter(tf => tf.Tbl_Participantes?.filter((tpf) => tpf.Id_Perfil == p.Id_Perfil).length > 0);
                     TareasMap.push({
                         Id_Perfil: p.Id_Perfil,
                         Tecnico: (p.Tbl_Profile?.Nombres ?? "") + " " + (p.Tbl_Profile?.Apellidos ?? ""),

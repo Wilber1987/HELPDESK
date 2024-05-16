@@ -1,18 +1,18 @@
 
 
-import { CaseTable_Case } from '../ModelProyect/ProyectDataBaseModel.js';
+import { Tbl_Case } from '../ModelProyect/ProyectDataBaseModel.js';
 import { WFilterOptions } from '../WDevCore/WComponents/WFilterControls.js';
 import { WTableComponent } from "../WDevCore/WComponents/WTableComponent.js";
 import { WRender } from '../WDevCore/WModules/WComponentsTools.js';
 /**
  * 
- * @param {CaseTable_Case} caseToVinculate 
+ * @param {Tbl_Case} caseToVinculate 
  * @param {String} actionName 
  * @param {Function} action 
  * @returns 
  */
 const CaseSearcherToVinculate = (caseToVinculate, actionName = null, action = null) => {
-    const model = new CaseTable_Case();
+    const model = new Tbl_Case();
     model.Fecha_Final.hiddenFilter = true;
     model.Estado.hiddenFilter = true;
     model.Cat_Dependencias.hiddenFilter = true;
@@ -20,7 +20,7 @@ const CaseSearcherToVinculate = (caseToVinculate, actionName = null, action = nu
 
 
     model.Get = async () => {
-        const response = await new CaseTable_Case(caseToVinculate).GetData("Proyect/GetCasosToVinculate");
+        const response = await new Tbl_Case(caseToVinculate).GetData("Proyect/GetCasosToVinculate");
         return response.map(c => { 
             c.Vinculado = c.Id_Vinculate != null ? "#28a745" : "rgba(0, 0, 0, 0.2)";
             return c;

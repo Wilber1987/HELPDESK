@@ -1,4 +1,4 @@
-import { CaseTable_Case, CaseTable_Tareas, Cat_Dependencias } from "../ModelProyect/ProyectDataBaseModel.js";
+import { Tbl_Case, Tbl_Tareas, Cat_Dependencias } from "../ModelProyect/ProyectDataBaseModel.js";
 import { CaseDashboardComponent } from "../Proyect/ProyectViews/Proyectos/CaseDashboardComponent.js";
 import { CaseManagerComponent } from "../Proyect/ProyectViews/Proyectos/CaseManagerComponent.js";
 import { TaskManagers } from "../Proyect/ProyectViews/Proyectos/TaskManager.js";
@@ -15,14 +15,14 @@ window.onload = () => {
         Inicialize: true,
         Elements: [{
             id: "Tab-dasboard", name: "Dashboard", action: async (ev) => {
-                //const dataset = await new CaseTable_Case().GetOwCase();
+                //const dataset = await new Tbl_Case().GetOwCase();
                 //const dependencias = await new Cat_Dependencias().GetOwDependencies();
                 DOMManager.NavigateFunction("Tab-dasboard", new CaseDashboardComponent());
             }
         }, {
             id: "Tab-Generales", name: "Administrador de Casos",
             action: async (ev) => {
-                const dataset = await new CaseTable_Case().Get();
+                const dataset = await new Tbl_Case().Get();
                 const dependencias = await new Cat_Dependencias().Get();
                 DOMManager.NavigateFunction("Tab-Generales",
                     new CaseManagerComponent(dataset, dependencias));
@@ -30,13 +30,13 @@ window.onload = () => {
         }, {
             id: "Tab-Solicitudes", name: "Administrador de Solicitudes",
             action: async (ev) => {
-                const Solicitudes = await new CaseTable_Case().GetSolicitudesPendientesAprobarAdmin();
+                const Solicitudes = await new Tbl_Case().GetSolicitudesPendientesAprobarAdmin();
                 DOMManager.NavigateFunction("Tab-Solicitudes",
                     new SolicitudesPendientesComponent(Solicitudes));
             }
         }, {
             id: "Tab-Tasks-Manager", name: "Administrador de Tareas", action: async (ev) => {
-                const tasks = await new CaseTable_Tareas().Get();
+                const tasks = await new Tbl_Tareas().Get();
                 DOMManager.NavigateFunction("Tab-Tasks-Manager", ChargeTasks(tasks));
             }
         }]
@@ -48,12 +48,12 @@ window.onload = () => {
     Aside.append(navigator);
 }
 const ChargeTasks = (tasks) => {
-    const tasksManager = new TaskManagers(tasks, new CaseTable_Tareas(), { ImageUrlPath: "" });
+    const tasksManager = new TaskManagers(tasks, new Tbl_Tareas(), { ImageUrlPath: "" });
     const filterOptions = new WFilterOptions({
         Dataset: tasks,
         Display: true,
         AutoSetDate: true,
-        ModelObject: new CaseTable_Tareas(),
+        ModelObject: new Tbl_Tareas(),
         //DisplayFilts: [],
         FilterFunction: (DFilt) => {
             tasksManager.DrawTaskManagers(DFilt);

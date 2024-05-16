@@ -32,7 +32,7 @@ namespace CAPA_NEGOCIO.Services
                         OBJECTID = dependencia.OBJECTID,
                         HostService = Enum.Parse<HostServices>(dependencia?.HostService)
                     });
-                    messages.ForEach(async m => await new CaseTable_Case().CreateAutomaticCase(m, dependencia));
+                    messages.ForEach(async m => await new Tbl_Case().CreateAutomaticCase(m, dependencia));
                 }
                 catch (System.Exception ex)
                 {

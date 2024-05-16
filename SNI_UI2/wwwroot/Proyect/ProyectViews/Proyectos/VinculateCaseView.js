@@ -3,7 +3,7 @@ import { WRender, ComponentsManager, WAjaxTools, WArrayF } from "../../../WDevCo
 import { StylesControlsV2, StylesControlsV3, StyleScrolls } from "../../../WDevCore/StyleModules/WStyleComponents.js"
 import { css } from "../../../WDevCore/WModules/WStyledRender.js";
 import { WTableComponent } from "../../../WDevCore/WComponents/WTableComponent.js";
-import { CaseTable_VinculateCase } from "../../../ModelProyect/ProyectDataBaseModel.js";
+import { Tbl_VinculateCase } from "../../../ModelProyect/ProyectDataBaseModel.js";
 import { WForm } from "../../../WDevCore/WComponents/WForm.js";
 import { WModalForm } from "../../../WDevCore/WComponents/WModalForm.js";
 /**
@@ -40,13 +40,13 @@ class ComponentView extends HTMLElement {
         this.OptionContainer.append(WRender.Create({
             tagName: 'button', className: 'Block-Primary', innerText: 'Datos 1',
             onclick: async () => {
-                this.Manager.NavigateFunction("table", new WTableComponent({ ModelObject: new CaseTable_VinculateCase()}))
+                this.Manager.NavigateFunction("table", new WTableComponent({ ModelObject: new Tbl_VinculateCase()}))
             } 
         }))  
         this.OptionContainer.append(WRender.Create({
             tagName: 'button', className: 'Block-Primary', innerText: 'Datos 2',
             onclick: async () => {
-                this.Manager.NavigateFunction("form", new WForm({ ModelObject: new CaseTable_VinculateCase()}))
+                this.Manager.NavigateFunction("form", new WForm({ ModelObject: new Tbl_VinculateCase()}))
             } 
         }))      
         this.OptionContainer.append(WRender.Create({

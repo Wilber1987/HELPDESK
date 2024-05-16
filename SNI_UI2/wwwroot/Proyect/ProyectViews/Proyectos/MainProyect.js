@@ -1,5 +1,5 @@
 
-import { CaseTable_Case, CaseTable_Tareas, Cat_Dependencias } from '../../../ModelProyect/ProyectDataBaseModel.js';
+import { Tbl_Case, Tbl_Tareas, Cat_Dependencias } from '../../../ModelProyect/ProyectDataBaseModel.js';
 import { WAppNavigator } from '../../../WDevCore/WComponents/WAppNavigator.js';
 import { WFilterOptions } from '../../../WDevCore/WComponents/WFilterControls.js';
 import { ComponentsManager, WRender } from '../../../WDevCore/WModules/WComponentsTools.js';
@@ -35,7 +35,7 @@ class MainProyect extends HTMLElement {
             // {
             //     name: "Datos Generales",
             //     action: async (ev) => {
-            //         const dataset = await new CaseTable_Case().Get();
+            //         const dataset = await new Tbl_Case().Get();
             //         const dependencias = await new Cat_Dependencias().Get();
             //         this.TabManager.NavigateFunction("Tab-Generales",
             //             new CaseManagerComponent(dataset, dependencias));
@@ -57,16 +57,16 @@ class MainProyect extends HTMLElement {
     }
     NavChargeActividades = async () => {
         const dependencias = await new Cat_Dependencias().GetOwDependencies();
-        const dataset = await new CaseTable_Case().GetOwCase();        
+        const dataset = await new Tbl_Case().GetOwCase();        
         this.TabManager.NavigateFunction("Tab-OwActividades",
             new CaseManagerComponent(dataset, dependencias));
     }
     NavChargeTasks = async () => {
-        const tasks = await new CaseTable_Tareas().Get();
+        const tasks = await new Tbl_Tareas().Get();
         this.TabManager.NavigateFunction("Tab-Tasks-Manager", this.ChargeTasks(tasks));
     }
     NavChargeOWTasks = async () => {
-        const tasks = await new CaseTable_Tareas().GetOwParticipations();
+        const tasks = await new Tbl_Tareas().GetOwParticipations();
         this.TabManager.NavigateFunction("Tab-OWTasks-Manager", this.ChargeTasks(tasks));
     }
     ChargeTasks(tasks) {
@@ -74,7 +74,7 @@ class MainProyect extends HTMLElement {
         const filterOptions = new WFilterOptions({
             Dataset: tasks,
             AutoSetDate: true,
-            ModelObject: new CaseTable_Tareas(),
+            ModelObject: new Tbl_Tareas(),
             //DisplayFilts: [],
             FilterFunction: (DFilt) => {
                 tasksManager.DrawTaskManagers(DFilt);

@@ -30,12 +30,12 @@ public class Cat_Dependencias : EntityClass
     public Cat_Dependencias? Cat_Dependencia { get; set; }
     [OneToMany(TableName = "Cat_Dependencias", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia_Padre")]
     public List<Cat_Dependencias>? Cat_Dependencias_Hijas { get; set; }
-    //[OneToMany(TableName = "CaseTable_Case", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
-    // public List<CaseTable_Case>? CaseTable_Case { get; set; }
-    [OneToMany(TableName = "CaseTable_Agenda", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
-    public List<CaseTable_Agenda>? CaseTable_Agenda { get; set; }
-    [OneToMany(TableName = "CaseTable_Dependencias_Usuarios", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
-    public List<CaseTable_Dependencias_Usuarios>? CaseTable_Dependencias_Usuarios { get; set; }
+    //[OneToMany(TableName = "Tbl_Case", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
+    // public List<Tbl_Case>? Tbl_Case { get; set; }
+    [OneToMany(TableName = "Tbl_Agenda", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
+    public List<Tbl_Agenda>? Tbl_Agenda { get; set; }
+    [OneToMany(TableName = "Tbl_Dependencias_Usuarios", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
+    public List<Tbl_Dependencias_Usuarios>? Tbl_Dependencias_Usuarios { get; set; }
     public List<Cat_Dependencias> GetOwDependencies(string identity)
     {
         if (AuthNetCore.User(identity).isAdmin)
@@ -43,12 +43,12 @@ public class Cat_Dependencias : EntityClass
             return new Cat_Dependencias().Get<Cat_Dependencias>();
         }
         Tbl_Profile? profile = new Tbl_Profile() { IdUser = AuthNetCore.User(identity).UserId }.Find<Tbl_Profile>();
-        CaseTable_Dependencias_Usuarios Inst = new CaseTable_Dependencias_Usuarios()
+        Tbl_Dependencias_Usuarios Inst = new Tbl_Dependencias_Usuarios()
         {
             Id_Perfil = Tbl_Profile.GetUserProfile(identity)?.Id_Perfil
         };
         return new Cat_Dependencias().Get_WhereIN<Cat_Dependencias>(
-            "Id_Dependencia", Inst.Get<CaseTable_Dependencias_Usuarios>().Select(p => p.Id_Dependencia.ToString()).ToArray()
+            "Id_Dependencia", Inst.Get<Tbl_Dependencias_Usuarios>().Select(p => p.Id_Dependencia.ToString()).ToArray()
         );
     }
     [OneToMany(TableName = "Tbl_Servicios", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
@@ -72,27 +72,27 @@ public class Cat_Dependencias : EntityClass
                     D.Id_Dependencia,
                     D.Descripcion,
                     D.Username,
-                    D.CaseTable_Dependencias_Usuarios,
-                    NCasos = new CaseTable_Case { Id_Dependencia = D.Id_Dependencia, Estado = Case_Estate.Activo.ToString() }.Get<CaseTable_Case>().Count,
-                    NCasosFinalizados = new CaseTable_Case { Id_Dependencia = D.Id_Dependencia, Estado = Case_Estate.Finalizado.ToString() }.Get<CaseTable_Case>().Count
+                    D.Tbl_Dependencias_Usuarios,
+                    NCasos = new Tbl_Case { Id_Dependencia = D.Id_Dependencia, Estado = Case_Estate.Activo.ToString() }.Get<Tbl_Case>().Count,
+                    NCasosFinalizados = new Tbl_Case { Id_Dependencia = D.Id_Dependencia, Estado = Case_Estate.Finalizado.ToString() }.Get<Tbl_Case>().Count
                 }
         ).ToList();
     }
 
     internal object? UpdateDependencies()
     {
-        if (CaseTable_Agenda != null && CaseTable_Agenda.Count > 0)
+        if (Tbl_Agenda != null && Tbl_Agenda.Count > 0)
         {
-            new CaseTable_Agenda { Id_Dependencia = this.Id_Dependencia }.Delete();
-            foreach (var item in CaseTable_Agenda)
+            new Tbl_Agenda { Id_Dependencia = this.Id_Dependencia }.Delete();
+            foreach (var item in Tbl_Agenda)
             {
                 item.IdAgenda = null;
             }
         }
-        if (CaseTable_Dependencias_Usuarios != null && CaseTable_Dependencias_Usuarios.Count > 0)
+        if (Tbl_Dependencias_Usuarios != null && Tbl_Dependencias_Usuarios.Count > 0)
         {
-            new CaseTable_Dependencias_Usuarios { Id_Dependencia = this.Id_Dependencia }.Delete();
-            foreach (var item in CaseTable_Dependencias_Usuarios)
+            new Tbl_Dependencias_Usuarios { Id_Dependencia = this.Id_Dependencia }.Delete();
+            foreach (var item in Tbl_Dependencias_Usuarios)
             {
                 item.Cat_Dependencias = null;
                 item.Id_Dependencia = null;

@@ -3,14 +3,14 @@ import { WRender, ComponentsManager, WAjaxTools, WArrayF, html } from "../../../
 import { StylesControlsV2, StylesControlsV3, StyleScrolls } from "../../../WDevCore/StyleModules/WStyleComponents.js"
 import { css } from "../../../WDevCore/WModules/WStyledRender.js";
 import { WCommentsComponent } from "../../../WDevCore/WComponents/WCommentsComponent.js";
-import { CaseTable_Agenda, CaseTable_Calendario, CaseTable_Comments, CaseTable_Comments_Tasks, CaseTable_Tareas } from "../../../ModelProyect/ProyectDataBaseModel.js";
+import { Tbl_Agenda, Tbl_Calendario, Tbl_Comments, Tbl_Comments_Tasks, Tbl_Tareas } from "../../../ModelProyect/ProyectDataBaseModel.js";
 import { WSecurity } from "../../../WDevCore/Security/WSecurity.js";
 import { WModalForm } from "../../../WDevCore/WComponents/WModalForm.js";
 import { WDetailObject } from "../../../WDevCore/WComponents/WDetailObject.js";
 
 /**
  * @typedef {Object} ComponentConfig
- * * @property {CaseTable_Tareas} Task
+ * * @property {Tbl_Tareas} Task
  */
 class TareaDetailView extends HTMLElement {
     /**
@@ -46,16 +46,16 @@ class TareaDetailView extends HTMLElement {
         this.Manager.NavigateFunction("id", await this.MainComponent());
     }
     async MainComponent() {
-        const commentsActividad = await new CaseTable_Comments_Tasks({ Id_Tarea: this.Task?.Id_Tarea }).Get();
+        const commentsActividad = await new Tbl_Comments_Tasks({ Id_Tarea: this.Task?.Id_Tarea }).Get();
         const commentsContainer = new WCommentsComponent({
             Dataset: commentsActividad,
-            ModelObject: new CaseTable_Comments_Tasks(),
+            ModelObject: new Tbl_Comments_Tasks(),
             User: WSecurity.UserData,
             UserIdProp: "Id_User",
             CommentsIdentify: this.Task?.Id_Tarea,
             CommentsIdentifyName: "Id_Tarea",
-            UrlSearch: "../api/ApiEntityHelpdesk/getCaseTable_Comments_Tasks",
-            UrlAdd: "../api/ApiEntityHelpdesk/saveCaseTable_Comments_Tasks"
+            UrlSearch: "../api/ApiEntityHelpdesk/getTbl_Comments_Tasks",
+            UrlAdd: "../api/ApiEntityHelpdesk/saveTbl_Comments_Tasks"
         });
 
         const node = html`<div class="card">
@@ -67,7 +67,7 @@ class TareaDetailView extends HTMLElement {
                     <h3> Estado: (${this.Task.Estado})</h3>                    
                     <div class="authores">
                         ${
-                            this.Task?.CaseTable_Participantes?.map(I => `<div class="author"><img src="${I.Tbl_Profile?.Foto}" />
+                            this.Task?.Tbl_Participantes?.map(I => `<div class="author"><img src="${I.Tbl_Profile?.Foto}" />
                                 <h2>${I.Tbl_Profile?.Nombres} ${I.Tbl_Profile?.Apellidos ?? ""}</h2></div>`)?.join("") ?? "Sin Participantes"
                         }
                     </div>
@@ -76,7 +76,7 @@ class TareaDetailView extends HTMLElement {
                     <div class="horarios">
                         <h5>Horario</h5>
                         ${
-                            this.Task?.CaseTable_Calendario?.map(H => `<div class="horario">
+                            this.Task?.Tbl_Calendario?.map(H => `<div class="horario">
                                del ${H.Fecha_Inicio?.toDateFormatEs()} hasta ${H.Fecha_Final?.toDateFormatEs()}
                             </div>`)?.join("") ?? "Sin horario"
                         }
@@ -255,29 +255,29 @@ class TareaDetailView extends HTMLElement {
 
     /**
     * 
-    * @param {CaseTable_Tareas} task 
+    * @param {Tbl_Tareas} task 
     */
     taskEdit = async (task) => {
         const CalendarModel = {
             type: 'CALENDAR',
-            ModelObject: () => new CaseTable_Calendario(),
+            ModelObject: () => new Tbl_Calendario(),
             require: false,
             CalendarFunction: async () => {
                 return {
-                    Agenda: await new CaseTable_Agenda({
+                    Agenda: await new Tbl_Agenda({
                         // @ts-ignore
-                        Id_Dependencia: task?.CaseTable_Case?.Id_Dependencia
+                        Id_Dependencia: task?.Tbl_Case?.Id_Dependencia
                     }).Get(),
-                    Calendario: await new CaseTable_Calendario({
+                    Calendario: await new Tbl_Calendario({
                         // @ts-ignore
-                        Id_Dependencia: task?.CaseTable_Case?.Id_Dependencia
+                        Id_Dependencia: task?.Tbl_Case?.Id_Dependencia
                     }).Get()
                 }
             }
         } 
-        this.TaskModel = new CaseTable_Tareas();
+        this.TaskModel = new Tbl_Tareas();
         // @ts-ignore
-        this.TaskModel.CaseTable_Calendario = CalendarModel;
+        this.TaskModel.Tbl_Calendario = CalendarModel;
         this.shadowRoot?.append(new WModalForm({
             EditObject: task,
             AutoSave: true,            
@@ -287,7 +287,7 @@ class TareaDetailView extends HTMLElement {
     }
     /**
      * 
-     * @param {CaseTable_Tareas} task 
+     * @param {Tbl_Tareas} task 
      * @param {String} state 
      */
     changeState = async (task, state) => {

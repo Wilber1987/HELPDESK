@@ -71,7 +71,7 @@ namespace CAPA_NEGOCIO.MAPEO
 
         public new object SaveUser(string identity)
         {
-            if (!AuthNetCore.HavePermission(PermissionsEnum.ADMINISTRAR_USUARIOS.ToString(), identity))
+            if (!AuthNetCore.HavePermission(Permissions.ADMINISTRAR_USUARIOS.ToString(), identity))
             {
                 throw new Exception("no tiene permisos");
             }
@@ -173,7 +173,7 @@ namespace CAPA_NEGOCIO.MAPEO
         internal bool IsAdmin()
         {
             return Security_Users_Roles?.Find(r => r.Security_Role?.Security_Permissions_Roles?.Find(p =>
-             p.Security_Permissions.Descripcion.Equals(PermissionsEnum.ADMIN_ACCESS.ToString())
+             p.Security_Permissions.Descripcion.Equals(Permissions.ADMIN_ACCESS.ToString())
             ) != null) != null;
         }
         internal object RecoveryPassword()
@@ -229,26 +229,26 @@ namespace CAPA_NEGOCIO.MAPEO
         public Security_Users? Security_Users { get; set; }
         //[ManyToOne(TableName = "Cat_Paises", KeyColumn = "Id_Pais", ForeignKeyColumn = "Id_Pais_Origen")]
         public Cat_Paises? Cat_Paises { get; set; }
-        //[OneToMany(TableName = "CaseTable_Case", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
-        public List<CaseTable_Case>? CaseTable_Case { get; set; }
-        //[OneToMany(TableName = "CaseTable_Agenda", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
-        public List<CaseTable_Agenda>? CaseTable_Agenda { get; set; }
-        [OneToMany(TableName = "CaseTable_Dependencias_Usuarios", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
-        public List<CaseTable_Dependencias_Usuarios>? CaseTable_Dependencias_Usuarios { get; set; }
+        //[OneToMany(TableName = "Tbl_Case", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
+        public List<Tbl_Case>? Tbl_Case { get; set; }
+        //[OneToMany(TableName = "Tbl_Agenda", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
+        public List<Tbl_Agenda>? Tbl_Agenda { get; set; }
+        [OneToMany(TableName = "Tbl_Dependencias_Usuarios", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
+        public List<Tbl_Dependencias_Usuarios>? Tbl_Dependencias_Usuarios { get; set; }
 
         [OneToMany(TableName = "Tbl_Servicios_Profile", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
         public List<Tbl_Servicios_Profile>? Tbl_Servicios_Profile { get; set; }
-        //[OneToMany(TableName = "CaseTable_Participantes", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
-        public List<CaseTable_Participantes>? CaseTable_Participantes { get; set; }
+        //[OneToMany(TableName = "Tbl_Participantes", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
+        public List<Tbl_Participantes>? Tbl_Participantes { get; set; }
         public void SaveDependenciesAndservices()
         {
-            if (this.Id_Perfil != null && this.CaseTable_Dependencias_Usuarios?.Count > 0
+            if (this.Id_Perfil != null && this.Tbl_Dependencias_Usuarios?.Count > 0
              && this.Tbl_Servicios_Profile?.Count > 0)
             {
-                new CaseTable_Dependencias_Usuarios { Id_Perfil = this.Id_Perfil }.Delete();
+                new Tbl_Dependencias_Usuarios { Id_Perfil = this.Id_Perfil }.Delete();
                 new Tbl_Servicios_Profile { Id_Perfil = this.Id_Perfil }.Delete();
             }
-            this.CaseTable_Dependencias_Usuarios?.ForEach(du =>
+            this.Tbl_Dependencias_Usuarios?.ForEach(du =>
             {
                 du.Id_Perfil = this.Id_Perfil;
                 du.Save();
@@ -260,11 +260,11 @@ namespace CAPA_NEGOCIO.MAPEO
             });
         }
 
-        public List<CaseTable_Dependencias_Usuarios> TakeDepCoordinaciones()
+        public List<Tbl_Dependencias_Usuarios> TakeDepCoordinaciones()
         {
-            CaseTable_Dependencias_Usuarios DU = new CaseTable_Dependencias_Usuarios();
+            Tbl_Dependencias_Usuarios DU = new Tbl_Dependencias_Usuarios();
             DU.Id_Perfil = this.Id_Perfil;
-            return DU.Get_WhereIN<CaseTable_Dependencias_Usuarios>("Id_Cargo", new string[] { "1", "2" });
+            return DU.Get_WhereIN<Tbl_Dependencias_Usuarios>("Id_Cargo", new string[] { "1", "2" });
         }
         public Object? TakeProfile()
         {
@@ -313,10 +313,10 @@ namespace CAPA_NEGOCIO.MAPEO
                 {
                     Correo_institucional = null;
                     IdUser = null;
-                    if (CaseTable_Dependencias_Usuarios != null)
+                    if (Tbl_Dependencias_Usuarios != null)
                     {
-                        new CaseTable_Dependencias_Usuarios() { Id_Perfil = Id_Perfil }.Delete();
-                        // foreach (var item in CaseTable_Dependencias_Usuarios)
+                        new Tbl_Dependencias_Usuarios() { Id_Perfil = Id_Perfil }.Delete();
+                        // foreach (var item in Tbl_Dependencias_Usuarios)
                         // {
                         //     item.Id_Perfil = Id_Perfil;
                         //     item.Save();
@@ -369,7 +369,7 @@ namespace CAPA_NEGOCIO.MAPEO
             var profiles = Get<Tbl_Profile>();
             foreach (var profile in profiles)
             {
-                foreach (var dep in profile.CaseTable_Dependencias_Usuarios ?? new List<CaseTable_Dependencias_Usuarios>())
+                foreach (var dep in profile.Tbl_Dependencias_Usuarios ?? new List<Tbl_Dependencias_Usuarios>())
                 {
                     dep.Cat_Dependencias.Password = "PROTECTED";
                 }
@@ -404,8 +404,8 @@ namespace CAPA_NEGOCIO.MAPEO
         [ManyToOne(TableName = "Tbl_Profile", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
         public Tbl_Profile? Tbl_Profile { get; set; }
 
-        [ManyToOne(TableName = "CaseTable_Case", KeyColumn = "Id_Case", ForeignKeyColumn = "Id_Case")]
-        public CaseTable_Case? CaseTable_Case { get; set; }
+        [ManyToOne(TableName = "Tbl_Case", KeyColumn = "Id_Case", ForeignKeyColumn = "Id_Case")]
+        public Tbl_Case? Tbl_Case { get; set; }
     }
 
     public class Cat_Tipo_Servicio : EntityClass
@@ -437,25 +437,25 @@ namespace CAPA_NEGOCIO.MAPEO
 
     }
 
-    public class CaseTable_VinculateCase : EntityClass
+    public class Tbl_VinculateCase : EntityClass
     {
         [PrimaryKey(Identity = true)]
         public int? Id_Vinculate { get; set; }
         public string? Descripcion { get; set; }
         public DateTime? Fecha { get; set; }
-        [OneToMany(TableName = "CaseTable_Case", KeyColumn = "Id_Vinculate", ForeignKeyColumn = "Id_Vinculate")]
-        public List<CaseTable_Case>? Casos_Vinculados { get; set; }
+        [OneToMany(TableName = "Tbl_Case", KeyColumn = "Id_Vinculate", ForeignKeyColumn = "Id_Vinculate")]
+        public List<Tbl_Case>? Casos_Vinculados { get; set; }
 
-        internal object DesvincularCaso(CaseTable_Case caseDV)
+        internal object DesvincularCaso(Tbl_Case caseDV)
         {
             try
             {
                 BeginGlobalTransaction();
-                List<CaseTable_Case> caseTable_Cases = new CaseTable_Case()
-                { Id_Vinculate = caseDV.Id_Vinculate }.Get<CaseTable_Case>();
-                if (caseTable_Cases.Count == 2)
+                List<Tbl_Case> Tbl_Cases = new Tbl_Case()
+                { Id_Vinculate = caseDV.Id_Vinculate }.Get<Tbl_Case>();
+                if (Tbl_Cases.Count == 2)
                 {
-                    foreach (var item in caseTable_Cases)
+                    foreach (var item in Tbl_Cases)
                     {
                         if (item.Id_Case != caseDV.Id_Case)
                         {
@@ -476,7 +476,7 @@ namespace CAPA_NEGOCIO.MAPEO
             }
         }
 
-        private static object? desvicular(CaseTable_Case caseDV)
+        private static object? desvicular(Tbl_Case caseDV)
         {
             caseDV.Id_Vinculate = null;
             caseDV.Estado = Case_Estate.Activo.ToString();
@@ -490,14 +490,14 @@ namespace CAPA_NEGOCIO.MAPEO
             {
                 BeginGlobalTransaction();
                 Fecha = DateTime.Now;
-                CaseTable_Case caseV = Casos_Vinculados.FirstOrDefault(c => c.Id_Vinculate != null);
+                Tbl_Case caseV = Casos_Vinculados.FirstOrDefault(c => c.Id_Vinculate != null);
                 if (caseV != null)
                 {
                     Id_Vinculate = caseV.Id_Vinculate;
-                    List<CaseTable_Case> oldCase = new CaseTable_Case() { Id_Vinculate = caseV.Id_Vinculate }.Get<CaseTable_Case>();
+                    List<Tbl_Case> oldCase = new Tbl_Case() { Id_Vinculate = caseV.Id_Vinculate }.Get<Tbl_Case>();
                     foreach (var c in oldCase)
                     {
-                        CaseTable_Case caseSelected = Casos_Vinculados.FirstOrDefault(cv => cv.Id_Case == c.Id_Case);
+                        Tbl_Case caseSelected = Casos_Vinculados.FirstOrDefault(cv => cv.Id_Case == c.Id_Case);
                         if (caseSelected == null)
                         {
                             Casos_Vinculados.Add(c);

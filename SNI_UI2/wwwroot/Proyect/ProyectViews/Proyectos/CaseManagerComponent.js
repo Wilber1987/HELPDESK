@@ -3,7 +3,7 @@
 import { caseGeneralData } from './CaseDetailComponent.js';
 import { CaseSearcherToVinculate } from '../../../AppComponents/CaseSearcherToVinculate.js';
 import { priorityStyles } from '../../../AppComponents/Styles.js';
-import { CaseTable_Agenda, CaseTable_Calendario, CaseTable_Case, CaseTable_Comments, CaseTable_Tareas, CaseTable_VinculateCase, Cat_Dependencias, Tbl_Servicios } from '../../../ModelProyect/ProyectDataBaseModel.js';
+import { Tbl_Agenda, Tbl_Calendario, Tbl_Case, Tbl_Comments, Tbl_Tareas, Tbl_VinculateCase, Cat_Dependencias, Tbl_Servicios } from '../../../ModelProyect/ProyectDataBaseModel.js';
 import { StylesControlsV2, StylesControlsV3 } from "../../../WDevCore/StyleModules/WStyleComponents.js";
 import { ModalVericateAction, WForm } from "../../../WDevCore/WComponents/WForm.js";
 import { WModalForm } from '../../../WDevCore/WComponents/WModalForm.js';
@@ -17,7 +17,7 @@ import { activityStyle } from '../../style.js';
 class CaseManagerComponent extends HTMLElement {
     /**
      * 
-     * @param {Array<CaseTable_Case>} Dataset 
+     * @param {Array<Tbl_Case>} Dataset 
      * @param {Array<Cat_Dependencias>} Dependencias 
      */
     constructor(Dataset, Dependencias) {
@@ -49,7 +49,7 @@ class CaseManagerComponent extends HTMLElement {
     actividadesManager = async () => {
         const datasetMap = this.Dataset.filter(x => x.Estado != "Vinculado").map(actividad => {
             actividad.Dependencia = actividad.Cat_Dependencias?.Descripcion;
-            actividad.Progreso = actividad.CaseTable_Tareas?.filter(tarea => tarea.Estado?.includes("Finalizado")).length;
+            actividad.Progreso = actividad.Tbl_Tareas?.filter(tarea => tarea.Estado?.includes("Finalizado")).length;
             return this.actividadElement(actividad);
         });
         this.TabManager.NavigateFunction("Tab-Actividades-Manager",
@@ -73,7 +73,7 @@ class CaseManagerComponent extends HTMLElement {
                 , caseGeneralData(actividad),
                 { tagName: 'h4', innerText: "Progreso" },
                 ControlBuilder.BuildProgressBar(actividad.Progreso,
-                    actividad.CaseTable_Tareas?.filter(tarea => !tarea.Estado?.includes("Inactivo"))?.length)
+                    actividad.Tbl_Tareas?.filter(tarea => !tarea.Estado?.includes("Inactivo"))?.length)
             ]
         })
     }
@@ -85,7 +85,7 @@ class CaseManagerComponent extends HTMLElement {
         })
     }
 
-    actividadDetail = async (actividad = (new CaseTable_Case())) => {
+    actividadDetail = async (actividad = (new Tbl_Case())) => {
         sessionStorage.setItem("detailCase", JSON.stringify(actividad));
         window.location = "/ProyectViews/CaseDetail"
     }
@@ -112,7 +112,7 @@ class CaseManagerComponent extends HTMLElement {
             title: "Vincular Casos",
             ObjectModal: CaseSearcherToVinculate(actividad, "Vincular", async (caso_vinculado, TableComponent, model) => {
                 this.shadowRoot.append(ModalVericateAction(async () => {
-                    const response = await new CaseTable_VinculateCase({
+                    const response = await new Tbl_VinculateCase({
                         Casos_Vinculados: [actividad, caso_vinculado]
                     }).VincularCaso();
                     const updateData = await model.Get();
@@ -132,7 +132,7 @@ export { CaseManagerComponent };
 export { CaseForm };
 export { simpleCaseForm };
 /**
- * @param {CaseTable_Case} [entity] 
+ * @param {Tbl_Case} [entity] 
  * @param {Array<Cat_Dependencias>} [dependencias] 
  * @param {Function} [action] 
  * @returns {WForm}
@@ -140,12 +140,12 @@ export { simpleCaseForm };
 const CaseForm = (entity, dependencias, action) => {
     const ModelCalendar = {
         type: 'CALENDAR',
-        ModelObject: () => new CaseTable_Calendario(),
+        ModelObject: () => new Tbl_Calendario(),
         require: false,
         CalendarFunction: async () => {
             return {
-                Agenda: await new CaseTable_Agenda({ Id_Dependencia: form.FormObject.Cat_Dependencias?.Id_Dependencia }).Get(),
-                Calendario: await new CaseTable_Calendario({ Id_Dependencia: form.FormObject.Cat_Dependencias?.Id_Dependencia }).Get()
+                Agenda: await new Tbl_Agenda({ Id_Dependencia: form.FormObject.Cat_Dependencias?.Id_Dependencia }).Get(),
+                Calendario: await new Tbl_Calendario({ Id_Dependencia: form.FormObject.Cat_Dependencias?.Id_Dependencia }).Get()
             }
         }
     }
@@ -154,16 +154,16 @@ const CaseForm = (entity, dependencias, action) => {
         EditObject: entity,
         SaveFunction: action,
         ImageUrlPath: "",
-        ModelObject: new CaseTable_Case({
-            CaseTable_Tareas: {
+        ModelObject: new Tbl_Case({
+            Tbl_Tareas: {
                 type: 'MasterDetail',
-                ModelObject: () => new CaseTable_Tareas({ CaseTable_Calendario: ModelCalendar })
+                ModelObject: () => new Tbl_Tareas({ Tbl_Calendario: ModelCalendar })
             }, Cat_Dependencias: {
                 type: "WSELECT", hiddenFilter: true, ModelObject: new Cat_Dependencias(),
                 Dataset: dependencias,
                 action: (caso) => {
-                    caso.CaseTable_Tareas
-                        .forEach(caseTable_Tarea => caseTable_Tarea.CaseTable_Calendario = []);
+                    caso.Tbl_Tareas
+                        .forEach(Tbl_Tarea => Tbl_Tarea.Tbl_Calendario = []);
                     form.DrawComponent();
                 }
             }
@@ -173,7 +173,7 @@ const CaseForm = (entity, dependencias, action) => {
 }
 
 /**
- * @param {CaseTable_Case} [entity] 
+ * @param {Tbl_Case} [entity] 
  * @param {Array<Cat_Dependencias>} [dependencias] 
  * @param {Array<Tbl_Servicios>} [servicios] 
  * @param {Function} [action] 
@@ -188,8 +188,8 @@ const simpleCaseForm = (entity, dependencias, servicios, action) => {
         EditObject: entity,
         SaveFunction: action,
         ImageUrlPath: "",
-        ModelObject: new CaseTable_Case({
-            CaseTable_Tareas: { type: "text", hidden: true },
+        ModelObject: new Tbl_Case({
+            Tbl_Tareas: { type: "text", hidden: true },
             Id_Vinculate: { type: "text", hidden: true },
             Titulo: { type: "text", hidden: true },
             Tbl_Servicios: {
@@ -200,7 +200,7 @@ const simpleCaseForm = (entity, dependencias, servicios, action) => {
             Estado: { type: "text", hidden: true },
             Fecha_Final: { type: "text", hidden: true },
             Descripcion: { type: "text", hidden: true },
-            CaseTable_Comments: { type: "MasterDetail", ModelObject: new CaseTable_Comments(), label: "Comentario", hidden: true },
+            Tbl_Comments: { type: "MasterDetail", ModelObject: new Tbl_Comments(), label: "Comentario", hidden: true },
             Cat_Dependencias: {
                 type: "WSELECT", hiddenFilter: true, ModelObject: new Cat_Dependencias(),
                 Dataset: dependencias,

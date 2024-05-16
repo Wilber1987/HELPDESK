@@ -21,32 +21,13 @@
         const logout = () => {
             WSecurity.LogOut();
         }
-        window.addEventListener("load", () => {
-            //active nav ProyectosCerrados Tareas PerfilManager
-            if (location.href.includes("PerfilManager")) {
-                PerfilManager.className = "active";
-            } else if (location.href.includes("SolicitudesRealizadas")) {
-                SolicitudesRealizadas.className = "active";
-            } else if (location.href.includes("SolicitudesPendientes")) {
-                SolicitudesPendientes.className = "active";
-            } else if (location.href.includes("ProyectosCerrados")) {
-                ProyectosCerrados.className = "active";
-            } else if (location.href.includes("Proyectos")) {
-                Proyectos.className = "active";
-            } else if (location.href.includes("CaseDetail")) {
-                Proyectos.className = "active";
-            } else if (location.href.includes("VinculateCaseView")) {
-                VinculateCaseView.className = "active";
-            } else if (location.href.includes("Transaction_Valoraciones_View")) {
-                Transaction_Valoraciones_View.className = "active";
-            } else if (location.href.includes("Tareas")) {
-                Tareas.className = "active";
-            } else if (location.href.includes("TestsView")) {
-                TestsView.className = "active";
-            }
-            else {
-                Home.className = "active";
-            }
+         window.addEventListener("load", () => {
+            //active nav
+            document.querySelectorAll(".menu-item").forEach(item => {
+                if (location.href.includes(item.id)) {
+                    item.className = "active";
+                }
+            })
             //logOut
             btnLogOut.onclick = logout;
         })
@@ -63,35 +44,44 @@
             <h3>TRANSACCIONES</h3>
             <a class="" id="Home" href="/">HOME</a>
             
-            @if (SecurityController.HavePermission(PermissionsEnum.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identify))
+            @if (SecurityController.HavePermission(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identify))
             {
                 <a class="" id="SolicitudesPendientes" href="~/ProyectViews/SolicitudesPendientes">Solicitudes Pendientes</a>
             }
-            @if (SecurityController.HavePermission(PermissionsEnum.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identify)
-            || SecurityController.HavePermission(PermissionsEnum.TECNICO_CASOS_DEPENDENCIA.ToString(), identify))
+            @if (SecurityController.HavePermission(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identify)
+            || SecurityController.HavePermission(Permissions.TECNICO_CASOS_DEPENDENCIA.ToString(), identify))
             {
                 <a class="" id="Proyectos" href="~/ProyectViews/Proyectos">Casos en Proceso</a>
             }
-            @if (SecurityController.HavePermission(PermissionsEnum.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identify)
-            || SecurityController.HavePermission(PermissionsEnum.TECNICO_CASOS_DEPENDENCIA.ToString(), identify))
+            @if (SecurityController.HavePermission(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identify)
+            || SecurityController.HavePermission(Permissions.TECNICO_CASOS_DEPENDENCIA.ToString(), identify))
             {
                 <a class="" id="ProyectosCerrados" href="~/ProyectViews/ProyectosCerrados">Casos finalizados</a>
             }
-            @if (SecurityController.HavePermission(PermissionsEnum.TECNICO_CASOS_DEPENDENCIA.ToString(), identify))
+            @if (SecurityController.HavePermission(Permissions.TECNICO_CASOS_DEPENDENCIA.ToString(), identify))
             {
                 <a class="" id="Tareas" href="~/ProyectViews/Tareas">Tareas en Proceso</a>
             }
-             @if (SecurityController.HavePermission(PermissionsEnum.ADMINISTRAR_USUARIOS.ToString(), identify))
+             @if (SecurityController.HavePermission(Permissions.ADMINISTRAR_USUARIOS.ToString(), identify))
             {
                 <a class="" id="PerfilManager" href="~/Security/PerfilManager">Administrador de perfiles</a>
             }   
-            @if (SecurityController.HavePermission(PermissionsEnum.GENERADOR_SOLICITUDES.ToString(), identify))
+            @if (SecurityController.HavePermission(Permissions.GENERADOR_SOLICITUDES.ToString(), identify))
             {
                 <a class="" id="SolicitudesRealizadas" href="~/ProyectViews/SolicitudesRealizadas">Solicitudes Realizadas</a>
             }  
 
+            @if (SecurityController.HavePermission(Permissions.QUESTIONNAIRES_MANAGER.ToString(), identify))
+            {
+                <a class="" id="SolicitudesRealizadas" href="~/Questionnaires/TestsView">Gestión de tests</a>
+            }  
+            @if (SecurityController.HavePermission(Permissions.QUESTIONNAIRES_USER.ToString(), identify))
+            {
+                <a class="" id="SolicitudesRealizadas" href="~/Questionnaires/ResolveTestView">Resolver de tests</a>
+            }  
+
              @* TEST MODULE 
-            @if (SecurityController.HavePermission(PermissionsEnum.QUESTIONNAIRES_MANAGER.ToString(), identify))
+            @if (SecurityController.HavePermission(Permissions.QUESTIONNAIRES_MANAGER.ToString(), identify))
             {
                 <a class="" id="TestsView" href="~/Questionnaires/TestsView">Administrador de Tests</a>
             }*@
@@ -111,7 +101,7 @@
         {
             <a href="~/Admin/Index">Admin Panel</a>
         }
-        @if (SecurityController.HavePermission(PermissionsEnum.PERFIL_ACCESS.ToString(), identify))
+        @if (SecurityController.HavePermission(Permissions.PERFIL_ACCESS.ToString(), identify))
         {
             <a class="" href="~/Security/PerfilView">Perfil</a>
         }

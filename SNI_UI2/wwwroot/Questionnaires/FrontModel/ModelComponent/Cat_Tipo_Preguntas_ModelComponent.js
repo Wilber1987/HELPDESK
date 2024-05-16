@@ -20,7 +20,7 @@ class Cat_Tipo_Preguntas_ModelComponent extends EntityClass {
    /**@type {ModelProperty}*/ Fecha_crea = { type: 'date' };
    ///**@type {ModelProperty}*/ Created_at = { type: 'date' };
    ///**@type {ModelProperty}*/ Updated_at = { type: 'date' };
-   /**@type {ModelProperty}*/ Editable = { type: 'checkbox' };
+   /**@type {ModelProperty}*/ Editable = { type: 'checkbox', require: false };
    /**@type {ModelProperty}*/ Descripcion_general = { type: 'text' };
    /**@type {ModelProperty}*/ Cat_Valor_Preguntas = { type: 'MasterDetail', ModelObject: () => new Cat_Valor_Preguntas_ModelComponent() };
     ///**@type {ModelProperty}*/ Pregunta_Tests = { type: 'MasterDetail',  ModelObject: ()=> new Pregunta_Tests_ModelComponent()};

@@ -11,6 +11,7 @@ import { Resultados_Tests } from "../../FrontModel/Resultados_Tests.js";
 import { Resultados_Pregunta_Tests } from "../../FrontModel/Resultados_Pregunta_Tests.js";
 import { Cat_Valor_Preguntas } from "../../FrontModel/Cat_Valor_Preguntas.js";
 import { Pregunta_Tests } from "../../FrontModel/Pregunta_Tests.js";
+import { ModalMessege } from "../../../WDevCore/WComponents/WForm.js";
 /**
  * @typedef {Object} ComponentConfig
  * * @property {Object} [propierty]
@@ -101,11 +102,13 @@ class ResolveTestViewComponent extends HTMLElement {
 
             /**@type {Cat_Valor_Preguntas} */
             const pregunta = editinObject[prop];
+            console.log(pregunta, prop);
+            console.log(test);
 
             resultados.push(new Resultados_Pregunta_Tests({
                 Id_Perfil: 1,
                 Cat_Valor_Preguntas: pregunta,
-                Pregunta_Tests: test.Pregunta_Tests?.find(p => p.Descripcion_pregunta == prop),
+                Pregunta_Tests: test.Pregunta_Tests?.find(p => p.Id_pregunta_test.toString() == prop),
                 Fecha: new Date(),
                 Resultado: pregunta.Valor,
                 Respuesta: "",
@@ -115,6 +118,7 @@ class ResolveTestViewComponent extends HTMLElement {
 
         /**@type {Array<Pregunta_Tests>} */
         const secciones = WArrayF.GroupBy(resultados.map(r => r.Pregunta_Tests), "Seccion");
+        const Test = new Tests({Resultados_Tests: []});
 
         for (const pregntaTest of secciones) {
             const resultadosSeccion = resultados.filter(r => r.Pregunta_Tests.Seccion == pregntaTest.Seccion);
@@ -128,8 +132,10 @@ class ResolveTestViewComponent extends HTMLElement {
                 Tipo: pregntaTest.Seccion != null ? "SUB_ESCALA" : "ESCALA",
                 Categoria_valor: "Por definir" //TODO DEFINIR EN BACKEND
             });
-            await resultado.Save();
+            Test.Resultados_Tests.push(resultado);
         }
+        const response = await Test.SaveResultado();
+        this.append(ModalMessege(response.message));
     }
 
     SetOption() {

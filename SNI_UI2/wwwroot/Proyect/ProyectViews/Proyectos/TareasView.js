@@ -3,7 +3,7 @@ import { StylesControlsV2, StylesControlsV3, StyleScrolls } from "../../../WDevC
 import { css } from "../../../WDevCore/WModules/WStyledRender.js";
 import { TaskManagers } from "./TaskManager.js";
 import { WFilterOptions } from "../../../WDevCore/WComponents/WFilterControls.js";
-import { CaseTable_Tareas } from "../../../ModelProyect/ProyectDataBaseModel.js";
+import { Tbl_Tareas } from "../../../ModelProyect/ProyectDataBaseModel.js";
 /**
  * @typedef {Object} ComponentConfig
  * * @property {Object} [propierty]
@@ -27,14 +27,14 @@ class TareasComponentView extends HTMLElement {
             this.OptionContainer,
             this.TabContainer
         );
-        this.Model = new CaseTable_Tareas({ Get: async ()=> {
+        this.Model = new Tbl_Tareas({ Get: async ()=> {
             return this.Model.GetOwParticipations();
         }});
         this.Draw();
     }
     Draw = async () => {
         this.SetOption();
-        const tasks = await new CaseTable_Tareas().GetOwParticipations();
+        const tasks = await new Tbl_Tareas().GetOwParticipations();
                 this.Manager.NavigateFunction("Tab-OWTasks-Manager", this.ChargeTasks(tasks));
     }
     SetOption() {

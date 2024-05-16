@@ -17,13 +17,13 @@ namespace API.Controllers
         public object getDashboard(ProfileTransaction Inst)
         {
             string? token = HttpContext.Session.GetString("seassonKey");
-            var caseTable = new CaseTable_Case().GetOwParticipantCase(token);
+            var caseTable = new Tbl_Case().GetOwParticipantCase(token);
             return new
             {
                 dependencies = new Cat_Dependencias().GetOwDependenciesConsolidados(token),
                 caseTickets = caseTable,
-                task = new CaseTable_Tareas().GetOwActiveParticipations(token),
-                comments = new CaseTable_Comments().GetOwComments(caseTable)
+                task = new Tbl_Tareas().GetOwActiveParticipations(token),
+                comments = new Tbl_Comments().GetOwComments(caseTable)
             };
         }
     }

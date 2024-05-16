@@ -1,5 +1,5 @@
 //@ts-check
-import { CaseTable_Agenda, CaseTable_Calendario, CaseTable_Tareas } from '../../../ModelProyect/ProyectDataBaseModel.js';
+import { Tbl_Agenda, Tbl_Calendario, Tbl_Tareas } from '../../../ModelProyect/ProyectDataBaseModel.js';
 import { StyleScrolls, StylesControlsV2, StylesControlsV3 } from "../../../WDevCore/StyleModules/WStyleComponents.js";
 import { WDetailObject } from '../../../WDevCore/WComponents/WDetailObject.js';
 import { WModalForm } from '../../../WDevCore/WComponents/WModalForm.js';
@@ -10,15 +10,15 @@ import { TareaDetailView } from './TareaDetailView.js';
 class TaskManagers extends HTMLElement {
     /**
      * 
-     * @param {Array<CaseTable_Tareas>} Dataset 
-     * @param {CaseTable_Tareas} Model 
+     * @param {Array<Tbl_Tareas>} Dataset 
+     * @param {Tbl_Tareas} Model 
      * @param {Object} [Config] 
      */
     constructor(Dataset, Model, Config) {
         super();
         this.Dataset = Dataset;
         this.Config = Config;
-        this.TaskModel = Model ?? new CaseTable_Tareas();
+        this.TaskModel = Model ?? new Tbl_Tareas();
         this.attachShadow({ mode: 'open' });
         this.shadowRoot?.append(this.WStyle,
             StyleScrolls.cloneNode(true),
@@ -99,10 +99,10 @@ class TaskManagers extends HTMLElement {
                 ev.dataTransfer.setData("text", ev.target.id);
             }, children: [
                 { tagName: "label", class: "task-title", innerText: task.Titulo + " #" + task.Id_Tarea },
-                { tagName: "label", class: "task-detail", innerText: task.CaseTable_Case?.Titulo },
+                { tagName: "label", class: "task-detail", innerText: task.Tbl_Case?.Titulo },
                 //{ tagName: "p", class: "p-title", innerText: task.Descripcion },
                 {
-                    class: "p-participantes", children: task?.CaseTable_Participantes?.map(I => ({
+                    class: "p-participantes", children: task?.Tbl_Participantes?.map(I => ({
                         tagName: 'img', className: "img-participantes",
                         src: "" + I.Tbl_Profile?.Foto
                     })) ?? []
@@ -120,28 +120,28 @@ class TaskManagers extends HTMLElement {
     }
     /**
     * 
-    * @param {CaseTable_Tareas} task 
+    * @param {Tbl_Tareas} task 
     */
     taskEdit = async (task) => {
         const CalendarModel = {
             type: 'CALENDAR',
-            ModelObject: () => new CaseTable_Calendario(),
+            ModelObject: () => new Tbl_Calendario(),
             require: false,
             CalendarFunction: async () => {
                 return {
-                    Agenda: await new CaseTable_Agenda({
+                    Agenda: await new Tbl_Agenda({
                         // @ts-ignore
-                        Id_Dependencia: task?.CaseTable_Case?.Id_Dependencia
+                        Id_Dependencia: task?.Tbl_Case?.Id_Dependencia
                     }).Get(),
-                    Calendario: await new CaseTable_Calendario({
+                    Calendario: await new Tbl_Calendario({
                         // @ts-ignore
-                        Id_Dependencia: task?.CaseTable_Case?.Id_Dependencia
+                        Id_Dependencia: task?.Tbl_Case?.Id_Dependencia
                     }).Get()
                 }
             }
         }
         // @ts-ignore
-        this.TaskModel.CaseTable_Calendario = CalendarModel;
+        this.TaskModel.Tbl_Calendario = CalendarModel;
         this.shadowRoot?.append(new WModalForm({
             EditObject: task,
             ImageUrlPath: this.Config?.ImageUrlPath,
@@ -151,10 +151,10 @@ class TaskManagers extends HTMLElement {
     }
     /**
     * 
-    * @param {CaseTable_Tareas} task 
+    * @param {Tbl_Tareas} task 
     */
     taskDetail = async (task) => {
-        const find = await new CaseTable_Tareas({ Id_Tarea: task.Id_Tarea }).Get()
+        const find = await new Tbl_Tareas({ Id_Tarea: task.Id_Tarea }).Get()
         const CaseDetail = new TareaDetailView({ Task: find[0] });
        //this.TabManager.NavigateFunction("Detail" + task.Id_Tarea, CaseDetail)
         this.shadowRoot?.append(new WModalForm({
@@ -166,7 +166,7 @@ class TaskManagers extends HTMLElement {
     }
     /**
      * 
-     * @param {CaseTable_Tareas} task 
+     * @param {Tbl_Tareas} task 
      * @param {String} state 
      */
     cardDrop = async (task, state) => {

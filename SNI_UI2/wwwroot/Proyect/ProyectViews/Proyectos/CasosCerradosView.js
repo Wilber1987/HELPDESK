@@ -1,7 +1,7 @@
 
 
 import { priorityStyles } from '../../../AppComponents/Styles.js';
-import { CaseTable_Case, Cat_Dependencias } from '../../../ModelProyect/ProyectDataBaseModel.js';
+import { Tbl_Case, Cat_Dependencias } from '../../../ModelProyect/ProyectDataBaseModel.js';
 import { StylesControlsV2, StylesControlsV3 } from "../../../WDevCore/StyleModules/WStyleComponents.js";
 import { WFilterOptions } from '../../../WDevCore/WComponents/WFilterControls.js';
 import { ModalMessege, ModalVericateAction } from "../../../WDevCore/WComponents/WForm.js";
@@ -20,7 +20,7 @@ import { caseGeneralData } from './CaseDetailComponent.js';
 class CasosCerradosView extends HTMLElement {
     /**
     * 
-    * @param {Array<CaseTable_Case>} Dataset 
+    * @param {Array<Tbl_Case>} Dataset 
     * @param {Array<Cat_Dependencias>} Dependencias 
     */
     constructor(Dataset, Dependencias) {
@@ -32,8 +32,8 @@ class CasosCerradosView extends HTMLElement {
         this.TabContainer = WRender.createElement({ type: 'div', props: { class: 'TabContainer', id: "TabContainer" } });
         this.TabManager = new ComponentsManager({ MainContainer: this.TabContainer });
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });
-        this.ModelObject = new CaseTable_Case({
-            CaseTable_Tareas: undefined, Estado: undefined, Cat_Dependencias: {
+        this.ModelObject = new Tbl_Case({
+            Tbl_Tareas: undefined, Estado: undefined, Cat_Dependencias: {
                 type: "WSELECT", hiddenFilter: true, ModelObject: () => new Cat_Dependencias()
             }, Get: async () => {
                 return await this.ModelObject.GetData("Proyect/GetOwCloseCase");
@@ -66,7 +66,7 @@ class CasosCerradosView extends HTMLElement {
     generatePaginatorList = (Dataset) => {
         return Dataset.filter(x => x.Estado != "Vinculado").map(actividad => {
             actividad.Dependencia = actividad.Cat_Dependencias?.Descripcion;
-            actividad.Progreso = actividad.CaseTable_Tareas?.filter(tarea => tarea.Estado?.includes("Finalizado")).length;
+            actividad.Progreso = actividad.Tbl_Tareas?.filter(tarea => tarea.Estado?.includes("Finalizado")).length;
             return this.actividadElement(actividad);
         });
     }
@@ -88,7 +88,7 @@ class CasosCerradosView extends HTMLElement {
                 }, caseGeneralData(actividad),
                 { tagName: 'h4', innerText: "Progreso" },
                 ControlBuilder.BuildProgressBar(actividad.Progreso,
-                    actividad.CaseTable_Tareas?.filter(tarea => !tarea.Estado?.includes("Inactivo"))?.length)
+                    actividad.Tbl_Tareas?.filter(tarea => !tarea.Estado?.includes("Inactivo"))?.length)
             ]
         })
     }
@@ -100,7 +100,7 @@ class CasosCerradosView extends HTMLElement {
         })
     }
 
-    actividadDetail = async (actividad = (new CaseTable_Case())) => {
+    actividadDetail = async (actividad = (new Tbl_Case())) => {
         sessionStorage.setItem("detailCase", JSON.stringify(actividad));
         window.location = "/ProyectViews/CaseDetail"
     }
@@ -125,7 +125,7 @@ class CasosCerradosView extends HTMLElement {
     Reabrir = async (actividad) => {
         const modal = ModalVericateAction(async () => {
             actividad.Estado = "Activo"
-            const response = await new CaseTable_Case(actividad).Update();
+            const response = await new Tbl_Case(actividad).Update();
             if (response.status == 200) {
                 this.shadowRoot.append(ModalMessege("Caso reabierto exitosamente")); 
                 this.shadowRoot.removeChild(modal)   
@@ -138,7 +138,7 @@ class CasosCerradosView extends HTMLElement {
        
     }
     update = async () => {
-        // const find = actividad.CaseTable_Tareas.find(t => t.Id_Tarea == task.Id_Tarea);
+        // const find = actividad.Tbl_Tareas.find(t => t.Id_Tarea == task.Id_Tarea);
         // for (const prop in task) {
         //     find[prop] = task[prop]
         // }
@@ -158,7 +158,7 @@ class CasosCerradosView extends HTMLElement {
 customElements.define('w-caos-cerrados-view', CasosCerradosView);
 window.onload = async () => {
     const dependencias = await new Cat_Dependencias().GetOwDependencies();
-    const dataset = await new CaseTable_Case().GetOwCloseCase();
+    const dataset = await new Tbl_Case().GetOwCloseCase();
     Main.appendChild(new CasosCerradosView(dataset, dependencias));
 }
 export { CasosCerradosView };

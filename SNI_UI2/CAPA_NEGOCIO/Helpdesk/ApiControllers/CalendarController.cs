@@ -27,35 +27,35 @@ namespace API.Controllers
             cal.TakeCalendario();
             return cal;
         }
-        public Object TakeActividades(CaseTable_Case Inst)
+        public Object TakeActividades(Tbl_Case Inst)
         {            
-            return Inst.Get<CaseTable_Case>();
+            return Inst.Get<Tbl_Case>();
         }
-        public Object TakeActividad(CaseTable_Case Inst)
+        public Object TakeActividad(Tbl_Case Inst)
         {
             return Inst.GetActividad();
         }
-        public Object SaveActividad(CaseTable_Case Act)
+        public Object SaveActividad(Tbl_Case Act)
         {            
             return true;
         }
-        public Object? SaveTarea(CaseTable_Tareas Act)
+        public Object? SaveTarea(Tbl_Tareas Act)
         {
             return Act.Save();
         }
-        public Object SolicitarActividad(CaseTable_Case Act)
+        public Object SolicitarActividad(Tbl_Case Act)
         {
             return Act.SolicitarActividades(HttpContext.Session.GetString("seassonKey"));
         }
         //Agenda por usuario
         public Object AgendaUsuarioDependencia(Cat_Dependencias Act)
         {
-            CaseTable_Agenda ag = new CaseTable_Agenda();
+            Tbl_Agenda ag = new Tbl_Agenda();
             ag.Id_Dependencia = Act.Id_Dependencia;
             ag.Id_Perfil = AuthNetCore.User(HttpContext.Session.GetString("seassonKey")).UserId;
-            return ag.Get<CaseTable_Agenda>();
+            return ag.Get<Tbl_Agenda>();
         }
-        public Object? SaveAgendaUsuarioDependencia(CaseTable_Agenda Act)
+        public Object? SaveAgendaUsuarioDependencia(Tbl_Agenda Act)
         {
             if (Act.IdAgenda != null)
             {
@@ -74,14 +74,14 @@ namespace API.Controllers
 
         public void TakeAgenda()
         {
-            CaseTable_Agenda ag = new CaseTable_Agenda();
+            Tbl_Agenda ag = new Tbl_Agenda();
             ag.Id_Dependencia = this.Id_Dependencia;
-            this.Agenda = ag.Get<CaseTable_Agenda>();
+            this.Agenda = ag.Get<Tbl_Agenda>();
         }
         public void TakeActividades()
         {
-            CaseTable_Case ag = new CaseTable_Case();
-            this.Actividades = ag.Get<CaseTable_Case>();
+            Tbl_Case ag = new Tbl_Case();
+            this.Actividades = ag.Get<Tbl_Case>();
         }
         public void TakeCalendario()
         {

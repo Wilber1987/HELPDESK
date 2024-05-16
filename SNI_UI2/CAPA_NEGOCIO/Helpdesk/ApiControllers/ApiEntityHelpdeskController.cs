@@ -15,37 +15,37 @@ namespace API.Controllers
     {
         [HttpPost]
         [AuthController]
-        public List<CaseTable_Comments> getCaseTable_Comments(CaseTable_Comments Inst)
+        public List<Tbl_Comments> getTbl_Comments(Tbl_Comments Inst)
         {
             return Inst.GetComments();
         }
         [HttpPost]
         [AuthController]
-        public object? saveCaseTable_Comments(CaseTable_Comments inst)
+        public object? saveTbl_Comments(Tbl_Comments inst)
         {
             return inst.SaveComment(HttpContext.Session.GetString("seassonKey"));
         }
         [HttpPost]
         [AuthController]
-        public object? updateCaseTable_Comments(CaseTable_Comments inst)
+        public object? updateTbl_Comments(Tbl_Comments inst)
         {
             return inst.Update();
         }
          [HttpPost]
         [AuthController]
-        public List<CaseTable_Comments_Tasks> getCaseTable_Comments_Tasks(CaseTable_Comments_Tasks Inst)
+        public List<Tbl_Comments_Tasks> getTbl_Comments_Tasks(Tbl_Comments_Tasks Inst)
         {
             return Inst.GetComments();
         }
         [HttpPost]
         [AuthController]
-        public object? saveCaseTable_Comments_Tasks(CaseTable_Comments_Tasks inst)
+        public object? saveTbl_Comments_Tasks(Tbl_Comments_Tasks inst)
         {
             return inst.SaveComment(HttpContext.Session.GetString("seassonKey"), false);
         }
         [HttpPost]
         [AuthController]
-        public object? updateCaseTable_Comments_Tasks(CaseTable_Comments_Tasks inst)
+        public object? updateTbl_Comments_Tasks(Tbl_Comments_Tasks inst)
         {
             return inst.Update();
         }
@@ -126,60 +126,60 @@ namespace API.Controllers
         {
             return inst.Update();
         }
-        //CaseTable_Agenda
+        //Tbl_Agenda
         [HttpPost]
         [AuthController]
-        public List<CaseTable_Agenda> getCaseTable_Agenda(CaseTable_Agenda Inst)
+        public List<Tbl_Agenda> getTbl_Agenda(Tbl_Agenda Inst)
         {
-            return Inst.Get<CaseTable_Agenda>();
+            return Inst.Get<Tbl_Agenda>();
         }
         [HttpPost]
         [AuthController]
-        public object? saveCaseTable_Agenda(CaseTable_Agenda inst)
+        public object? saveTbl_Agenda(Tbl_Agenda inst)
         {
             return inst.Save();
         }
         [HttpPost]
         [AuthController]
-        public object? updateCaseTable_Agenda(CaseTable_Agenda inst)
+        public object? updateTbl_Agenda(Tbl_Agenda inst)
         {
             return inst.Update();
         }
-        //CaseTable_Dependencias_Usuarios
+        //Tbl_Dependencias_Usuarios
         [HttpPost]
         [AuthController]
-        public List<CaseTable_Dependencias_Usuarios> getCaseTable_Dependencias_Usuarios(CaseTable_Dependencias_Usuarios Inst)
+        public List<Tbl_Dependencias_Usuarios> getTbl_Dependencias_Usuarios(Tbl_Dependencias_Usuarios Inst)
         {
-            return Inst.Get<CaseTable_Dependencias_Usuarios>();
+            return Inst.Get<Tbl_Dependencias_Usuarios>();
         }
         [HttpPost]
         [AuthController]
-        public object? saveCaseTable_Dependencias_Usuarios(CaseTable_Dependencias_Usuarios inst)
+        public object? saveTbl_Dependencias_Usuarios(Tbl_Dependencias_Usuarios inst)
         {
             return inst.Save();
         }
         [HttpPost]
         [AuthController]
-        public object? updateCaseTable_Dependencias_Usuarios(CaseTable_Dependencias_Usuarios inst)
+        public object? updateTbl_Dependencias_Usuarios(Tbl_Dependencias_Usuarios inst)
         {
             return inst.Update();
         }
-        //CaseTable_Evidencias
+        //Tbl_Evidencias
         [HttpPost]
         [AuthController]
-        public List<CaseTable_Evidencias> getCaseTable_Evidencias(CaseTable_Evidencias Inst)
+        public List<Tbl_Evidencias> getTbl_Evidencias(Tbl_Evidencias Inst)
         {
-            return Inst.Get<CaseTable_Evidencias>();
+            return Inst.Get<Tbl_Evidencias>();
         }
         [HttpPost]
         [AuthController]
-        public object? saveCaseTable_Evidencias(CaseTable_Evidencias inst)
+        public object? saveTbl_Evidencias(Tbl_Evidencias inst)
         {
             return inst.Save();
         }
         [HttpPost]
         [AuthController]
-        public object? updateCaseTable_Evidencias(CaseTable_Evidencias inst)
+        public object? updateTbl_Evidencias(Tbl_Evidencias inst)
         {
             return inst.Update();
         }
@@ -266,16 +266,16 @@ namespace API.Controllers
             return inst.Update();
         }
 
-        //CaseTable_Case
+        //Tbl_Case
         [HttpPost]
         [AuthController]
-        public List<CaseTable_Case> getCaseTable_Case(CaseTable_Case Inst)
+        public List<Tbl_Case> getTbl_Case(Tbl_Case Inst)
         {
-            return Inst.Get<CaseTable_Case>();
+            return Inst.Get<Tbl_Case>();
         }
         [HttpPost]
         [AuthController]
-        public object? saveCaseTable_Case(CaseTable_Case inst)
+        public object? saveTbl_Case(Tbl_Case inst)
         {
             inst.Estado ??= Case_Estate.Solicitado.ToString();
             inst.Id_Perfil = AuthNetCore.User(HttpContext.Session.GetString("seassonKey")).UserId;
@@ -285,83 +285,83 @@ namespace API.Controllers
         }
         [HttpPost]
         [AuthController]
-        public object? updateCaseTable_Case(CaseTable_Case inst)
+        public object? updateTbl_Case(Tbl_Case inst)
         {
             return inst.Update();
         }
-        //CaseTable_Calendario
+        //Tbl_Calendario
         [HttpPost]
         [AuthController]
-        public List<ViewCalendarioByDependencia> getCaseTable_Calendario(ViewCalendarioByDependencia Inst)
+        public List<ViewCalendarioByDependencia> getTbl_Calendario(ViewCalendarioByDependencia Inst)
         {
             return Inst.Get<ViewCalendarioByDependencia>();
         }
         [HttpPost]
         [AuthController]
-        public object? saveCaseTable_Calendario(CaseTable_Calendario inst)
+        public object? saveTbl_Calendario(Tbl_Calendario inst)
         {
             return inst.Save();
         }
         [HttpPost]
         [AuthController]
-        public object? updateCaseTable_Calendario(CaseTable_Calendario inst)
+        public object? updateTbl_Calendario(Tbl_Calendario inst)
         {
             return inst.Update();
         }
-        //CaseTable_Tareas
+        //Tbl_Tareas
         [HttpPost]
         [AuthController]
-        public List<CaseTable_Tareas> getCaseTable_Tareas(CaseTable_Tareas Inst)
+        public List<Tbl_Tareas> getTbl_Tareas(Tbl_Tareas Inst)
         {
-            return Inst.Get<CaseTable_Tareas>();
+            return Inst.Get<Tbl_Tareas>();
         }        
         [HttpPost]
         [AuthController]
-        public object? saveCaseTable_Tareas(CaseTable_Tareas inst)
+        public object? saveTbl_Tareas(Tbl_Tareas inst)
         {
             return inst.SaveTarea(HttpContext.Session.GetString("seassonKey"));
         }
         [HttpPost]
         [AuthController]
-        public object? updateCaseTable_Tareas(CaseTable_Tareas inst)
+        public object? updateTbl_Tareas(Tbl_Tareas inst)
         {
             return inst.UpdateTarea();
         }
-        //CaseTable_Participantes
+        //Tbl_Participantes
         [HttpPost]
         [AuthController]
-        public List<CaseTable_Participantes> getCaseTable_Participantes(CaseTable_Participantes Inst)
+        public List<Tbl_Participantes> getTbl_Participantes(Tbl_Participantes Inst)
         {
-            return Inst.Get<CaseTable_Participantes>();
+            return Inst.Get<Tbl_Participantes>();
         }
         [HttpPost]
         [AuthController]
-        public object? saveCaseTable_Participantes(CaseTable_Participantes inst)
+        public object? saveTbl_Participantes(Tbl_Participantes inst)
         {
             return inst.Save();
         }
         [HttpPost]
         [AuthController]
-        public object? updateCaseTable_Participantes(CaseTable_Participantes inst)
+        public object? updateTbl_Participantes(Tbl_Participantes inst)
         {
             return inst.Update();
         }
         //Cat_Cargos
         [HttpPost]
         [AuthController]
-        public List<CaseTable_VinculateCase> getCaseTable_VinculateCase(CaseTable_VinculateCase inst)
+        public List<Tbl_VinculateCase> getTbl_VinculateCase(Tbl_VinculateCase inst)
         {
-            return inst.Get<CaseTable_VinculateCase>();
+            return inst.Get<Tbl_VinculateCase>();
         }
           [HttpPost]
         [AuthController]
-        public object? saveCaseTable_VinculateCase(CaseTable_VinculateCase inst)
+        public object? saveTbl_VinculateCase(Tbl_VinculateCase inst)
         {
             return inst.Save();
         }
         [HttpPost]
         [AuthController]
-        public object? updateCaseTable_VinculateCase(CaseTable_VinculateCase inst)
+        public object? updateTbl_VinculateCase(Tbl_VinculateCase inst)
         {
             return inst.Update();
         }

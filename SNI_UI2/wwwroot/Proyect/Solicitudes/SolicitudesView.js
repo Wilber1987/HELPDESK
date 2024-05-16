@@ -1,5 +1,5 @@
 
-import { CaseTable_Case, CaseTable_Comments, Cat_Dependencias } from '../../ModelProyect/ProyectDataBaseModel.js';
+import { Tbl_Case, Tbl_Comments, Cat_Dependencias } from '../../ModelProyect/ProyectDataBaseModel.js';
 import { StylesControlsV2, StylesControlsV3 } from "../../WDevCore/StyleModules/WStyleComponents.js";
 import { WForm } from "../../WDevCore/WComponents/WForm.js";
 import { WPaginatorViewer } from '../../WDevCore/WComponents/WPaginatorViewer.js';
@@ -13,7 +13,7 @@ import { caseGeneralData } from '../ProyectViews/Proyectos/CaseDetailComponent.j
 import { activityStyle } from '../style.js';
 
 const OnLoad = async () => {
-    const Solicitudes = await new CaseTable_Case().GetOwSolicitudesPendientesAprobar();
+    const Solicitudes = await new Tbl_Case().GetOwSolicitudesPendientesAprobar();
     const AdminPerfil = new MainSolicitudesView(Solicitudes);
     Main.appendChild(AdminPerfil);
 }
@@ -21,7 +21,7 @@ window.onload = OnLoad;
 class MainSolicitudesView extends HTMLElement {
     /**
      * 
-     * @param {Array<CaseTable_Case>} Dataset 
+     * @param {Array<Tbl_Case>} Dataset 
      * @param {Array<Cat_Dependencias>} Dependencias 
      */
     constructor(Dataset) {
@@ -33,8 +33,8 @@ class MainSolicitudesView extends HTMLElement {
         this.TabContainer = WRender.createElement({ type: 'div', props: { class: 'TabContainer', id: "TabContainer" } });
         this.TabManager = new ComponentsManager({ MainContainer: this.TabContainer });
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });
-        this.ModelObject = new CaseTable_Case({
-            CaseTable_Tareas: {
+        this.ModelObject = new Tbl_Case({
+            Tbl_Tareas: {
                 type: "text", hidden: true
             }, Estado: {
                 type: "text", hidden: true
@@ -87,15 +87,15 @@ class MainSolicitudesView extends HTMLElement {
     }
     actividadDetail = async (actividad) => {
         const actividadDetailView = WRender.Create({ className: "actividadDetailView", children: [this.actividadElementDetail(actividad)] });
-        const commentsDataset = await new CaseTable_Comments({ Id_Case: actividad.Id_Case }).Get();
+        const commentsDataset = await new Tbl_Comments({ Id_Case: actividad.Id_Case }).Get();
         const commentsContainer = new WCommentsComponent({
             Dataset: commentsDataset,
-            ModelObject: new CaseTable_Comments(),
+            ModelObject: new Tbl_Comments(),
             User: WSecurity.UserData,
             UserIdProp: "Id_User",
             CommentsIdentify: actividad.Id_Case,
-            UrlSearch: "../api/ApiEntityHelpdesk/getCaseTable_Comments",
-            UrlAdd: "../api/ApiEntityHelpdesk/saveCaseTable_Comments"
+            UrlSearch: "../api/ApiEntityHelpdesk/getTbl_Comments",
+            UrlAdd: "../api/ApiEntityHelpdesk/saveTbl_Comments"
         });
         actividadDetailView.append(commentsContainer)
         this.TabManager.NavigateFunction("Tab-Actividades-Viewer" + actividad.Id_Case, actividadDetailView);
@@ -123,7 +123,7 @@ class MainSolicitudesView extends HTMLElement {
     mapCaseToPaginatorElement(Dataset) {
         return Dataset.map(actividad => {
             actividad.Dependencia = actividad.Cat_Dependencias.Descripcion;
-            //actividad.Progreso = actividad.CaseTable_Tareas?.filter(tarea => tarea.Estado?.includes("Finalizado")).length;
+            //actividad.Progreso = actividad.Tbl_Tareas?.filter(tarea => tarea.Estado?.includes("Finalizado")).length;
             return this.actividadElement(actividad);
         });
     }

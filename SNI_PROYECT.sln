@@ -7,13 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CAPA_DATOS", "CAPA_DATOS\CA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UI", "SNI_UI2\UI.csproj", "{65064C0F-E1E2-4448-9F71-6581FA14B112}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SNI_PROYECT", "SNI_PROYECT", "{5D5B000E-9E4F-4B7A-B252-9667C82D5BE7}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0AC08783-3E50-4C66-BEA7-FDD6049A581C}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,9 +28,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{65064C0F-E1E2-4448-9F71-6581FA14B112} = {5D5B000E-9E4F-4B7A-B252-9667C82D5BE7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B7B4F754-54CB-45DC-9974-ED2063BC89B2}

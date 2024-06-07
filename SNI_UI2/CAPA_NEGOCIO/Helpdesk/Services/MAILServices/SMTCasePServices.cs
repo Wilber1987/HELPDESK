@@ -9,66 +9,67 @@ using CAPA_NEGOCIO.MAPEO;
 
 namespace CAPA_NEGOCIO.Services
 {
-    public class SMTPCaseServices
-    {
-        public async Task<bool> sendCaseMailNotificationsAsync()
-        {
+	public class SMTPCaseServices
+	{
+		public async Task<bool> sendCaseMailNotificationsAsync()
+		{
 
 
-            List<Tbl_Mails> caseMail = new Tbl_Mails()
-            {
-                Estado = MailState.PENDIENTE.ToString()
-            }.Get<Tbl_Mails>();
+			List<Tbl_Mails> caseMail = new Tbl_Mails()
+			{
+				Estado = MailState.PENDIENTE.ToString()
+			}.Get<Tbl_Mails>();
 
-            foreach (var item in caseMail)
-            {
-                try
-                {
-                    await Task.Delay(100);
+			foreach (var item in caseMail)
+			{
+				try
+				{
+					await Task.Delay(100);
 
-                    var Tcase = new Tbl_Case() { Id_Case = item.Id_Case }.Find<Tbl_Case>();
-                    var send = await SMTPMailServices.SendMail(item.FromAdress,
-                    item.ToAdress,
-                    item.Subject,
-                    item.Body,
-                    item.Attach_Files,
-                    new MailConfig()
-                    {
-                        HOST = Tcase?.Cat_Dependencias?.SMTPHOST,
-                        PASSWORD = Tcase?.Cat_Dependencias?.Password,
-                        USERNAME = Tcase?.Cat_Dependencias?.Username,
-                        CLIENT = Tcase?.Cat_Dependencias?.CLIENT,
-                        CLIENT_SECRET = Tcase?.Cat_Dependencias?.CLIENT_SECRET,
-                        AutenticationType = Enum.Parse<AutenticationTypeEnum>(Tcase?.Cat_Dependencias?.AutenticationType),
-                        TENAT = Tcase?.Cat_Dependencias?.TENAT,
-                        OBJECTID = Tcase?.Cat_Dependencias?.OBJECTID,
-                        HostService = Enum.Parse<HostServices>(Tcase?.Cat_Dependencias?.HostService)
-                    });
-                    if (send)
-                    {
-                        try
-                        {
-                            item.BeginGlobalTransaction();
-                            item.Estado = MailState.ENVIADO.ToString();
-                            item.Update();
-                            item.CommitGlobalTransaction();
-                        }
-                        catch (System.Exception ex)
-                        {
+					var Tcase = new Tbl_Case() { Id_Case = item.Id_Case }.Find<Tbl_Case>();
+					var send = await SMTPMailServices.SendMail(item.FromAdress,
+					item.ToAdress,
+					item.Subject,
+					item.Body,
+					item.Attach_Files,
+					item.Uid,
+					new MailConfig()
+					{
+						HOST = Tcase?.Cat_Dependencias?.SMTPHOST,
+						PASSWORD = Tcase?.Cat_Dependencias?.Password,
+						USERNAME = Tcase?.Cat_Dependencias?.Username,
+						CLIENT = Tcase?.Cat_Dependencias?.CLIENT,
+						CLIENT_SECRET = Tcase?.Cat_Dependencias?.CLIENT_SECRET,
+						AutenticationType = Enum.Parse<AutenticationTypeEnum>(Tcase?.Cat_Dependencias?.AutenticationType),
+						TENAT = Tcase?.Cat_Dependencias?.TENAT,
+						OBJECTID = Tcase?.Cat_Dependencias?.OBJECTID,
+						HostService = Enum.Parse<HostServices>(Tcase?.Cat_Dependencias?.HostService)
+					});
+					if (send)
+					{
+						try
+						{
+							item.BeginGlobalTransaction();
+							item.Estado = MailState.ENVIADO.ToString();
+							item.Update();
+							item.CommitGlobalTransaction();
+						}
+						catch (System.Exception ex)
+						{
 
-                            item.RollBackGlobalTransaction();
-                            LoggerServices.AddMessageError($"correo enviado, error al actualizar estado del correo {item.Uid}", ex);
-                        }
-                    }
-                }
-                catch (System.Exception ex)
-                {
-                    LoggerServices.AddMessageError($"error al enviar el correo {item.Uid}", ex);
-                }
+							item.RollBackGlobalTransaction();
+							LoggerServices.AddMessageError($"correo enviado, error al actualizar estado del correo {item.Uid}", ex);
+						}
+					}
+				}
+				catch (System.Exception ex)
+				{
+					LoggerServices.AddMessageError($"error al enviar el correo {item.Uid}", ex);
+				}
 
-            }
+			}
 
-            return true;
-        }
-    }
+			return true;
+		}
+	}
 }

@@ -185,9 +185,9 @@ namespace CAPA_NEGOCIO.MAPEO
                 user.Password = EncrypterServices.Encrypt(password);
                 user.Update();
                 _ = SMTPMailServices.SendMail("heldesk@password.recovery",
-                 new List<string> { user.Mail },
+                 [user.Mail],
                  "Recuperación de contraseña",
-                 $"nueva contraseña: {password}", null, null);
+                 $"nueva contraseña: {password}", null, null, null);
                 return user;
             }
             if (user?.Estado == "INACTIVO")

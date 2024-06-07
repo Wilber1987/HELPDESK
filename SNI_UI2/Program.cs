@@ -6,7 +6,7 @@ using SNI_UI2;
 using SNI_UI2.CAPA_NEGOCIO;
 
 
-SqlADOConexion.IniciarConexion("sa", "zaxscd", ".", "PROYECT_MANAGER_BD");
+SqlADOConexion.IniciarConexion("sa", "zaxscd", ".", "HELPDESK");
 //PostgresADOConexion.IniciarConexion("postgres", "zaxscd", "localhost", "pst", 5432);
 //var customers = new Customer { MTConnection = PostgresADOConexion.SQLM }.Get<Customer>();
 //var AGENCY = new Structure_agency {  }.Get<Structure_agency>();

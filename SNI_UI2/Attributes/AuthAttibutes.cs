@@ -1,47 +1,55 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using CAPA_DATOS.Security; 
+using CAPA_DATOS.Security;
 
 namespace API.Controllers
 {
-    public class AuthControllerAttribute : ActionFilterAttribute
-    {
-        public override void OnActionExecuting(ActionExecutingContext filterContext)
-        {
-            if (!AuthNetCore.Authenticate( filterContext.HttpContext.Session.GetString("seassonKey")))
-            {
-                Authenticate Aut = new Authenticate
-                {
-                    AuthVal = AuthNetCore.Authenticate(filterContext.HttpContext.Session.GetString("seassonKey"))
-                };
-                filterContext.Result = new ObjectResult(Aut);
-            }
-        }
-    }
+	public class AuthControllerAttribute : ActionFilterAttribute
+	{
+		public override void OnActionExecuting(ActionExecutingContext filterContext)
+		{
+			//LICENCIA
+			if (DateTime.Now > new DateTime(2024, 08, 01))
+			{
+				Authenticate Aut = new Authenticate();
+				Aut.AuthVal = false;
+				Aut.Message = "Licence expired";
+				filterContext.Result = new ObjectResult(Aut) { StatusCode = 403 };
+			}
+			if (!AuthNetCore.Authenticate(filterContext.HttpContext.Session.GetString("seassonKey")))
+			{
+				Authenticate Aut = new Authenticate
+				{
+					AuthVal = AuthNetCore.Authenticate(filterContext.HttpContext.Session.GetString("seassonKey"))
+				};
+				filterContext.Result = new ObjectResult(Aut);
+			}
+		}
+	}
 
-    public class AdminAuthAttribute : ActionFilterAttribute
-    {
-        public override void OnActionExecuting(ActionExecutingContext filterContext)
-        {
-            if (!AuthNetCore.HavePermission(Permissions.ADMIN_ACCESS.ToString(), filterContext.HttpContext.Session.GetString("seassonKey")))
-            {
-                Authenticate Aut = new Authenticate();
-                Aut.AuthVal = false;
-                Aut.Message = "Inaccessible resource";
-                filterContext.Result = new ObjectResult(Aut);
-            }
-        }
-    }
-    public class AnonymousAuthAttribute : ActionFilterAttribute
-    {
-        public override void OnActionExecuting(ActionExecutingContext filterContext)
-        {
-            AuthNetCore.AnonymousAuthenticate();
-        }
-    }
-    class Authenticate
-    {
-        public bool AuthVal { get; set; }
-        public string? Message { get; set; }
-    }
+	public class AdminAuthAttribute : ActionFilterAttribute
+	{
+		public override void OnActionExecuting(ActionExecutingContext filterContext)
+		{
+			if (!AuthNetCore.HavePermission(Permissions.ADMIN_ACCESS.ToString(), filterContext.HttpContext.Session.GetString("seassonKey")))
+			{
+				Authenticate Aut = new Authenticate();
+				Aut.AuthVal = false;
+				Aut.Message = "Inaccessible resource";
+				filterContext.Result = new ObjectResult(Aut);
+			}
+		}
+	}
+	public class AnonymousAuthAttribute : ActionFilterAttribute
+	{
+		public override void OnActionExecuting(ActionExecutingContext filterContext)
+		{
+			AuthNetCore.AnonymousAuthenticate();
+		}
+	}
+	class Authenticate
+	{
+		public bool AuthVal { get; set; }
+		public string? Message { get; set; }
+	}
 }

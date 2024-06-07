@@ -1,7 +1,7 @@
 
 import { Tbl_Case, Tbl_Comments, Cat_Dependencias } from '../../ModelProyect/ProyectDataBaseModel.js';
 import { StylesControlsV2, StylesControlsV3 } from "../../WDevCore/StyleModules/WStyleComponents.js";
-import { WForm } from "../../WDevCore/WComponents/WForm.js";
+import { ModalMessege, WForm } from "../../WDevCore/WComponents/WForm.js";
 import { WPaginatorViewer } from '../../WDevCore/WComponents/WPaginatorViewer.js';
 import { ComponentsManager, WRender } from '../../WDevCore/WModules/WComponentsTools.js';
 import { css } from '../../WDevCore/WModules/WStyledRender.js';
@@ -111,7 +111,10 @@ class MainSolicitudesView extends HTMLElement {
 
     nuevoCaso = async () => {
         const form = new WForm({
-            ModelObject: this.ModelObject
+            ModelObject: this.ModelObject,
+            SaveFunction: ()=> {
+                this.shadowRoot.append(ModalMessege("Aviso", "Caso guardado correctamente", true))
+            }
         })
         this.TabManager.NavigateFunction("Tab-nuevoCasoView",
             WRender.Create({ className: "nuevoCasoView", children: [form] }));

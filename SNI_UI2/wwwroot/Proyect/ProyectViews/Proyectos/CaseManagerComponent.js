@@ -5,7 +5,7 @@ import { CaseSearcherToVinculate } from '../../../AppComponents/CaseSearcherToVi
 import { priorityStyles } from '../../../AppComponents/Styles.js';
 import { Tbl_Agenda, Tbl_Calendario, Tbl_Case, Tbl_Comments, Tbl_Tareas, Tbl_VinculateCase, Cat_Dependencias, Tbl_Servicios } from '../../../ModelProyect/ProyectDataBaseModel.js';
 import { StylesControlsV2, StylesControlsV3 } from "../../../WDevCore/StyleModules/WStyleComponents.js";
-import { ModalVericateAction, WForm } from "../../../WDevCore/WComponents/WForm.js";
+import { ModalMessege, ModalVericateAction, WForm } from "../../../WDevCore/WComponents/WForm.js";
 import { WModalForm } from '../../../WDevCore/WComponents/WModalForm.js';
 import { WPaginatorViewer } from '../../../WDevCore/WComponents/WPaginatorViewer.js';
 import { WTableComponent } from "../../../WDevCore/WComponents/WTableComponent.js";
@@ -39,7 +39,7 @@ class CaseManagerComponent extends HTMLElement {
         if (this.Dependencias.length != 0) {
             this.OptionContainer.append(WRender.Create({
                 tagName: 'input', type: 'button', className: 'Block-Success',
-                value: 'Nueva Caso', onclick: this.CaseForm
+                value: 'Nuevo Caso', onclick: this.CaseForm
             }))
         }
         this.shadowRoot.append(this.OptionContainer, this.TabContainer);
@@ -105,7 +105,10 @@ class CaseManagerComponent extends HTMLElement {
     }
     CaseForm = async () => {
         this.TabManager.NavigateFunction("Tab-CaseFormView",
-            WRender.Create({ className: "CaseFormView", children: [CaseForm(undefined, this.Dependencias)] }));
+            WRender.Create({ className: "CaseFormView", children: [CaseForm(undefined, this.Dependencias, ()=>{
+                console.log(false);
+                this.shadowRoot.append(ModalMessege("Caso guardado correctamente", null, true))
+            })] }));
     }
     Vincular = async (actividad) => {
         this.shadowRoot.append(new WModalForm({
@@ -154,6 +157,7 @@ const CaseForm = (entity, dependencias, action) => {
         EditObject: entity,
         SaveFunction: action,
         ImageUrlPath: "",
+        AutoSave: true,
         ModelObject: new Tbl_Case({
             Tbl_Tareas: {
                 type: 'MasterDetail',

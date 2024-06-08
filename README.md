@@ -32,3 +32,18 @@ push de submodule
 git push origin HEAD:main
 
 PxI/Pz8/Pz8/PwdSP2E/Pw==
+
+--CONFIGURACION EXCHANGE
+
+Import-Module ExchangeOnlineManagement
+New-ServicePrincipal -AppId [id. de aplicación (cliente)]  -ServiceId   [Id. de objeto]
+
+Get-ServicePrincipal
+
+Add-MailboxPermission -Identidad "wilbermatusgonzalez@wexpdev.onmicrosoft.com"  -Usuario -ServiceId  [Id. de objeto] -AccessRights FullAccess
+
+Add-MailboxPermission -Identity "wdevexp@wexpdev.onmicrosoft.com" -User  [Id. de objeto]  -AccessRights FullAccess
+
+Connect-ExchangeOnline -UserPrincipalName "wdevexp@wexpdev.onmicrosoft.com"
+Connect-ExchangeOnline -UserPrincipalName "wilbermatusgonzalez@wexpdev.onmicrosoft.com"
+

@@ -183,39 +183,49 @@ class ResolveTestViewComponent extends HTMLElement {
                 .task {
                     position: relative;
                     color: #2e2e2f;
-                    cursor: move;
                     background-color: #fff;
-                    padding: 1rem;
+                    overflow: hidden;
                     border-radius: 8px;
                     box-shadow: rgba(99, 99, 99, 0.1) 0px 2px 8px 0px;
                     margin-bottom: 1rem;
                     border: 3px dashed transparent;
-                    min-width: 350px;
+                    min-width: 340px;
                     border: solid #e6e6e6 1px;
-                    min-height: 150px;
-                    height: 150px;
+                    min-height: 140px;
+                    height: 160px;
                     display: grid;
-                    grid-template-rows: 30px 20px 60px 40px;
+                    grid-template-rows: 30px 35px 35px 40px;
+                    gap: 5px;
                   }
                   .labelheader {
-                    margin: 10px 0px;
+                    margin: 0px 10px;
                     display: block;
                     font-size: 14px;
                     font-weight: 600;
                     text-transform: capitalize;
+                    z-index: 1;
+                    color: #fff;
+                    background-color: rgba(0, 0, 0, 0.3);
+                    padding: 10px;
+                    border-radius: 10px;
+                  }
+
+                  .task p {
+                    font-size: 13px;
+                    margin: 0px 10px;                    
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    z-index: 1;
+                    color: #fff;
+                    background-color: rgba(0, 0, 0, 0.3);
+                    padding: 10px;
+                    border-radius: 10px;
                   }
                   
                   .task:hover {
                     box-shadow: rgba(99, 99, 99, 0.3) 0px 2px 8px 0px;
                     border-color: rgba(162, 179, 207, 0.2) !important;
-                  }
-                  
-                  .task p {
-                    font-size: 13px;
-                    margin: 10px 0;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-                    overflow: hidden;
                   }
                   
                   .tag {
@@ -236,9 +246,10 @@ class ResolveTestViewComponent extends HTMLElement {
                   .tags .img-cover {
                     position: absolute;
                     width: 100%;
-                    height: 100px;
+                    height: 115px;
                     top: 0;
-                    left: 0;                    
+                    left: 0;   
+                    object-fit: cover;                 
                   }
                   
                   .options {
@@ -255,15 +266,21 @@ class ResolveTestViewComponent extends HTMLElement {
                   
                   .stats {
                     position: relative;
-                    width: 100%;
+                    width: -webkit-fill-available;
                     color: #9fa4aa;
                     font-size: 12px;
                     display: flex;
                     align-items: center;
-                    justify-content: space-between;                   
+                    justify-content: space-between;  
+                    padding: 10px;                
                   }
                   .viewer {
-                    justify-content: flex-end;
+                    justify-content: space-between;
+                    display: flex;
+                    width: -webkit-fill-available;
+                    align-items: center;
+                    z-index: 1;
+                    margin: 10px;
                   }
                   .stats div {
                     margin-right: 1rem;
@@ -272,6 +289,12 @@ class ResolveTestViewComponent extends HTMLElement {
                     align-items: center;
                     cursor: pointer;
                     width: 100%;
+                  }
+                  .stats div a{
+                    transition: all 0.5s;
+                  }
+                  .stats div a:hover{
+                    color: #2e2e2f;
                   }
                   
                   .stats svg {

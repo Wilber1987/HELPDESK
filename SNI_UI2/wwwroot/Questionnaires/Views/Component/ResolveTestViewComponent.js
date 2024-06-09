@@ -48,19 +48,13 @@ class ResolveTestViewComponent extends HTMLElement {
 
         /**@type {Array} */
         this.DatasetCategories = WArrayF.GroupBy(this.Dataset.map(d => d.Cat_Categorias_Test), "Descripcion");
-        this.DatasetCategories.forEach(element => {
-            const testCategories = this.Dataset?.filter(test => test.Cat_Categorias_Test.Descripcion == element.Descripcion);
+        this.DatasetCategories.forEach(test => {
+            const testCategories = this.Dataset?.filter(test =>
+                test.Cat_Categorias_Test.Descripcion == test.Cat_Categorias_Test.Descripcion
+            );
             testCategories?.forEach(test => {
-                this.TabContainer.append(WRender.Create({
-                    class: "cardText", children: [
-                        test.Descripcion,
-                        {
-                            tagName: 'input', type: 'button', className: 'className', value: 'Resolve', onclick: async () => {
-                                this.BuildTest(test);
-                            }
-                        }
-                    ]
-                }))
+
+                this.TabContainer.append(this.TestCard(test));
             });
         });
     }
@@ -118,7 +112,7 @@ class ResolveTestViewComponent extends HTMLElement {
 
         /**@type {Array<Pregunta_Tests>} */
         const secciones = WArrayF.GroupBy(resultados.map(r => r.Pregunta_Tests), "Seccion");
-        const Test = new Tests({Resultados_Tests: []});
+        const Test = new Tests({ Resultados_Tests: [] });
 
         for (const pregntaTest of secciones) {
             const resultadosSeccion = resultados.filter(r => r.Pregunta_Tests.Seccion == pregntaTest.Seccion);
@@ -150,6 +144,187 @@ class ResolveTestViewComponent extends HTMLElement {
            display: block;
         }           
     `
+    TestCard(/**@type { Tests } */ test) {
+        return WRender.Create({
+            className: "task", children: [
+                {
+                    className: "tags", children: [{
+                        tagName: 'img', className: "img-cover",
+                        src: "" + test.Image
+                    }, {
+                        className: "viewer", children: [
+                            { tagName: "span", className: "tag", innerHTML: test.Titulo },
+                            {
+                                tagName: 'button', className: 'options', children:
+                                    [WRender.CreateStringNode(`<div><svg xml:space="preserve" viewBox="0 0 41.915 41.916" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" id="Capa_1" version="1.1" fill="#000000"><g stroke-width="0" id="SVGRepo_bgCarrier"></g><g stroke-linejoin="round" stroke-linecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"><g><g><path d="M11.214,20.956c0,3.091-2.509,5.589-5.607,5.589C2.51,26.544,0,24.046,0,20.956c0-3.082,2.511-5.585,5.607-5.585 C8.705,15.371,11.214,17.874,11.214,20.956z"></path> <path d="M26.564,20.956c0,3.091-2.509,5.589-5.606,5.589c-3.097,0-5.607-2.498-5.607-5.589c0-3.082,2.511-5.585,5.607-5.585 C24.056,15.371,26.564,17.874,26.564,20.956z"></path> <path d="M41.915,20.956c0,3.091-2.509,5.589-5.607,5.589c-3.097,0-5.606-2.498-5.606-5.589c0-3.082,2.511-5.585,5.606-5.585 C39.406,15.371,41.915,17.874,41.915,20.956z"></path></g></g></g></svg></div>`)],
+                                onclick: async () => {
+                                    //code.....
+                                }
+                            }]
+
+                    }]
+                }, {
+                    tagName: "label", className: "labelheader", innerHTML: test.Titulo
+                }, {
+                    tagName: "p", className: "", innerHTML: test.Descripcion
+                }, {
+                    className: "stats", children: [
+                        [
+                            WRender.CreateStringNode(`<div><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><g stroke-width="0" id="SVGRepo_bgCarrier"></g><g stroke-linejoin="round" stroke-linecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <path stroke-linecap="round" stroke-width="2" d="M12 8V12L15 15"></path> <circle stroke-width="2" r="9" cy="12" cx="12"></circle> </g></svg>
+                                ${new Date(test.Fecha_publicacion).toLocaleDateString()}</div>`),
+                            {
+                                tagName: "a", innerHTML: "Resolver", onclick: async () => {
+                                    this.BuildTest(test);
+                                }
+                            }
+                        ]
+                    ]
+                }, css`
+                .task {
+                    position: relative;
+                    color: #2e2e2f;
+                    background-color: #fff;
+                    overflow: hidden;
+                    border-radius: 8px;
+                    box-shadow: rgba(99, 99, 99, 0.1) 0px 2px 8px 0px;
+                    margin-bottom: 1rem;
+                    border: 3px dashed transparent;
+                    min-width: 340px;
+                    border: solid #e6e6e6 1px;
+                    min-height: 140px;
+                    height: 160px;
+                    display: grid;
+                    grid-template-rows: 30px 35px 35px 40px;
+                    gap: 5px;
+                  }
+                  .labelheader {
+                    margin: 0px 10px;
+                    display: block;
+                    font-size: 14px;
+                    font-weight: 600;
+                    text-transform: capitalize;
+                    z-index: 1;
+                    color: #fff;
+                    background-color: rgba(0, 0, 0, 0.3);
+                    padding: 10px;
+                    border-radius: 10px;
+                  }
+
+                  .task p {
+                    font-size: 13px;
+                    margin: 0px 10px;                    
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    z-index: 1;
+                    color: #fff;
+                    background-color: rgba(0, 0, 0, 0.3);
+                    padding: 10px;
+                    border-radius: 10px;
+                  }
+                  
+                  .task:hover {
+                    box-shadow: rgba(99, 99, 99, 0.3) 0px 2px 8px 0px;
+                    border-color: rgba(162, 179, 207, 0.2) !important;
+                  }
+                  
+                  .tag {
+                    border-radius: 100px;
+                    padding: 4px 13px;
+                    font-size: 12px;
+                    color: #ffffff;
+                    background-color: #1389eb;
+                  }
+                  
+                  .tags {
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    position: relative;
+                  }
+                  .tags .img-cover {
+                    position: absolute;
+                    width: 100%;
+                    height: 115px;
+                    top: 0;
+                    left: 0;   
+                    object-fit: cover;                 
+                  }
+                  
+                  .options {
+                    background: transparent;
+                    border: 0;
+                    color: #c4cad3;
+                    font-size: 17px;
+                  }
+                  
+                  .options svg {
+                    fill: #9fa4aa;
+                    width: 20px;
+                  }
+                  
+                  .stats {
+                    position: relative;
+                    width: -webkit-fill-available;
+                    color: #9fa4aa;
+                    font-size: 12px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;  
+                    padding: 10px;                
+                  }
+                  .viewer {
+                    justify-content: space-between;
+                    display: flex;
+                    width: -webkit-fill-available;
+                    align-items: center;
+                    z-index: 1;
+                    margin: 10px;
+                  }
+                  .stats div {
+                    margin-right: 1rem;
+                    height: 20px;
+                    display: flex;
+                    align-items: center;
+                    cursor: pointer;
+                    width: 100%;
+                  }
+                  .stats div a{
+                    transition: all 0.5s;
+                  }
+                  .stats div a:hover{
+                    color: #2e2e2f;
+                  }
+                  
+                  .stats svg {
+                    margin-right: 5px;
+                    height: 100%;
+                    stroke: #9fa4aa;
+                  }
+                  
+                  .viewer .img-participantes {
+                    height: 30px;
+                    width: 30px;
+                    background-color: rgb(28, 117, 219);
+                    margin-right: -10px;
+                    border-radius: 50%;
+                    border: 1px solid #fff;
+                    display: grid;
+                    align-items: center;
+                    text-align: center;
+                    font-weight: bold;
+                    color: #fff;
+                    padding: 2px;
+                  }
+                  
+                  .viewer span svg {
+                    stroke: #fff;
+                  }                  
+                    `
+            ]
+        });
+    }
 }
 customElements.define('w-resolve-test-view', ResolveTestViewComponent);
 export { ResolveTestViewComponent }

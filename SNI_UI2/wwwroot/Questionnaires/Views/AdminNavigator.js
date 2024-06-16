@@ -39,22 +39,15 @@ function ElementTab(DOMManager, ModelComponent, ModelEntity) {
                 AutoSave: true,
                 Options: {
                     Add: true,
+                    Filter: true,
+                    FilterDisplay: true,
                     Edit: true
                 }
-            });
-            const FilterOptions = new WFilterOptions({
-                Dataset: response,
-                ModelObject: ModelComponent,
-                AutoSetDate: true,
-                Display: true,
-                FilterFunction: (DFilt) => {
-                    Table?.DrawTable(DFilt);
-                }
-            });
+            });         
             DOMManager.NavigateFunction(ModelEntity.constructor.name, [WRender.Create({
                 tagName: "h2",
                 innerText: WOrtograficValidation.es(ModelEntity.constructor.name)
-            }), FilterOptions, Table]);
+            }), Table]);
         }
     };
 }

@@ -48,24 +48,18 @@ function ElementTab(DOMManager, Model) {
                 Dataset: response,
                 ModelObject: Model,
                 Options: {
+                    Filter: true,
+                    FilterDisplay: true,
                     Add: true, UrlAdd: "../api/ApiEntityHelpdesk/save" + Model.constructor.name,
                     Edit: true, UrlUpdate: "../api/ApiEntityHelpdesk/update" + Model.constructor.name,
                     // Search: true, UrlSearch: "../api/ApiEntityHelpdesk/get" + Model.constructor.name,
                 }
             });
-            const FilterOptions = new WFilterOptions({
-                Dataset: response,
-                ModelObject: Model,
-                AutoSetDate: true,
-                Display: true,
-                FilterFunction: (DFilt) => {
-                    Table?.DrawTable(DFilt);
-                }
-            });
+        
             DOMManager.NavigateFunction(Model.constructor.name, [WRender.Create({
                 tagName: "h2",
                 innerText: WOrtograficValidation.es(Model.constructor.name)
-            }), FilterOptions, Table]);
+            }), Table]);
         }
     };
 }

@@ -27,7 +27,6 @@ namespace CAPA_NEGOCIO.MAPEO
 		public int? Id_Vinculate { get; set; }
 		[JsonProp]
 		public MimeMessageCaseData? MimeMessageCaseData { get; set; }
-
 		// [ManyToOne(TableName = "Tbl_Profile", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
 		public Tbl_Profile? Tbl_Profile { get; set; }
 		[ManyToOne(TableName = "Cat_Dependencias", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia")]
@@ -36,24 +35,23 @@ namespace CAPA_NEGOCIO.MAPEO
 		public Tbl_Servicios? Tbl_Servicios { get; set; }
 		[OneToMany(TableName = "Tbl_Tareas", KeyColumn = "Id_Case", ForeignKeyColumn = "Id_Case")]
 		public List<Tbl_Tareas>? Tbl_Tareas { get; set; }
-
 		//[OneToMany(TableName = "Tbl_Comments", KeyColumn = "Id_Case", ForeignKeyColumn = "Id_Case")]
 		public List<Tbl_Comments>? Tbl_Comments { get; set; }
-
 		public async Task<bool> CreateAutomaticCase(MimeMessage mail, Cat_Dependencias dependencia)
 		{
 			try
 			{
 				List<ModelFiles> Attach = new List<ModelFiles>();
 				Descripcion = mail?.HtmlBody;
-				Titulo = mail?.Subject.ToUpper() + $" ({mail?.From})";
+				Titulo = mail?.Subject.ToUpper();
 				Estado = Case_Estate.Solicitado.ToString();
 				Fecha_Inicio = mail?.Date.DateTime;
 				Id_Dependencia = dependencia.Id_Dependencia;
 				Mail = mail.From.ToString();
-				MimeMessageCaseData = new MimeMessageCaseData 
+				MimeMessageCaseData = new MimeMessageCaseData
 				{
-					MessageId = mail.MessageId	
+					MessageId = mail.MessageId,
+					InReplyTo = mail.References?.LastOrDefault()
 				};
 				RecoveryEmbebedCidImages(mail);
 				BeginGlobalTransaction();
@@ -110,7 +108,6 @@ namespace CAPA_NEGOCIO.MAPEO
 			}
 
 		}
-
 		private void RecoveryEmbebedCidImages(MimeMessage mail)
 		{
 			foreach (var part in mail.BodyParts)
@@ -128,7 +125,6 @@ namespace CAPA_NEGOCIO.MAPEO
 				}
 			}
 		}
-
 		private void saveMessage(MimeMessage mail, List<ModelFiles> Attach, Tbl_Case? findCase)
 		{
 			new Tbl_Comments()
@@ -143,36 +139,6 @@ namespace CAPA_NEGOCIO.MAPEO
 
 			}.Save();
 		}
-		/*
-		public bool SaveActividades(string identity)
-		{
-			this.Id_Perfil = AuthNetCore.User(identity).UserId;
-			if (this.CheckCanSaveAct())
-			{
-				this.Estado = "Activa";
-				this.Id_Case = (Int32?)SqlADOConexion.SQLM?.InsertObject(this);
-				foreach (Tbl_Tareas obj in this.Tbl_Tareas ?? new List<Tbl_Tareas>())
-				{
-					obj.Id_Case = this.Id_Case;
-					obj.Save();
-				}
-				return true;
-			}
-			return false;
-		}
-		public bool CheckCanSaveAct()
-		{
-			Tbl_Dependencias_Usuarios DU = new()
-			{
-				Id_Perfil = this.Id_Perfil,
-				Id_Dependencia = this.Id_Dependencia
-			};
-			if (DU.Get_WhereIN<Tbl_Dependencias_Usuarios>("Id_Cargo", new string[] { "1", "2" }).Count == 0)
-			{
-				return false;
-			}
-			return true;
-		}*/
 		public bool SolicitarActividades(string identity)
 		{
 			this.Id_Perfil = AuthNetCore.User(identity).UserId;
@@ -198,7 +164,7 @@ namespace CAPA_NEGOCIO.MAPEO
 		{
 			if (AuthNetCore.HavePermission(Permissions.ADMIN_ACCESS.ToString(), identity))
 			{
-				return Where<Tbl_Case>(FilterData.NotIn("Estado", Case_Estate.Vinculado));
+				return Where<Tbl_Case>(FilterData.In("Estado", Case_Estate.Activo));
 			}
 			if (AuthNetCore.HavePermission(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identity))
 			{
@@ -253,6 +219,11 @@ namespace CAPA_NEGOCIO.MAPEO
 		}
 		public List<Tbl_Case> GetSolicitudesPendientesAprobar(string? identity, Case_Estate case_Estate)
 		{
+			if (AuthNetCore.HavePermission(Permissions.ADMIN_ACCESS.ToString(), identity))
+			{
+				Estado = case_Estate.ToString();
+				return Get<Tbl_Case>();
+			}
 			if (AuthNetCore.HavePermission(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identity))
 			{
 				return getCaseByDependencia(identity, case_Estate);
@@ -359,7 +330,8 @@ namespace CAPA_NEGOCIO.MAPEO
 		}
 		internal object CerrarCaso(string identity)
 		{
-			if (AuthNetCore.HavePermission(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identity))
+			if (AuthNetCore.HavePermission(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identity)
+			|| AuthNetCore.HavePermission(Permissions.TECNICO_CASOS_DEPENDENCIA.ToString(), identity))
 			{
 				List<Tbl_Tareas> Tbl_Tareas =
 				new Tbl_Tareas() { Id_Case = this.Id_Case }.Get<Tbl_Tareas>();
@@ -391,7 +363,7 @@ namespace CAPA_NEGOCIO.MAPEO
 				if (inst.Id_Vinculate != null)
 				{
 					return this.Get_WhereNotIN<Tbl_Case>("Id_Vinculate",
-					 new string[] { inst.Id_Vinculate.ToString() })
+					 [inst.Id_Vinculate.ToString()])
 					 .Where(c => c.Estado != Case_Estate.Solicitado.ToString()
 					 && c.Estado != Case_Estate.Rechazado.ToString()
 					 && c.Estado != Case_Estate.Finalizado.ToString()).ToList();
@@ -399,7 +371,7 @@ namespace CAPA_NEGOCIO.MAPEO
 				else
 				{
 					return this.Get_WhereNotIN<Tbl_Case>("Id_Case",
-					 new string[] { inst.Id_Case.ToString() })
+					 [inst.Id_Case.ToString()])
 					 .Where(c => c.Estado != Case_Estate.Solicitado.ToString()
 					 && c.Estado != Case_Estate.Rechazado.ToString()
 					 && c.Estado != Case_Estate.Finalizado.ToString()).ToList();
@@ -432,5 +404,6 @@ namespace CAPA_NEGOCIO.MAPEO
 	public class MimeMessageCaseData
 	{
 		public string? MessageId { get; set; }
-	}
+        public string? InReplyTo { get; internal set; }
+    }
 }

@@ -71,14 +71,14 @@
                 <a class="" id="SolicitudesRealizadas" href="~/ProyectViews/SolicitudesRealizadas">Solicitudes Realizadas</a>
             }  
 
-            @if (SecurityController.HavePermission(Permissions.QUESTIONNAIRES_MANAGER.ToString(), identify))
+            @* @if (SecurityController.HavePermission(Permissions.QUESTIONNAIRES_MANAGER.ToString(), identify))
             {
                 <a class="" id="SolicitudesRealizadas" href="~/Questionnaires/TestsView">Gestión de tests</a>
             }  
             @if (SecurityController.HavePermission(Permissions.QUESTIONNAIRES_USER.ToString(), identify))
             {
                 <a class="" id="SolicitudesRealizadas" href="~/Questionnaires/ResolveTestView">Resolver de tests</a>
-            }  
+            }   *@
 
              @* TEST MODULE 
             @if (SecurityController.HavePermission(Permissions.QUESTIONNAIRES_MANAGER.ToString(), identify))

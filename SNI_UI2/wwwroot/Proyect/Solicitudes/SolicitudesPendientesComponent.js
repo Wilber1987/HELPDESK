@@ -93,6 +93,7 @@ class SolicitudesPendientesComponent extends HTMLElement {
                     this.update(this.filterD);
                 }
             });
+            this.mainTable.FilterOptions = this.FilterOptions;
 
             this.TabManager.NavigateFunction("Tab-Actividades-Manager",
                 WRender.Create({
@@ -113,7 +114,7 @@ class SolicitudesPendientesComponent extends HTMLElement {
             WRender.Create({ className: "nuevoCasoView", children: [form] }));
     }
     update = async (inst = this.filterD) => {
-        const Solicitudes = await new Tbl_Case({ FilterData: inst }).GetSolicitudesPendientesAprobar();
+        const Solicitudes = await new Tbl_Case({ FilterData: inst, OrderData:  this.mainTable?.Sorts }).GetSolicitudesPendientesAprobar();
         this.mainTable?.DrawTable(Solicitudes);
     }
 

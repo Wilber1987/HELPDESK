@@ -80,7 +80,7 @@ namespace API.Controllers
 			return Tbl_Case.RechazarSolicitud(HttpContext.Session.GetString("seassonKey"));
 		}
 
-[HttpPost]
+		[HttpPost]
 		[AuthController]
 		public object AprobarSolicitud(Tbl_Case Tbl_Case)
 		{

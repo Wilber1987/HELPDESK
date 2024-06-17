@@ -6,8 +6,18 @@ namespace API.Controllers
 {
 	public class AuthControllerAttribute : ActionFilterAttribute
 	{
+		public Permissions[] PermissionsList { get; set; }
+		public AuthControllerAttribute()
+		{
+			PermissionsList = [];
+		}
+		public AuthControllerAttribute(params Permissions[] permissionsList){
+			PermissionsList = permissionsList ?? [];
+		}
 		public override void OnActionExecuting(ActionExecutingContext filterContext)
 		{
+			string? token = filterContext.HttpContext.Session.GetString("seassonKey");
+
 			//LICENCIA
 			if (DateTime.Now > new DateTime(2024, 08, 01))
 			{
@@ -15,14 +25,23 @@ namespace API.Controllers
 				Aut.AuthVal = false;
 				Aut.Message = "Licence expired";
 				filterContext.Result = new ObjectResult(Aut) { StatusCode = 403 };
-			}
-			if (!AuthNetCore.Authenticate(filterContext.HttpContext.Session.GetString("seassonKey")))
+			}			
+			if (!AuthNetCore.Authenticate(token))
 			{
 				Authenticate Aut = new Authenticate
 				{
-					AuthVal = AuthNetCore.Authenticate(filterContext.HttpContext.Session.GetString("seassonKey"))
+					AuthVal = false
 				};
 				filterContext.Result = new ObjectResult(Aut);
+			}
+			if (PermissionsList.Length > 0 && !AuthNetCore.HavePermission(token, PermissionsList))
+			{
+				Authenticate Aut = new Authenticate
+				{
+					AuthVal = false,
+					Message = "Inaccessible resource"
+				};
+				filterContext.Result = new ObjectResult(Aut) { StatusCode =  401 };
 			}
 		}
 	}
@@ -36,7 +55,7 @@ namespace API.Controllers
 				Authenticate Aut = new Authenticate();
 				Aut.AuthVal = false;
 				Aut.Message = "Inaccessible resource";
-				filterContext.Result = new ObjectResult(Aut);
+				filterContext.Result = new ObjectResult(Aut) { StatusCode =  401 };
 			}
 		}
 	}

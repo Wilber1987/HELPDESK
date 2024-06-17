@@ -64,7 +64,7 @@ class CaseDashboardComponent extends HTMLElement {
         //             val: { type: "number" },
         //         }))
         // }))
-        console.log(casosEtiquetadosPorMes);
+        //console.log(casosEtiquetadosPorMes);
         this.OptionContainer.append(WRender.Create({
             tagName: 'input', type: 'button',
             className: 'Btn-Mini', value: title4, onclick: () =>
@@ -90,19 +90,9 @@ class CaseDashboardComponent extends HTMLElement {
     dashBoardView = async () => {
         this.Modelcase = new Tbl_Case();
         this.ModelTareas = new Tbl_Tareas();
-        this.Dataset = await this.Modelcase.GetOwCase();
-        this.TareasDataset = await new Tbl_Tareas().Get();
-        const { columChart, radialChartDependencias, columChartAperturaCasos, columChartMonth, radialChart } = this.buildCharts();
-        const tableTareas = await this.taskData();
-
         const dasboardContainer = WRender.Create({
             className: "dashBoardView",
-            children: [tableTareas,
-                columChart,
-                radialChartDependencias,
-                columChartAperturaCasos,
-                columChartMonth,
-                radialChart]
+            children: []
         });
         this.FilterOptions = new WFilterOptions({
             Dataset: this.Dataset,
@@ -114,7 +104,7 @@ class CaseDashboardComponent extends HTMLElement {
             Display: true,
             AutoFilter: false,
             FilterFunction: async (/** @type {any} */ FilterData) => {
-                this.Dataset = await new Tbl_Case({ FilterData: FilterData }).GetOwCase();
+                this.Dataset = await new Tbl_Case({ FilterData: FilterData }).Get();
                 this.TareasDataset = await new Tbl_Tareas({ FilterData: FilterData }).Get();
                 const { columChart, radialChartDependencias, columChartAperturaCasos, columChartMonth, radialChart } = this.buildCharts();
                 const tableTareas = await this.taskData();
@@ -127,7 +117,15 @@ class CaseDashboardComponent extends HTMLElement {
                     radialChart);
             }
         });
+
+        //this.TareasDataset = await new Tbl_Tareas().Get();
+        //const { columChart, radialChartDependencias, columChartAperturaCasos, columChartMonth, radialChart } = this.buildCharts();
+        //const tableTareas = await this.taskData();
+
+
+
         this.shadowRoot?.append(this.FilterOptions, dasboardContainer);
+        await this.FilterOptions.filterFunction();
     }
     WStyle = css`
         .dashBoardView{
@@ -156,7 +154,7 @@ class CaseDashboardComponent extends HTMLElement {
                 }
             });
         });
-        console.log(TareasMap);
+        //console.log(TareasMap);
         const tableTareas = new WTableComponent({
             maxElementByPage: 8,
             ModelObject: {
@@ -191,7 +189,7 @@ class CaseDashboardComponent extends HTMLElement {
             Mes: c.Fecha_Inicio.getMonthFormatEs(),
             val: 1
         }));
-        console.log(casosEtiquetadosPorMes);
+        //console.log(casosEtiquetadosPorMes);
         this.SetOptions(casosMap, casosProcesados, casosEtiquetadosPorMes)
 
         const columChart = new ColumChart({

@@ -164,7 +164,7 @@ namespace CAPA_NEGOCIO.MAPEO
 		{
 			if (AuthNetCore.HavePermission(Permissions.ADMIN_ACCESS.ToString(), identity))
 			{
-				return Where<Tbl_Case>(FilterData.NotIn("Estado", Case_Estate.Vinculado));
+				return Where<Tbl_Case>(FilterData.In("Estado", Case_Estate.Activo));
 			}
 			if (AuthNetCore.HavePermission(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identity))
 			{

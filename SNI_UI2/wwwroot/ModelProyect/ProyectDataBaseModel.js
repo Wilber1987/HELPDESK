@@ -27,7 +27,6 @@ class Tbl_Evidencias extends EntityClass {
     Cat_Tipo_Evidencia = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Tipo_Evidencia() };
     Data = { type: 'file' };
     Id_Tarea = { type: 'number', hidden: true };
-
 }
 export { Tbl_Evidencias }
 
@@ -78,7 +77,8 @@ class Tbl_Case extends EntityClass {
     }
     Id_Case = { type: 'number', primary: true };
     Id_Vinculate = { type: 'number', hidden: true };
-
+    image = { type: 'img',  };
+    firma = { type: 'draw',  };
     Tbl_Servicios = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Tbl_Servicios(), hiddenInTable: true };
     Titulo = { type: 'text' };
     Fecha_Inicio = { type: 'date', hiddenInTable: true, };   
@@ -87,11 +87,10 @@ class Tbl_Case extends EntityClass {
     Cat_Dependencias = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Dependencias() };
     Estado = { type: "Select", Dataset: ["Activo", "Espera", "Pendiente", "Finalizado"] };
     Case_Priority = { type: "Select", Dataset: ["Alta", "Media", "Baja"], label: "Prioridad" , hiddenInTable: true};
-
-    Fecha_Final = { type: 'date' , hiddenFilter: true, hiddenInTable: true };
-
-    
+    Fecha_Final = { type: 'date' , hiddenFilter: true, hiddenInTable: true };    
     Tbl_Tareas = { type: 'MasterDetail', ModelObject: () => new Tbl_Tareas() };
+    Cat_DependenciasList = { type: 'MasterDetail', ModelObject: () => new Cat_Dependencias() };
+    Tbl_CommentsList = { type: 'MasterDetail', ModelObject: () => new Tbl_Comments() };
     /**
      * @returns {Array<Tbl_Case>}
      */

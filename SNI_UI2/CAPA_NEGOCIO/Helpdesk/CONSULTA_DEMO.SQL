@@ -57,6 +57,22 @@ BEGIN
             INSERT INTO PROYECT_MANAGER_BD.helpdesk.Cat_Dependencias (Descripcion)
             VALUES (@Departamento)
             SET @DepartamentoId = SCOPE_IDENTITY()
+
+            INSERT INTO PROYECT_MANAGER_BD.helpdesk.Tbl_Agenda
+            (Id_Perfil, Id_Dependencia, Dia, Hora_Inicial, Hora_Final, Fecha_Caducidad)
+            VALUES(NULL,  @DepartamentoId, N'Lunes', N'08:00', N'17:00', '2024-06-07 00:00:00.000');
+            INSERT INTO PROYECT_MANAGER_BD.helpdesk.Tbl_Agenda
+            (Id_Perfil, Id_Dependencia, Dia, Hora_Inicial, Hora_Final, Fecha_Caducidad)
+            VALUES(NULL,  @DepartamentoId, N'Martes', N'08:00', N'17:00', '2024-06-07 00:00:00.000');
+            INSERT INTO PROYECT_MANAGER_BD.helpdesk.Tbl_Agenda
+            (Id_Perfil, Id_Dependencia, Dia, Hora_Inicial, Hora_Final, Fecha_Caducidad)
+            VALUES(NULL,  @DepartamentoId, N'Miércoles', N'08:00', N'17:00', '2024-06-07 00:00:00.000');
+            INSERT INTO PROYECT_MANAGER_BD.helpdesk.Tbl_Agenda
+            (Id_Perfil, Id_Dependencia, Dia, Hora_Inicial, Hora_Final, Fecha_Caducidad)
+            VALUES(NULL,  @DepartamentoId, N'Jueves', N'08:00', N'17:00', '2024-06-07 00:00:00.000');
+            INSERT INTO PROYECT_MANAGER_BD.helpdesk.Tbl_Agenda
+            (Id_Perfil, Id_Dependencia, Dia, Hora_Inicial, Hora_Final, Fecha_Caducidad)
+            VALUES(NULL,  @DepartamentoId, N'Viernes', N'08:00', N'17:00', '2024-06-07 00:00:00.000');
         END
         ELSE
         BEGIN
@@ -84,7 +100,7 @@ BEGIN
 
         -- Insertar nuevo usuario
         INSERT INTO PROYECT_MANAGER_BD.[security].Security_Users (Nombres, Estado, Descripcion, Password, Mail, Token, Token_Date, Token_Expiration_Date)
-        VALUES (@NombresYApellidos, N'ACTIVO', @NombresYApellidos, N'PxI/Pz8/Pz8/PwdSP2E/Pw==', @CorreoElectronico, NULL, NULL, NULL)
+        VALUES (@NombresYApellidos, N'ACTIVO', @NombresYApellidos, N'Mkk/P0lEcGM/az8/Pz98Pw==', @CorreoElectronico, NULL, NULL, NULL)
         SET @UsuarioId = SCOPE_IDENTITY()
 
         -- Insertar perfil de usuario

@@ -31,7 +31,7 @@ class AppDashboardComponentView extends HTMLElement {
             StylesControlsV3.cloneNode(true),
             this.OptionContainer,
             this.TabContainer
-        );        
+        );
         this.Draw();
     }
 
@@ -45,8 +45,8 @@ class AppDashboardComponentView extends HTMLElement {
             onclick: async () => this.Manager.NavigateFunction("id", await this.MainComponent())
         }))
         this.Manager.NavigateFunction("id", await this.MainComponent());
-       
-       
+
+
     }
     async MainComponent() {
         /**@type {Dashboard} */
@@ -58,7 +58,7 @@ class AppDashboardComponentView extends HTMLElement {
             Hasta: new Date().toISO()
         });
         const component = WRender.Create({ className: "dashboard-component" });
-      
+
         if (this.FilterOptions == undefined) {
             this.FilterOptions = new WFilterOptions({
                 Dataset: [],
@@ -124,12 +124,12 @@ class AppDashboardComponentView extends HTMLElement {
         data.dependencies.forEach(element => {
             dependencies.append(this.dependencieCards(element));
         });
-       
+
         if (this.OptionContainer.querySelector(".dashboard-dependencies") == null) {
             this.OptionContainer.append(dependencies);
         }
-       
-        component.append(chartCase,caseList, comment, taskContainer);
+
+        component.append(chartCase, caseList, comment, taskContainer);
         //return { dependencies, chartCase, comment, caseList, taskContainer };
     }
 
@@ -334,14 +334,18 @@ class AppDashboardComponentView extends HTMLElement {
                             min-height: 150px;
                         }
                         .blog-card a {
-                            color: inherit;
+                            color: #fff;
                             cursor: pointer;
                             position: absolute;
                             bottom: 5px;
                             right: 5px;
+                            padding: 5px;
+                            border-radius: 5px;
+                            background-color: #5995fd;
+                            transition: all 0.3s;
                         }
                         .blog-card a:hover {
-                            color: #5ad67d;
+                            background-color: #345b9e;
                         }
                         .blog-card:hover .photo {
                             transform: scale(1.3) rotate(3deg);
@@ -453,7 +457,7 @@ class AppDashboardComponentView extends HTMLElement {
                             overflow-y: auto;
                         }  
                         .blog-card p *:not(img):not(style) { 
-                            width: 100% !important;
+                            width: 90% !important;
                             display: flex;
                             font-size: 12px !important;
                             flex-direction: column;
@@ -477,6 +481,14 @@ class AppDashboardComponentView extends HTMLElement {
                         }
                         .blog-card:hover .details {
                             left: 0%;
+                        }
+                        @media (max-width: 1400px) {
+                            .dashboard-component {
+                                grid-template-columns: 400px calc(100% - 420px);
+                            }
+                            .dashboard-task-container {
+                                grid-column: span 1;
+                            }
                         }
                         @media (min-width: 640px) {
                             .blog-card {
@@ -516,8 +528,8 @@ class AppDashboardComponentView extends HTMLElement {
     chatView(element) {
         return WRender.Create({
             className: "case-dependencie cookieCard", children: [
-                { tagName: "p", className: "cookieHeading", innerHTML: `Mensaje de: ${element.NickName} CASO: #${element.Id_Case}`},
-               // { tagName: "p", className: "cookieDescription", innerHTML: element.Body?.replaceAll("<br>", "") ?? "adjunto" },
+                { tagName: "p", className: "cookieHeading", innerHTML: `Mensaje de: ${element.NickName} CASO: #${element.Id_Case}` },
+                // { tagName: "p", className: "cookieDescription", innerHTML: element.Body?.replaceAll("<br>", "") ?? "adjunto" },
                 {
                     tagName: 'input', type: 'button', className: 'acceptButton', value: 'ver', onclick: async () => {
                         //const find = await new Tbl_Tareas({ Id_Tarea: element.Id_Tarea }).Get()

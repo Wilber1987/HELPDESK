@@ -77,8 +77,8 @@ class Tbl_Case extends EntityClass {
     }
     Id_Case = { type: 'number', primary: true };
     Id_Vinculate = { type: 'number', hidden: true };
-    image = { type: 'img',  };
-    firma = { type: 'draw',  };
+    image = { type: 'img',   hidden: true};
+    firma = { type: 'draw', hidden: true };
     Tbl_Servicios = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Tbl_Servicios(), hiddenInTable: true };
     Titulo = { type: 'text' };
     Fecha_Inicio = { type: 'date', hiddenInTable: true, };   

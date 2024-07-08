@@ -21,9 +21,10 @@ class CaseDashboardComponent extends HTMLElement {
         this.Dataset = [];
         this.attachShadow({ mode: 'open' });
         this.shadowRoot?.append(this.WStyle);
-        this.DrawCaseDashboardComponent();
         this.OptionContainer = WRender.Create({ className: "options-container" });
         this.shadowRoot?.append(this.OptionContainer, StylesControlsV2.cloneNode(true))
+        this.DrawCaseDashboardComponent();
+        
     }
     connectedCallback() { }
     DrawCaseDashboardComponent = async () => {
@@ -106,7 +107,11 @@ class CaseDashboardComponent extends HTMLElement {
             FilterFunction: async (/** @type {any} */ FilterData) => {
                 this.Dataset = await new Tbl_Case({ FilterData: FilterData }).Get();
                 this.TareasDataset = await new Tbl_Tareas({ FilterData: FilterData }).Get();
-                const { columChart, radialChartDependencias, columChartAperturaCasos, columChartMonth, radialChart } = this.buildCharts();
+                const { columChart,
+                    radialChartDependencias,
+                    columChartAperturaCasos,
+                    columChartMonth,
+                    radialChart } = this.buildCharts();
                 const tableTareas = await this.taskData();
                 dasboardContainer.innerHTML = "";
                 dasboardContainer.append(tableTareas,

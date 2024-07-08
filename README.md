@@ -47,3 +47,14 @@ Add-MailboxPermission -Identity "wdevexp@wexpdev.onmicrosoft.com" -User  [Id. de
 Connect-ExchangeOnline -UserPrincipalName "wdevexp@wexpdev.onmicrosoft.com"
 Connect-ExchangeOnline -UserPrincipalName "wilbermatusgonzalez@wexpdev.onmicrosoft.com"
 
+
+
+--BORRAR DATOS DE PRUEBA
+delete from helpdesk.Tbl_Comments_Tasks 
+delete from helpdesk.Tbl_Comments
+delete from helpdesk.Tbl_Mails
+delete from helpdesk.Tbl_Calendario 
+delete from helpdesk.Tbl_Participantes  
+delete from helpdesk.Tbl_Tareas 
+delete from helpdesk.Tbl_Profile_CasosAsignados  
+delete from helpdesk.Tbl_Case

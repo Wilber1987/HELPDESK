@@ -1,6 +1,6 @@
 import { priorityStyles } from '../../AppComponents/Styles.js';
 import { Tbl_Case, Tbl_Comments, Cat_Dependencias, Tbl_Servicios } from '../../ModelProyect/ProyectDataBaseModel.js';
-import { WSecurity } from '../../WDevCore/Security/WSecurity.js';
+import { Permissions, WSecurity } from '../../WDevCore/Security/WSecurity.js';
 import { StylesControlsV2, StylesControlsV3 } from "../../WDevCore/StyleModules/WStyleComponents.js";
 import { WCommentsComponent } from '../../WDevCore/WComponents/WCommentsComponent.js';
 import { WFilterOptions } from "../../WDevCore/WComponents/WFilterControls.js";
@@ -85,7 +85,7 @@ class SolicitudesPendientesComponent extends HTMLElement {
             this.FilterOptions = new WFilterOptions({
                 Dataset: this.Dataset,
                 ModelObject: this.ModelObject,
-                AutoFilter: false,
+                UseEntityMethods: false,
                 AutoSetDate: true,
                 Display: true,
                 FilterFunction: (DFilt) => {
@@ -149,7 +149,8 @@ class SolicitudesPendientesComponent extends HTMLElement {
                         {
                             className: "options", children: [
                                 { tagName: 'button', className: 'Btn-Mini', innerText: "Detalle", onclick: async () => await this.actividadDetail(actividad) },
-                                { tagName: 'button', className: 'Btn-Mini', innerText: 'Vincular Caso', onclick: () => this.Vincular(actividad) }
+                                WSecurity.HavePermission(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA) ?
+                                    { tagName: 'button', className: 'Btn-Mini', innerText: 'Vincular Caso', onclick: () => this.Vincular(actividad) } : ""
                             ]
                         }
                     ]

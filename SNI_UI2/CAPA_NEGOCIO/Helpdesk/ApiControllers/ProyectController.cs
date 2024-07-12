@@ -1,4 +1,5 @@
 ﻿using CAPA_DATOS;
+using CAPA_DATOS.Security;
 using CAPA_NEGOCIO.MAPEO;
 using CAPA_NEGOCIO.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -74,33 +75,38 @@ namespace API.Controllers
 			return inst.GetOwSolicitudes(HttpContext.Session.GetString("seassonKey"), Case_Estate.Espera);
 		}
 		[HttpPost]
-		[AuthController]
+		[AuthController(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA)]
+
 		public object RechazarSolicitud(Tbl_Case Tbl_Case)
 		{
 			return Tbl_Case.RechazarSolicitud(HttpContext.Session.GetString("seassonKey"));
 		}
 
 		[HttpPost]
-		[AuthController]
+		[AuthController(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA)]
+
 		public object AprobarSolicitud(Tbl_Case Tbl_Case)
 		{
-			return Tbl_Case.AprobarSolicitud(HttpContext.Session.GetString("seassonKey"));
+			return new CaseBlock().AprobarSolicitud(HttpContext.Session.GetString("seassonKey"), Tbl_Case);
 		}
 		[HttpPost]
-		[AuthController]
+		[AuthController(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA, Permissions.TECNICO_CASOS_DEPENDENCIA)]
+
 		public object CerrarCaso(Tbl_Case Tbl_Case)
 		{
 			return Tbl_Case.CerrarCaso(HttpContext.Session.GetString("seassonKey"));
 		}
 		//CASOS VINCULADOS      
 		[HttpPost]
-		[AuthController]
+		[AuthController(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA)]
+
 		public object VincularCaso(Tbl_VinculateCase inst)
 		{
 			return inst.VincularCaso();
 		}
 		[HttpPost]
-		[AuthController]
+		[AuthController(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA)]
+
 		public object DesvincularCaso(Tbl_VinculateCase inst)
 		{
 			return inst.DesvincularCaso(inst.Casos_Vinculados.FirstOrDefault());
@@ -111,25 +117,25 @@ namespace API.Controllers
 			.GetCasosToVinculate(HttpContext.Session.GetString("seassonKey"), Inst);
 		}
 		[HttpPost]
-		[AuthController]
+		[AuthController(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA)]
 		public object AprobarCaseList(CaseBlock Inst)
 		{
 			return Inst.AprobarSolicitudes(HttpContext.Session.GetString("seassonKey"));
 		}
 		[HttpPost]
-		[AuthController]
+		[AuthController(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA)]
 		public object RechazarCaseList(CaseBlock Inst)
 		{
 			return Inst.RechazarSolicitudes(HttpContext.Session.GetString("seassonKey"));
 		}
 		[HttpPost]
-		[AuthController]
+		[AuthController(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA)]
 		public object RemitirCasos(CaseBlock Inst)
 		{
 			return Inst.RemitirCasos(HttpContext.Session.GetString("seassonKey"));
 		}
 		[HttpPost]
-		[AuthController]
+		[AuthController(Permissions.PERFIL_MANAGER)]
 		public object AsignarDependencias(ProfileTransaction Inst)
 		{
 			return Inst.AsignarDependencias(HttpContext.Session.GetString("seassonKey"));

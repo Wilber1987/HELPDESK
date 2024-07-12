@@ -4,7 +4,7 @@ import { priorityStyles } from '../../../AppComponents/Styles.js';
 import { CaseOwModel } from '../../../ModelProyect/CaseOwModel.js';
 import { ViewCalendarioByDependencia } from '../../../ModelProyect/DBOViewModel.js';
 import { Tbl_Agenda, Tbl_Case, Tbl_Comments, Tbl_Evidencias, Tbl_Tareas, Tbl_VinculateCase, Cat_Dependencias, Tbl_Servicios } from '../../../ModelProyect/ProyectDataBaseModel.js';
-import { WSecurity } from '../../../WDevCore/Security/WSecurity.js';
+import { Permissions, WSecurity } from '../../../WDevCore/Security/WSecurity.js';
 import { StylesControlsV2, StylesControlsV3 } from "../../../WDevCore/StyleModules/WStyleComponents.js";
 import { WAppNavigator } from '../../../WDevCore/WComponents/WAppNavigator.js';
 import { GanttChart } from '../../../WDevCore/WComponents/WChartJSComponents.js';
@@ -153,11 +153,11 @@ class CaseDetailComponent extends HTMLElement {
                             ModelObject: new Tbl_Case(),
                             AddItemsFromApi: false,
                             Options: {
-                                UserActions: [{
+                                UserActions: WSecurity.HavePermission(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA) ? [{
                                     name: "Desvincular caso", action: (caso) => {
                                         this.Desvincular(caso, vinculateTable, modelVinculate);
                                     }
-                                }]
+                                }] : undefined
                             }
                         })
                         tabManager.NavigateFunction("vinculaciones", vinculateTable)
@@ -179,7 +179,9 @@ class CaseDetailComponent extends HTMLElement {
                     tagName: 'h4', innerText: `#${actividad.Id_Case} - ${actividad.Titulo} (${actividad.Tbl_Servicios?.Descripcion_Servicio ?? ""})`, children: [
                         {
                             className: "options", children: [
-                                { tagName: 'button', className: 'Btn-Mini', innerText: "Editar", onclick: async () => this.editCase() },
+                                WSecurity.HavePermission(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA) ?
+                                    { tagName: 'button', className: 'Btn-Mini', innerText: "Editar", onclick: async () => this.editCase() } : "",
+
                                 actividad.Estado == "Finalizado" ?
                                     { tagName: 'button', className: 'Btn-Mini', innerText: 'Reabrir Caso', onclick: () => this.Reabrir(actividad) } :
                                     (

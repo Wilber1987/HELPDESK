@@ -13,16 +13,18 @@ import { ComponentsManager, WRender } from '../../../WDevCore/WModules/WComponen
 import { ControlBuilder } from '../../../WDevCore/WModules/WControlBuilder.js';
 import { css } from '../../../WDevCore/WModules/WStyledRender.js';
 import { activityStyle } from '../../style.js';
+import { Permissions, WSecurity } from '../../../WDevCore/Security/WSecurity.js';
+import { WFilterOptions } from '../../../WDevCore/WComponents/WFilterControls.js';
 
 class CaseManagerComponent extends HTMLElement {
     /**
      * 
-     * @param {Array<Tbl_Case>} Dataset 
+     * @param {Array<Tbl_Case>} [Dataset] 
      * @param {Array<Cat_Dependencias>} Dependencias 
      */
-    constructor(Dataset, Dependencias) {
+    constructor(Dependencias, Dataset) {
         super();
-        this.Dataset = Dataset;
+        this.Dataset = Dataset = [];
         this.Dependencias = Dependencias;
         this.attachShadow({ mode: 'open' });
         this.shadowRoot.append(this.WStyle, StylesControlsV2.cloneNode(true), StylesControlsV3.cloneNode(true));
@@ -47,13 +49,30 @@ class CaseManagerComponent extends HTMLElement {
         this.actividadesManager();
     }
     actividadesManager = async () => {
-        const datasetMap = this.Dataset.filter(x => x.Estado != "Vinculado").map(actividad => {
-            actividad.Dependencia = actividad.Cat_Dependencias?.Descripcion;
-            actividad.Progreso = actividad.Tbl_Tareas?.filter(tarea => tarea.Estado?.includes("Finalizado")).length;
-            return this.actividadElement(actividad);
+        this.Paginator =  new WPaginatorViewer({ Dataset: [], userStyles: [StylesControlsV2] });
+        this.FilterOptions =  new WFilterOptions({
+            Dataset: [],
+            UseEntityMethods: false,
+            AutoFilter: true,
+            Display: true,
+            AutoSetDate: true,
+            ModelObject: new Tbl_Case(),
+            FilterFunction: async (/** @type {Array | undefined} */ DFilt) => {
+                // @ts-ignore
+                const data = await new Tbl_Case({ FilterData: DFilt }).GetOwCase();
+                const datasetMap = data.map(actividad => {
+                    actividad.Dependencia = actividad.Cat_Dependencias?.Descripcion;
+                    actividad.Progreso = actividad.Tbl_Tareas?.filter(tarea => tarea.Estado?.includes("Finalizado")).length;
+                    return this.actividadElement(actividad);
+                });
+                this.Paginator.Draw(datasetMap);
+            }
         });
+        
         this.TabManager.NavigateFunction("Tab-Actividades-Manager",
-            WRender.Create({ className: "actividadesView", children: [new WPaginatorViewer({ Dataset: datasetMap, userStyles: [StylesControlsV2] })] }));
+            WRender.Create({
+                className: "actividadesView", children: [this.FilterOptions, this.Paginator]
+            }));
     }
 
     actividadElement = (actividad) => {
@@ -65,7 +84,9 @@ class CaseManagerComponent extends HTMLElement {
                         {
                             className: "options", children: [
                                 { tagName: 'button', className: 'Btn-Mini', innerText: "Detalle", onclick: async () => await this.actividadDetail(actividad) },
-                                { tagName: 'button', className: 'Btn-Mini', innerText: 'Vincular Caso', onclick: () => this.Vincular(actividad) }
+                                WSecurity.HavePermission(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA) ?
+                                    { tagName: 'button', className: 'Btn-Mini', innerText: 'Vincular Caso', onclick: () => this.Vincular(actividad) } :
+                                    ""
                             ]
                         }
                     ]
@@ -105,10 +126,12 @@ class CaseManagerComponent extends HTMLElement {
     }
     CaseForm = async () => {
         this.TabManager.NavigateFunction("Tab-CaseFormView",
-            WRender.Create({ className: "CaseFormView", children: [CaseForm(undefined, this.Dependencias, ()=>{
-                console.log(false);
-                this.shadowRoot.append(ModalMessege("Caso guardado correctamente", null, true))
-            })] }));
+            WRender.Create({
+                className: "CaseFormView", children: [CaseForm(undefined, this.Dependencias, () => {
+                    console.log(false);
+                    this.shadowRoot.append(ModalMessege("Caso guardado correctamente", null, true))
+                })]
+            }));
     }
     Vincular = async (actividad) => {
         this.shadowRoot.append(new WModalForm({

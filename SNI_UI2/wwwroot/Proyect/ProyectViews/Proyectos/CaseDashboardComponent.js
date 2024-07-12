@@ -103,7 +103,7 @@ class CaseDashboardComponent extends HTMLElement {
                 Estado: { type: "Select", Dataset: ["Activo", "Espera", "Pendiente", "Finalizado"] }
             },
             Display: true,
-            AutoFilter: false,
+            UseEntityMethods: false,
             FilterFunction: async (/** @type {any} */ FilterData) => {
                 this.Dataset = await new Tbl_Case({ FilterData: FilterData }).Get();
                 this.TareasDataset = await new Tbl_Tareas({ FilterData: FilterData }).Get();
@@ -188,6 +188,7 @@ class CaseDashboardComponent extends HTMLElement {
             Mes: c.Fecha_Inicio.getMonthFormatEs(),
             val: 1
         }));
+        
         const casosEtiquetadosPorMes = this.Dataset.map(c => ({
             Estado: c.Estado,
             Caso: "Caso",
@@ -206,6 +207,14 @@ class CaseDashboardComponent extends HTMLElement {
             groupParams: ["Dependencia"]
         });
         columChart.id = "ColumnCasosPorDependencia";
+        
+        this.OptionContainer.append(WRender.Create({
+            tagName: 'input', type: 'button',
+            className: 'Btn-Mini', value: "title1", onclick: () => {
+                console.log(columChart.GroupsProcessData);
+                this.drawReport(columChart.GroupsProcessData, "")
+            }
+        }))
         const radialChartDependencias = new RadialChart({
             // @ts-ignore
             Title: "Casos por dependencia",

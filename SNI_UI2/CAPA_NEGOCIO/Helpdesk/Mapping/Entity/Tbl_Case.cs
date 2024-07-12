@@ -254,6 +254,7 @@ namespace CAPA_NEGOCIO.MAPEO
 		}
 		internal object AprobarSolicitud(string identity)
 		{
+			
 			var user = AuthNetCore.User(identity);
 			if (!AuthNetCore.HavePermission(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identity))
 			{
@@ -267,7 +268,7 @@ namespace CAPA_NEGOCIO.MAPEO
 			Estado = Case_Estate.Activo.ToString();
 
 			var response = Update();
-			CreateAsignationsByService();
+
 
 			var comment = new Tbl_Comments()
 			{
@@ -278,14 +279,15 @@ namespace CAPA_NEGOCIO.MAPEO
 				Estado = CommetsState.Pendiente.ToString(),
 				Mail = user.mail
 			};
-			new Tbl_Tareas()
+			Tbl_Tareas nuevaTarea = new Tbl_Tareas()
 			{
 				Titulo = "Ejecución y resolución del caso",
 				Descripcion = $"Ejecución y resolución del caso: #{this.Id_Case}",
 				Id_Case = this.Id_Case,
 				Estado = TareasState.Proceso.ToString(),
 				Tbl_Case = this
-			}.SaveTarea(identity);
+			};
+			nuevaTarea.SaveTarea(identity);
 			if (Tbl_Tareas != null)
 			{
 				foreach (var task in Tbl_Tareas)
@@ -293,13 +295,14 @@ namespace CAPA_NEGOCIO.MAPEO
 					task.NotificarTecnicos(this, user);
 				}
 			}
+			CreateAsignationsByService(nuevaTarea);
 
 			comment.Save();
 			comment.CreateMailForComment(user, this);
 			//CommitGlobalTransaction();
 			return response;
 		}
-		public void CreateAsignationsByService()
+		public void CreateAsignationsByService(Tbl_Tareas? nuevaTarea)
 		{
 			if (this.Tbl_Servicios != null)
 			{
@@ -312,8 +315,18 @@ namespace CAPA_NEGOCIO.MAPEO
 						Id_Perfil = sp.Id_Perfil,
 						Fecha = DateTime.Now
 					}.Save();
+					if (nuevaTarea != null)
+					{
+						new Tbl_Participantes
+						{
+							Id_Tarea = nuevaTarea.Id_Tarea,
+							Id_Perfil = sp.Id_Perfil
+						}.Save();
+					}
+
 				});
 			}
+
 		}
 		internal object RechazarSolicitud(string identity)
 		{
@@ -357,8 +370,7 @@ namespace CAPA_NEGOCIO.MAPEO
 		internal List<Tbl_Case> GetCasosToVinculate(string? identity, Tbl_Case inst)
 		{
 			this.Id_Dependencia = inst.Id_Dependencia;
-			if (AuthNetCore.HavePermission(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identity)
-			 && AuthNetCore.HavePermission(Permissions.TECNICO_CASOS_DEPENDENCIA.ToString(), identity))
+			if (AuthNetCore.HavePermission(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identity))
 			{
 				if (inst.Id_Vinculate != null)
 				{
@@ -404,6 +416,6 @@ namespace CAPA_NEGOCIO.MAPEO
 	public class MimeMessageCaseData
 	{
 		public string? MessageId { get; set; }
-        public string? InReplyTo { get; internal set; }
-    }
+		public string? InReplyTo { get; internal set; }
+	}
 }

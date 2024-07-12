@@ -11,24 +11,26 @@ import { WDetailObject } from "../../../WDevCore/WComponents/WDetailObject.js";
 /**
  * @typedef {Object} ComponentConfig
  * * @property {Tbl_Tareas} Task
+ * * @property {Function} [action]
+ * * @property {Function} [BackAction]
  */
 class TareaDetailView extends HTMLElement {
     /**
-     * 
-     * @param {ComponentConfig} props 
+     * @param {ComponentConfig} Config 
      */
-    constructor(props) {
+    constructor(Config) {
         super();
         this.attachShadow({ mode: 'open' });
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });
         this.TabContainer = WRender.Create({ className: "TabContainer", id: 'TabContainer' });
         this.Manager = new ComponentsManager({ MainContainer: this.TabContainer, SPAManage: false });
-        this.Task = props.Task;
-        this.shadowRoot?.append(this.CustomStyle);
+        this.Task = Config.Task;
+        this.Config = Config;
         this.shadowRoot?.append(
             StylesControlsV2.cloneNode(true),
             StyleScrolls.cloneNode(true),
             StylesControlsV3.cloneNode(true),
+            this.CustomStyle,
             //this.OptionContainer,
             this.TabContainer
         );
@@ -63,23 +65,20 @@ class TareaDetailView extends HTMLElement {
                         src="https://cdn2.hubspot.net/hubfs/322787/Mychefcom/images/BLOG/Header-Blog/photo-culinaire-pexels.jpg" />
                 </div> -->
                 <div class="right">
+                    
                     <h1>${this.Task?.Titulo}</h1>
                     <h3> Estado: (${this.Task.Estado})</h3>                    
                     <div class="authores">
-                        ${
-                            this.Task?.Tbl_Participantes?.map(I => `<div class="author"><img src="${I.Tbl_Profile?.Foto}" />
-                                <h2>${I.Tbl_Profile?.Nombres} ${I.Tbl_Profile?.Apellidos ?? ""}</h2></div>`)?.join("") ?? "Sin Participantes"
-                        }
+                        ${this.Task?.Tbl_Participantes?.map(I => `<div class="author"><img src="${I.Tbl_Profile?.Foto}" />
+                                <label>${I.Tbl_Profile?.Nombres} ${I.Tbl_Profile?.Apellidos ?? ""}</label></div>`)?.join("") ?? "Sin Participantes"}
                     </div>
                     <div class="separator"></div>
                     <p>${this.Task?.Descripcion}</p>
                     <div class="horarios">
                         <h5>Horario</h5>
-                        ${
-                            this.Task?.Tbl_Calendario?.map(H => `<div class="horario">
+                        ${this.Task?.Tbl_Calendario?.map(H => `<div class="horario">
                                del ${H.Fecha_Inicio?.toDateFormatEs()} hasta ${H.Fecha_Final?.toDateFormatEs()}
-                            </div>`)?.join("") ?? "Sin horario"
-                        }
+                            </div>`)?.join("") ?? "-"}
                     </div>
                 </div>
                 <!-- <h5>12</h5>
@@ -92,24 +91,103 @@ class TareaDetailView extends HTMLElement {
                 </ul><div class="fab"><i class="fa fa-arrow-down fa-3x"> </i></div> -->
                 
             </div>`
-            //"Activo", "Proceso", "Finalizado", "Espera", "Inactivo"
-        node.append(WRender.Create({ className: "options", children: [
-            { tagName:'input',  type:'button', className: 'Btn-Mini', value: 'Editar', onclick: async ()=>{
-               this.taskEdit(this.Task);
-            }},{ tagName:'input',  type:'button', className: 'Btn-Mini', value: 'Activar', onclick: async ()=>{
-                this.changeState(this.Task, "Activo")                
-            }},{ tagName:'input',  type:'button', className: 'Btn-Mini', value: 'En proceso', onclick: async ()=>{
-                this.changeState(this.Task, "Proceso")
-            }},{ tagName:'input',  type:'button', className: 'Btn-Mini', value: 'Finalizar', onclick: async ()=>{
-                this.changeState(this.Task, "Finalizado")
-            }},{ tagName:'input',  type:'button', className: 'Btn-Mini', value: 'En espera', onclick: async ()=>{
-                this.changeState(this.Task, "Espera")
-            }},{ tagName:'input',  type:'button', className: 'Btn-Mini', value: 'Inactivar', onclick: async ()=>{
-                this.changeState(this.Task, "Inactivo")
-            }}
-        ]}),            
-            css`
-             @import url('https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css');
+        //"Activo", "Proceso", "Finalizado", "Espera", "Inactivo"
+        node.append(WRender.Create({
+            className: "options", children: [
+                {
+                    tagName: 'input', type: 'button', className: 'Btn-Mini', value: 'Editar', onclick: async () => {
+                        this.taskEdit(this.Task);
+                    }
+                }, {
+                    tagName: 'input', type: 'button', className: 'Btn-Mini', value: 'Activar', onclick: async () => {
+                        this.changeState(this.Task, "Activo")
+                    }
+                }, {
+                    tagName: 'input', type: 'button', className: 'Btn-Mini', value: 'En proceso', onclick: async () => {
+                        this.changeState(this.Task, "Proceso")
+                    }
+                }, {
+                    tagName: 'input', type: 'button', className: 'Btn-Mini', value: 'Finalizar', onclick: async () => {
+                        this.changeState(this.Task, "Finalizado")
+                    }
+                }, {
+                    tagName: 'input', type: 'button', className: 'Btn-Mini', value: 'En espera', onclick: async () => {
+                        this.changeState(this.Task, "Espera")
+                    }
+                }, {
+                    tagName: 'input', type: 'button', className: 'Btn-Mini', value: 'Inactivar', onclick: async () => {
+                        this.changeState(this.Task, "Inactivo")
+                    }
+                }
+            ]
+        }))
+        if (this.Config.BackAction) {
+            node.append(WRender.Create({
+                tagName: 'input', type: 'button', className: 'Btn-Mini-Success btn-return', value: '<', onclick: () => {
+                    // @ts-ignore
+                    this.Config.BackAction();
+                }
+            }))
+        }
+        return WRender.Create({ className: "container", children: [node, commentsContainer] });
+    }
+
+    /**
+    * 
+    * @param {Tbl_Tareas} task 
+    */
+    taskEdit = async (task) => {
+        const CalendarModel = {
+            type: 'CALENDAR',
+            ModelObject: () => new Tbl_Calendario(),
+            require: false,
+            CalendarFunction: async () => {
+                return {
+                    Agenda: await new Tbl_Agenda({
+                        // @ts-ignore
+                        Id_Dependencia: task?.Tbl_Case?.Id_Dependencia
+                    }).Get(),
+                    Calendario: await new Tbl_Calendario({
+                        // @ts-ignore
+                        Id_Dependencia: task?.Tbl_Case?.Id_Dependencia
+                    }).Get()
+                }
+            }
+        }
+        this.TaskModel = new Tbl_Tareas();
+        // @ts-ignore
+        this.TaskModel.Tbl_Calendario = CalendarModel;
+        this.shadowRoot?.append(new WModalForm({
+            EditObject: task,
+            AutoSave: true,
+            title: "Editar",
+            ModelObject: this.TaskModel
+        }))
+    }
+    /**
+     * 
+     * @param {Tbl_Tareas} task 
+     * @param {String} state 
+     */
+    changeState = async (task, state) => {
+        // @ts-ignore
+        task.Estado = state;
+        const response = await task.Update();
+    }
+
+
+    CustomStyle = css`
+        @import url('https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css');
+        .component{
+           display: block;
+        }  
+        .btn-return {
+            position: absolute;
+            top: -25px;
+            left: 5px;
+            width: 50px;
+            padding: 5px;
+        }          
             /*Just the background stuff*/
             .container {
                 display: grid;
@@ -185,15 +263,16 @@ class TareaDetailView extends HTMLElement {
                 align-items: center;
                 gap: 5px;
                 background-color: #9ECAFF;
-                height: 40px;
-                width: 150px;
+                height: 30px;
+                width: 250px;
                 border-radius: 20px;
+                font-size: 12px;
             }
 
             .author > img {
                 float: left;
-                height: 40px;
-                width: 40px;
+                height: 30px;
+                width: 30px;
                 border-radius: 50%;
             }
 
@@ -248,59 +327,10 @@ class TareaDetailView extends HTMLElement {
                 text-align: center;                
                 border: solid 1px #d1cfcf;
                 border-radius: 10px;
-            }   
-        `)
-        return WRender.Create({ className: "container", children: [node, commentsContainer]});
-    }
-
-    /**
-    * 
-    * @param {Tbl_Tareas} task 
-    */
-    taskEdit = async (task) => {
-        const CalendarModel = {
-            type: 'CALENDAR',
-            ModelObject: () => new Tbl_Calendario(),
-            require: false,
-            CalendarFunction: async () => {
-                return {
-                    Agenda: await new Tbl_Agenda({
-                        // @ts-ignore
-                        Id_Dependencia: task?.Tbl_Case?.Id_Dependencia
-                    }).Get(),
-                    Calendario: await new Tbl_Calendario({
-                        // @ts-ignore
-                        Id_Dependencia: task?.Tbl_Case?.Id_Dependencia
-                    }).Get()
-                }
-            }
-        } 
-        this.TaskModel = new Tbl_Tareas();
-        // @ts-ignore
-        this.TaskModel.Tbl_Calendario = CalendarModel;
-        this.shadowRoot?.append(new WModalForm({
-            EditObject: task,
-            AutoSave: true,            
-            title: "Editar",
-            ModelObject: this.TaskModel
-        }))
-    }
-    /**
-     * 
-     * @param {Tbl_Tareas} task 
-     * @param {String} state 
-     */
-    changeState = async (task, state) => {
-        // @ts-ignore
-        task.Estado = state;
-        const response = await task.Update();        
-    }
-
-
-    CustomStyle = css`
-        .component{
-           display: block;
-        }           
+                max-width: 70%;
+                flex-wrap: wrap;
+                gap: 5px;
+            }                  
     `
 }
 customElements.define('w-tarea-detail-component', TareaDetailView);

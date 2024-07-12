@@ -285,7 +285,7 @@ namespace API.Controllers
             return inst.Save();
         }
         [HttpPost]
-        [AuthController]
+        [AuthController(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA)]
         public object? updateTbl_Case(Tbl_Case inst)
         {
             return inst.Update();

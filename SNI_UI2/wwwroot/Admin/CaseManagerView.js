@@ -22,10 +22,10 @@ window.onload = () => {
         }, {
             id: "Tab-Generales", name: "Administrador de Casos",
             action: async (ev) => {
-                const dataset = await new Tbl_Case().Get();
+                //const dataset = await new Tbl_Case().Get();
                 const dependencias = await new Cat_Dependencias().Get();
                 DOMManager.NavigateFunction("Tab-Generales",
-                    new CaseManagerComponent(dataset, dependencias));
+                    new CaseManagerComponent( dependencias));
             }
         }, {
             id: "Tab-Solicitudes", name: "Administrador de Solicitudes",
@@ -36,8 +36,8 @@ window.onload = () => {
             }
         }, {
             id: "Tab-Tasks-Manager", name: "Administrador de Tareas", action: async (ev) => {
-                const tasks = await new Tbl_Tareas().Get();
-                DOMManager.NavigateFunction("Tab-Tasks-Manager", ChargeTasks(tasks));
+                //const tasks = await new Tbl_Tareas().Get();
+                DOMManager.NavigateFunction("Tab-Tasks-Manager", ChargeTasks());
             }
         }]
     })
@@ -47,16 +47,18 @@ window.onload = () => {
     Aside.append(WRender.Create({ tagName: "h3", innerText: "Administración de Casos" }))
     Aside.append(navigator);
 }
-const ChargeTasks = (tasks) => {
-    const tasksManager = new TaskManagers(tasks, new Tbl_Tareas(), { ImageUrlPath: "" });
+const ChargeTasks = () => {
+    const tasksManager = new TaskManagers([], new Tbl_Tareas(), { ImageUrlPath: "" });
     const filterOptions = new WFilterOptions({
-        Dataset: tasks,
         Display: true,
         AutoSetDate: true,
         ModelObject: new Tbl_Tareas(),
+        UseEntityMethods: true,
+        AutoFilter: true,
         //DisplayFilts: [],
         FilterFunction: (DFilt) => {
-            tasksManager.DrawTaskManagers(DFilt);
+            tasksManager.Dataset = DFilt;
+            tasksManager.DrawTaskManagers();
         }
     })
     return WRender.Create({

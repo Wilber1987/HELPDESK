@@ -6,7 +6,7 @@ import { StylesControlsV2 } from '../../../WDevCore/StyleModules/WStyleComponent
 import { ColumChart, RadialChart } from '../../../WDevCore/WComponents/WChartJSComponents.js';
 import { WFilterOptions } from '../../../WDevCore/WComponents/WFilterControls.js';
 import { WModalForm } from '../../../WDevCore/WComponents/WModalForm.js';
-import { WReportComponent } from '../../../WDevCore/WComponents/WReportComponent.js';
+import { PageType, WReportComponent } from '../../../WDevCore/WComponents/WReportComponent.js';
 import { WTableComponent } from '../../../WDevCore/WComponents/WTableComponent.js';
 import { WArrayF, WRender } from '../../../WDevCore/WModules/WComponentsTools.js';
 import { css } from '../../../WDevCore/WModules/WStyledRender.js';
@@ -24,7 +24,7 @@ class CaseDashboardComponent extends HTMLElement {
         this.OptionContainer = WRender.Create({ className: "options-container" });
         this.shadowRoot?.append(this.OptionContainer, StylesControlsV2.cloneNode(true))
         this.DrawCaseDashboardComponent();
-        
+
     }
     connectedCallback() { }
     DrawCaseDashboardComponent = async () => {
@@ -86,7 +86,14 @@ class CaseDashboardComponent extends HTMLElement {
         }))
     }
     drawReport = (/** @type {any[]} */ MapData, /**@type {String} */ title, /**@type {Object} */ model) => {
-        this.shadowRoot?.append(new WModalForm({ title: title, ObjectModal: new WReportComponent({ Dataset: MapData, ModelObject: model }) }))
+        this.shadowRoot?.append(new WModalForm({
+            title: title,
+            ObjectModal: new WReportComponent({
+                Dataset: MapData,
+                PageType: PageType.OFICIO_HORIZONTAL,
+                ModelObject: model
+            })
+        }))
     }
     dashBoardView = async () => {
         this.Modelcase = new Tbl_Case();
@@ -188,7 +195,7 @@ class CaseDashboardComponent extends HTMLElement {
             Mes: c.Fecha_Inicio.getMonthFormatEs(),
             val: 1
         }));
-        
+
         const casosEtiquetadosPorMes = this.Dataset.map(c => ({
             Estado: c.Estado,
             Caso: "Caso",
@@ -207,7 +214,7 @@ class CaseDashboardComponent extends HTMLElement {
             groupParams: ["Dependencia"]
         });
         columChart.id = "ColumnCasosPorDependencia";
-        
+
         this.OptionContainer.append(WRender.Create({
             tagName: 'input', type: 'button',
             className: 'Btn-Mini', value: "title1", onclick: () => {

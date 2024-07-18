@@ -57,9 +57,9 @@ class MainProyect extends HTMLElement {
     }
     NavChargeActividades = async () => {
         const dependencias = await new Cat_Dependencias().GetOwDependencies();
-        const dataset = await new Tbl_Case().GetOwCase();        
+        //const dataset = await new Tbl_Case().GetOwCase();        
         this.TabManager.NavigateFunction("Tab-OwActividades",
-            new CaseManagerComponent(dataset, dependencias));
+            new CaseManagerComponent( dependencias));
     }
     NavChargeTasks = async () => {
         const tasks = await new Tbl_Tareas().Get();

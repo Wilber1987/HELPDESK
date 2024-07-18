@@ -39,8 +39,47 @@ BEGIN
 	    @Extension NVARCHAR(MAX),
 	    @Observaciones NVARCHAR(MAX),
 	    @Departamento NVARCHAR(MAX), 
+      @RolTecnico NVARCHAR(MAX), 
+      @RolGestor NVARCHAR(MAX), 
 	    @Cargo NVARCHAR(MAX)
 
+
+    -- Verificar si el ROL existe, sino crearlo
+    IF NOT EXISTS (SELECT 1 FROM PROYECT_MANAGER_BD.security.Security_Roles WHERE Descripcion = 'GESTOR DE CASOS')
+    BEGIN
+      INSERT INTO PROYECT_MANAGER_BD.[security].Security_Roles
+      (Descripcion, Estado)
+      VALUES(N'GESTOR DE CASOS', N'ACTIVO')
+
+      SET @RolGestor = SCOPE_IDENTITY()
+
+      INSERT INTO PROYECT_MANAGER_BD.[security].Security_Permissions_Roles
+      (Id_Role, Id_Permission, Estado)
+      VALUES(@RolGestor, 2, N'ACTIVO');
+    END
+    ELSE
+    BEGIN
+      SELECT @RolGestor = Id_Role FROM PROYECT_MANAGER_BD.security.Security_Roles WHERE Descripcion = 'GESTOR DE CASOS'
+    END
+    -- Verificar si el ROL existe, sino crearlo
+    IF NOT EXISTS (SELECT 1 FROM PROYECT_MANAGER_BD.security.Security_Roles WHERE Descripcion = 'TECNICO DE CASOS')
+    BEGIN     
+
+      INSERT INTO PROYECT_MANAGER_BD.[security].Security_Roles
+      (Descripcion, Estado)
+      VALUES(N'TECNICO DE CASOS', N'ACTIVO')
+
+      SET @RolTecnico = SCOPE_IDENTITY()
+
+      INSERT INTO PROYECT_MANAGER_BD.[security].Security_Permissions_Roles
+      (Id_Role, Id_Permission, Estado)
+      VALUES(@RolTecnico, 3, N'ACTIVO');
+    END
+    ELSE
+    BEGIN
+      SELECT @RolTecnico = Id_Role FROM PROYECT_MANAGER_BD.security.Security_Roles WHERE Descripcion = 'TECNICO DE CASOS'
+    END
+    
     DECLARE usuarioCursor CURSOR FOR
     SELECT Departamento, Cargo, NombresYApellidos, CorreoElectronico, Telefono, Extension, Observaciones
     FROM @TablaUsuarios
@@ -57,6 +96,10 @@ BEGIN
             INSERT INTO PROYECT_MANAGER_BD.helpdesk.Cat_Dependencias (Descripcion)
             VALUES (@Departamento)
             SET @DepartamentoId = SCOPE_IDENTITY()
+
+            INSERT INTO PROYECT_MANAGER_BD.helpdesk.Tbl_Servicios
+            (Nombre_Servicio, Descripcion_Servicio, Id_Tipo_Servicio, Visibilidad, Estado, Fecha_Inicio, Fecha_Finalizacion, Id_Dependencia)
+            VALUES(N'Servicio Atención', N'Atención', 1, N'publica', N'Activo', '2021-01-12', '2028-12-12', @DepartamentoId);
 
             INSERT INTO PROYECT_MANAGER_BD.helpdesk.Tbl_Agenda
             (Id_Perfil, Id_Dependencia, Dia, Hora_Inicial, Hora_Final, Fecha_Caducidad)
@@ -98,15 +141,19 @@ BEGIN
          PRINT @DepartamentoId         
          PRINT @CargoId
 
-        -- Insertar nuevo usuario
+        -- Insertar nuevo usuario pass: demo2024
         INSERT INTO PROYECT_MANAGER_BD.[security].Security_Users (Nombres, Estado, Descripcion, Password, Mail, Token, Token_Date, Token_Expiration_Date)
-        VALUES (@NombresYApellidos, N'ACTIVO', @NombresYApellidos, N'Mkk/P0lEcGM/az8/Pz98Pw==', @CorreoElectronico, NULL, NULL, NULL)
+        VALUES (@NombresYApellidos, N'ACTIVO', @NombresYApellidos, N'JFk/PT8ePz8/Xz8/Pz8YPw==', @CorreoElectronico, NULL, NULL, NULL)
         SET @UsuarioId = SCOPE_IDENTITY()
+
+        INSERT INTO PROYECT_MANAGER_BD.[security].Security_Users_Roles
+        (Id_Role, Id_User, Estado)
+        VALUES(@RolGestor, @UsuarioId, N'ACTIVO');
 
         -- Insertar perfil de usuario
         INSERT INTO PROYECT_MANAGER_BD.[security].Tbl_Profile (Nombres, Apellidos, IdUser, Estado)
         VALUES (SUBSTRING(@NombresYApellidos, 1, CHARINDEX(' ', @NombresYApellidos) - 1), SUBSTRING(@NombresYApellidos, CHARINDEX(' ', @NombresYApellidos) + 1, LEN(@NombresYApellidos)), @UsuarioId, N'ACTIVO')
-		SET @IPerfil = SCOPE_IDENTITY()
+		    SET @IPerfil = SCOPE_IDENTITY()
         -- Insertar relación usuario-departamento-cargo
         INSERT INTO PROYECT_MANAGER_BD.helpdesk.Tbl_Dependencias_Usuarios (Id_Perfil, Id_Dependencia, Id_Cargo)
         VALUES (@IPerfil, @DepartamentoId, @CargoId)
@@ -116,7 +163,9 @@ BEGIN
 
     CLOSE usuarioCursor
     DEALLOCATE usuarioCursor
-END
+END;
+
+GO
 
 DECLARE @JSON2 NVARCHAR(MAX)
 SET @JSON2 = '[
@@ -620,6 +669,7 @@ SET @JSON2 = '[
     }
   ]'
 
-EXEC CrearUsuariosDesdeJSON @JSON2
+EXEC CrearUsuariosDesdeJSON @JSON2;
+GO
 
 DROP PROCEDURE CrearUsuariosDesdeJSON

@@ -9,11 +9,13 @@ delete from PROYECT_MANAGER_BD.helpdesk.Tbl_Case
 
 
 delete from PROYECT_MANAGER_BD.helpdesk.Tbl_Agenda 
+delete from PROYECT_MANAGER_BD.helpdesk.Tbl_Servicios_Profile 
 delete from PROYECT_MANAGER_BD.helpdesk.Tbl_Servicios
-delete from PROYECT_MANAGER_BD.helpdesk.Tbl_Dependencias_Usuarios  
+delete from PROYECT_MANAGER_BD.helpdesk.Tbl_Dependencias_Usuarios 
 delete from PROYECT_MANAGER_BD.helpdesk.Cat_Dependencias 
 
 DBCC CHECKIDENT ('PROYECT_MANAGER_BD.helpdesk.Cat_Dependencias', RESEED, 0);
+DBCC CHECKIDENT ('PROYECT_MANAGER_BD.helpdesk.Tbl_Servicios', RESEED, 0);
 
 
 --DATOS BASICOS DE PRUEBA
@@ -29,6 +31,9 @@ VALUES(N'ON_DEVEXP', NULL, N'wilbermatusgonzalez@wexpdev.onmicrosoft.com', N'-',
 INSERT INTO PROYECT_MANAGER_BD.helpdesk.Tbl_Servicios
 (Nombre_Servicio, Descripcion_Servicio, Id_Tipo_Servicio, Visibilidad, Estado, Fecha_Inicio, Fecha_Finalizacion, Id_Dependencia)
 VALUES(N'Servicio Atención', N'Atención', 1, N'publica', N'Activo', '2021-01-12', '2021-12-12', 1);
+INSERT INTO PROYECT_MANAGER_BD.helpdesk.Tbl_Servicios
+(Nombre_Servicio, Descripcion_Servicio, Id_Tipo_Servicio, Visibilidad, Estado, Fecha_Inicio, Fecha_Finalizacion, Id_Dependencia)
+VALUES(N'Servicio Atención 2', N'Atención 2', 1, N'publica', N'Activo', '2021-01-12', '2021-12-12', 1);
 INSERT INTO PROYECT_MANAGER_BD.helpdesk.Tbl_Servicios
 (Nombre_Servicio, Descripcion_Servicio, Id_Tipo_Servicio, Visibilidad, Estado, Fecha_Inicio, Fecha_Finalizacion, Id_Dependencia)
 VALUES(N'Servicio Atención', N'Atención', 3, N'publica', N'Activo', NULL, NULL, 2);
@@ -81,9 +86,10 @@ DELETE FROM PROYECT_MANAGER_BD.[security].Security_Roles;
 DBCC CHECKIDENT ('PROYECT_MANAGER_BD.[security].Security_Users', RESEED, 0);
 DBCC CHECKIDENT ('PROYECT_MANAGER_BD.[security].Security_Permissions', RESEED, 0);
 DBCC CHECKIDENT ('PROYECT_MANAGER_BD.[security].Security_Roles', RESEED, 0);
+DBCC CHECKIDENT ('PROYECT_MANAGER_BD.[security].Tbl_Profile', RESEED, 0);
 
 
-ALTER TABLE PROYECT_MANAGER_BD.[security].Security_Permissions ADD Detalles nvarchar(500) NULL;
+-- ALTER TABLE PROYECT_MANAGER_BD.[security].Security_Permissions ADD Detalles nvarchar(500) NULL;
 
 
 INSERT INTO PROYECT_MANAGER_BD.[security].Security_Permissions
@@ -128,6 +134,66 @@ INSERT INTO PROYECT_MANAGER_BD.[security].Security_Users_Roles
 (Id_Role, Id_User, Estado)
 VALUES(1, 1, N'ACTIVO');
 
+INSERT INTO PROYECT_MANAGER_BD.helpdesk.Tbl_Dependencias_Usuarios
+(Id_Perfil, Id_Dependencia, Id_Cargo)
+VALUES(1, 1, NULL);
+
+INSERT INTO PROYECT_MANAGER_BD.[security].Security_Users
+(Nombres, Estado, Descripcion, Password, Mail, Token, Token_Date, Token_Expiration_Date)
+VALUES(N'TECNICO', N'ACTIVO', N'TECNICO', N'PxI/Pz8/Pz8/PwdSP2E/Pw==', N'tecnico@tecnico.net', NULL, NULL, NULL);
+
+INSERT INTO PROYECT_MANAGER_BD.[security].Tbl_Profile
+(Nombres, Apellidos, FechaNac, IdUser, Sexo, Foto, DNI, Correo_institucional, Id_Pais_Origen, Estado)
+VALUES(N'TECNICO', N'TECNICO', '1900-01-01', 2, N'Masculino', N'\Media\profiles\avatar.png', N'1112dfg', N'tecnico@tecnico.net', NULL, N'ACTIVO');
+
+INSERT INTO PROYECT_MANAGER_BD.helpdesk.Tbl_Dependencias_Usuarios
+(Id_Perfil, Id_Dependencia, Id_Cargo)
+VALUES(2, 1, NULL);
+
+INSERT INTO PROYECT_MANAGER_BD.[security].Security_Roles
+(Descripcion, Estado)
+VALUES(N'GESTOR DE CASOS', N'ACTIVO');
+
+INSERT INTO PROYECT_MANAGER_BD.[security].Security_Users_Roles
+(Id_Role, Id_User, Estado)
+VALUES(2, 1, N'ACTIVO');
+
+INSERT INTO PROYECT_MANAGER_BD.[security].Security_Permissions_Roles 
+VALUES(2, 2, N'ACTIVO');
+
+
+INSERT INTO PROYECT_MANAGER_BD.[security].Security_Users
+(Nombres, Estado, Descripcion, Password, Mail, Token, Token_Date, Token_Expiration_Date)
+VALUES(N'GESTOR', N'ACTIVO', N'GESTOR', N'PxI/Pz8/Pz8/PwdSP2E/Pw==', N'GESTOR@GESTOR.net', NULL, NULL, NULL);
+
+INSERT INTO PROYECT_MANAGER_BD.[security].Tbl_Profile
+(Nombres, Apellidos, FechaNac, IdUser, Sexo, Foto, DNI, Correo_institucional, Id_Pais_Origen, Estado)
+VALUES(N'GESTOR', N'GESTOR', '1900-01-01', 3, N'Masculino', N'\Media\profiles\avatar.png', N'1112dfg', N'GESTOR@GESTOR.net', NULL, N'ACTIVO');
+
+INSERT INTO PROYECT_MANAGER_BD.helpdesk.Tbl_Dependencias_Usuarios
+(Id_Perfil, Id_Dependencia, Id_Cargo)
+VALUES(3, 1, NULL);
+
+INSERT INTO PROYECT_MANAGER_BD.[security].Security_Roles
+(Descripcion, Estado)
+VALUES(N'TECNICO DE CASOS', N'ACTIVO');
+
+
+
+INSERT INTO PROYECT_MANAGER_BD.[security].Security_Users_Roles
+(Id_Role, Id_User, Estado)
+VALUES(3, 1, N'ACTIVO');
+
+INSERT INTO PROYECT_MANAGER_BD.[security].Security_Permissions_Roles 
+VALUES(3, 3, N'ACTIVO');
+
+INSERT INTO PROYECT_MANAGER_BD.helpdesk.Tbl_Servicios_Profile
+(Id_Perfil, Id_Servicio)
+VALUES(3, 1);
+
+INSERT INTO PROYECT_MANAGER_BD.helpdesk.Tbl_Servicios_Profile
+(Id_Perfil, Id_Servicio)
+VALUES(3, 2);
 
 
 

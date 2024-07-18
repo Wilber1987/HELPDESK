@@ -9,6 +9,12 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>@ViewData["Title"] HELPDESK</title>
     <link rel="stylesheet" href="~/css/AdminTemplate.css" />
     <script>
@@ -24,7 +30,7 @@
          window.addEventListener("load", () => {
             //active nav
             document.querySelectorAll(".menu-item").forEach(item => {
-                if (location.href.includes(item.id)) {
+                if (location.href.includes(item.href)) {
                     item.className = "active";
                 }
             })
@@ -39,54 +45,10 @@
         <nav>
             <img src="~/Media/Image/close.webp" class="navIcon" onclick="displayNav()">
             <div class="logo-container">
-                <img src="~/Media/Image/logo.png" />
+                <img src="~/Media/img/logo.png" />
             </div>
-            <h3>TRANSACCIONES</h3>
-            <a class="" id="Home" href="/">HOME</a>
-            
-            @if (SecurityController.HavePermission(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identify))
-            {
-                <a class="" id="SolicitudesPendientes" href="~/ProyectViews/SolicitudesPendientes">Solicitudes Pendientes</a>
-            }
-            @if (SecurityController.HavePermission(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identify)
-            || SecurityController.HavePermission(Permissions.TECNICO_CASOS_DEPENDENCIA.ToString(), identify))
-            {
-                <a class="" id="Proyectos" href="~/ProyectViews/Proyectos">Casos en Proceso</a>
-            }
-            @if (SecurityController.HavePermission(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identify)
-            || SecurityController.HavePermission(Permissions.TECNICO_CASOS_DEPENDENCIA.ToString(), identify))
-            {
-                <a class="" id="ProyectosCerrados" href="~/ProyectViews/ProyectosCerrados">Casos finalizados</a>
-            }
-            @if (SecurityController.HavePermission(Permissions.TECNICO_CASOS_DEPENDENCIA.ToString(), identify))
-            {
-                <a class="" id="Tareas" href="~/ProyectViews/Tareas">Tareas en Proceso</a>
-            }
-             @if (SecurityController.HavePermission(Permissions.ADMINISTRAR_USUARIOS.ToString(), identify))
-            {
-                <a class="" id="PerfilManager" href="~/Security/PerfilManager">Administrador de perfiles</a>
-            }   
-            @if (SecurityController.HavePermission(Permissions.GENERADOR_SOLICITUDES.ToString(), identify))
-            {
-                <a class="" id="SolicitudesRealizadas" href="~/ProyectViews/SolicitudesRealizadas">Solicitudes Realizadas</a>
-            }  
-
-            @* @if (SecurityController.HavePermission(Permissions.QUESTIONNAIRES_MANAGER.ToString(), identify))
-            {
-                <a class="" id="SolicitudesRealizadas" href="~/Questionnaires/TestsView">Gestión de tests</a>
-            }  
-            @if (SecurityController.HavePermission(Permissions.QUESTIONNAIRES_USER.ToString(), identify))
-            {
-                <a class="" id="SolicitudesRealizadas" href="~/Questionnaires/ResolveTestView">Resolver de tests</a>
-            }   *@
-
-             @* TEST MODULE 
-            @if (SecurityController.HavePermission(Permissions.QUESTIONNAIRES_MANAGER.ToString(), identify))
-            {
-                <a class="" id="TestsView" href="~/Questionnaires/TestsView">Administrador de Tests</a>
-            }*@
-            @* <a class="" id="VinculateCaseView" href="~/ProyectViews/VinculateCaseView">Casos vinculados</a> *@
-
+            <partial name="MainMenu"/>
+           
         </nav>
     </aside>
 

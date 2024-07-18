@@ -6,6 +6,7 @@ using API.Controllers;
 using System.Collections.Generic;
 using System.Linq;
 using CAPA_NEGOCIO.Services;
+using CAPA_DATOS.Security;
 
 namespace API.Controllers
 {
@@ -208,20 +209,20 @@ namespace API.Controllers
 
         //Tbl_Profile
         [HttpPost]
-        [AuthController]
-        public List<Tbl_Profile> getTbl_Profile(Tbl_Profile Inst)
+        [AuthController(Permissions.PERFIL_MANAGER)]
+        public List<CAPA_NEGOCIO.MAPEO.Tbl_Profile> getTbl_Profile(CAPA_NEGOCIO.MAPEO.Tbl_Profile Inst)
         {
-            return Inst.GetProfiles();
+            return Inst.GetProfiles(HttpContext.Session.GetString("seassonKey"));
         }
         [HttpPost]
-        [AuthController]
-        public object? saveTbl_Profile(Tbl_Profile inst)
+        [AuthController(Permissions.PERFIL_MANAGER)]
+        public object? saveTbl_Profile(CAPA_NEGOCIO.MAPEO.Tbl_Profile inst)
         {
             return inst.SaveProfile();
         }
         [HttpPost]
-        [AuthController]
-        public object? updateTbl_Profile(Tbl_Profile inst)
+        [AuthController(Permissions.PERFIL_MANAGER)]
+        public object? updateTbl_Profile(CAPA_NEGOCIO.MAPEO.Tbl_Profile inst)
         {
             inst.IdUser = AuthNetCore.User(HttpContext.Session.GetString("seassonKey")).UserId;
             return inst.SaveProfile();
@@ -284,7 +285,7 @@ namespace API.Controllers
             return inst.Save();
         }
         [HttpPost]
-        [AuthController]
+        [AuthController(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA)]
         public object? updateTbl_Case(Tbl_Case inst)
         {
             return inst.Update();

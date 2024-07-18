@@ -15,11 +15,11 @@ class TareasComponentView extends HTMLElement {
      */
     constructor(props) {
         super();
-        this.attachShadow({ mode: 'open' });     
+        this.attachShadow({ mode: 'open' });
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });
         this.TabContainer = WRender.Create({ className: "TabContainer", id: 'TabContainer' });
-        this.Manager = new ComponentsManager({ MainContainer: this.TabContainer, SPAManage: false });        
-        this.shadowRoot?.append(this.CustomStyle);        
+        this.Manager = new ComponentsManager({ MainContainer: this.TabContainer, SPAManage: false });
+        this.shadowRoot?.append(this.CustomStyle);
         this.shadowRoot?.append(
             StylesControlsV2.cloneNode(true),
             StyleScrolls.cloneNode(true),
@@ -27,34 +27,38 @@ class TareasComponentView extends HTMLElement {
             this.OptionContainer,
             this.TabContainer
         );
-        this.Model = new Tbl_Tareas({ Get: async ()=> {
-            return this.Model.GetOwParticipations();
-        }});
+        this.Model = new Tbl_Tareas({
+            Get: async () => {
+                return this.Model.GetOwParticipations();
+            }
+        });
         this.Draw();
     }
     Draw = async () => {
         this.SetOption();
-        const tasks = await new Tbl_Tareas().GetOwParticipations();
-                this.Manager.NavigateFunction("Tab-OWTasks-Manager", this.ChargeTasks(tasks));
+        //const tasks = await new Tbl_Tareas().GetOwParticipations();
+        this.Manager.NavigateFunction("Tab-OWTasks-Manager", this.ChargeTasks());
     }
     SetOption() {
-       /*  this.OptionContainer.append(WRender.Create({
-            tagName: 'button', className: 'Block-Primary', innerText: 'Datos Tareas',
-            onclick: async () => {
-                
-            } 
-        }))       */  
+        /*  this.OptionContainer.append(WRender.Create({
+             tagName: 'button', className: 'Block-Primary', innerText: 'Datos Tareas',
+             onclick: async () => {
+                 
+             } 
+         }))       */
     }
-    ChargeTasks(tasks) {
-        const tasksManager = new TaskManagers(tasks);
+    ChargeTasks() {
+        const tasksManager = new TaskManagers([]);
         const filterOptions = new WFilterOptions({
-            Dataset: tasks,
             AutoSetDate: true,
             Display: true,
             ModelObject: this.Model,
+            UseEntityMethods: false,
+            AutoFilter: true,
             //DisplayFilts: [],
-            FilterFunction: (DFilt) => {
-                tasksManager.Dataset = DFilt;
+            FilterFunction: async (DFilt) => {
+                const tasks = await new Tbl_Tareas({FilterData: DFilt}).GetOwParticipations();
+                tasksManager.Dataset = tasks;
                 tasksManager.DrawTaskManagers();
             }
         })

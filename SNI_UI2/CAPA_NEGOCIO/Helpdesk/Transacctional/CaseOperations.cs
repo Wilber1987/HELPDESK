@@ -78,7 +78,7 @@ namespace CAPA_NEGOCIO.Services
 				{
 					item.Cat_Dependencias = dependencia;
 					item.Tbl_Servicios = servicio;
-					item.CreateAsignationsByService();
+					item.CreateAsignationsByService(null);
 					item.Update();
 				}
 				CommitGlobalTransaction();
@@ -99,7 +99,35 @@ namespace CAPA_NEGOCIO.Services
 			}
 
 
+
+
 		}
+
+		public object AprobarSolicitud(string? v, Tbl_Case caseP)
+		{
+			try
+			{
+				BeginGlobalTransaction();
+				caseP.AprobarSolicitud(v);
+				CommitGlobalTransaction();
+				return new ResponseService()
+				{
+					status = 200,
+					message = "Solicitudes aprobadas"
+				};
+			}
+			catch (System.Exception e)
+			{
+				RollBackGlobalTransaction();
+				return new ResponseService()
+				{
+					status = 500,
+					message = e.Message
+				};
+			}
+		}
+
+
 	}
 	public class ProfileTransaction : TransactionalClass
 	{

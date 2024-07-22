@@ -19,7 +19,7 @@ namespace API.Controllers
 			string? token = filterContext.HttpContext.Session.GetString("seassonKey");
 
 			//LICENCIA
-			if (DateTime.Now > new DateTime(2024, 07, 18))
+			if (DateTime.Now > new DateTime(2024, 08, 20))
 			{
 				Authenticate Aut = new Authenticate();
 				Aut.AuthVal = false;

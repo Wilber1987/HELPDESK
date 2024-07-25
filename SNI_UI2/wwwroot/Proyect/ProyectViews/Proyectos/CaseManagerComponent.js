@@ -17,6 +17,7 @@ import { Tbl_Agenda } from "../../FrontModel/Tbl_Agenda.js";
 import { Tbl_Tareas } from "../../FrontModel/Tbl_Tareas.js";
 import { activityStyle } from '../../style.js';
 import { caseGeneralData } from './CaseDetailComponent.js';
+import { Tbl_Comments } from '../../FrontModel/Tbl_Comments.js';
 
 class CaseManagerComponent extends HTMLElement {
     /**

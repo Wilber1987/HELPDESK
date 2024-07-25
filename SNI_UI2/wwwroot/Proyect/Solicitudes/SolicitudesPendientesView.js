@@ -1,5 +1,5 @@
 
-import { Tbl_Case } from '../../ModelProyect/ProyectDataBaseModel.js';
+import { Tbl_Case } from '../FrontModel/ProyectDataBaseModel.js';
 import { SolicitudesPendientesComponent } from './SolicitudesPendientesComponent.js';
 
 const OnLoad = async () => {

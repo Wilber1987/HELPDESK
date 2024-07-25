@@ -1,7 +1,7 @@
-import { Cat_Dependencias } from "./ModelProyect/ProyectDataBaseModel.js";
 import { AppDashboardComponentView } from "./Proyect/Dasboards/AppDashboardComponentView.js";
 import { WRender } from "./WDevCore/WModules/WComponentsTools.js";
 import { css } from "./WDevCore/WModules/WStyledRender.js";
+import {Cat_Dependencias} from "./Proyect/FrontModel/Cat_Dependencias";
 
 const ColorsList = ["#044fa2", "#0088ce", "#f6931e", "#eb1c24", "#01c0f4", "#00bff3", "#e63da4", "#6a549f"];
 

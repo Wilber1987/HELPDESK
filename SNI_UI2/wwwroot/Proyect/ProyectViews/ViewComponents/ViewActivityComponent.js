@@ -1,7 +1,8 @@
 import { StylesControlsV2, StyleScrolls } from "../../../WDevCore/StyleModules/WStyleComponents.JS";
 import { WModalForm } from '../../../WDevCore/WComponents/WModalForm.js';
-import { WAjaxTools, WRender } from "../../../WDevCore/WModules/WComponentsTools.js";
+import { WRender } from "../../../WDevCore/WModules/WComponentsTools.js";
 import { WCssClass, WStyledRender } from '../../../WDevCore/WModules/WStyledRender.js';
+import {WAjaxTools} from "../../../WDevCore/WModules/WAjaxTools";
 class ViewActivityComponent extends HTMLElement {
     constructor(Activity) {
         super();

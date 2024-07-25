@@ -1,10 +1,11 @@
-import { WRender, WAjaxTools, ComponentsManager } from '../../WDevCore/WModules/WComponentsTools.js';
+import { WRender, ComponentsManager } from '../../WDevCore/WModules/WComponentsTools.js';
 import { css, WCssClass, WStyledRender } from '../../WDevCore/WModules/WStyledRender.js';
 import "../../WDevCore/WComponents/WTableComponent.js";
 import { basicButtons, StylesControlsV2 } from "../../WDevCore/StyleModules/WStyleComponents.js";
 import { WAppNavigator } from '../../WDevCore/WComponents/WAppNavigator.js';
 import { ModalVericateAction } from '../../WDevCore/WComponents/WForm.js';
 import { Tbl_Investigaciones } from '../../ModelProyect/ModelDatabase.js';
+import {WAjaxTools} from "../../WDevCore/WModules/WAjaxTools";
 class NotificacionesView extends HTMLElement {
     constructor() {
         super();

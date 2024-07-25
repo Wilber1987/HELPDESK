@@ -1,9 +1,11 @@
-import { WRender, ComponentsManager, WAjaxTools, WArrayF } from "../../../WDevCore/WModules/WComponentsTools.js";
+import { WRender, ComponentsManager } from "../../../WDevCore/WModules/WComponentsTools.js";
 import { StylesControlsV2, StylesControlsV3, StyleScrolls } from "../../../WDevCore/StyleModules/WStyleComponents.js"
 import { css } from "../../../WDevCore/WModules/WStyledRender.js";
 import { TaskManagers } from "./TaskManager.js";
 import { WFilterOptions } from "../../../WDevCore/WComponents/WFilterControls.js";
-import { Tbl_Tareas } from "../../../ModelProyect/ProyectDataBaseModel.js";
+import {WArrayF} from "../../../WDevCore/WModules/WArrayF";
+import {Tbl_Tareas} from "../../FrontModel/Tbl_Tareas";
+import {WAjaxTools} from "../../../WDevCore/WModules/WAjaxTools";
 /**
  * @typedef {Object} ComponentConfig
  * * @property {Object} [propierty]

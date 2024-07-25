@@ -1,5 +1,6 @@
-import { EntityClass } from "../WDevCore/WModules/EntityClass.js";
-import { WAjaxTools } from "../WDevCore/WModules/WComponentsTools.js";
+import { EntityClass } from "../../WDevCore/WModules/EntityClass.js";
+
+import {WAjaxTools} from "../../WDevCore/WModules/WAjaxTools";
 class Security_Permissions extends EntityClass {
    constructor(props) {
        super(props, 'EntitySECURITY');

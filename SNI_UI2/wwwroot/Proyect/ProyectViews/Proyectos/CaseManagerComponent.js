@@ -3,7 +3,7 @@
 import { caseGeneralData } from './CaseDetailComponent.js';
 import { CaseSearcherToVinculate } from '../../../AppComponents/CaseSearcherToVinculate.js';
 import { priorityStyles } from '../../../AppComponents/Styles.js';
-import { Tbl_Agenda, Tbl_Calendario, Tbl_Case, Tbl_Comments, Tbl_Tareas, Tbl_VinculateCase, Cat_Dependencias, Tbl_Servicios } from '../../../ModelProyect/ProyectDataBaseModel.js';
+import { Tbl_Case, Tbl_VinculateCase } from '../../FrontModel/ProyectDataBaseModel.js';
 import { StylesControlsV2, StylesControlsV3 } from "../../../WDevCore/StyleModules/WStyleComponents.js";
 import { ModalMessege, ModalVericateAction, WForm } from "../../../WDevCore/WComponents/WForm.js";
 import { WModalForm } from '../../../WDevCore/WComponents/WModalForm.js';
@@ -15,6 +15,9 @@ import { css } from '../../../WDevCore/WModules/WStyledRender.js';
 import { activityStyle } from '../../style.js';
 import { Permissions, WSecurity } from '../../../WDevCore/Security/WSecurity.js';
 import { WFilterOptions } from '../../../WDevCore/WComponents/WFilterControls.js';
+import {Tbl_Tareas} from "../../FrontModel/Tbl_Tareas";
+import {Cat_Dependencias} from "../../FrontModel/Cat_Dependencias";
+import {Tbl_Agenda} from "../../FrontModel/Tbl_Agenda";
 
 class CaseManagerComponent extends HTMLElement {
     /**

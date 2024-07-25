@@ -1,5 +1,5 @@
 import { priorityStyles } from '../../AppComponents/Styles.js';
-import { Tbl_Case, Tbl_Comments, Cat_Dependencias, Tbl_Servicios } from '../../ModelProyect/ProyectDataBaseModel.js';
+import { Tbl_Case } from '../FrontModel/ProyectDataBaseModel.js';
 import { Permissions, WSecurity } from '../../WDevCore/Security/WSecurity.js';
 import { StylesControlsV2, StylesControlsV3 } from "../../WDevCore/StyleModules/WStyleComponents.js";
 import { WCommentsComponent } from '../../WDevCore/WComponents/WCommentsComponent.js';
@@ -12,6 +12,7 @@ import { css } from '../../WDevCore/WModules/WStyledRender.js';
 import { CaseDetailComponent, caseGeneralData } from '../ProyectViews/Proyectos/CaseDetailComponent.js';
 import { simpleCaseForm } from '../ProyectViews/Proyectos/CaseManagerComponent.js';
 import { activityStyle } from '../style.js';
+import {Cat_Dependencias} from "../FrontModel/Cat_Dependencias";
 class SolicitudesPendientesComponent extends HTMLElement {
     /**
      * 

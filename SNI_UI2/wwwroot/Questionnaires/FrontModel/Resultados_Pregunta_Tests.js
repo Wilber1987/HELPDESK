@@ -1,10 +1,10 @@
 //@ts-check
 import { EntityClass } from "../../WDevCore/WModules/EntityClass.js";
-import { WAjaxTools } from "../../WDevCore/WModules/WComponentsTools.js";
 //@ts-ignore
 import { ModelProperty } from "../../WDevCore/WModules/CommonModel.js";
 import { Cat_Valor_Preguntas } from './Cat_Valor_Preguntas.js'
 import { Pregunta_Tests } from './Pregunta_Tests.js'
+import {WAjaxTools} from "../../WDevCore/WModules/WAjaxTools";
 class Resultados_Pregunta_Tests extends EntityClass {
     /** @param {Partial<Resultados_Pregunta_Tests>} [props] */
     constructor(props) {

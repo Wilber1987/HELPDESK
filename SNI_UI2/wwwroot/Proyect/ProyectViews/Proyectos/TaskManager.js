@@ -1,11 +1,12 @@
 //@ts-check
-import { Tbl_Agenda, Tbl_Calendario, Tbl_Tareas } from '../../../ModelProyect/ProyectDataBaseModel.js';
 import { StyleScrolls, StylesControlsV2, StylesControlsV3 } from "../../../WDevCore/StyleModules/WStyleComponents.js";
 import { WModalForm } from '../../../WDevCore/WComponents/WModalForm.js';
 import { WToolTip } from '../../../WDevCore/WComponents/WMultiSelect.js';
 import { ComponentsManager, WRender } from '../../../WDevCore/WModules/WComponentsTools.js';
 import { css } from '../../../WDevCore/WModules/WStyledRender.js';
 import { TareaDetailView } from './TareaDetailView.js';
+import {Tbl_Tareas} from "../../FrontModel/Tbl_Tareas";
+import {Tbl_Agenda} from "../../FrontModel/Tbl_Agenda";
 
 class TaskManagers extends HTMLElement {
     /**

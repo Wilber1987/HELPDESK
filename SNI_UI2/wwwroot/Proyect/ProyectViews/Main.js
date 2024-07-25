@@ -1,9 +1,11 @@
-import { WRender, WArrayF, ComponentsManager, WAjaxTools } from '../../WDevCore/WModules/WComponentsTools.js';
+import { WRender, ComponentsManager } from '../../WDevCore/WModules/WComponentsTools.js';
 import { WCssClass } from '../../WDevCore/WModules/WStyledRender.js';
 import { StyleScrolls } from "../../WDevCore/StyleModules/WStyleComponents.js";
 import { WAppNavigator } from "../../WDevCore/WComponents/WAppNavigator.js";
 import { WModalForm } from "../../WDevCore/WComponents/WModalForm.js";
 import { WSecurity } from '../../WDevCore/Security/WSecurity.js';
+import {WArrayF} from "../../WDevCore/WModules/WArrayF";
+import {WAjaxTools} from "../../WDevCore/WModules/WAjaxTools";
 Aside.append(WRender.Create({ tagName: "h3", innerText: "Navegación General" }));
 Aside.append(WRender.createElement({
     type: "w-app-navigator",

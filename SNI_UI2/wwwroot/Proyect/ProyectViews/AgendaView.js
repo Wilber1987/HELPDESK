@@ -1,12 +1,14 @@
 import { WAppNavigator } from '../../WDevCore/WComponents/WAppNavigator.js';
-import { WRender, WArrayF, ComponentsManager, WAjaxTools } from '../../WDevCore/WModules/WComponentsTools.js';
+import { WRender, ComponentsManager } from '../../WDevCore/WModules/WComponentsTools.js';
 import { WCssClass, WStyledRender } from '../../WDevCore/WModules/WStyledRender.js';
 import { WTableComponent } from "../../WDevCore/WComponents/WTableComponent.js";
 import { StylesControlsV2 } from "../../WDevCore/StyleModules/WStyleComponents.js";
 import { WModalForm } from "../../WDevCore/WComponents/WModalForm.js";
 import { ReservarComponent } from "./ViewComponents/ReservaComponent.js";
 import { ViewActivityComponent } from "./ViewComponents/ViewActivityComponent.js";
-import AgendaModel from '../../ModelProyect/AgendaModel.js';
+import AgendaModel from '../FrontModel/AgendaModel.js';
+import {WArrayF} from "../../WDevCore/WModules/WArrayF";
+import {WAjaxTools} from "../../WDevCore/WModules/WAjaxTools";
 class AgendaView extends HTMLElement {
     constructor() {
         super();

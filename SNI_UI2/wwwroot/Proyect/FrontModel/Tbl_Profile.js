@@ -1,11 +1,11 @@
 //@ts-check
 //import { Cat_Dependencias, Tbl_Servicios } from "../../ModelProyect/ProyectDataBaseModel.js";
-import { Cat_Dependencias, Tbl_Servicios } from "../../ModelProyect/ProyectDataBaseModel.js";
 import { WForm } from "../../WDevCore/WComponents/WForm.js";
 // @ts-ignore
 import { ModelProperty } from "../../WDevCore/WModules/CommonModel.js";
 import { EntityClass } from "../../WDevCore/WModules/EntityClass.js";
-import { WAjaxTools } from "../../WDevCore/WModules/WComponentsTools.js";
+import {Cat_Dependencias} from "./Cat_Dependencias";
+import {WAjaxTools} from "../../WDevCore/WModules/WAjaxTools";
 
 
 //@ts-check

@@ -1,12 +1,16 @@
 //@ts-check
-import { WRender, ComponentsManager, WAjaxTools, WArrayF, html } from "../../../WDevCore/WModules/WComponentsTools.js";
+import { WRender, ComponentsManager, html } from "../../../WDevCore/WModules/WComponentsTools.js";
 import { StylesControlsV2, StylesControlsV3, StyleScrolls } from "../../../WDevCore/StyleModules/WStyleComponents.js"
 import { css } from "../../../WDevCore/WModules/WStyledRender.js";
 import { WCommentsComponent } from "../../../WDevCore/WComponents/WCommentsComponent.js";
-import { Tbl_Agenda, Tbl_Calendario, Tbl_Comments, Tbl_Comments_Tasks, Tbl_Tareas } from "../../../ModelProyect/ProyectDataBaseModel.js";
 import { WSecurity } from "../../../WDevCore/Security/WSecurity.js";
 import { WModalForm } from "../../../WDevCore/WComponents/WModalForm.js";
 import { WDetailObject } from "../../../WDevCore/WComponents/WDetailObject.js";
+import {WArrayF} from "../../../WDevCore/WModules/WArrayF";
+import {Tbl_Comments_Tasks} from "../../FrontModel/Tbl_Comments_Tasks";
+import {Tbl_Tareas} from "../../FrontModel/Tbl_Tareas";
+import {Tbl_Agenda} from "../../FrontModel/Tbl_Agenda";
+import {WAjaxTools} from "../../../WDevCore/WModules/WAjaxTools";
 
 /**
  * @typedef {Object} ComponentConfig

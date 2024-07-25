@@ -1,11 +1,15 @@
 import { LogErrorView } from "../Admin/LogErrorView.js";
-import { Cat_Cargos_Dependencias, Cat_Dependencias, Cat_Paises, Cat_Tipo_Evidencia, Cat_Tipo_Participaciones, Cat_Tipo_Servicio, Tbl_Servicios } from "../ModelProyect/ProyectDataBaseModel.js";
 import { StylesControlsV2 } from "../WDevCore/StyleModules/WStyleComponents.js";
 import { WAppNavigator } from "../WDevCore/WComponents/WAppNavigator.js";
 import { WFilterOptions } from "../WDevCore/WComponents/WFilterControls.js";
 import { WTableComponent } from "../WDevCore/WComponents/WTableComponent.js";
-import { ComponentsManager, WAjaxTools, WRender } from '../WDevCore/WModules/WComponentsTools.js';
+import { ComponentsManager, WRender } from '../WDevCore/WModules/WComponentsTools.js';
 import { WOrtograficValidation } from "../WDevCore/WModules/WOrtograficValidation.js";
+import {Cat_Tipo_Servicio} from "./FrontModel/Cat_Tipo_Servicio";
+import {Cat_Dependencias} from "./FrontModel/Cat_Dependencias";
+import {Cat_Tipo_Participaciones} from "./FrontModel/Cat_Tipo_Participaciones";
+import {Cat_Paises} from "./FrontModel/Cat_Paises";
+import {WAjaxTools} from "../WDevCore/WModules/WAjaxTools";
 window.addEventListener("load", async () => {
     setTimeout(async () => {
         const DOMManager = new ComponentsManager({ MainContainer: Main });

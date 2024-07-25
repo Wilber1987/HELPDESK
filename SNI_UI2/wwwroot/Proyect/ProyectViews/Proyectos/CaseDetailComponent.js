@@ -1,9 +1,9 @@
 
 
 import { priorityStyles } from '../../../AppComponents/Styles.js';
-import { CaseOwModel } from '../../../ModelProyect/CaseOwModel.js';
-import { ViewCalendarioByDependencia } from '../../../ModelProyect/DBOViewModel.js';
-import { Tbl_Agenda, Tbl_Case, Tbl_Comments, Tbl_Evidencias, Tbl_Tareas, Tbl_VinculateCase, Cat_Dependencias, Tbl_Servicios } from '../../../ModelProyect/ProyectDataBaseModel.js';
+import { CaseOwModel } from '../../FrontModel/CaseOwModel.js';
+import { ViewCalendarioByDependencia } from '../../FrontModel/DBOViewModel.js';
+import { Tbl_Case, Tbl_VinculateCase } from '../../FrontModel/ProyectDataBaseModel.js';
 import { Permissions, WSecurity } from '../../../WDevCore/Security/WSecurity.js';
 import { StylesControlsV2, StylesControlsV3 } from "../../../WDevCore/StyleModules/WStyleComponents.js";
 import { WAppNavigator } from '../../../WDevCore/WComponents/WAppNavigator.js';
@@ -21,6 +21,10 @@ import { Tbl_Profile_CasosAsignados, Tbl_Profile_CasosAsignados_ModelComponent }
 import { activityStyle } from '../../style.js';
 import { simpleCaseForm } from './CaseManagerComponent.js';
 import { TaskManagers } from './TaskManager.js';
+import {Tbl_Evidencias} from "../../FrontModel/Tbl_Evidencias";
+import {Tbl_Tareas} from "../../FrontModel/Tbl_Tareas";
+import {Cat_Dependencias} from "../../FrontModel/Cat_Dependencias";
+import {Tbl_Agenda} from "../../FrontModel/Tbl_Agenda";
 
 class CaseDetailComponent extends HTMLElement {
     /**

@@ -1,15 +1,17 @@
 
 
 //@ts-check
-import { Tbl_Case, Tbl_Participantes, Tbl_Tareas } from '../../../ModelProyect/ProyectDataBaseModel.js';
+import { Tbl_Case } from '../../FrontModel/ProyectDataBaseModel.js';
 import { StylesControlsV2 } from '../../../WDevCore/StyleModules/WStyleComponents.js';
 import { ColumChart, RadialChart } from '../../../WDevCore/WComponents/WChartJSComponents.js';
 import { WFilterOptions } from '../../../WDevCore/WComponents/WFilterControls.js';
 import { WModalForm } from '../../../WDevCore/WComponents/WModalForm.js';
 import { PageType, WReportComponent } from '../../../WDevCore/WComponents/WReportComponent.js';
 import { WTableComponent } from '../../../WDevCore/WComponents/WTableComponent.js';
-import { WArrayF, WRender } from '../../../WDevCore/WModules/WComponentsTools.js';
+import { WRender } from '../../../WDevCore/WModules/WComponentsTools.js';
 import { css } from '../../../WDevCore/WModules/WStyledRender.js';
+import {WArrayF} from "../../../WDevCore/WModules/WArrayF";
+import {Tbl_Tareas} from "../../FrontModel/Tbl_Tareas";
 
 class CaseDashboardComponent extends HTMLElement {
     /**

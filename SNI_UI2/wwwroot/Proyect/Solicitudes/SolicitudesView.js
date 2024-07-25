@@ -1,5 +1,5 @@
 
-import { Tbl_Case, Tbl_Comments, Cat_Dependencias } from '../../ModelProyect/ProyectDataBaseModel.js';
+import { Tbl_Case } from '../FrontModel/ProyectDataBaseModel.js';
 import { StylesControlsV2, StylesControlsV3 } from "../../WDevCore/StyleModules/WStyleComponents.js";
 import { ModalMessege, WForm } from "../../WDevCore/WComponents/WForm.js";
 import { WPaginatorViewer } from '../../WDevCore/WComponents/WPaginatorViewer.js';
@@ -11,6 +11,7 @@ import { WSecurity } from '../../WDevCore/Security/WSecurity.js';
 import { priorityStyles } from '../../AppComponents/Styles.js';
 import { caseGeneralData } from '../ProyectViews/Proyectos/CaseDetailComponent.js';
 import { activityStyle } from '../style.js';
+import {Cat_Dependencias} from "../FrontModel/Cat_Dependencias";
 
 const OnLoad = async () => {
     const Solicitudes = await new Tbl_Case().GetOwSolicitudesPendientesAprobar();

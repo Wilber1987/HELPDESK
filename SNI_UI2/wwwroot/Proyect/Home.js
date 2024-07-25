@@ -1,8 +1,10 @@
-import { ComponentsManager, WAjaxTools, WRender, WArrayF } from "../WDevCore/WModules/WComponentsTools.js";
+import { ComponentsManager, WRender } from "../WDevCore/WModules/WComponentsTools.js";
 import { WCssClass } from "../WDevCore/WModules/WStyledRender.js";
 import { WModalForm } from "../WDevCore/WComponents/WModalForm.js";
 import { WDetailObject } from "../WDevCore/WComponents/WDetailObject.js";
 import { Tbl_Profile } from "../WDevCore/Security/Tbl_Profile.js";
+import {WArrayF} from "../WDevCore/WModules/WArrayF";
+import {WAjaxTools} from "../WDevCore/WModules/WAjaxTools";
 
 class HomeClass extends HTMLElement {
     constructor(response) {

@@ -1,4 +1,4 @@
-import { Tbl_Case, Tbl_Tareas, Cat_Dependencias } from "../ModelProyect/ProyectDataBaseModel.js";
+import { Tbl_Case } from "../Proyect/FrontModel/ProyectDataBaseModel.js";
 import { CaseDashboardComponent } from "../Proyect/ProyectViews/Proyectos/CaseDashboardComponent.js";
 import { CaseManagerComponent } from "../Proyect/ProyectViews/Proyectos/CaseManagerComponent.js";
 import { TaskManagers } from "../Proyect/ProyectViews/Proyectos/TaskManager.js";
@@ -8,6 +8,8 @@ import { StylesControlsV2 } from "../WDevCore/StyleModules/WStyleComponents.js";
 import { WAppNavigator } from "../WDevCore/WComponents/WAppNavigator.js";
 import { WFilterOptions } from "../WDevCore/WComponents/WFilterControls.js";
 import { ComponentsManager, WRender } from '../WDevCore/WModules/WComponentsTools.js';
+import {Tbl_Tareas} from "../Proyect/FrontModel/Tbl_Tareas";
+import {Cat_Dependencias} from "../Proyect/FrontModel/Cat_Dependencias";
 window.onload = () => {
     console.log("test");
     const navigator = new WAppNavigator({

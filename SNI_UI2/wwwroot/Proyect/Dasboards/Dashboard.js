@@ -1,6 +1,8 @@
-import { Tbl_Case, Tbl_Comments, Tbl_Tareas, Cat_Dependencias } from "../../ModelProyect/ProyectDataBaseModel.js";
+import { Tbl_Case } from "../FrontModel/ProyectDataBaseModel.js";
 import { EntityClass } from "../../WDevCore/WModules/EntityClass.js";
-import { WAjaxTools } from "../../WDevCore/WModules/WComponentsTools.js";
+import {Tbl_Tareas} from "../FrontModel/Tbl_Tareas";
+import {Cat_Dependencias} from "../FrontModel/Cat_Dependencias";
+import {WAjaxTools} from "../../WDevCore/WModules/WAjaxTools";
 
 class Dashboard extends EntityClass {
     constructor(props) {

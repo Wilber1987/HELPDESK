@@ -1,11 +1,13 @@
 //@ts-check
-import { WRender, ComponentsManager, WAjaxTools, WArrayF } from "../../../WDevCore/WModules/WComponentsTools.js";
+import { WRender, ComponentsManager } from "../../../WDevCore/WModules/WComponentsTools.js";
 import { StylesControlsV2, StylesControlsV3, StyleScrolls } from "../../../WDevCore/StyleModules/WStyleComponents.js"
 import { css } from "../../../WDevCore/WModules/WStyledRender.js";
 import { WTableComponent } from "../../../WDevCore/WComponents/WTableComponent.js";
-import { Tbl_VinculateCase } from "../../../ModelProyect/ProyectDataBaseModel.js";
+import { Tbl_VinculateCase } from "../../FrontModel/ProyectDataBaseModel.js";
 import { WForm } from "../../../WDevCore/WComponents/WForm.js";
 import { WModalForm } from "../../../WDevCore/WComponents/WModalForm.js";
+import {WArrayF} from "../../../WDevCore/WModules/WArrayF";
+import {WAjaxTools} from "../../../WDevCore/WModules/WAjaxTools";
 /**
  * @typedef {Object} ComponentConfig
  * * @property {Object} [propierty]

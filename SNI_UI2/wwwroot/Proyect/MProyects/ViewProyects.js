@@ -1,7 +1,8 @@
 import "../../WDevCore/WComponents/WTableComponent.js";
-import { ComponentsManager, WAjaxTools, WRender } from '../../WDevCore/WModules/WComponentsTools.js';
+import { ComponentsManager, WRender } from '../../WDevCore/WModules/WComponentsTools.js';
 import { WCssClass } from '../../WDevCore/WModules/WStyledRender.js';
 import { ProyectDetailViewer } from './ProyectDetailViewer.js';
+import {WAjaxTools} from "../../WDevCore/WModules/WAjaxTools";
 
 const DOMManager = new ComponentsManager();
 class ViewProyects extends HTMLElement {

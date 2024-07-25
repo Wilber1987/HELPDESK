@@ -1,4 +1,4 @@
-import { Tbl_Case } from "../../../ModelProyect/ProyectDataBaseModel.js";
+import { Tbl_Case } from "../../FrontModel/ProyectDataBaseModel.js";
 import { CaseDetailComponent } from "./CaseDetailComponent.js";
 
 const OnLoad = async () => {

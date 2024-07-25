@@ -1,11 +1,13 @@
 
-import { Tbl_Case, Tbl_Tareas, Cat_Dependencias } from '../../../ModelProyect/ProyectDataBaseModel.js';
+import { Tbl_Case } from '../../FrontModel/ProyectDataBaseModel.js';
 import { WAppNavigator } from '../../../WDevCore/WComponents/WAppNavigator.js';
 import { WFilterOptions } from '../../../WDevCore/WComponents/WFilterControls.js';
 import { ComponentsManager, WRender } from '../../../WDevCore/WModules/WComponentsTools.js';
 import { WCssClass, WStyledRender } from '../../../WDevCore/WModules/WStyledRender.js';
 import { CaseManagerComponent } from './CaseManagerComponent.js';
 import { TaskManagers } from './TaskManager.js';
+import {Tbl_Tareas} from "../../FrontModel/Tbl_Tareas";
+import {Cat_Dependencias} from "../../FrontModel/Cat_Dependencias";
 
 const OnLoad = async () => {
     Aside.append(WRender.Create({ tagName: "h3", innerText: "Administración de Actividades" }));

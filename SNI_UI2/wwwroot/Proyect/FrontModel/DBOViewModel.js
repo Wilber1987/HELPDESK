@@ -1,5 +1,6 @@
-import { EntityClass } from "../WDevCore/WModules/EntityClass.js";
-import { WAjaxTools } from "../WDevCore/WModules/WComponentsTools.js";
+import { EntityClass } from "../../WDevCore/WModules/EntityClass.js";
+
+import {WAjaxTools} from "../../WDevCore/WModules/WAjaxTools";
 
 class ViewParticipantesServicios extends EntityClass {
    constructor(props) {

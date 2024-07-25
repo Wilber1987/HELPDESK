@@ -1,5 +1,7 @@
-import { WRender, WArrayF, ComponentsManager, WAjaxTools } from '../WDevCore/WModules/WComponentsTools.js';
+import { WRender, ComponentsManager } from '../WDevCore/WModules/WComponentsTools.js';
 import { WCssClass } from '../WDevCore/WModules/WStyledRender.js';
+import {WArrayF} from "../WDevCore/WModules/WArrayF";
+import {WAjaxTools} from "../WDevCore/WModules/WAjaxTools";
 class AsideV1 extends HTMLElement {
     constructor(Data = []) {
         super();

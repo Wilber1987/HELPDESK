@@ -1,7 +1,7 @@
 
 
 import { priorityStyles } from '../../../AppComponents/Styles.js';
-import { Tbl_Case, Cat_Dependencias } from '../../../ModelProyect/ProyectDataBaseModel.js';
+import { Tbl_Case } from '../../FrontModel/ProyectDataBaseModel.js';
 import { StylesControlsV2, StylesControlsV3 } from "../../../WDevCore/StyleModules/WStyleComponents.js";
 import { WFilterOptions } from '../../../WDevCore/WComponents/WFilterControls.js';
 import { ModalMessege, ModalVericateAction } from "../../../WDevCore/WComponents/WForm.js";
@@ -12,6 +12,7 @@ import { ControlBuilder } from '../../../WDevCore/WModules/WControlBuilder.js';
 import { css } from '../../../WDevCore/WModules/WStyledRender.js';
 import { activityStyle } from '../../style.js';
 import { caseGeneralData } from './CaseDetailComponent.js';
+import {Cat_Dependencias} from "../../FrontModel/Cat_Dependencias";
 
 /**
  * @typedef {Object} ComponentConfig

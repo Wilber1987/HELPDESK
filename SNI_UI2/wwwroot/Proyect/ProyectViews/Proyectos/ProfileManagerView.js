@@ -1,5 +1,4 @@
 //@ts-check
-import { Cat_Dependencias, Tbl_Servicios } from '../../../ModelProyect/ProyectDataBaseModel.js';
 import { StylesControlsV2, StylesControlsV3 } from '../../../WDevCore/StyleModules/WStyleComponents.js';
 import { WAppNavigator } from '../../../WDevCore/WComponents/WAppNavigator.js';
 import { WFilterOptions } from '../../../WDevCore/WComponents/WFilterControls.js';
@@ -10,6 +9,7 @@ import { ComponentsManager, WRender } from '../../../WDevCore/WModules/WComponen
 import { WCssClass, WStyledRender } from '../../../WDevCore/WModules/WStyledRender.js';
 import { Tbl_Profile } from '../../FrontModel/Tbl_Profile.js';
 import { activityStyle } from '../../style.js';
+import {Cat_Dependencias} from "../../FrontModel/Cat_Dependencias";
 
 const OnLoad = async () => {
     const Dataset = await new Tbl_Profile().Get();

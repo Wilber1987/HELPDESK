@@ -1,4 +1,5 @@
-import { Tbl_Case, Cat_Dependencias, Tbl_Servicios } from "./ProyectDataBaseModel.js";
+import { Tbl_Case } from "./ProyectDataBaseModel.js";
+import {Cat_Dependencias} from "./Cat_Dependencias";
 
 const CaseOwModel = async (Id_Dependencia) => {
     const dep = await new Cat_Dependencias({ Id_Dependencia: Id_Dependencia }).GetOwDependencies();

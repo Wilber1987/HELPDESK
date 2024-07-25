@@ -3,12 +3,13 @@ import { StylesControlsV2 } from "../../WDevCore/StyleModules/WStyleComponents.j
 import { WAppNavigator } from "../../WDevCore/WComponents/WAppNavigator.js";
 import { WFilterOptions } from "../../WDevCore/WComponents/WFilterControls.js";
 import { WTableComponent } from "../../WDevCore/WComponents/WTableComponent.js";
-import { ComponentsManager, WAjaxTools, WRender } from '../../WDevCore/WModules/WComponentsTools.js';
+import { ComponentsManager, WRender } from '../../WDevCore/WModules/WComponentsTools.js';
 import { WOrtograficValidation } from "../../WDevCore/WModules/WOrtograficValidation.js";
 import { Cat_Categorias_Test } from "../FrontModel/Cat_Categorias_Test.js";
 import { Cat_Tipo_Preguntas } from "../FrontModel/Cat_Tipo_Preguntas.js";
 import { Cat_Categorias_Test_ModelComponent } from "../FrontModel/ModelComponent/Cat_Categorias_Test_ModelComponent.js";
 import { Cat_Tipo_Preguntas_ModelComponent } from "../FrontModel/ModelComponent/Cat_Tipo_Preguntas_ModelComponent.js";
+import {WAjaxTools} from "../../WDevCore/WModules/WAjaxTools";
 window.addEventListener("load", async () => {
     setTimeout(async () => {
         // @ts-ignore

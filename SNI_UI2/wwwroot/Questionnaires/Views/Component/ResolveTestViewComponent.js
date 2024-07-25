@@ -1,5 +1,5 @@
 //@ts-check
-import { WRender, ComponentsManager, WAjaxTools, WArrayF, html } from "../../../WDevCore/WModules/WComponentsTools.js";
+import { WRender, ComponentsManager, html } from "../../../WDevCore/WModules/WComponentsTools.js";
 import { StylesControlsV2, StylesControlsV3, StyleScrolls } from "../../../WDevCore/StyleModules/WStyleComponents.js"
 import { css } from "../../../WDevCore/WModules/WStyledRender.js";
 import { Tests_ModelComponent } from "../../FrontModel/ModelComponent/Tests_ModelComponent.js";
@@ -12,6 +12,8 @@ import { Resultados_Pregunta_Tests } from "../../FrontModel/Resultados_Pregunta_
 import { Cat_Valor_Preguntas } from "../../FrontModel/Cat_Valor_Preguntas.js";
 import { Pregunta_Tests } from "../../FrontModel/Pregunta_Tests.js";
 import { ModalMessege } from "../../../WDevCore/WComponents/WForm.js";
+import {WArrayF} from "../../../WDevCore/WModules/WArrayF";
+import {WAjaxTools} from "../../../WDevCore/WModules/WAjaxTools";
 /**
  * @typedef {Object} ComponentConfig
  * * @property {Object} [propierty]

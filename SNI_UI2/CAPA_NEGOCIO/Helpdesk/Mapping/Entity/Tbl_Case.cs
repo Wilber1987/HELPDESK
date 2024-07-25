@@ -42,12 +42,33 @@ namespace CAPA_NEGOCIO.MAPEO
 			try
 			{
 				List<ModelFiles> Attach = new List<ModelFiles>();
+				var remitente = (MailboxAddress?)mail.From.FirstOrDefault();
+
+
 				Descripcion = mail?.HtmlBody;
 				Titulo = mail?.Subject.ToUpper();
 				Estado = Case_Estate.Solicitado.ToString();
 				Fecha_Inicio = mail?.Date.DateTime;
 				Id_Dependencia = dependencia.Id_Dependencia;
-				Mail = mail.From.ToString();
+				Mail = remitente?.Address;
+
+				Tbl_Profile? tbl_Profile = new Tbl_Profile { Correo_institucional = Mail }.Find<Tbl_Profile>();
+
+				if (tbl_Profile == null)
+				{
+					tbl_Profile = new Tbl_Profile
+					{
+						Correo_institucional = remitente?.Address,
+						Nombres = remitente?.Name,
+						Apellidos = remitente?.Name,
+						Estado = "ACTIVO",
+						Foto = "\\Media\\profiles\\avatar.png",
+						Sexo = "Masculino"
+					};
+					tbl_Profile.Save();
+				}
+				Tbl_Profile = tbl_Profile;
+
 				MimeMessageCaseData = new MimeMessageCaseData
 				{
 					MessageId = mail.MessageId,
@@ -81,6 +102,12 @@ namespace CAPA_NEGOCIO.MAPEO
 				else
 				{
 					Save();
+					new Tbl_Profile_CasosAsignados
+					{
+						Tbl_Profile = Tbl_Profile,
+						Tbl_Case = this,
+						Cat_Tipo_Participaciones = new Cat_Tipo_Participaciones { Descripcion = "Autor" }.Find<Cat_Tipo_Participaciones>()
+					}.Save();
 					if (mail?.Attachments != null)
 					{
 						foreach (MimeEntity attach in mail.Attachments)
@@ -184,6 +211,11 @@ namespace CAPA_NEGOCIO.MAPEO
 		}
 		public List<Tbl_Case> GetOwParticipantCase(string identity)
 		{
+			if (AuthNetCore.HavePermission(Permissions.ADMIN_ACCESS.ToString(), identity))
+			{
+				return GetOwCase(identity)
+				.Where(c => c.Estado != Case_Estate.Rechazado.ToString()).ToList();
+			}
 			if (AuthNetCore.HavePermission(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identity))
 			{
 				return getCaseByDependencia(identity, null)
@@ -254,7 +286,7 @@ namespace CAPA_NEGOCIO.MAPEO
 		}
 		internal object AprobarSolicitud(string identity)
 		{
-			
+
 			var user = AuthNetCore.User(identity);
 			if (!AuthNetCore.HavePermission(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identity))
 			{

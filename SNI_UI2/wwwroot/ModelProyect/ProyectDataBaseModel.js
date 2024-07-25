@@ -80,17 +80,17 @@ class Tbl_Case extends EntityClass {
     }
     Id_Case = { type: 'number', primary: true };
     Id_Vinculate = { type: 'number', hidden: true };
-    image = { type: 'img',   hidden: true};
+    //image = { type: 'img',   hidden: true};
     firma = { type: 'draw', hidden: true };
+    Cat_Dependencias = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Dependencias() };
     Tbl_Servicios = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Tbl_Servicios(), hiddenInTable: true };
     Titulo = { type: 'text' };
-    Fecha_Inicio = { type: 'date', hiddenInTable: true, };   
-    Mail = { type: 'text' , hidden: true};  
-    Cat_Dependencias = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Dependencias() };
+    Fecha_Inicio = { type: 'date', hiddenInTable: true, };
+    Mail = { type: 'text', hidden: true };
     Estado = { type: "Select", Dataset: ["Activo", "Espera", "Pendiente", "Finalizado"] };
-    Case_Priority = { type: "Select", Dataset: ["Alta", "Media", "Baja"], label: "Prioridad" , hiddenInTable: true};
-    Fecha_Final = { type: 'date' , hiddenFilter: true, hiddenInTable: true };   
-    Descripcion = { type: 'richtext',  hiddenFilter: true }; 
+    Case_Priority = { type: "Select", Dataset: ["Alta", "Media", "Baja"], label: "Prioridad", hiddenInTable: true };
+    Fecha_Final = { type: 'date', hiddenFilter: true, hiddenInTable: true };
+    Descripcion = { type: 'richtext', hiddenFilter: true };
     Tbl_Tareas = { type: 'MasterDetail', ModelObject: () => new Tbl_Tareas() };
     /**
      * @returns {Array<Tbl_Case>}
@@ -165,7 +165,7 @@ class Tbl_Case extends EntityClass {
     */
     AprobarCaseList = async (element, table_case) => {
         return await WAjaxTools.PostRequest("/api/Proyect/AprobarCaseList",
-            { Tbl_Cases: element, servicio:  table_case.Tbl_Servicios});
+            { Tbl_Cases: element, servicio: table_case.Tbl_Servicios });
     }
     /**
        * @param {Array<Tbl_Case>} element
@@ -185,7 +185,7 @@ class Tbl_Case extends EntityClass {
        * @param {Array<Tbl_Comments>} comentarios
        * @returns {Object}
        */
-    RemitirCasos = async (element, dependencia, comentarios) => {
+    RemitirCasos = async (element, dependencia, comentarios, table_case) => {
         return await WAjaxTools.PostRequest("/api/Proyect/RemitirCasos", {
             Tbl_Cases: element,
             dependencia: dependencia,
@@ -252,9 +252,9 @@ class Tbl_Tareas extends EntityClass {
         ModelObject: () => new Tbl_Tareas(), require: false
     };
     Estado = { type: "Select", Dataset: ["Activo", "Proceso", "Finalizado", "Espera", "Inactivo"] };
-    Fecha_Inicio = { type: "date"}
+    Fecha_Inicio = { type: "date" }
     //Tbl_TareasHijas = { type: 'MULTISELECT', hiddenFilter: true, ModelObject: () => new Tbl_Tareas() };
-  
+
     Tbl_Participantes = { type: 'MasterDetail', ModelObject: () => new Tbl_Participantes() };
     //Tbl_Evidencias = { type: 'MasterDetail', require: false, ModelObject: () => new Tbl_Evidencias() };
     Tbl_Calendario = {

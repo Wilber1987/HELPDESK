@@ -36,6 +36,7 @@ namespace API.Controllers
 		{
 			return inst.GetOwCase(HttpContext.Session.GetString("seassonKey"));
 		}
+		
 		public List<Tbl_Case> GetOwCloseCase(Tbl_Case inst)
 		{
 			return inst.GetOwCloseCase(HttpContext.Session.GetString("seassonKey"));

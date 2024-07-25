@@ -42,14 +42,14 @@ public class Cat_Dependencias : EntityClass
 	{
 		if (AuthNetCore.User(identity).isAdmin)
 		{
-			return new Cat_Dependencias().Get<Cat_Dependencias>();
+			return Get<Cat_Dependencias>();
 		}
 		Tbl_Profile? profile = new Tbl_Profile() { IdUser = AuthNetCore.User(identity).UserId }.Find<Tbl_Profile>();
 		Tbl_Dependencias_Usuarios Inst = new Tbl_Dependencias_Usuarios()
 		{
 			Id_Perfil = Tbl_Profile.GetUserProfile(identity)?.Id_Perfil
 		};
-		return new Cat_Dependencias().Get_WhereIN<Cat_Dependencias>(
+		return Get_WhereIN<Cat_Dependencias>(
 			"Id_Dependencia", Inst.Get<Tbl_Dependencias_Usuarios>().Select(p => p.Id_Dependencia.ToString()).ToArray()
 		);
 	}

@@ -35,21 +35,32 @@ class CaseDashboardComponent extends HTMLElement {
         /** @type {Array} */ casosProcesados,
         /** @type {Array} */ casosEtiquetadosPorMes) => {
 
-        const title1 = "Casos por dependencia";
-        const title2 = "Estado de los Casos";
-        const title3 = "Cumplimiento del SLA por mes";
-        const title4 = "Frecuencia de solicitudes por mes";
-        const title5 = "Estado de los Casos por dependencia";
+
+        //const title2 = "Estado de los Casos";
+        //const title3 = "Cumplimiento del SLA por mes";
+
+        //const title5 = "Estado de los Casos por dependencia";
         this.OptionContainer.innerHTML = "";
+        const TITLE_1 = "Casos por dependencia";
         this.OptionContainer.append(WRender.Create({
             tagName: 'input', type: 'button',
-            className: 'Btn-Mini', value: title1, onclick: () =>
-                this.drawReport(WArrayF.GroupBy(casosMap, "Dependencia"), title1, new Tbl_Case({
-                    Dependencia: { type: "text" },
-                    val: { type: "number" }
-                }))
+            className: 'Btn-Mini', value: TITLE_1, onclick: () =>
+                this.drawReport(
+                    WArrayF.GroupArray(casosMap, ["Dependencia", "Estado"], ["casos"]),
+                    TITLE_1
+                )
         }))
+
+        const TITLE_2 = "Frecuencia de solicitudes por mes";
         this.OptionContainer.append(WRender.Create({
+            tagName: 'input', type: 'button',
+            className: 'Btn-Mini', value: TITLE_2, onclick: () =>
+                this.drawReport(
+                    WArrayF.GroupArray(casosEtiquetadosPorMes, ["Mes", "Estado"], ["casos"]),
+                    TITLE_2
+                )
+        }))
+        /*this.OptionContainer.append(WRender.Create({
             tagName: 'input', type: 'button',
             className: 'Btn-Mini', value: title2, onclick: () =>
                 this.drawReport(WArrayF.GroupBy(this.Dataset, "Estado"), title2, new Tbl_Case())
@@ -66,16 +77,7 @@ class CaseDashboardComponent extends HTMLElement {
         //         }))
         // }))
         //console.log(casosEtiquetadosPorMes);
-        this.OptionContainer.append(WRender.Create({
-            tagName: 'input', type: 'button',
-            className: 'Btn-Mini', value: title4, onclick: () =>
-                this.drawReport(casosEtiquetadosPorMes, title4, new Tbl_Case({
-                    Estado: { type: "text" },
-                    Caso: { type: "text" },
-                    Mes: { type: "text" },
-                    val: { type: "number" },
-                }))
-        }))
+        
         this.OptionContainer.append(WRender.Create({
             tagName: 'input', type: 'button',
             className: 'Btn-Mini', value: title5, onclick: () =>
@@ -83,20 +85,23 @@ class CaseDashboardComponent extends HTMLElement {
                     Dependencia: { type: "text" },
                     val: { type: "number" }
                 }))
-        }))
+        }))*/
     }
     drawReport = (/** @type {any[]} */ MapData, /**@type {String} */ title, /**@type {Object} */ model) => {
+        console.log(this.FilterOptions?.FilterControls);
         this.shadowRoot?.append(new WModalForm({
-            title: title,
             ObjectModal: new WReportComponent({
                 Dataset: MapData,
+                Logo: "/Media/img/logo.png",
+                Header: title,
+                SubHeader: `Del ${this.FilterOptions?.FilterControls[0].childNodes[0].value} al ${this.FilterOptions?.FilterControls[0].childNodes[1].value}`,
                 PageType: PageType.OFICIO_HORIZONTAL,
-                ModelObject: model
+                //ModelObject: model
             })
         }))
     }
     dashBoardView = async () => {
-        this.Modelcase = new Tbl_Case();
+        this.Modelcase = new Tbl_Case({});
         this.ModelTareas = new Tbl_Tareas();
         const dasboardContainer = WRender.Create({
             className: "dashBoardView",
@@ -112,6 +117,7 @@ class CaseDashboardComponent extends HTMLElement {
             Display: true,
             UseEntityMethods: false,
             FilterFunction: async (/** @type {any} */ FilterData) => {
+
                 this.Dataset = await new Tbl_Case({ FilterData: FilterData }).Get();
                 this.TareasDataset = await new Tbl_Tareas({ FilterData: FilterData }).Get();
                 const { columChart,
@@ -184,7 +190,7 @@ class CaseDashboardComponent extends HTMLElement {
     buildCharts() {
         const casosMap = this.Dataset.map(x => {
             x.Dependencia = x.Cat_Dependencias.Descripcion;
-            x.val = 1;
+            x.casos = 1;
             return x;
         });
         const casosProcesados = this.Dataset.filter(c => !c.Estado.includes("Pendiente") && !c.Estado.includes("Solicitado")
@@ -193,14 +199,14 @@ class CaseDashboardComponent extends HTMLElement {
             Servicio: c.Tbl_Servicios?.Descripcion_Servicio ?? "",
             Caso: "Caso",
             Mes: c.Fecha_Inicio.getMonthFormatEs(),
-            val: 1
+            casos: 1
         }));
 
         const casosEtiquetadosPorMes = this.Dataset.map(c => ({
             Estado: c.Estado,
             Caso: "Caso",
-            Mes: c.Fecha_Inicio.getMonthFormatEs(),
-            val: 1
+            Mes: `${c.Fecha_Inicio.getMonthFormatEs()} ${new Date(c.Fecha_Inicio).getFullYear()}`,
+            casos: 1
         }));
         //console.log(casosEtiquetadosPorMes);
         this.SetOptions(casosMap, casosProcesados, casosEtiquetadosPorMes)
@@ -209,19 +215,19 @@ class CaseDashboardComponent extends HTMLElement {
             // @ts-ignore
             Title: "Estado de los Casos por dependencia",
             Dataset: casosMap, percentCalc: true,
-            EvalValue: "val",
+            EvalValue: "casos",
             AttNameEval: "Estado",
             groupParams: ["Dependencia"]
         });
         columChart.id = "ColumnCasosPorDependencia";
 
-        this.OptionContainer.append(WRender.Create({
+        /*this.OptionContainer.append(WRender.Create({
             tagName: 'input', type: 'button',
             className: 'Btn-Mini', value: "title1", onclick: () => {
                 console.log(columChart.GroupsProcessData);
                 this.drawReport(columChart.GroupsProcessData, "")
             }
-        }))
+        }))*/
         const radialChartDependencias = new RadialChart({
             // @ts-ignore
             Title: "Casos por dependencia",
@@ -236,14 +242,14 @@ class CaseDashboardComponent extends HTMLElement {
         //     Estado: c.Estado,
         //     Caso: "Caso",
         //     Mes: c.Fecha_Inicio.getMonthFormatEs(),
-        //     val: 1
+        //     casos: 1
         // }));
         const columChartMonth = new ColumChart({
             // @ts-ignore
             Title: "Cumplimiento del SLA por mes",
             //TypeChart: "Line",
             Dataset: casosProcesados,
-            EvalValue: "val",
+            EvalValue: "casos",
             AttNameEval: "Estado",
             groupParams: ["Servicio", "Mes"]
         });
@@ -252,7 +258,7 @@ class CaseDashboardComponent extends HTMLElement {
             // @ts-ignore
             TypeChart: "Line",
             Dataset: casosEtiquetadosPorMes,
-            EvalValue: "val",
+            EvalValue: "casos",
             AttNameEval: "Caso",
             groupParams: ["Mes"]
         });

@@ -35,8 +35,17 @@ const activityStyle = css`
         .actividad .propiedades {
             font-size: 12px;
             display: flex;
-            gap: 20px;
+            gap: 10px;
             flex-wrap: wrap;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .actividad label {            
+            flex-wrap: wrap;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .actividad .options {
             display: flex;

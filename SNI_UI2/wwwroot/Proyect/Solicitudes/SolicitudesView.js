@@ -112,6 +112,7 @@ class MainSolicitudesView extends HTMLElement {
     nuevoCaso = async () => {
         const form = new WForm({
             ModelObject: this.ModelObject,
+            AutoSave: true,
             SaveFunction: ()=> {
                 this.shadowRoot.append(ModalMessege("Aviso", "Caso guardado correctamente", true))
             }

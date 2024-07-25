@@ -22,6 +22,10 @@
 {
     <script src="~/Admin/CaseManagerView.js" type="module"></script>
 }
+@if (SecurityController.IsAdmin(HttpContext.Session.GetString("seassonKey")))
+{
+    <script  src="~/Admin/AdminConfig.js" type="module"></script>
+}
 @if (SecurityController.HavePermission(Permissions.ADMINISTRAR_USUARIOS.ToString(), HttpContext.Session.GetString("seassonKey")))
 {
     <script src="~/WDevCore/Security/AdminSecurity.js" type="module"></script>
@@ -30,6 +34,7 @@
 {
     <script src="~/Proyect/AdminNavigator.js" type="module"></script>
 }
+
 @* @if (SecurityController.HavePermission(Permissions.QUESTIONNAIRES_MANAGER.ToString(), HttpContext.Session.GetString("seassonKey")))
 {
     <script src="~/Questionnaires/Views/AdminNavigator.js" type="module"></script>

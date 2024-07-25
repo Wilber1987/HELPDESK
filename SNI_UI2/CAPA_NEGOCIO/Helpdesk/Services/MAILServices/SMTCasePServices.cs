@@ -25,8 +25,11 @@ namespace CAPA_NEGOCIO.Services
 				try
 				{
 					await Task.Delay(100);
-
 					var Tcase = new Tbl_Case() { Id_Case = item.Id_Case }.Find<Tbl_Case>();
+					if (Tcase?.Cat_Dependencias?.SMTPHOST == null && Tcase?.Cat_Dependencias?.Username == null)
+					{
+						continue;
+					}
 					var send = await SMTPMailServices.SendMail(item.FromAdress,
 					item.ToAdress,
 					item.Subject,

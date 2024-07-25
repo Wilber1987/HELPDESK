@@ -1,10 +1,12 @@
 ﻿@using API.Controllers
 @using CAPA_DATOS.Security
-<!DOCTYPE html>
-<html lang="en">
+@using DataBaseModel
 @{
     string identify = Context.Session.GetString("seassonKey");
+    var pageConfig = Config.pageConfig();
 }
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
     <meta charset="utf-8" />
@@ -15,7 +17,7 @@
     <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>@ViewData["Title"] HELPDESK</title>
+    <title>@ViewData["Title"] @pageConfig.TITULO</title>
     <link rel="stylesheet" href="~/css/AdminTemplate.css" />
     <script>
         function displayNav() {
@@ -45,7 +47,7 @@
         <nav>
             <img src="~/Media/Image/close.webp" class="navIcon" onclick="displayNav()">
             <div class="logo-container">
-                <img src="~/Media/img/logo.png" />
+                <img src="@pageConfig.MEDIA_IMG_PATH@pageConfig.LOGO_PRINCIPAL">
             </div>
             <partial name="MainMenu"/>
            
@@ -55,8 +57,8 @@
     <header id="Header" class="admin-header">
         <img src="~/Media/Image/navIcon.png" class="navIcon" onclick="displayNav()">
         <div class="title-container">
-            <label for="" class="title">HELPDESK</label>
-            <label for="" class="sub-title">Sistema de ayuda</label>
+            <label for="" class="title">@pageConfig.TITULO</label>
+            <label for="" class="sub-title">@pageConfig.SUB_TITULO</label>
         </div>
 
         @if (SecurityController.IsAdmin(identify))

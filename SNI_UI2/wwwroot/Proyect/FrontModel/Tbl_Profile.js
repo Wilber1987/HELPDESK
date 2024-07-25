@@ -21,7 +21,7 @@ class Tbl_Profile extends EntityClass {
     /**@type {ModelProperty}*/ Apellidos = { type: 'text' };
     /**@type {ModelProperty}*/ FechaNac = { type: 'date', label: "fecha de nacimiento" };
     /**@type {ModelProperty}*/ Sexo = { type: "Select", Dataset: ["Masculino", "Femenino"] };
-    /**@type {ModelProperty}*/ Foto = { type: 'img' };
+    /**@type {ModelProperty}*/ Foto = { type: 'img', require: false };
     /**@type {ModelProperty}*/ DNI = { type: 'text' };
     /**@type {ModelProperty}*/ Correo_institucional = { type: 'text', label: "correo", disabled: true, hidden: true };
     /**@type {ModelProperty}*/ Estado = { type: "Select", Dataset: ["ACTIVO", "INACTIVO"] };

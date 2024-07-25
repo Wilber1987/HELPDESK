@@ -9,38 +9,42 @@ using CAPA_NEGOCIO.MAPEO;
 
 namespace CAPA_NEGOCIO.Services
 {
-    public class IMAPCaseServices
-    {
+	public class IMAPCaseServices
+	{
 
-        public async Task<bool> chargeAutomaticCase()
-        {
+		public async Task<bool> chargeAutomaticCase()
+		{
 
-            List<Cat_Dependencias> dependencias = new Cat_Dependencias().Get<Cat_Dependencias>();
-            foreach (var dependencia in dependencias)
-            {
-                try
-                {
-                    var messages = await new IMAPServices().GetMessages(new MailConfig()
-                    {
-                        HOST = dependencia.Host,
-                        PASSWORD = dependencia.Password,
-                        USERNAME = dependencia.Username,
-                        CLIENT = dependencia.CLIENT,
-                        CLIENT_SECRET = dependencia.CLIENT_SECRET,
-                        AutenticationType = Enum.Parse<AutenticationTypeEnum>(dependencia.AutenticationType),
-                        TENAT = dependencia.TENAT,
-                        OBJECTID = dependencia.OBJECTID,
-                        HostService = Enum.Parse<HostServices>(dependencia?.HostService)
-                    });
-                    messages.ForEach(async m => await new Tbl_Case().CreateAutomaticCase(m, dependencia));
-                }
-                catch (System.Exception ex)
-                {
-                    LoggerServices.AddMessageError($"error obteniendo mensjes de la dependencia: {dependencia.Descripcion}", ex);
-                }
+			List<Cat_Dependencias> dependencias = new Cat_Dependencias().Get<Cat_Dependencias>();
+			foreach (var dependencia in dependencias)
+			{
+				if (dependencia.Host == null && dependencia.Username == null)
+				{
+					continue;
+				}
+				try
+				{
+					var messages = await new IMAPServices().GetMessages(new MailConfig()
+					{
+						HOST = dependencia.Host,
+						PASSWORD = dependencia.Password,
+						USERNAME = dependencia.Username,
+						CLIENT = dependencia.CLIENT,
+						CLIENT_SECRET = dependencia.CLIENT_SECRET,
+						AutenticationType = Enum.Parse<AutenticationTypeEnum>(dependencia.AutenticationType),
+						TENAT = dependencia.TENAT,
+						OBJECTID = dependencia.OBJECTID,
+						HostService = Enum.Parse<HostServices>(dependencia?.HostService)
+					});
+					messages.ForEach(async m => await new Tbl_Case().CreateAutomaticCase(m, dependencia));
+				}
+				catch (System.Exception ex)
+				{
+					LoggerServices.AddMessageError($"error obteniendo mensjes de la dependencia: {dependencia.Descripcion}", ex);
+				}
 
-            }
-            return true;
-        }
-    }
+			}
+			return true;
+		}
+	}
 }

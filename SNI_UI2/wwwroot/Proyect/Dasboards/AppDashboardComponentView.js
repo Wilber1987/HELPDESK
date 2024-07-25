@@ -146,11 +146,11 @@ class AppDashboardComponentView extends HTMLElement {
                 <div class="row row1">
                     <div class="item">
                         <span class="big-text">${element.NCasos}</span>
-                        <span class="regular-text">Casos en proceso</span>
+                        <span class="regular-text">Proceso</span>
                     </div>
                     <div class="item">
                         <span class="big-text">${element.NCasosFinalizados}</span>
-                        <span class="regular-text">Casos finalizados</span>
+                        <span class="regular-text">Finalizados</span>
                     </div>
                     <div class="item">
                         <span class="big-text">${element.Tbl_Dependencias_Usuarios?.length ?? 0}</span>

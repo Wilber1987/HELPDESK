@@ -166,17 +166,6 @@ class SolicitudesPendientesComponent extends HTMLElement {
                     this.shadowRoot.append(ModalMessege("Seleccione solicitudes"));
                     return;
                 }
-                // this.shadowRoot.append(ModalVericateAction(async () => {
-                //     const response = await new Tbl_Case()
-                //         .AprobarCaseList(this.mainTable.selectedItems);
-                //     if (response.status == 200) {
-                //         this.shadowRoot.append(ModalMessege("Solicitudes aprobadas"));
-                //         this.update();
-                //     } else {
-                //         this.shadowRoot.append(ModalMessege("Error"));
-                //     }
-                //     //modal.close();
-                // }, "Esta seguro que desea aprobar estas solicitudes"));
                 const dependencias = await new Cat_Dependencias().Get();
                 const servicios = await new Tbl_Servicios({ Id_Dependencia: this.mainTable.selectedItems[0]?.Cat_Dependencias?.Id_Dependencia }).Get();
                 const modal = new WModalForm({

@@ -13,7 +13,7 @@ import { EntityClass } from "../WDevCore/WModules/EntityClass.js";
  */
 class LogErrorView extends HTMLElement {
     /**
-    * @param {ComponentConfig} props
+    * @param {ComponentConfig} [props]
     */
     constructor(props) {
         super();

@@ -1,15 +1,14 @@
 //@ts-check
 import { StylesControlsV2, StylesControlsV3 } from '../../../WDevCore/StyleModules/WStyleComponents.js';
-import { WAppNavigator } from '../../../WDevCore/WComponents/WAppNavigator.js';
 import { WFilterOptions } from '../../../WDevCore/WComponents/WFilterControls.js';
 import { ModalMessege, ModalVericateAction } from '../../../WDevCore/WComponents/WForm.js';
 import { WModalForm } from '../../../WDevCore/WComponents/WModalForm.js';
 import { WTableComponent } from '../../../WDevCore/WComponents/WTableComponent.js';
 import { ComponentsManager, WRender } from '../../../WDevCore/WModules/WComponentsTools.js';
-import { WCssClass, WStyledRender } from '../../../WDevCore/WModules/WStyledRender.js';
+import { Cat_Dependencias } from "../../FrontModel/Cat_Dependencias.js";
 import { Tbl_Profile } from '../../FrontModel/Tbl_Profile.js';
+import { Tbl_Servicios } from '../../FrontModel/Tbl_Servicios.js';
 import { activityStyle } from '../../style.js';
-import {Cat_Dependencias} from "../../FrontModel/Cat_Dependencias";
 
 const OnLoad = async () => {
     const Dataset = await new Tbl_Profile().Get();
@@ -46,7 +45,10 @@ class PerfilManagerComponent extends HTMLElement {
     }
     connectedCallback() { }
     Draw = async () => {
-        this.OptionContainer.append(WRender.Create({ tagName: 'input', type: 'button', className: 'Block-Alert', value: 'Gestión de perfiles', onclick: this.perfilManagerComponent }))
+        this.OptionContainer.append(WRender.Create({
+            tagName: 'input', type:
+                'button', className: 'Block-Alert', value: 'Gestión de perfiles', onclick: this.perfilManagerComponent
+        }))
         this.UserActions.forEach(element => {
             this.OptionContainer2.append(WRender.Create({
                 tagName: 'input', type: 'button', className: 'Btn',

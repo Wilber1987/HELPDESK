@@ -1,10 +1,7 @@
-import { WRender, ComponentsManager } from '../../WDevCore/WModules/WComponentsTools.js';
-import { WCssClass } from '../../WDevCore/WModules/WStyledRender.js';
-import { WCardCarousel, WCard } from '../../WDevCore/WComponents/WCardCarousel.js';
 import { StylesControlsV1 } from "../../WDevCore/StyleModules/WStyleComponents.js";
+import { WRender } from '../../WDevCore/WModules/WComponentsTools.js';
+import { WCssClass } from '../../WDevCore/WModules/WStyledRender.js';
 import { ActionFunction } from '../Home.js';
-import {WArrayF} from "../../WDevCore/WModules/WArrayF";
-import {WAjaxTools} from "../../WDevCore/WModules/WAjaxTools";
 
 
 class ProyectDetailViewer extends HTMLElement {
@@ -121,4 +118,4 @@ class ProyectDetailViewer extends HTMLElement {
     };
 }
 customElements.define('w-view', ProyectDetailViewer);
-export {ProyectDetailViewer}
+export { ProyectDetailViewer };

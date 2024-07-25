@@ -1,5 +1,6 @@
+//@ts-check
+import { CaseSearcherToVinculate } from '../../AppComponents/CaseSearcherToVinculate.js';
 import { priorityStyles } from '../../AppComponents/Styles.js';
-import { Tbl_Case } from '../FrontModel/ProyectDataBaseModel.js';
 import { Permissions, WSecurity } from '../../WDevCore/Security/WSecurity.js';
 import { StylesControlsV2, StylesControlsV3 } from "../../WDevCore/StyleModules/WStyleComponents.js";
 import { WCommentsComponent } from '../../WDevCore/WComponents/WCommentsComponent.js';
@@ -8,23 +9,24 @@ import { ModalMessege, ModalVericateAction, WForm } from "../../WDevCore/WCompon
 import { WModalForm } from '../../WDevCore/WComponents/WModalForm.js';
 import { WTableComponent } from '../../WDevCore/WComponents/WTableComponent.js';
 import { ComponentsManager, WRender } from '../../WDevCore/WModules/WComponentsTools.js';
-import { css } from '../../WDevCore/WModules/WStyledRender.js';
+import { Cat_Dependencias } from "../FrontModel/Cat_Dependencias.js";
+import { Tbl_Case, Tbl_VinculateCase } from '../FrontModel/Tbl_CaseModule.js';
+import { Tbl_Comments } from '../FrontModel/Tbl_Comments.js';
+import { Tbl_Servicios } from '../FrontModel/Tbl_Servicios.js';
 import { CaseDetailComponent, caseGeneralData } from '../ProyectViews/Proyectos/CaseDetailComponent.js';
 import { simpleCaseForm } from '../ProyectViews/Proyectos/CaseManagerComponent.js';
 import { activityStyle } from '../style.js';
-import {Cat_Dependencias} from "../FrontModel/Cat_Dependencias";
 class SolicitudesPendientesComponent extends HTMLElement {
     /**
      * 
      * @param {Array<Tbl_Case>} Dataset 
-     * @param {Array<Cat_Dependencias>} Dependencias 
      */
     constructor(Dataset) {
         super();
         this.Dataset = Dataset;
         //this.Dependencias = Dependencias;
         this.attachShadow({ mode: 'open' });
-        this.shadowRoot.append(this.WStyle, StylesControlsV2.cloneNode(true), StylesControlsV3.cloneNode(true));
+        this.shadowRoot?.append(this.WStyle, StylesControlsV2.cloneNode(true), StylesControlsV3.cloneNode(true));
         this.TabContainer = WRender.createElement({ type: 'div', props: { class: 'TabContainer', id: "TabContainer" } });
         this.TabManager = new ComponentsManager({ MainContainer: this.TabContainer });
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });
@@ -48,9 +50,11 @@ class SolicitudesPendientesComponent extends HTMLElement {
         }
     }
     disconnectedCallback() {
-        clearInterval(this.nIntervId);
-        // liberar nuestro inervalId de la variable
-        this.nIntervId = null;
+        if (this.nIntervId != null) {
+            clearInterval(this.nIntervId);
+            // liberar nuestro inervalId de la variable
+            this.nIntervId = null;
+        }
     }
     DrawSolicitudesPendientesComponent = async () => {
         this.OptionContainer.append(WRender.Create({ tagName: 'input', type: 'button', className: 'Block-Alert', value: 'Casos Pendientes de Aprobación', onclick: this.actividadesManager }))
@@ -62,7 +66,7 @@ class SolicitudesPendientesComponent extends HTMLElement {
             }))
 
         });
-        this.shadowRoot.append(this.OptionContainer, this.TabContainer);
+        this.shadowRoot?.append(this.OptionContainer, this.TabContainer);
         this.actividadesManager();
     }
 
@@ -71,7 +75,7 @@ class SolicitudesPendientesComponent extends HTMLElement {
             this.mainTable = new WTableComponent({
                 Dataset: this.Dataset,
                 AddItemsFromApi: false,
-                ModelObject: this.ModelObject, userStyles: [StylesControlsV2],
+                ModelObject: this.ModelObject,
                 Options: {
                     MultiSelect: true,
                     UserActions: [{
@@ -142,7 +146,7 @@ class SolicitudesPendientesComponent extends HTMLElement {
         })
     }
     actividadElement = (actividad) => {
-        this.shadowRoot.append(priorityStyles.cloneNode(true));
+        this.shadowRoot?.append(priorityStyles.cloneNode(true));
         return WRender.Create({
             className: "actividad", object: actividad, children: [
                 {
@@ -150,50 +154,67 @@ class SolicitudesPendientesComponent extends HTMLElement {
                         {
                             className: "options", children: [
                                 { tagName: 'button', className: 'Btn-Mini', innerText: "Detalle", onclick: async () => await this.actividadDetail(actividad) },
-                                WSecurity.HavePermission(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA) ?
-                                    { tagName: 'button', className: 'Btn-Mini', innerText: 'Vincular Caso', onclick: () => this.Vincular(actividad) } : ""
+                                WSecurity.HavePermission(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA) ? { tagName: 'button', className: 'Btn-Mini', innerText: 'Vincular Caso', onclick: () => this.Vincular(actividad) } : ""
                             ]
                         }
                     ]
-                }
-                , caseGeneralData(actividad)
+                }, caseGeneralData(actividad)
             ]
         })
+    }
+    Vincular = async (actividad) => {
+        this.shadowRoot?.append(new WModalForm({
+            title: "Vincular Casos",
+            ObjectModal: CaseSearcherToVinculate(actividad, "Vincular", async (caso_vinculado, TableComponent, model) => {
+                this.shadowRoot?.append(ModalVericateAction(async () => {
+                    const response = await new Tbl_VinculateCase({
+                        Casos_Vinculados: [actividad, caso_vinculado]
+                    }).VincularCaso();
+                    const updateData = await model.Get();
+                    TableComponent.Dataset = updateData;
+                    TableComponent.DrawTable();
+                }, "Esta seguro de Vincular este caso"))
+            })
+        }));
     }
     UserActions = [
         {
             name: "Aprobar", action: async (/**@type {Tbl_Case}*/element) => {
+                // @ts-ignore
                 if (this.mainTable.selectedItems.length <= 0) {
-                    this.shadowRoot.append(ModalMessege("Seleccione solicitudes"));
+                    this.shadowRoot?.append(ModalMessege("Seleccione solicitudes"));
                     return;
                 }
                 const dependencias = await new Cat_Dependencias().Get();
+                // @ts-ignore
                 const servicios = await new Tbl_Servicios({ Id_Dependencia: this.mainTable.selectedItems[0]?.Cat_Dependencias?.Id_Dependencia }).Get();
                 const modal = new WModalForm({
                     ObjectModal: simpleCaseForm(element,
+                        // @ts-ignore
                         dependencias.filter(d => d.Id_Dependencia == this.mainTable.selectedItems[0]?.Cat_Dependencias?.Id_Dependencia),
                         servicios,
                         async (table_case) => {
-                            const response = await new Tbl_Case()
-                                .AprobarCaseList(this.mainTable.selectedItems, table_case);
+                            const response = await new Tbl_Case({})
+                                .AprobarCaseList(this.mainTable?.selectedItems ?? [], table_case);
                             if (response.status == 200) {
-                                this.shadowRoot.append(ModalMessege("Solicitudes aprobadas"));
+                                this.shadowRoot?.append(ModalMessege("Solicitudes aprobadas"));
                                 this.update();
                             } else {
-                                this.shadowRoot.append(ModalMessege("Error"));
+                                this.shadowRoot?.append(ModalMessege("Error"));
                             }
                             modal.close();
                         })
                 });
-                this.shadowRoot.append(modal);
+                this.shadowRoot?.append(modal);
             }
         }, {
             name: "Rechazar", action: async (/**@type {Tbl_Case}*/element) => {
+                // @ts-ignore
                 if (this.mainTable.selectedItems.length <= 0) {
-                    this.shadowRoot.append(ModalMessege("Seleccione solicitudes"));
+                    this.shadowRoot?.append(ModalMessege("Seleccione solicitudes"));
                     return;
                 }
-                this.shadowRoot.append(new WModalForm({
+                this.shadowRoot?.append(new WModalForm({
                     title: "Escriba la razón por la cual se están rechazando estas solicitudes",
                     EditObject: {
                         Id_Case: element.Id_Case,
@@ -201,16 +222,16 @@ class SolicitudesPendientesComponent extends HTMLElement {
                     ModelObject: new Tbl_Comments(),
                     ObjectOptions: {
                         SaveFunction: async (comentario) => {
-                            this.shadowRoot.append(ModalVericateAction(async () => {
+                            this.shadowRoot?.append(ModalVericateAction(async () => {
                                 const response = await new Tbl_Case()
-                                    .RechazarCaseList(this.mainTable.selectedItems, comentario);
+                                    .RechazarCaseList(this.mainTable?.selectedItems ?? [], comentario);
                                 if (response.status == 200) {
-                                    this.shadowRoot.append(ModalMessege("Solicitudes rechazadas"));
+                                    this.shadowRoot?.append(ModalMessege("Solicitudes rechazadas"));
                                     this.update();
                                 } else {
-                                    this.shadowRoot.append(ModalMessege("Error"));
+                                    this.shadowRoot?.append(ModalMessege("Error"));
                                 }
-                                modal.close();
+                                //modal.close();
                             }, "Esta seguro que desea rechazar estas solicitudes"));
                         }
                     }
@@ -219,11 +240,13 @@ class SolicitudesPendientesComponent extends HTMLElement {
             }
         }, {
             name: "Remitir a otra dependencia", action: async (/**@type {Tbl_Case}*/element) => {
+                // @ts-ignore
                 if (this.mainTable.selectedItems.length <= 0) {
-                    this.shadowRoot.append(ModalMessege("Seleccione solicitudes"));
+                    this.shadowRoot?.append(ModalMessege("Seleccione solicitudes"));
                     return;
                 }
                 const dependencias = await new Cat_Dependencias().Get();
+                // @ts-ignore
                 const filterDepend = dependencias.filter(d => d.Id_Dependencia != this.mainTable.selectedItems[0]?.Cat_Dependencias?.Id_Dependencia)
                 const servicios = await new Tbl_Servicios({ Id_Dependencia: filterDepend[0]?.Id_Dependencia }).Get();
                 const modal = new WModalForm({
@@ -231,21 +254,22 @@ class SolicitudesPendientesComponent extends HTMLElement {
                         filterDepend,
                         servicios,
                         async (table_case) => {
-                            this.shadowRoot.append(ModalVericateAction(async () => {
+                            this.shadowRoot?.append(ModalVericateAction(async () => {
                                 const response =
+                                    // @ts-ignore
                                     await new Tbl_Case().RemitirCasos(this.mainTable.selectedItems,
                                         table_case.Cat_Dependencias, table_case.Tbl_Comments, table_case);
                                 if (response.status == 200) {
-                                    this.shadowRoot.append(ModalMessege("Solicitud remitida"));
+                                    this.shadowRoot?.append(ModalMessege("Solicitud remitida"));
                                     this.update();
                                 } else {
-                                    this.shadowRoot.append(ModalMessege("Error"));
+                                    this.shadowRoot?.append(ModalMessege("Error"));
                                 }
                                 modal.close();
                             }, "Esta seguro que desea remitir esta solicitud"))
                         })
                 });
-                this.shadowRoot.append(modal);
+                this.shadowRoot?.append(modal);
             }
         }
     ]

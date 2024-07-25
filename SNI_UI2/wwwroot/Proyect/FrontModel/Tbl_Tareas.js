@@ -1,4 +1,7 @@
-import {EntityClass} from "../../WDevCore/WModules/EntityClass";
+//@ts-check
+import {EntityClass} from "../../WDevCore/WModules/EntityClass.js";
+import { Tbl_Calendario } from "./Tbl_Calendario.js";
+import { Tbl_Participantes } from "./Tbl_Participantes.js";
 
 class Tbl_Tareas extends EntityClass {
     constructor(props) {

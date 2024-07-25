@@ -1,17 +1,16 @@
 
-import { Tbl_Case } from '../FrontModel/ProyectDataBaseModel.js';
+import { priorityStyles } from '../../AppComponents/Styles.js';
+import { WSecurity } from '../../WDevCore/Security/WSecurity.js';
 import { StylesControlsV2, StylesControlsV3 } from "../../WDevCore/StyleModules/WStyleComponents.js";
+import { WCommentsComponent } from '../../WDevCore/WComponents/WCommentsComponent.js';
+import { WFilterOptions } from "../../WDevCore/WComponents/WFilterControls.js";
 import { ModalMessege, WForm } from "../../WDevCore/WComponents/WForm.js";
 import { WPaginatorViewer } from '../../WDevCore/WComponents/WPaginatorViewer.js';
 import { ComponentsManager, WRender } from '../../WDevCore/WModules/WComponentsTools.js';
-import { css } from '../../WDevCore/WModules/WStyledRender.js';
-import { WFilterOptions } from "../../WDevCore/WComponents/WFilterControls.js";
-import { WCommentsComponent } from '../../WDevCore/WComponents/WCommentsComponent.js';
-import { WSecurity } from '../../WDevCore/Security/WSecurity.js';
-import { priorityStyles } from '../../AppComponents/Styles.js';
+import { Cat_Dependencias } from "../FrontModel/Cat_Dependencias.js";
+import { Tbl_Case } from '../FrontModel/Tbl_CaseModule.js';
 import { caseGeneralData } from '../ProyectViews/Proyectos/CaseDetailComponent.js';
 import { activityStyle } from '../style.js';
-import {Cat_Dependencias} from "../FrontModel/Cat_Dependencias";
 
 const OnLoad = async () => {
     const Solicitudes = await new Tbl_Case().GetOwSolicitudesPendientesAprobar();

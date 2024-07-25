@@ -1,7 +1,5 @@
 import { EntityClass } from "../../WDevCore/WModules/EntityClass.js";
 
-import {WAjaxTools} from "../../WDevCore/WModules/WAjaxTools";
-
 class ViewParticipantesServicios extends EntityClass {
    constructor(props) {
        super(props, 'ViewDBO');
@@ -23,7 +21,7 @@ class ViewParticipantesServicios extends EntityClass {
    Nombre_Proyecto = { type: 'text' };
    Estado = { type: 'SELECT', Dataset: ["ACTIVO", "INACTIVO"]  };
 }
-export { ViewParticipantesServicios }
+export { ViewParticipantesServicios };
 
 class ViewCalendarioByDependencia extends EntityClass {
    constructor(props) {
@@ -41,7 +39,7 @@ class ViewCalendarioByDependencia extends EntityClass {
    Id_Tarea = { type: 'number' };
    Id_Dependencia = { type: 'number' };
 }
-export { ViewCalendarioByDependencia }
+export { ViewCalendarioByDependencia };
 class ViewActividadesParticipantes extends EntityClass {
    constructor(props) {
        super(props, 'ViewDBO');
@@ -55,4 +53,5 @@ class ViewActividadesParticipantes extends EntityClass {
    Estado = { type: 'SELECT', Dataset: ["ACTIVO", "INACTIVO"]  };
    Id_Perfil = { type: 'number' };
 }
-export { ViewActividadesParticipantes }
+export { ViewActividadesParticipantes };
+

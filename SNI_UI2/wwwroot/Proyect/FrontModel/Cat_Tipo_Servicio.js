@@ -1,4 +1,4 @@
-import {EntityClass} from "../../WDevCore/WModules/EntityClass";
+import {EntityClass} from "../../WDevCore/WModules/EntityClass.js";
 
 class Cat_Tipo_Servicio extends EntityClass {
     constructor(props) {

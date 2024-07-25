@@ -1,10 +1,9 @@
-import { WRender, ComponentsManager } from '../../../WDevCore/WModules/WComponentsTools.js';
-import { WCssClass, WStyledRender } from '../../../WDevCore/WModules/WStyledRender.js';
 import { WCalendar } from '../../../WDevCore/WComponents/WCalendar.js';
 import { WForm } from '../../../WDevCore/WComponents/WForm.js';
 import { WModalForm } from '../../../WDevCore/WComponents/WModalForm.js';
-import {WArrayF} from "../../../WDevCore/WModules/WArrayF";
-import {WAjaxTools} from "../../../WDevCore/WModules/WAjaxTools";
+import { WAjaxTools } from "../../../WDevCore/WModules/WAjaxTools.js";
+import { ComponentsManager, WRender } from '../../../WDevCore/WModules/WComponentsTools.js';
+import { WCssClass, WStyledRender } from '../../../WDevCore/WModules/WStyledRender.js';
 const Reservaciones = [];
 const CompM = new ComponentsManager();
 class ReservarComponent extends HTMLElement {
@@ -294,7 +293,7 @@ class DetailDayClass extends HTMLElement {
         }
     };
 }
-export { ReservarComponent,  DetailDayClass}
+export { DetailDayClass, ReservarComponent };
 customElements.define('w-day', DetailDayClass);
 const Estados = [
     { id_: "Fresa", Descripcion: "Severa" },

@@ -1,13 +1,12 @@
-import { WAppNavigator } from '../../WDevCore/WComponents/WAppNavigator.js';
-import { WRender, ComponentsManager } from '../../WDevCore/WModules/WComponentsTools.js';
-import { WCssClass, WStyledRender } from '../../WDevCore/WModules/WStyledRender.js';
-import { WTableComponent } from "../../WDevCore/WComponents/WTableComponent.js";
 import { StylesControlsV2 } from "../../WDevCore/StyleModules/WStyleComponents.js";
+import { WAppNavigator } from '../../WDevCore/WComponents/WAppNavigator.js';
 import { WModalForm } from "../../WDevCore/WComponents/WModalForm.js";
+import { WTableComponent } from "../../WDevCore/WComponents/WTableComponent.js";
+import { WAjaxTools } from "../../WDevCore/WModules/WAjaxTools.js";
+import { ComponentsManager, WRender } from '../../WDevCore/WModules/WComponentsTools.js';
+import { WCssClass, WStyledRender } from '../../WDevCore/WModules/WStyledRender.js';
 import { ReservarComponent } from "./ViewComponents/ReservaComponent.js";
 import { ViewActivityComponent } from "./ViewComponents/ViewActivityComponent.js";
-import {WArrayF} from "../../WDevCore/WModules/WArrayF";
-import {WAjaxTools} from "../../WDevCore/WModules/WAjaxTools";
 
 class HomeView extends HTMLElement {
     constructor() {
@@ -125,5 +124,5 @@ class HomeView extends HTMLElement {
 }
 
 customElements.define('w-home', HomeView);
-export { HomeView }
+export { HomeView };
 

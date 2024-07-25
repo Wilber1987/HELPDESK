@@ -2,7 +2,7 @@ import "../../WDevCore/WComponents/WTableComponent.js";
 import { ComponentsManager, WRender } from '../../WDevCore/WModules/WComponentsTools.js';
 import { WCssClass } from '../../WDevCore/WModules/WStyledRender.js';
 import { ProyectDetailViewer } from './ProyectDetailViewer.js';
-import {WAjaxTools} from "../../WDevCore/WModules/WAjaxTools";
+import { WAjaxTools } from "../../WDevCore/WModules/WAjaxTools.js";
 
 const DOMManager = new ComponentsManager();
 class ViewProyects extends HTMLElement {
@@ -104,7 +104,7 @@ class ViewProyectsTab extends HTMLElement {
             tagName: 'w-articles',
             //ArticleHeader : ["nombre_Proyecto"],
             ArticleBody: ["Nombre_Proyecto", "Descripcion_Servicio"],
-            Dataset: Dataset, 
+            Dataset: Dataset,
             Options: {
                 Search: true,
                 ApiUrlSearch: "api/Investigaciones/TakeInvestigaciones",
@@ -125,7 +125,7 @@ class ViewProyectsTab extends HTMLElement {
         const ProyectMap = WRender.Create({});
         const BodyComponents = new ProyectDetailViewer(response, DOMManager);
         //this.appendChild(WRender.createElement(ModalComp(BodyComponents, ProyectMap)));
-        DOMManager.NavigateFunction("proyecto"+Id_Servicio, BodyComponents)
+        DOMManager.NavigateFunction("proyecto" + Id_Servicio, BodyComponents)
     }
     Style = {
         type: "w-style",

@@ -1,13 +1,11 @@
 //@ts-check
-import { WRender, ComponentsManager } from "../../../WDevCore/WModules/WComponentsTools.js";
-import { StylesControlsV2, StylesControlsV3, StyleScrolls } from "../../../WDevCore/StyleModules/WStyleComponents.js"
-import { css } from "../../../WDevCore/WModules/WStyledRender.js";
-import { WTableComponent } from "../../../WDevCore/WComponents/WTableComponent.js";
-import { Tbl_VinculateCase } from "../../FrontModel/ProyectDataBaseModel.js";
+import { StylesControlsV2, StylesControlsV3, StyleScrolls } from "../../../WDevCore/StyleModules/WStyleComponents.js";
 import { WForm } from "../../../WDevCore/WComponents/WForm.js";
 import { WModalForm } from "../../../WDevCore/WComponents/WModalForm.js";
-import {WArrayF} from "../../../WDevCore/WModules/WArrayF";
-import {WAjaxTools} from "../../../WDevCore/WModules/WAjaxTools";
+import { WTableComponent } from "../../../WDevCore/WComponents/WTableComponent.js";
+import { ComponentsManager, WRender } from "../../../WDevCore/WModules/WComponentsTools.js";
+import { css } from "../../../WDevCore/WModules/WStyledRender.js";
+import { Tbl_VinculateCase } from "../../FrontModel/Tbl_CaseModule.js";
 /**
  * @typedef {Object} ComponentConfig
  * * @property {Object} [propierty]
@@ -67,7 +65,7 @@ class ComponentView extends HTMLElement {
     `
 }
 customElements.define('w-component', ComponentView);
-export { ComponentView }
+export { ComponentView };
 
 window.onload = ()=>{
     const t = document.createElement("w-component");

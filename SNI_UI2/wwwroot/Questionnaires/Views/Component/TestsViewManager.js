@@ -2,9 +2,8 @@
 //@ts-check
 import { StylesControlsV2, StyleScrolls } from "../../../WDevCore/StyleModules/WStyleComponents.js";
 import { WTableComponent } from "../../../WDevCore/WComponents/WTableComponent.js";
-import { WFilterOptions } from "../../../WDevCore/WComponents/WFilterControls.js";
-import { css } from "../../../WDevCore/WModules/WStyledRender.js";
 import { WRender } from "../../../WDevCore/WModules/WComponentsTools.js";
+import { css } from "../../../WDevCore/WModules/WStyledRender.js";
 import { Tests_ModelComponent } from "../../FrontModel/ModelComponent/Tests_ModelComponent.js";
 import { Tests } from "../../FrontModel/Tests.js";
 
@@ -69,3 +68,4 @@ class TestsViewManager extends HTMLElement {
 }
 customElements.define('w-component-tests-manager', TestsViewManager);
 export { TestsViewManager };
+

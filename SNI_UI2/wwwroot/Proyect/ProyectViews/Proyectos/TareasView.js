@@ -1,11 +1,9 @@
-import { WRender, ComponentsManager } from "../../../WDevCore/WModules/WComponentsTools.js";
-import { StylesControlsV2, StylesControlsV3, StyleScrolls } from "../../../WDevCore/StyleModules/WStyleComponents.js"
-import { css } from "../../../WDevCore/WModules/WStyledRender.js";
-import { TaskManagers } from "./TaskManager.js";
+import { StylesControlsV2, StylesControlsV3, StyleScrolls } from "../../../WDevCore/StyleModules/WStyleComponents.js";
 import { WFilterOptions } from "../../../WDevCore/WComponents/WFilterControls.js";
-import {WArrayF} from "../../../WDevCore/WModules/WArrayF";
-import {Tbl_Tareas} from "../../FrontModel/Tbl_Tareas";
-import {WAjaxTools} from "../../../WDevCore/WModules/WAjaxTools";
+import { ComponentsManager, WRender } from "../../../WDevCore/WModules/WComponentsTools.js";
+import { css } from "../../../WDevCore/WModules/WStyledRender.js";
+import { Tbl_Tareas } from "../../FrontModel/Tbl_Tareas.js";
+import { TaskManagers } from "./TaskManager.js";
 /**
  * @typedef {Object} ComponentConfig
  * * @property {Object} [propierty]
@@ -76,4 +74,4 @@ window.onload = async () => {
     Main.appendChild(new TareasComponentView());
 }
 customElements.define('w-tareas-view', TareasComponentView);
-export { TareasComponentView }
+export { TareasComponentView };

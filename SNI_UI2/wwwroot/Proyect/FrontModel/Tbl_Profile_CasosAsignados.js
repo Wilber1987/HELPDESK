@@ -1,7 +1,7 @@
 import { ModelProperty } from "../../WDevCore/WModules/CommonModel.js";
 import { EntityClass } from "../../WDevCore/WModules/EntityClass.js";
 import { Tbl_Profile } from "./Tbl_Profile.js";
-import {Cat_Tipo_Participaciones} from "./Cat_Tipo_Participaciones";
+import {Cat_Tipo_Participaciones} from "./Cat_Tipo_Participaciones.js";
 
 class Tbl_Profile_CasosAsignados extends EntityClass {
     /**

@@ -1,16 +1,14 @@
 //@ts-check
-import { WRender, ComponentsManager, html } from "../../../WDevCore/WModules/WComponentsTools.js";
-import { StylesControlsV2, StylesControlsV3, StyleScrolls } from "../../../WDevCore/StyleModules/WStyleComponents.js"
-import { css } from "../../../WDevCore/WModules/WStyledRender.js";
-import { WCommentsComponent } from "../../../WDevCore/WComponents/WCommentsComponent.js";
 import { WSecurity } from "../../../WDevCore/Security/WSecurity.js";
+import { StylesControlsV2, StylesControlsV3, StyleScrolls } from "../../../WDevCore/StyleModules/WStyleComponents.js";
+import { WCommentsComponent } from "../../../WDevCore/WComponents/WCommentsComponent.js";
 import { WModalForm } from "../../../WDevCore/WComponents/WModalForm.js";
-import { WDetailObject } from "../../../WDevCore/WComponents/WDetailObject.js";
-import {WArrayF} from "../../../WDevCore/WModules/WArrayF";
-import {Tbl_Comments_Tasks} from "../../FrontModel/Tbl_Comments_Tasks";
-import {Tbl_Tareas} from "../../FrontModel/Tbl_Tareas";
-import {Tbl_Agenda} from "../../FrontModel/Tbl_Agenda";
-import {WAjaxTools} from "../../../WDevCore/WModules/WAjaxTools";
+import { ComponentsManager, html, WRender } from "../../../WDevCore/WModules/WComponentsTools.js";
+import { css } from "../../../WDevCore/WModules/WStyledRender.js";
+import { Tbl_Agenda } from "../../FrontModel/Tbl_Agenda.js";
+import { Tbl_Calendario } from "../../FrontModel/Tbl_Calendario.js";
+import { Tbl_Comments_Tasks } from "../../FrontModel/Tbl_Comments_Tasks.js";
+import { Tbl_Tareas } from "../../FrontModel/Tbl_Tareas.js";
 
 /**
  * @typedef {Object} ComponentConfig
@@ -338,4 +336,5 @@ class TareaDetailView extends HTMLElement {
     `
 }
 customElements.define('w-tarea-detail-component', TareaDetailView);
-export { TareaDetailView }
+export { TareaDetailView };
+

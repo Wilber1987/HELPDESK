@@ -1,4 +1,5 @@
-import {EntityClass} from "../../WDevCore/WModules/EntityClass";
+import {EntityClass} from "../../WDevCore/WModules/EntityClass.js";
+import { Tbl_Participantes } from "./Tbl_Participantes.js";
 
 class Cat_Tipo_Participaciones extends EntityClass {
     constructor(props) {

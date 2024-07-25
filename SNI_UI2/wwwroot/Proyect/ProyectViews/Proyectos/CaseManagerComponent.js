@@ -1,23 +1,22 @@
 
 
-import { caseGeneralData } from './CaseDetailComponent.js';
 import { CaseSearcherToVinculate } from '../../../AppComponents/CaseSearcherToVinculate.js';
 import { priorityStyles } from '../../../AppComponents/Styles.js';
-import { Tbl_Case, Tbl_VinculateCase } from '../../FrontModel/ProyectDataBaseModel.js';
+import { Permissions, WSecurity } from '../../../WDevCore/Security/WSecurity.js';
 import { StylesControlsV2, StylesControlsV3 } from "../../../WDevCore/StyleModules/WStyleComponents.js";
+import { WFilterOptions } from '../../../WDevCore/WComponents/WFilterControls.js';
 import { ModalMessege, ModalVericateAction, WForm } from "../../../WDevCore/WComponents/WForm.js";
 import { WModalForm } from '../../../WDevCore/WComponents/WModalForm.js';
 import { WPaginatorViewer } from '../../../WDevCore/WComponents/WPaginatorViewer.js';
 import { WTableComponent } from "../../../WDevCore/WComponents/WTableComponent.js";
 import { ComponentsManager, WRender } from '../../../WDevCore/WModules/WComponentsTools.js';
 import { ControlBuilder } from '../../../WDevCore/WModules/WControlBuilder.js';
-import { css } from '../../../WDevCore/WModules/WStyledRender.js';
+import { Cat_Dependencias } from "../../FrontModel/Cat_Dependencias.js";
+import { Tbl_Case, Tbl_VinculateCase } from '../../FrontModel/Tbl_CaseModule.js';
+import { Tbl_Agenda } from "../../FrontModel/Tbl_Agenda.js";
+import { Tbl_Tareas } from "../../FrontModel/Tbl_Tareas.js";
 import { activityStyle } from '../../style.js';
-import { Permissions, WSecurity } from '../../../WDevCore/Security/WSecurity.js';
-import { WFilterOptions } from '../../../WDevCore/WComponents/WFilterControls.js';
-import {Tbl_Tareas} from "../../FrontModel/Tbl_Tareas";
-import {Cat_Dependencias} from "../../FrontModel/Cat_Dependencias";
-import {Tbl_Agenda} from "../../FrontModel/Tbl_Agenda";
+import { caseGeneralData } from './CaseDetailComponent.js';
 
 class CaseManagerComponent extends HTMLElement {
     /**
@@ -157,9 +156,7 @@ class CaseManagerComponent extends HTMLElement {
     WStyle = activityStyle.cloneNode(true)
 }
 customElements.define('w-case-manager', CaseManagerComponent);
-export { CaseManagerComponent };
-export { CaseForm };
-export { simpleCaseForm };
+export { CaseForm, CaseManagerComponent, simpleCaseForm };
 /**
  * @param {Tbl_Case} [entity] 
  * @param {Array<Cat_Dependencias>} [dependencias] 

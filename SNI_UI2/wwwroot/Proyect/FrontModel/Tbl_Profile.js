@@ -1,11 +1,12 @@
 //@ts-check
-//import { Cat_Dependencias, Tbl_Servicios } from "../../ModelProyect/ProyectDataBaseModel.js";
+//import { Cat_Dependencias, Tbl_Servicios } from "../../ModelProyect/Tbl_CaseModule.js";
 import { WForm } from "../../WDevCore/WComponents/WForm.js";
 // @ts-ignore
 import { ModelProperty } from "../../WDevCore/WModules/CommonModel.js";
 import { EntityClass } from "../../WDevCore/WModules/EntityClass.js";
-import {Cat_Dependencias} from "./Cat_Dependencias";
-import {WAjaxTools} from "../../WDevCore/WModules/WAjaxTools";
+import { Cat_Dependencias } from "./Cat_Dependencias.js";
+import { WAjaxTools } from "../../WDevCore/WModules/WAjaxTools.js";
+import { Tbl_Servicios } from "./Tbl_Servicios.js";
 
 
 //@ts-check
@@ -57,9 +58,9 @@ class Tbl_Profile extends EntityClass {
     }
     /**@type {ModelProperty}*/ Tbl_Servicios = {
         type: 'Multiselect', hiddenFilter: true, ModelObject: () => new Tbl_Servicios(),
-        require: false, disabled:  async (Profile, /** @type {WForm} */ Form) =>{
-           return Profile.Tbl_Servicios?.length == 0
-        } 
+        require: false, disabled: async (Profile, /** @type {WForm} */ Form) => {
+            return Profile.Tbl_Servicios?.length == 0
+        }
     }
     /**
       * @param {Array<Tbl_Profile>} perfiles

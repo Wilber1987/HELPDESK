@@ -2,7 +2,7 @@ import { StylesControlsV2, StyleScrolls } from "../../../WDevCore/StyleModules/W
 import { WModalForm } from '../../../WDevCore/WComponents/WModalForm.js';
 import { WRender } from "../../../WDevCore/WModules/WComponentsTools.js";
 import { WCssClass, WStyledRender } from '../../../WDevCore/WModules/WStyledRender.js';
-import {WAjaxTools} from "../../../WDevCore/WModules/WAjaxTools";
+import { WAjaxTools } from "../../../WDevCore/WModules/WAjaxTools.js";
 class ViewActivityComponent extends HTMLElement {
     constructor(Activity) {
         super();
@@ -23,7 +23,7 @@ class ViewActivityComponent extends HTMLElement {
         this.append(this.Style, this.Container, this.TareasContainer);
         this.Draw();
     }
-    async NewTarea() {       
+    async NewTarea() {
         const modal = new WModalForm({
             ObjectModal: ReservaComp,
             title: "Nueva Tarea",

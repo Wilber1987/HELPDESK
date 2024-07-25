@@ -1,6 +1,6 @@
 
 
-import { Tbl_Case } from '../Proyect/FrontModel/ProyectDataBaseModel.js';
+import { Tbl_Case } from '../Proyect/FrontModel/Tbl_CaseModule.js';
 import { WFilterOptions } from '../WDevCore/WComponents/WFilterControls.js';
 import { WTableComponent } from "../WDevCore/WComponents/WTableComponent.js";
 import { WRender } from '../WDevCore/WModules/WComponentsTools.js';

@@ -1,10 +1,8 @@
 //@ts-check
 import { EntityClass } from "../../WDevCore/WModules/EntityClass.js";
 //@ts-ignore
-import { ModelProperty } from "../../WDevCore/WModules/CommonModel.js";
-import { Cat_Tipo_Preguntas } from './Cat_Tipo_Preguntas.js'
-import { Resultados_Pregunta_Tests } from './Resultados_Pregunta_Tests.js'
-import {WAjaxTools} from "../../WDevCore/WModules/WAjaxTools";
+import { Cat_Tipo_Preguntas } from './Cat_Tipo_Preguntas.js';
+import { Resultados_Pregunta_Tests } from './Resultados_Pregunta_Tests.js';
 class Cat_Valor_Preguntas extends EntityClass {
     /** @param {Partial<Cat_Valor_Preguntas>} [props] */
     constructor(props) {
@@ -23,4 +21,4 @@ class Cat_Valor_Preguntas extends EntityClass {
    /**@type {Cat_Tipo_Preguntas} ManyToOne*/ Cat_Tipo_Preguntas;
    /**@type {Array<Resultados_Pregunta_Tests>} OneToMany*/ Resultados_Pregunta_Tests;
 }
-export { Cat_Valor_Preguntas }
+export { Cat_Valor_Preguntas };

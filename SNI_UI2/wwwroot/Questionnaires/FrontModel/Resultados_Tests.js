@@ -1,10 +1,8 @@
 //@ts-check
 import { EntityClass } from "../../WDevCore/WModules/EntityClass.js";
 //@ts-ignore
-import { ModelProperty } from "../../WDevCore/WModules/CommonModel.js";
-import { Tests }  from './Tests.js'
 import { Resultados_Pregunta_Tests } from "./Resultados_Pregunta_Tests.js";
-import {WAjaxTools} from "../../WDevCore/WModules/WAjaxTools";
+import { Tests } from './Tests.js';
 class Resultados_Tests extends EntityClass {
     /** @param {Partial<Resultados_Tests>} [props] */
    constructor(props) {
@@ -22,4 +20,4 @@ class Resultados_Tests extends EntityClass {
    /**@type {Tests} ManyToOne*/ Tests;
    /**@type {Array<Resultados_Pregunta_Tests>} OneToMany*/ Resultados_Pregunta_Tests;
 }
-export { Resultados_Tests }
+export { Resultados_Tests };

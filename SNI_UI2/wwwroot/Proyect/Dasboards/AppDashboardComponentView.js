@@ -1,18 +1,16 @@
 //@ts-check
-import { WRender, ComponentsManager, html } from "../../WDevCore/WModules/WComponentsTools.js";
-import { StylesControlsV2, StylesControlsV3, StyleScrolls } from "../../WDevCore/StyleModules/WStyleComponents.js"
-import { css } from "../../WDevCore/WModules/WStyledRender.js";
-import { Dashboard } from "./Dashboard.js";
+import { StylesControlsV2, StylesControlsV3, StyleScrolls } from "../../WDevCore/StyleModules/WStyleComponents.js";
 import { ColumChart } from "../../WDevCore/WComponents/WChartJSComponents.js";
-import { CaseDetailComponent } from "../ProyectViews/Proyectos/CaseDetailComponent.js";
-import { Tbl_Case } from "../FrontModel/ProyectDataBaseModel.js";
-import { TareaDetailView } from "../ProyectViews/Proyectos/TareaDetailView.js";
-import { WPaginatorViewer } from "../../WDevCore/WComponents/WPaginatorViewer.js";
 import { WFilterOptions } from "../../WDevCore/WComponents/WFilterControls.js";
+import { WPaginatorViewer } from "../../WDevCore/WComponents/WPaginatorViewer.js";
+import { ComponentsManager, html, WRender } from "../../WDevCore/WModules/WComponentsTools.js";
+import { css } from "../../WDevCore/WModules/WStyledRender.js";
+import { Cat_Dependencias } from "../FrontModel/Cat_Dependencias.js";
+import { Tbl_Case } from "../FrontModel/Tbl_CaseModule.js";
+import { Tbl_Comments } from "../FrontModel/Tbl_Comments.js";
+import { CaseDetailComponent } from "../ProyectViews/Proyectos/CaseDetailComponent.js";
 import { TaskCard } from "../ProyectViews/Proyectos/TaskManager.js";
-import {WArrayF} from "../../WDevCore/WModules/WArrayF";
-import {Tbl_Tareas} from "../FrontModel/Tbl_Tareas";
-import {WAjaxTools} from "../../WDevCore/WModules/WAjaxTools";
+import { Dashboard } from "./Dashboard.js";
 /**
  * @typedef {Object} ComponentConfig
  * * @property {Object} [propierty]
@@ -138,7 +136,7 @@ class AppDashboardComponentView extends HTMLElement {
     }
 
     /**
-     * @param {import("../FrontModel/ProyectDataBaseModel.js").Cat_Dependencias} element
+     * @param {Cat_Dependencias} element
      */
     dependencieCards(element) {
         const card = html`<div class="card card-style">
@@ -296,7 +294,7 @@ class AppDashboardComponentView extends HTMLElement {
         return card;
     }
     /**
-     * @param {import("../FrontModel/ProyectDataBaseModel.js").Tbl_Case} element
+     * @param {import("../FrontModel/Tbl_CaseModule.js").Tbl_Case} element
      */
     caseView(element) {
         return WRender.Create({
@@ -310,6 +308,7 @@ class AppDashboardComponentView extends HTMLElement {
                     </div>`, {
                     className: "description", children: [
                         { tagName: "h1", innerHTML: `CASO #${element.Id_Case} - ${element.Titulo}` },
+                        // @ts-ignore
                         { tagName: "h2", innerHTML: element.Cat_Dependencias.Descripcion, class: "h2" },
                         { tagName: "p", innerHTML: element.Descripcion },
                         {
@@ -527,7 +526,7 @@ class AppDashboardComponentView extends HTMLElement {
     }
 
     /**
-     * @param {import("../FrontModel/ProyectDataBaseModel.js").Tbl_Comments} element
+     * @param {Tbl_Comments} element
      */
     chatView(element) {
         return WRender.Create({
@@ -698,4 +697,4 @@ class AppDashboardComponentView extends HTMLElement {
     `
 }
 customElements.define('w-app-dasboard', AppDashboardComponentView);
-export { AppDashboardComponentView }
+export { AppDashboardComponentView };

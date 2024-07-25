@@ -5,8 +5,9 @@ import { WToolTip } from '../../../WDevCore/WComponents/WMultiSelect.js';
 import { ComponentsManager, WRender } from '../../../WDevCore/WModules/WComponentsTools.js';
 import { css } from '../../../WDevCore/WModules/WStyledRender.js';
 import { TareaDetailView } from './TareaDetailView.js';
-import {Tbl_Tareas} from "../../FrontModel/Tbl_Tareas";
-import {Tbl_Agenda} from "../../FrontModel/Tbl_Agenda";
+import { Tbl_Tareas } from "../../FrontModel/Tbl_Tareas.js";
+import { Tbl_Agenda } from "../../FrontModel/Tbl_Agenda.js";
+import { Tbl_Calendario } from "../../FrontModel/Tbl_Calendario.js";
 
 class TaskManagers extends HTMLElement {
     /**
@@ -98,12 +99,12 @@ class TaskManagers extends HTMLElement {
         card.className += " task-card"
         // @ts-ignore
         card.task = task;
-         // @ts-ignore
+        // @ts-ignore
         card.querySelector(".tag").style.backgroundColor = GetTaskColor(task);
         card.ondragstart = (ev) => {
             // @ts-ignore
             ev.dataTransfer?.setData("text", ev.target?.id);
-            
+
         };
 
         return card
@@ -113,7 +114,7 @@ class TaskManagers extends HTMLElement {
      * @param {Tbl_Tareas} task 
      * @param {String} state 
      */
-    cardDrop = async (task, state) => {        
+    cardDrop = async (task, state) => {
         const response = await task.Update();
         if (response.status == 200 && this.Config?.action != undefined) {
             this.Config.action(task);

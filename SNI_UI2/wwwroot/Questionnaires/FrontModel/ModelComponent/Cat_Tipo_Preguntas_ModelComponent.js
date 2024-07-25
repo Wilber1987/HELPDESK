@@ -2,9 +2,7 @@
 import { EntityClass } from "../../../WDevCore/WModules/EntityClass.js";
 // @ts-ignore
 import { ModelProperty } from "../../../WDevCore/WModules/CommonModel.js";
-import { Cat_Valor_Preguntas_ModelComponent } from './Cat_Valor_Preguntas_ModelComponent.js'
-import { Pregunta_Tests_ModelComponent } from './Pregunta_Tests_ModelComponent.js'
-import {WAjaxTools} from "../../../WDevCore/WModules/WAjaxTools";
+import { Cat_Valor_Preguntas_ModelComponent } from './Cat_Valor_Preguntas_ModelComponent.js';
 class Cat_Tipo_Preguntas_ModelComponent extends EntityClass {
     /** @param {Partial<Cat_Tipo_Preguntas_ModelComponent>} [props] */
     constructor(props) {
@@ -25,4 +23,4 @@ class Cat_Tipo_Preguntas_ModelComponent extends EntityClass {
    /**@type {ModelProperty}*/ Cat_Valor_Preguntas = { type: 'MasterDetail', ModelObject: () => new Cat_Valor_Preguntas_ModelComponent() };
     ///**@type {ModelProperty}*/ Pregunta_Tests = { type: 'MasterDetail',  ModelObject: ()=> new Pregunta_Tests_ModelComponent()};
 }
-export { Cat_Tipo_Preguntas_ModelComponent }
+export { Cat_Tipo_Preguntas_ModelComponent };

@@ -1,11 +1,10 @@
 //@ts-check
-import { WRender, ComponentsManager } from "../WDevCore/WModules/WComponentsTools.js";
-import { StylesControlsV2, StyleScrolls } from "../WDevCore/StyleModules/WStyleComponents.js"
-import { WTableComponent } from "../WDevCore/WComponents/WTableComponent.js"
-import { WFilterOptions } from "../WDevCore/WComponents/WFilterControls.js"
+import { StylesControlsV2, StyleScrolls } from "../WDevCore/StyleModules/WStyleComponents.js";
+import { WFilterOptions } from "../WDevCore/WComponents/WFilterControls.js";
 import { WModalForm } from "../WDevCore/WComponents/WModalForm.js";
+import { WTableComponent } from "../WDevCore/WComponents/WTableComponent.js";
 import { EntityClass } from "../WDevCore/WModules/EntityClass.js";
-import {WAjaxTools} from "../WDevCore/WModules/WAjaxTools";
+import { WRender } from "../WDevCore/WModules/WComponentsTools.js";
 class Transactional_ConfiguracionesView extends HTMLElement {
     constructor(props) {
         super();
@@ -78,7 +77,7 @@ class Transactional_ConfiguracionesView extends HTMLElement {
     }
 }
 customElements.define('w-transactional_configuraciones', Transactional_ConfiguracionesView);
-export { Transactional_ConfiguracionesView }
+export { Transactional_ConfiguracionesView };
 
 class Transactional_Configuraciones extends EntityClass {
     constructor(props) {
@@ -93,4 +92,5 @@ class Transactional_Configuraciones extends EntityClass {
     Valor = { type: 'text' };
     Tipo_Configuracion = { type: 'text' , disabled: true };
 }
-export { Transactional_Configuraciones }
+export { Transactional_Configuraciones };
+

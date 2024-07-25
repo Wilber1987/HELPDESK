@@ -1,4 +1,4 @@
-import {EntityClass} from "../../WDevCore/WModules/EntityClass";
+import {EntityClass} from "../../WDevCore/WModules/EntityClass.js";
 
 class Tbl_Evidencias extends EntityClass {
     constructor(props) {

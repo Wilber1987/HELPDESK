@@ -1,25 +1,21 @@
-import { WAppNavigator } from '../../WDevCore/WComponents/WAppNavigator.js';
-import { WRender, ComponentsManager } from '../../WDevCore/WModules/WComponentsTools.js';
-import { WCssClass, WStyledRender } from '../../WDevCore/WModules/WStyledRender.js';
-import { WTableComponent } from "../../WDevCore/WComponents/WTableComponent.js";
 import { StylesControlsV2 } from "../../WDevCore/StyleModules/WStyleComponents.js";
-import { WModalForm } from "../../WDevCore/WComponents/WModalForm.js";
-import { ReservarComponent } from "./ViewComponents/ReservaComponent.js";
-import { ViewActivityComponent } from "./ViewComponents/ViewActivityComponent.js";
-import AgendaModel from '../FrontModel/AgendaModel.js';
-import {WArrayF} from "../../WDevCore/WModules/WArrayF";
-import {WAjaxTools} from "../../WDevCore/WModules/WAjaxTools";
+import { WAppNavigator } from '../../WDevCore/WComponents/WAppNavigator.js';
+import { WTableComponent } from "../../WDevCore/WComponents/WTableComponent.js";
+import { WAjaxTools } from "../../WDevCore/WModules/WAjaxTools.js";
+import { ComponentsManager, WRender } from '../../WDevCore/WModules/WComponentsTools.js';
+import { WCssClass, WStyledRender } from '../../WDevCore/WModules/WStyledRender.js';
+import { AgendaModel } from '../FrontModel/AgendaModel.js';
 class AgendaView extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
         this.className = "HomeView DivContainer";
-        this.shadowRoot.append(this.WStyle,StylesControlsV2.cloneNode(true));
+        this.shadowRoot.append(this.WStyle, StylesControlsV2.cloneNode(true));
         this.TabContainer = WRender.createElement({ type: 'div', props: { class: 'TabContainer', id: "TabContainer" } });
         this.TabManager = new ComponentsManager({ MainContainer: this.TabContainer });
-        this.DrawAgendaView(); 
+        this.DrawAgendaView();
     }
-    connectedCallback() {}
+    connectedCallback() { }
     DrawAgendaView = async () => {
         const response = await WAjaxTools.PostRequest("./api/Calendar/TakeData");
         this.TabAgenda = new WAppNavigator({
@@ -76,4 +72,4 @@ class AgendaView extends HTMLElement {
 
 }
 customElements.define('w-agenda-view', AgendaView);
-export { AgendaView }
+export { AgendaView };

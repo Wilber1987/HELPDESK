@@ -1,15 +1,14 @@
-import { Tbl_Case } from "../Proyect/FrontModel/ProyectDataBaseModel.js";
+import { Cat_Dependencias } from "../Proyect/FrontModel/Cat_Dependencias.js";
+import { Tbl_Case } from "../Proyect/FrontModel/Tbl_CaseModule.js";
+import { Tbl_Tareas } from "../Proyect/FrontModel/Tbl_Tareas.js";
 import { CaseDashboardComponent } from "../Proyect/ProyectViews/Proyectos/CaseDashboardComponent.js";
 import { CaseManagerComponent } from "../Proyect/ProyectViews/Proyectos/CaseManagerComponent.js";
 import { TaskManagers } from "../Proyect/ProyectViews/Proyectos/TaskManager.js";
 import { SolicitudesPendientesComponent } from "../Proyect/Solicitudes/SolicitudesPendientesComponent.js";
-import { MainSolicitudesView } from "../Proyect/Solicitudes/SolicitudesView.js";
 import { StylesControlsV2 } from "../WDevCore/StyleModules/WStyleComponents.js";
 import { WAppNavigator } from "../WDevCore/WComponents/WAppNavigator.js";
 import { WFilterOptions } from "../WDevCore/WComponents/WFilterControls.js";
 import { ComponentsManager, WRender } from '../WDevCore/WModules/WComponentsTools.js';
-import {Tbl_Tareas} from "../Proyect/FrontModel/Tbl_Tareas";
-import {Cat_Dependencias} from "../Proyect/FrontModel/Cat_Dependencias";
 window.onload = () => {
     console.log("test");
     const navigator = new WAppNavigator({

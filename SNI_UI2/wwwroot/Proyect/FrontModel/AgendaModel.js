@@ -1,4 +1,4 @@
-export default class AgendaModel {
+export  class AgendaModel {
     constructor(Inst = { IdUsuario: 1, IdDependencia: 1 }) {
         this.idUsuario = Inst.IdUsuario;
         this.idDependencia = Inst.IdDependencia;

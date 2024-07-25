@@ -1,16 +1,17 @@
-import {Tbl_Profile} from "../../WDevCore/Security/Tbl_Profile.js";
-import {EntityClass} from "../../WDevCore/WModules/EntityClass.js";
-import {Tbl_Servicios} from "./Tbl_Servicios";
-import {Tbl_Comments} from "./Tbl_Comments";
-import Tbl_Tareas from "./Tbl_Tareas";
-import {Cat_Cargos_Dependencias} from "./Cat_Cargos_Dependencias";
-import Cat_Dependencias from "./Cat_Dependencias";
-import {WAjaxTools} from "../../WDevCore/WModules/WAjaxTools";
+import { Tbl_Profile } from "../../WDevCore/Security/Tbl_Profile.js";
+import { EntityClass } from "../../WDevCore/WModules/EntityClass.js";
+import { Tbl_Servicios } from "./Tbl_Servicios.js";
+import { Tbl_Comments } from "./Tbl_Comments.js";
+import { Tbl_Tareas } from "./Tbl_Tareas.js";
+import { Cat_Cargos_Dependencias } from "./Cat_Cargos_Dependencias.js";
+import { Cat_Dependencias } from "./Cat_Dependencias.js";
+import { WAjaxTools } from "../../WDevCore/WModules/WAjaxTools.js";
+import { ModelProperty } from "../../WDevCore/WModules/CommonModel.js";
 
 
 class Tbl_Case extends EntityClass {
     /**
-    * @param {Partial<Tbl_Case>} props 
+    * @param {Partial<Tbl_Case>} [props] 
     */
     constructor(props) {
         super(props, 'EntityHelpdesk');
@@ -19,19 +20,33 @@ class Tbl_Case extends EntityClass {
         };
         //this.Mail = undefined;
     }
+    /**@type {ModelProperty} */
     Id_Case = { type: 'number', primary: true };
+    /**@type {ModelProperty} */
     Id_Vinculate = { type: 'number', hidden: true };
+    /**@type {ModelProperty} */
     //image = { type: 'img',   hidden: true};
+    /**@type {ModelProperty} */
     firma = { type: 'draw', hidden: true };
+    /**@type {ModelProperty} */
     Cat_Dependencias = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Dependencias() };
+    /**@type {ModelProperty} */
     Tbl_Servicios = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Tbl_Servicios(), hiddenInTable: true };
+    /**@type {ModelProperty} */
     Titulo = { type: 'text' };
+    /**@type {ModelProperty} */
     Fecha_Inicio = { type: 'date', hiddenInTable: true, };
+    /**@type {ModelProperty} */
     Mail = { type: 'text', hidden: true };
+    /**@type {ModelProperty} */
     Estado = { type: "Select", Dataset: ["Activo", "Espera", "Pendiente", "Finalizado"] };
+    /**@type {ModelProperty} */
     Case_Priority = { type: "Select", Dataset: ["Alta", "Media", "Baja"], label: "Prioridad", hiddenInTable: true };
+    /**@type {ModelProperty} */
     Fecha_Final = { type: 'date', hiddenFilter: true, hiddenInTable: true };
+    /**@type {ModelProperty} */
     Descripcion = { type: 'richtext', hiddenFilter: true };
+    /**@type {ModelProperty} */
     Tbl_Tareas = { type: 'MasterDetail', ModelObject: () => new Tbl_Tareas() };
     /**
      * @returns {Array<Tbl_Case>}

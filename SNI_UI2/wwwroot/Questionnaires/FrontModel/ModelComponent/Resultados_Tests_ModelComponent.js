@@ -2,8 +2,7 @@
 import { EntityClass } from "../../../WDevCore/WModules/EntityClass.js";
 // @ts-ignore
 import { ModelProperty } from "../../../WDevCore/WModules/CommonModel.js";
-import { Tests_ModelComponent } from './Tests_ModelComponent.js'
-import {WAjaxTools} from "../../../WDevCore/WModules/WAjaxTools";
+import { Tests_ModelComponent } from './Tests_ModelComponent.js';
 class Resultados_Tests_ModelComponent extends EntityClass {
     /** @param {Partial<Resultados_Tests_ModelComponent>} [props] */
     constructor(props) {
@@ -22,4 +21,5 @@ class Resultados_Tests_ModelComponent extends EntityClass {
    /**@type {ModelProperty}*/ Tipo = { type: 'text' };
    /**@type {ModelProperty}*/ Tests = { type: 'WSELECT', ModelObject: () => new Tests_ModelComponent() };
 }
-export { Resultados_Tests_ModelComponent }
+export { Resultados_Tests_ModelComponent };
+

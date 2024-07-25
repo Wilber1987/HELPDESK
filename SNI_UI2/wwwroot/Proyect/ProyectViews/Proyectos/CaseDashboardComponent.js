@@ -1,7 +1,7 @@
 
 
 //@ts-check
-import { Tbl_Case } from '../../FrontModel/ProyectDataBaseModel.js';
+import { Tbl_Case } from '../../FrontModel/Tbl_CaseModule.js';
 import { StylesControlsV2 } from '../../../WDevCore/StyleModules/WStyleComponents.js';
 import { ColumChart, RadialChart } from '../../../WDevCore/WComponents/WChartJSComponents.js';
 import { WFilterOptions } from '../../../WDevCore/WComponents/WFilterControls.js';
@@ -10,8 +10,8 @@ import { PageType, WReportComponent } from '../../../WDevCore/WComponents/WRepor
 import { WTableComponent } from '../../../WDevCore/WComponents/WTableComponent.js';
 import { WRender } from '../../../WDevCore/WModules/WComponentsTools.js';
 import { css } from '../../../WDevCore/WModules/WStyledRender.js';
-import {WArrayF} from "../../../WDevCore/WModules/WArrayF";
-import {Tbl_Tareas} from "../../FrontModel/Tbl_Tareas";
+import {WArrayF} from "../../../WDevCore/WModules/WArrayF.js";
+import {Tbl_Tareas} from "../../FrontModel/Tbl_Tareas.js";
 
 class CaseDashboardComponent extends HTMLElement {
     /**

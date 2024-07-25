@@ -1,4 +1,4 @@
-import {Tbl_Comments} from "./Tbl_Comments";
+import {Tbl_Comments} from "./Tbl_Comments.js";
 
 class Tbl_Comments_Tasks extends Tbl_Comments {
     constructor(props) {

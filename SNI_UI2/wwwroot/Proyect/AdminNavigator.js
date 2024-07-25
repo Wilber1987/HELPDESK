@@ -1,21 +1,24 @@
+//@ts-check
 import { LogErrorView } from "../Admin/LogErrorView.js";
 import { StylesControlsV2 } from "../WDevCore/StyleModules/WStyleComponents.js";
 import { WAppNavigator } from "../WDevCore/WComponents/WAppNavigator.js";
-import { WFilterOptions } from "../WDevCore/WComponents/WFilterControls.js";
 import { WTableComponent } from "../WDevCore/WComponents/WTableComponent.js";
+import { WAjaxTools } from "../WDevCore/WModules/WAjaxTools.js";
 import { ComponentsManager, WRender } from '../WDevCore/WModules/WComponentsTools.js';
 import { WOrtograficValidation } from "../WDevCore/WModules/WOrtograficValidation.js";
-import {Cat_Tipo_Servicio} from "./FrontModel/Cat_Tipo_Servicio";
-import {Cat_Dependencias} from "./FrontModel/Cat_Dependencias";
-import {Cat_Tipo_Participaciones} from "./FrontModel/Cat_Tipo_Participaciones";
-import {Cat_Paises} from "./FrontModel/Cat_Paises";
-import {WAjaxTools} from "../WDevCore/WModules/WAjaxTools";
+import { Cat_Cargos_Dependencias } from "./FrontModel/Cat_Cargos_Dependencias.js";
+import { Cat_Dependencias } from "./FrontModel/Cat_Dependencias.js";
+import { Cat_Paises } from "./FrontModel/Cat_Paises.js";
+import { Tbl_Servicios } from "./FrontModel/Tbl_Servicios.js";
 window.addEventListener("load", async () => {
     setTimeout(async () => {
+        // @ts-ignore
         const DOMManager = new ComponentsManager({ MainContainer: Main });
+        // @ts-ignore
         Main.append(WRender.createElement(StylesControlsV2));
-
+        // @ts-ignore
         Aside.append(WRender.Create({ tagName: "h3", innerText: "Mantenimiento de Catalogos" }));
+        // @ts-ignore
         Aside.append(new WAppNavigator({
             Direction: "column",
             Elements: [{
@@ -59,7 +62,7 @@ function ElementTab(DOMManager, Model) {
                     // Search: true, UrlSearch: "../api/ApiEntityHelpdesk/get" + Model.constructor.name,
                 }
             });
-        
+
             DOMManager.NavigateFunction(Model.constructor.name, [WRender.Create({
                 tagName: "h2",
                 innerText: WOrtograficValidation.es(Model.constructor.name)

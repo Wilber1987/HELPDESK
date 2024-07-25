@@ -1,9 +1,7 @@
 //@ts-check
 import { EntityClass } from "../../WDevCore/WModules/EntityClass.js";
 //@ts-ignore
-import { ModelProperty } from "../../WDevCore/WModules/CommonModel.js";
-import { Tests } from './Tests.js'
-import {WAjaxTools} from "../../WDevCore/WModules/WAjaxTools";
+import { Tests } from './Tests.js';
 class Cat_Categorias_Test extends EntityClass {
     /** @param {Partial<Cat_Categorias_Test>} [props] */
     constructor(props) {
@@ -20,4 +18,4 @@ class Cat_Categorias_Test extends EntityClass {
    /**@type {Date}*/ Updated_at;
    /**@type {Array<Tests>} OneToMany*/ Tests;
 }
-export { Cat_Categorias_Test }
+export { Cat_Categorias_Test };

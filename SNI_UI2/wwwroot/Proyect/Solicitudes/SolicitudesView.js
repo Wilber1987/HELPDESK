@@ -3,17 +3,20 @@ import { priorityStyles } from '../../AppComponents/Styles.js';
 import { WSecurity } from '../../WDevCore/Security/WSecurity.js';
 import { StylesControlsV2, StylesControlsV3 } from "../../WDevCore/StyleModules/WStyleComponents.js";
 import { WCommentsComponent } from '../../WDevCore/WComponents/WCommentsComponent.js';
+import { WDetailObject } from '../../WDevCore/WComponents/WDetailObject.js';
 import { WFilterOptions } from "../../WDevCore/WComponents/WFilterControls.js";
 import { ModalMessege, WForm } from "../../WDevCore/WComponents/WForm.js";
 import { WPaginatorViewer } from '../../WDevCore/WComponents/WPaginatorViewer.js';
 import { ComponentsManager, WRender } from '../../WDevCore/WModules/WComponentsTools.js';
-import { Cat_Dependencias } from "../FrontModel/Cat_Dependencias.js";
-import { Tbl_Case } from '../FrontModel/Tbl_CaseModule.js';
+import { Cat_Dependencias_ModelComponent } from "../FrontModel/Cat_Dependencias.js";
+import { Tbl_Case_ModelComponent } from '../FrontModel/Tbl_CaseModule.js';
+import { Tbl_Comments_ModelComponent } from '../FrontModel/Tbl_Comments.js';
+import { Tbl_Profile_CasosAsignados, Tbl_Profile_CasosAsignados_ModelComponent } from '../FrontModel/Tbl_Profile_CasosAsignados.js';
 import { caseGeneralData } from '../ProyectViews/Proyectos/CaseDetailComponent.js';
 import { activityStyle } from '../style.js';
 
 const OnLoad = async () => {
-    const Solicitudes = await new Tbl_Case().GetOwSolicitudesPendientesAprobar();
+    const Solicitudes = await new Tbl_Case_ModelComponent().GetOwSolicitudesPendientesAprobar();
     const AdminPerfil = new MainSolicitudesView(Solicitudes);
     Main.appendChild(AdminPerfil);
 }
@@ -21,8 +24,8 @@ window.onload = OnLoad;
 class MainSolicitudesView extends HTMLElement {
     /**
      * 
-     * @param {Array<Tbl_Case>} Dataset 
-     * @param {Array<Cat_Dependencias>} Dependencias 
+     * @param {Array<Tbl_Case_ModelComponent>} Dataset
+     * @param {Array<Cat_Dependencias_ModelComponent>} Dependencias
      */
     constructor(Dataset) {
         super();
@@ -33,13 +36,13 @@ class MainSolicitudesView extends HTMLElement {
         this.TabContainer = WRender.createElement({ type: 'div', props: { class: 'TabContainer', id: "TabContainer" } });
         this.TabManager = new ComponentsManager({ MainContainer: this.TabContainer });
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });
-        this.ModelObject = new Tbl_Case({
+        this.ModelObject = new Tbl_Case_ModelComponent({
             Tbl_Tareas: {
                 type: "text", hidden: true
             }, Estado: {
                 type: "text", hidden: true
             }, Cat_Dependencias: {
-                type: "WSELECT", hiddenFilter: true, ModelObject: () => new Cat_Dependencias()
+                type: "WSELECT", hiddenFilter: true, ModelObject: () => new Cat_Dependencias_ModelComponent()
             }
         });
         this.DrawMainSolicitudesView();
@@ -47,17 +50,37 @@ class MainSolicitudesView extends HTMLElement {
     connectedCallback() { }
     DrawMainSolicitudesView = async () => {
         //this.OptionContainer.append(WRender.Create({ tagName: 'input', type: 'button', className: 'Block-Basic', value: 'Estadística', onclick: this.dashBoardView }))
-        this.OptionContainer.append(WRender.Create({ tagName: 'input', type: 'button', className: 'Block-Alert', value: 'Lista de casos', onclick: this.actividadesManager }))
+        this.OptionContainer.append(WRender.Create({
+            tagName: 'input', type: 'button', className: 'Block-Primary', value: 'Pendientes',
+            onclick: async () =>
+                this.actividadesManager(this.Dataset, "Pendientes")
+        }))
+        this.OptionContainer.append(WRender.Create({
+            tagName: 'input', type: 'button', className: 'Block-Secundary', value: 'Aprobadas', onclick: async () =>
+                this.actividadesManager(await new Tbl_Case_ModelComponent().GetOwSolicitudesAprobadas(), "Aprobadas")
+        }))
+        this.OptionContainer.append(WRender.Create({
+            tagName: 'input', type: 'button', className: 'Block-Tertiary', value: 'Rechazadas', onclick: async () =>
+                this.actividadesManager(await new Tbl_Case_ModelComponent().GetOwSolicitudesRechazadas(), "Rechazadas")
+        }))
+        this.OptionContainer.append(WRender.Create({
+            tagName: 'input', type: 'button', className: 'Block-Fourth', value: 'Vinculadas', onclick: async () =>
+                this.actividadesManager(await new Tbl_Case_ModelComponent().GetOwSolicitudesVinculadas(), "Vinculadas")
+        }))
+        this.OptionContainer.append(WRender.Create({
+            tagName: 'input', type: 'button', className: 'Block-Alert', value: 'Finalizadas', onclick: async () =>
+                this.actividadesManager(await new Tbl_Case_ModelComponent().GetOwSolicitudesFinalizadas(), "Finalizadas")
+        }))
         this.OptionContainer.append(WRender.Create({ tagName: 'input', type: 'button', className: 'Block-Success', value: 'Nuevo Caso', onclick: this.nuevoCaso }))
 
         this.shadowRoot.append(this.OptionContainer, this.TabContainer);
         //this.dashBoardView();
         this.actividadesManager();
     }
-    actividadesManager = async () => {
-        const paginator = new WPaginatorViewer({ Dataset: this.mapCaseToPaginatorElement(this.Dataset), userStyles: [StylesControlsV2] });
+    actividadesManager = async (Dataset = this.Dataset, View = "Pendientes") => {
+        const paginator = new WPaginatorViewer({ Dataset: this.mapCaseToPaginatorElement(Dataset), userStyles: [StylesControlsV2] });
         this.FilterOptions = new WFilterOptions({
-            Dataset: this.Dataset,
+            Dataset: Dataset,
             AutoSetDate: true,
             ModelObject: this.ModelObject,
             Display: true,
@@ -65,7 +88,7 @@ class MainSolicitudesView extends HTMLElement {
                 this.paginator?.Draw(DFilt);
             }
         });
-        this.TabManager.NavigateFunction("Tab-Actividades-Manager",
+        this.TabManager.NavigateFunction("Tab-Actividades-Manager-" + View,
             WRender.Create({ className: "actividadesView", children: [this.FilterOptions, paginator] }));
     }
 
@@ -86,14 +109,34 @@ class MainSolicitudesView extends HTMLElement {
         })
     }
     actividadDetail = async (actividad) => {
-        const actividadDetailView = WRender.Create({ className: "actividadDetailView", children: [this.actividadElementDetail(actividad)] });
-        const commentsDataset = await new Tbl_Comments({ Id_Case: actividad.Id_Case }).Get();
+        actividad.Tbl_Profile_CasosAsignados =  await new Tbl_Profile_CasosAsignados({ Id_Case: actividad.Id_Case }).Get();
+        const actividadDetailView = WRender.Create({
+            className: "actividadDetailView",
+            style: {
+                display: "grid",
+                gap: "20px",
+                gridTemplateColumns: "calc(100% - 620px) 600px"
+            },
+            children: [
+                new WDetailObject({
+                    ObjectDetail: actividad, ModelObject: new Tbl_Case_ModelComponent({
+                        // @ts-ignore
+                        Tbl_Profile_CasosAsignados: {
+                            type: "MASTERDETAIL",
+                            label: "Participantes",
+                            ModelObject: new Tbl_Profile_CasosAsignados_ModelComponent()
+                        }
+                    })
+                })]
+        });
+        const commentsDataset = await new Tbl_Comments_ModelComponent({ Id_Case: actividad.Id_Case }).Get();
         const commentsContainer = new WCommentsComponent({
             Dataset: commentsDataset,
-            ModelObject: new Tbl_Comments(),
+            ModelObject: new Tbl_Comments_ModelComponent(),
             User: WSecurity.UserData,
             UserIdProp: "Id_User",
             CommentsIdentify: actividad.Id_Case,
+            CommentsIdentifyName: "Id_Case",
             UrlSearch: "../api/ApiEntityHelpdesk/getTbl_Comments",
             UrlAdd: "../api/ApiEntityHelpdesk/saveTbl_Comments"
         });
@@ -113,7 +156,7 @@ class MainSolicitudesView extends HTMLElement {
         const form = new WForm({
             ModelObject: this.ModelObject,
             AutoSave: true,
-            SaveFunction: ()=> {
+            SaveFunction: () => {
                 this.shadowRoot.append(ModalMessege("Aviso", "Caso guardado correctamente", true))
             }
         })

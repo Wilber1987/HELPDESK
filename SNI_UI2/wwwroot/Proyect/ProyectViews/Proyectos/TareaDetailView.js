@@ -5,10 +5,10 @@ import { WCommentsComponent } from "../../../WDevCore/WComponents/WCommentsCompo
 import { WModalForm } from "../../../WDevCore/WComponents/WModalForm.js";
 import { ComponentsManager, html, WRender } from "../../../WDevCore/WModules/WComponentsTools.js";
 import { css } from "../../../WDevCore/WModules/WStyledRender.js";
-import { Tbl_Agenda } from "../../FrontModel/Tbl_Agenda.js";
-import { Tbl_Calendario } from "../../FrontModel/Tbl_Calendario.js";
-import { Tbl_Comments_Tasks } from "../../FrontModel/Tbl_Comments_Tasks.js";
-import { Tbl_Tareas } from "../../FrontModel/Tbl_Tareas.js";
+import { Tbl_Agenda_ModelComponent } from "../../FrontModel/Tbl_Agenda.js";
+import { Tbl_Calendario_ModelComponent } from "../../FrontModel/Tbl_Calendario.js";
+import { Tbl_Comments_Tasks_ModelComponent } from "../../FrontModel/Tbl_Comments_Tasks.js";
+import { Tbl_Tareas, Tbl_Tareas_ModelComponent } from "../../FrontModel/Tbl_Tareas.js";
 
 /**
  * @typedef {Object} ComponentConfig
@@ -50,10 +50,10 @@ class TareaDetailView extends HTMLElement {
         this.Manager.NavigateFunction("id", await this.MainComponent());
     }
     async MainComponent() {
-        const commentsActividad = await new Tbl_Comments_Tasks({ Id_Tarea: this.Task?.Id_Tarea }).Get();
+        const commentsActividad = await new Tbl_Comments_Tasks_ModelComponent({ Id_Tarea: this.Task?.Id_Tarea }).Get();
         const commentsContainer = new WCommentsComponent({
             Dataset: commentsActividad,
-            ModelObject: new Tbl_Comments_Tasks(),
+            ModelObject: new Tbl_Comments_Tasks_ModelComponent(),
             User: WSecurity.UserData,
             UserIdProp: "Id_User",
             CommentsIdentify: this.Task?.Id_Tarea,
@@ -79,7 +79,8 @@ class TareaDetailView extends HTMLElement {
                     <div class="horarios">
                         <h5>Horario</h5>
                         ${this.Task?.Tbl_Calendario?.map(H => `<div class="horario">
-                               del ${H.Fecha_Inicio?.toDateFormatEs()} hasta ${H.Fecha_Final?.toDateFormatEs()}
+                               del ${H.Fecha_Inicio?.// @ts-ignore
+                               toDateFormatEs()} hasta ${H.Fecha_Final?.toDateFormatEs()}
                             </div>`)?.join("") ?? "-"}
                     </div>
                 </div>
@@ -136,27 +137,27 @@ class TareaDetailView extends HTMLElement {
 
     /**
     * 
-    * @param {Tbl_Tareas} task 
+    * @param {Tbl_Tareas} task
     */
     taskEdit = async (task) => {
         const CalendarModel = {
             type: 'CALENDAR',
-            ModelObject: () => new Tbl_Calendario(),
+            ModelObject: () => new Tbl_Calendario_ModelComponent(),
             require: false,
             CalendarFunction: async () => {
                 return {
-                    Agenda: await new Tbl_Agenda({
+                    Agenda: await new Tbl_Agenda_ModelComponent({
                         // @ts-ignore
                         Id_Dependencia: task?.Tbl_Case?.Id_Dependencia
                     }).Get(),
-                    Calendario: await new Tbl_Calendario({
+                    Calendario: await new Tbl_Calendario_ModelComponent({
                         // @ts-ignore
                         Id_Dependencia: task?.Tbl_Case?.Id_Dependencia
                     }).Get()
                 }
             }
         }
-        this.TaskModel = new Tbl_Tareas();
+        this.TaskModel = new Tbl_Tareas_ModelComponent();
         // @ts-ignore
         this.TaskModel.Tbl_Calendario = CalendarModel;
         this.shadowRoot?.append(new WModalForm({
@@ -168,7 +169,7 @@ class TareaDetailView extends HTMLElement {
     }
     /**
      * 
-     * @param {Tbl_Tareas} task 
+     * @param {Tbl_Tareas} task
      * @param {String} state 
      */
     changeState = async (task, state) => {

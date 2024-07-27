@@ -1,5 +1,4 @@
-
-
+//@ts-check
 import { CaseSearcherToVinculate } from '../../../AppComponents/CaseSearcherToVinculate.js';
 import { priorityStyles } from '../../../AppComponents/Styles.js';
 import { Permissions, WSecurity } from '../../../WDevCore/Security/WSecurity.js';
@@ -11,26 +10,28 @@ import { WPaginatorViewer } from '../../../WDevCore/WComponents/WPaginatorViewer
 import { WTableComponent } from "../../../WDevCore/WComponents/WTableComponent.js";
 import { ComponentsManager, WRender } from '../../../WDevCore/WModules/WComponentsTools.js';
 import { ControlBuilder } from '../../../WDevCore/WModules/WControlBuilder.js';
-import { Cat_Dependencias } from "../../FrontModel/Cat_Dependencias.js";
-import { Tbl_Case, Tbl_VinculateCase } from '../../FrontModel/Tbl_CaseModule.js';
-import { Tbl_Agenda } from "../../FrontModel/Tbl_Agenda.js";
-import { Tbl_Tareas } from "../../FrontModel/Tbl_Tareas.js";
+import { Cat_Dependencias_ModelComponent } from "../../FrontModel/Cat_Dependencias.js";
+import { Tbl_Case, Tbl_Case_ModelComponent, Tbl_VinculateCase } from '../../FrontModel/Tbl_CaseModule.js';
+import { Tbl_Agenda_ModelComponent } from "../../FrontModel/Tbl_Agenda.js";
+import { Tbl_Tareas_ModelComponent } from "../../FrontModel/Tbl_Tareas.js";
 import { activityStyle } from '../../style.js';
 import { caseGeneralData } from './CaseDetailComponent.js';
-import { Tbl_Comments } from '../../FrontModel/Tbl_Comments.js';
+import { Tbl_Comments_ModelComponent } from '../../FrontModel/Tbl_Comments.js';
+import { Tbl_Calendario_ModelComponent } from '../../FrontModel/Tbl_Calendario.js';
+import { Tbl_Servicios, Tbl_Servicios_ModelComponent } from '../../FrontModel/Tbl_Servicios.js';
 
 class CaseManagerComponent extends HTMLElement {
     /**
      * 
-     * @param {Array<Tbl_Case>} [Dataset] 
-     * @param {Array<Cat_Dependencias>} Dependencias 
+     * @param {Array<Tbl_Case_ModelComponent>} [Dataset]
+     * @param {Array<Cat_Dependencias_ModelComponent>} Dependencias
      */
     constructor(Dependencias, Dataset) {
         super();
         this.Dataset = Dataset = [];
         this.Dependencias = Dependencias;
         this.attachShadow({ mode: 'open' });
-        this.shadowRoot.append(this.WStyle, StylesControlsV2.cloneNode(true), StylesControlsV3.cloneNode(true));
+        this.shadowRoot?.append(this.WStyle, StylesControlsV2.cloneNode(true), StylesControlsV3.cloneNode(true));
         this.TabContainer = WRender.createElement({ type: 'div', props: { class: 'TabContainer', id: "TabContainer" } });
         this.TabManager = new ComponentsManager({ MainContainer: this.TabContainer });
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });
@@ -47,28 +48,31 @@ class CaseManagerComponent extends HTMLElement {
                 value: 'Nuevo Caso', onclick: this.CaseForm
             }))
         }
-        this.shadowRoot.append(this.OptionContainer, this.TabContainer);
+        this.shadowRoot?.append(this.OptionContainer, this.TabContainer);
         //this.dashBoardView();
         this.actividadesManager();
     }
     actividadesManager = async () => {
-        this.Paginator =  new WPaginatorViewer({ Dataset: [], userStyles: [StylesControlsV2] });
+        // @ts-ignore
+        this.Paginator =  new WPaginatorViewer({ Dataset: [] });
         this.FilterOptions =  new WFilterOptions({
             Dataset: [],
             UseEntityMethods: false,
             AutoFilter: true,
             Display: true,
             AutoSetDate: true,
-            ModelObject: new Tbl_Case(),
+            ModelObject: new Tbl_Case_ModelComponent(),
             FilterFunction: async (/** @type {Array | undefined} */ DFilt) => {
+                /**@type {Array<Tbl_Case>} */
                 // @ts-ignore
-                const data = await new Tbl_Case({ FilterData: DFilt }).GetOwCase();
+                const data = await new Tbl_Case_ModelComponent({ FilterData: DFilt }).GetOwCase();
                 const datasetMap = data.map(actividad => {
+                    // @ts-ignore
                     actividad.Dependencia = actividad.Cat_Dependencias?.Descripcion;
                     actividad.Progreso = actividad.Tbl_Tareas?.filter(tarea => tarea.Estado?.includes("Finalizado")).length;
                     return this.actividadElement(actividad);
                 });
-                this.Paginator.Draw(datasetMap);
+                this.Paginator?.Draw(datasetMap);
             }
         });
         
@@ -79,7 +83,7 @@ class CaseManagerComponent extends HTMLElement {
     }
 
     actividadElement = (actividad) => {
-        this.shadowRoot.append(priorityStyles.cloneNode(true));
+        this.shadowRoot?.append(priorityStyles.cloneNode(true));
         return WRender.Create({
             className: "actividad", object: actividad, children: [
                 {
@@ -109,15 +113,16 @@ class CaseManagerComponent extends HTMLElement {
         })
     }
 
-    actividadDetail = async (actividad = (new Tbl_Case())) => {
+    actividadDetail = async (actividad = (new Tbl_Case_ModelComponent())) => {
         sessionStorage.setItem("detailCase", JSON.stringify(actividad));
+        // @ts-ignore
         window.location = "/ProyectViews/CaseDetail"
     }
     dependenciasViewer = async () => {
         const dependenciasDetailView = WRender.Create({ className: "", children: [] });
         //const tareasActividad = await new Cat_Dependencias().Get();
         dependenciasDetailView.append(new WTableComponent({
-            ModelObject: new Cat_Dependencias({}),
+            ModelObject: new Cat_Dependencias_ModelComponent({}),
             Options: {
                 Add: true, UrlAdd: "../api/ApiEntityDBO/saveCat_Dependencias",
                 Edit: true, UrlUpdate: "../api/ApiEntityDBO/updateCat_Dependencias",
@@ -132,15 +137,15 @@ class CaseManagerComponent extends HTMLElement {
             WRender.Create({
                 className: "CaseFormView", children: [CaseForm(undefined, this.Dependencias, () => {
                     console.log(false);
-                    this.shadowRoot.append(ModalMessege("Caso guardado correctamente", null, true))
+                    this.shadowRoot?.append(ModalMessege("Caso guardado correctamente", undefined, true))
                 })]
             }));
     }
     Vincular = async (actividad) => {
-        this.shadowRoot.append(new WModalForm({
+        this.shadowRoot?.append(new WModalForm({
             title: "Vincular Casos",
             ObjectModal: CaseSearcherToVinculate(actividad, "Vincular", async (caso_vinculado, TableComponent, model) => {
-                this.shadowRoot.append(ModalVericateAction(async () => {
+                this.shadowRoot?.append(ModalVericateAction(async () => {
                     const response = await new Tbl_VinculateCase({
                         Casos_Vinculados: [actividad, caso_vinculado]
                     }).VincularCaso();
@@ -159,20 +164,20 @@ class CaseManagerComponent extends HTMLElement {
 customElements.define('w-case-manager', CaseManagerComponent);
 export { CaseForm, CaseManagerComponent, simpleCaseForm };
 /**
- * @param {Tbl_Case} [entity] 
- * @param {Array<Cat_Dependencias>} [dependencias] 
+ * @param {Tbl_Case_ModelComponent} [entity]
+ * @param {Array<Cat_Dependencias_ModelComponent>} [dependencias]
  * @param {Function} [action] 
  * @returns {WForm}
  */
 const CaseForm = (entity, dependencias, action) => {
     const ModelCalendar = {
         type: 'CALENDAR',
-        ModelObject: () => new Tbl_Calendario(),
+        ModelObject: () => new Tbl_Calendario_ModelComponent(),
         require: false,
         CalendarFunction: async () => {
             return {
-                Agenda: await new Tbl_Agenda({ Id_Dependencia: form.FormObject.Cat_Dependencias?.Id_Dependencia }).Get(),
-                Calendario: await new Tbl_Calendario({ Id_Dependencia: form.FormObject.Cat_Dependencias?.Id_Dependencia }).Get()
+                Agenda: await new Tbl_Agenda_ModelComponent({ Id_Dependencia: form.FormObject.Cat_Dependencias?.Id_Dependencia }).Get(),
+                Calendario: await new Tbl_Calendario_ModelComponent({ Id_Dependencia: form.FormObject.Cat_Dependencias?.Id_Dependencia }).Get()
             }
         }
     }
@@ -182,12 +187,12 @@ const CaseForm = (entity, dependencias, action) => {
         SaveFunction: action,
         ImageUrlPath: "",
         AutoSave: true,
-        ModelObject: new Tbl_Case({
+        ModelObject: new Tbl_Case_ModelComponent({
             Tbl_Tareas: {
                 type: 'MasterDetail',
-                ModelObject: () => new Tbl_Tareas({ Tbl_Calendario: ModelCalendar })
+                ModelObject: () => new Tbl_Tareas_ModelComponent({ Tbl_Calendario: ModelCalendar })
             }, Cat_Dependencias: {
-                type: "WSELECT", hiddenFilter: true, ModelObject: new Cat_Dependencias(),
+                type: "WSELECT", hiddenFilter: true, ModelObject: new Cat_Dependencias_ModelComponent(),
                 Dataset: dependencias,
                 action: (caso) => {
                     caso.Tbl_Tareas
@@ -201,14 +206,15 @@ const CaseForm = (entity, dependencias, action) => {
 }
 
 /**
- * @param {Tbl_Case} [entity] 
- * @param {Array<Cat_Dependencias>} [dependencias] 
+ * @param {Tbl_Case_ModelComponent} [entity]
+ * @param {Array<Cat_Dependencias_ModelComponent>} [dependencias]
  * @param {Array<Tbl_Servicios>} [servicios] 
  * @param {Function} [action] 
  * @returns {WForm}
  */
 const simpleCaseForm = (entity, dependencias, servicios, action) => {
     servicios = servicios?.map(s => {
+        // @ts-ignore
         s.Descripcion = s.Descripcion_Servicio;
         return s;
     })
@@ -216,24 +222,25 @@ const simpleCaseForm = (entity, dependencias, servicios, action) => {
         EditObject: entity,
         SaveFunction: action,
         ImageUrlPath: "",
-        ModelObject: new Tbl_Case({
+        ModelObject: new Tbl_Case_ModelComponent({
             Tbl_Tareas: { type: "text", hidden: true },
             Id_Vinculate: { type: "text", hidden: true },
             Titulo: { type: "text", hidden: true },
             Tbl_Servicios: {
-                type: "wselect", ModelObject: new Cat_Dependencias(),
-                Dataset: servicios, required: false
+                type: "wselect", ModelObject: new Cat_Dependencias_ModelComponent(),
+                Dataset: servicios, require: false
             },
             Fecha_Inicio: { type: "text", hidden: true },
             Estado: { type: "text", hidden: true },
             Fecha_Final: { type: "text", hidden: true },
             Descripcion: { type: "text", hidden: true },
-            Tbl_Comments: { type: "MasterDetail", ModelObject: new Tbl_Comments(), label: "Comentario", hidden: true },
+            // @ts-ignore
+            Tbl_Comments: { type: "MasterDetail", ModelObject: new Tbl_Comments_ModelComponent(), label: "Comentario", hidden: true },
             Cat_Dependencias: {
-                type: "WSELECT", hiddenFilter: true, ModelObject: new Cat_Dependencias(),
+                type: "WSELECT", hiddenFilter: true, ModelObject: new Cat_Dependencias_ModelComponent(),
                 Dataset: dependencias,
                 action: async (caso) => {
-                    const servicios = await new Tbl_Servicios({ Id_Dependencia: caso.Cat_Dependencias?.Id_Dependencia }).Get();
+                    const servicios = await new Tbl_Servicios_ModelComponent({ Id_Dependencia: caso.Cat_Dependencias?.Id_Dependencia }).Get();
                     form.ModelObject.Tbl_Servicios.Dataset = servicios;
                     form.DrawComponent();
                 }

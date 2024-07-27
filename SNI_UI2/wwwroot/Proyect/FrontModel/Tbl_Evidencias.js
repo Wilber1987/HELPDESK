@@ -9,7 +9,7 @@ class Tbl_Evidencias extends EntityClass {
     }
 
     IdEvidencia = {type: 'number', primary: true};
-    Cat_Tipo_Evidencia = {type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Tipo_Evidencia()};
+    Cat_Tipo_Evidencia = {type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Tipo_Evidencia_ModelComponent()};
     Data = {type: 'file'};
     Id_Tarea = {type: 'number', hidden: true};
 }

@@ -1,7 +1,7 @@
 
 
 import { priorityStyles } from '../../../AppComponents/Styles.js';
-import { Tbl_Case } from '../../FrontModel/Tbl_CaseModule.js';
+import { Tbl_Case_ModelComponent } from '../../FrontModel/Tbl_CaseModule.js';
 import { StylesControlsV2, StylesControlsV3 } from "../../../WDevCore/StyleModules/WStyleComponents.js";
 import { WFilterOptions } from '../../../WDevCore/WComponents/WFilterControls.js';
 import { ModalMessege, ModalVericateAction } from "../../../WDevCore/WComponents/WForm.js";
@@ -12,7 +12,7 @@ import { ControlBuilder } from '../../../WDevCore/WModules/WControlBuilder.js';
 import { css } from '../../../WDevCore/WModules/WStyledRender.js';
 import { activityStyle } from '../../style.js';
 import { caseGeneralData } from './CaseDetailComponent.js';
-import {Cat_Dependencias} from "../../FrontModel/Cat_Dependencias.js";
+import {Cat_Dependencias_ModelComponent} from "../../FrontModel/Cat_Dependencias.js";
 
 /**
  * @typedef {Object} ComponentConfig
@@ -21,8 +21,8 @@ import {Cat_Dependencias} from "../../FrontModel/Cat_Dependencias.js";
 class CasosCerradosView extends HTMLElement {
     /**
     * 
-    * @param {Array<Tbl_Case>} Dataset 
-    * @param {Array<Cat_Dependencias>} Dependencias 
+    * @param {Array<Tbl_Case_ModelComponent>} Dataset
+    * @param {Array<Cat_Dependencias_ModelComponent>} Dependencias
     */
     constructor(Dataset, Dependencias) {
         super();
@@ -33,9 +33,9 @@ class CasosCerradosView extends HTMLElement {
         this.TabContainer = WRender.createElement({ type: 'div', props: { class: 'TabContainer', id: "TabContainer" } });
         this.TabManager = new ComponentsManager({ MainContainer: this.TabContainer });
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });
-        this.ModelObject = new Tbl_Case({
+        this.ModelObject = new Tbl_Case_ModelComponent({
             Tbl_Tareas: undefined, Estado: undefined, Cat_Dependencias: {
-                type: "WSELECT", hiddenFilter: true, ModelObject: () => new Cat_Dependencias()
+                type: "WSELECT", hiddenFilter: true, ModelObject: () => new Cat_Dependencias_ModelComponent()
             }, Get: async () => {
                 return await this.ModelObject.GetData("Proyect/GetOwCloseCase");
             }
@@ -101,7 +101,7 @@ class CasosCerradosView extends HTMLElement {
         })
     }
 
-    actividadDetail = async (actividad = (new Tbl_Case())) => {
+    actividadDetail = async (actividad = (new Tbl_Case_ModelComponent())) => {
         sessionStorage.setItem("detailCase", JSON.stringify(actividad));
         window.location = "/ProyectViews/CaseDetail"
     }
@@ -109,7 +109,7 @@ class CasosCerradosView extends HTMLElement {
         const dependenciasDetailView = WRender.Create({ className: "", children: [] });
         //const tareasActividad = await new Cat_Dependencias().Get();
         dependenciasDetailView.append(new WTableComponent({
-            ModelObject: new Cat_Dependencias({}),
+            ModelObject: new Cat_Dependencias_ModelComponent({}),
             Options: {
                 Add: true, UrlAdd: "../api/ApiEntityDBO/saveCat_Dependencias",
                 Edit: true, UrlUpdate: "../api/ApiEntityDBO/updateCat_Dependencias",
@@ -126,7 +126,7 @@ class CasosCerradosView extends HTMLElement {
     Reabrir = async (actividad) => {
         const modal = ModalVericateAction(async () => {
             actividad.Estado = "Activo"
-            const response = await new Tbl_Case(actividad).Update();
+            const response = await new Tbl_Case_ModelComponent(actividad).Update();
             if (response.status == 200) {
                 this.shadowRoot.append(ModalMessege("Caso reabierto exitosamente")); 
                 this.shadowRoot.removeChild(modal)   
@@ -158,8 +158,8 @@ class CasosCerradosView extends HTMLElement {
 }
 customElements.define('w-caos-cerrados-view', CasosCerradosView);
 window.onload = async () => {
-    const dependencias = await new Cat_Dependencias().GetOwDependencies();
-    const dataset = await new Tbl_Case().GetOwCloseCase();
+    const dependencias = await new Cat_Dependencias_ModelComponent().GetOwDependencies();
+    const dataset = await new Tbl_Case_ModelComponent().GetOwCloseCase();
     Main.appendChild(new CasosCerradosView(dataset, dependencias));
 }
 export { CasosCerradosView };

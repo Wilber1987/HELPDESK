@@ -54,6 +54,22 @@ namespace API.Controllers
 		{
 			return inst.GetOwSolicitudes(HttpContext.Session.GetString("seassonKey"), Case_Estate.Solicitado);
 		}
+		public List<Tbl_Case> GetOwSolicitudesAprobadas(Tbl_Case inst)
+		{
+			return inst.GetOwSolicitudes(HttpContext.Session.GetString("seassonKey"), Case_Estate.Activo);
+		}
+		public List<Tbl_Case> GetOwSolicitudesRechazadas(Tbl_Case inst)
+		{
+			return inst.GetOwSolicitudes(HttpContext.Session.GetString("seassonKey"), Case_Estate.Rechazado);
+		}
+		public List<Tbl_Case> GetOwSolicitudesFinalizadas(Tbl_Case inst)
+		{
+			return inst.GetOwSolicitudes(HttpContext.Session.GetString("seassonKey"), Case_Estate.Finalizado);
+		}
+		public List<Tbl_Case> GetOwSolicitudesVinculadas(Tbl_Case inst)
+		{
+			return inst.GetOwSolicitudes(HttpContext.Session.GetString("seassonKey"), Case_Estate.Vinculado);
+		}
 
 		public List<Tbl_Case> GetOwSolicitudesPendientes(Tbl_Case inst)
 		{

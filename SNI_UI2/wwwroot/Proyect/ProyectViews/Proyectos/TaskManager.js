@@ -5,21 +5,21 @@ import { WToolTip } from '../../../WDevCore/WComponents/WMultiSelect.js';
 import { ComponentsManager, WRender } from '../../../WDevCore/WModules/WComponentsTools.js';
 import { css } from '../../../WDevCore/WModules/WStyledRender.js';
 import { TareaDetailView } from './TareaDetailView.js';
-import { Tbl_Tareas } from "../../FrontModel/Tbl_Tareas.js";
-import { Tbl_Agenda } from "../../FrontModel/Tbl_Agenda.js";
-import { Tbl_Calendario } from "../../FrontModel/Tbl_Calendario.js";
+import { Tbl_Tareas_ModelComponent } from "../../FrontModel/Tbl_Tareas.js";
+import { Tbl_Agenda_ModelComponent } from "../../FrontModel/Tbl_Agenda.js";
+import { Tbl_Calendario_ModelComponent } from "../../FrontModel/Tbl_Calendario.js";
 
 class TaskManagers extends HTMLElement {
     /**
-     * @param {Array<Tbl_Tareas>} Dataset 
-     * @param {Tbl_Tareas} Model 
+     * @param {Array<Tbl_Tareas_ModelComponent>} Dataset
+     * @param {Tbl_Tareas_ModelComponent} Model
      * @param {Object} [Config] 
      */
     constructor(Dataset, Model, Config) {
         super();
         this.Dataset = Dataset;
         this.Config = Config;
-        this.TaskModel = Model ?? new Tbl_Tareas();
+        this.TaskModel = Model ?? new Tbl_Tareas_ModelComponent();
         this.attachShadow({ mode: 'open' });
         this.shadowRoot?.append(this.WStyle,
             StyleScrolls.cloneNode(true),
@@ -111,7 +111,7 @@ class TaskManagers extends HTMLElement {
     }
 
     /**
-     * @param {Tbl_Tareas} task 
+     * @param {Tbl_Tareas_ModelComponent} task
      * @param {String} state 
      */
     cardDrop = async (task, state) => {
@@ -174,7 +174,6 @@ class TaskManagers extends HTMLElement {
         }
         .panel {          
             padding: 5px;  
-            overflow-y: auto;    
             transition: all 0.4s;            
         }
         .panel-inact {          
@@ -257,7 +256,7 @@ export { TaskManagers };
 
 
 /**
-* @param {Tbl_Tareas} element
+* @param {Tbl_Tareas_ModelComponent} element
 * @param {ComponentsManager} Manager
 */
 const TaskCard = (element, Manager) => {
@@ -314,7 +313,7 @@ const TaskCard = (element, Manager) => {
                             //]
                         }, {
                             tagName: "a", innerHTML: "Ver detalles", onclick: async () => {
-                                const find = await new Tbl_Tareas({ Id_Tarea: element.Id_Tarea }).Get()
+                                const find = await new Tbl_Tareas_ModelComponent({ Id_Tarea: element.Id_Tarea }).Get()
                                 const CaseDetail = new TareaDetailView({
                                     Task: find[0], BackAction: () => {
                                         Manager.NavigateFunction("main-task")
@@ -464,20 +463,20 @@ const TaskCard = (element, Manager) => {
         ]
     });
     /**
-    * @param {Tbl_Tareas} task 
+    * @param {Tbl_Tareas_ModelComponent} task
     */
     const taskEdit = async (task) => {
         const CalendarModel = {
             type: 'CALENDAR',
-            ModelObject: () => new Tbl_Calendario(),
+            ModelObject: () => new Tbl_Calendario_ModelComponent(),
             require: false,
             CalendarFunction: async () => {
                 return {
-                    Agenda: await new Tbl_Agenda({
+                    Agenda: await new Tbl_Agenda_ModelComponent({
                         // @ts-ignore
                         Id_Dependencia: task?.Tbl_Case?.Id_Dependencia
                     }).Get(),
-                    Calendario: await new Tbl_Calendario({
+                    Calendario: await new Tbl_Calendario_ModelComponent({
                         // @ts-ignore
                         Id_Dependencia: task?.Tbl_Case?.Id_Dependencia
                     }).Get()
@@ -489,7 +488,7 @@ const TaskCard = (element, Manager) => {
             EditObject: task,
             //ImageUrlPath: this.Config?.ImageUrlPath,
             AutoSave: true,
-            ModelObject: new Tbl_Tareas({ Tbl_Calendario: CalendarModel })
+            ModelObject: new Tbl_Tareas_ModelComponent({ Tbl_Calendario: CalendarModel })
         }))
     }
     return card;
@@ -498,7 +497,7 @@ const TaskCard = (element, Manager) => {
 export { TaskCard }
 
 /**
- * @param {Tbl_Tareas} element
+ * @param {Tbl_Tareas_ModelComponent} element
  */
 function GetTaskColor(element) {
     switch (element.Estado.toString().toUpperCase()) {

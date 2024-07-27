@@ -4,9 +4,9 @@ import { WForm } from "../../WDevCore/WComponents/WForm.js";
 // @ts-ignore
 import { ModelProperty } from "../../WDevCore/WModules/CommonModel.js";
 import { EntityClass } from "../../WDevCore/WModules/EntityClass.js";
-import { Cat_Dependencias } from "./Cat_Dependencias.js";
+import { Cat_Dependencias_ModelComponent } from "./Cat_Dependencias.js";
 import { WAjaxTools } from "../../WDevCore/WModules/WAjaxTools.js";
-import { Tbl_Servicios } from "./Tbl_Servicios.js";
+import { Tbl_Servicios_ModelComponent } from "./Tbl_Servicios.js";
 
 
 //@ts-check
@@ -29,10 +29,10 @@ class Tbl_Profile extends EntityClass {
     //PROPIEDADES DE HELPDESK
     /**@type {ModelProperty}*/ Cat_Dependencias = {
         type: 'Multiselect', hiddenFilter: true,
-        ModelObject: () => new Cat_Dependencias(), require: false,
+        ModelObject: () => new Cat_Dependencias_ModelComponent(), require: false,
         action: async (Profile, /** @type {WForm} */ Form) => {
             if (Profile.Cat_Dependencias.length > 0) {
-                const servicios = await new Tbl_Servicios({
+                const servicios = await new Tbl_Servicios_ModelComponent({
                     FilterData: [{
                         PropName: "Id_Dependencia", FilterType: "in", Values:
                             Profile.Cat_Dependencias.map(d => d.Id_Dependencia.toString())
@@ -57,7 +57,7 @@ class Tbl_Profile extends EntityClass {
         }
     }
     /**@type {ModelProperty}*/ Tbl_Servicios = {
-        type: 'Multiselect', hiddenFilter: true, ModelObject: () => new Tbl_Servicios(),
+        type: 'Multiselect', hiddenFilter: true, ModelObject: () => new Tbl_Servicios_ModelComponent(),
         require: false, disabled: async (Profile, /** @type {WForm} */ Form) => {
             return Profile.Tbl_Servicios?.length == 0
         }

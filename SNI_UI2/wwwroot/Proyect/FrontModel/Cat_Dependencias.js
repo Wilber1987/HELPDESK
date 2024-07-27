@@ -1,6 +1,6 @@
 import {EntityClass} from "../../WDevCore/WModules/EntityClass.js";
 
-class Cat_Dependencias extends EntityClass {
+class Cat_Dependencias_ModelComponent extends EntityClass {
     constructor(props) {
         super(props, 'EntityHelpdesk');
         for (const prop in props) {
@@ -34,10 +34,10 @@ class Cat_Dependencias extends EntityClass {
     Cat_Dependencias_Hijas = {
         type: 'Multiselect',
         hiddenFilter: true,
-        ModelObject: () => new Cat_Dependencias(),
+        ModelObject: () => new Cat_Dependencias_ModelComponent(),
         require: false
     };
-    Tbl_Agenda = {type: 'MasterDetail', ModelObject: () => new Tbl_Agenda()};
+    Tbl_Agenda = {type: 'MasterDetail', ModelObject: () => new Tbl_Agenda_ModelComponent()};
     Tbl_Dependencias_Usuarios = {
         type: 'MasterDetail',
         ModelObject: () => new Tbl_Dependencias_Usuarios(),
@@ -48,4 +48,36 @@ class Cat_Dependencias extends EntityClass {
     }
 }
 
-export {Cat_Dependencias};
+export {Cat_Dependencias_ModelComponent};
+
+class Cat_Dependencias extends EntityClass {
+    /** @param {Partial<Cat_Dependencias>} [props] */
+    constructor(props) {
+        super(props, 'EntityHelpdesk');
+        for (const prop in props) {
+            this[prop] = props[prop];
+        }
+    }
+    /**@type {Number}*/ Id_Dependencia;
+    /**@type {String}*/ Descripcion;
+    /**@type {String}*/ Username;
+    /**@type {String}*/ Password;
+    /**@type {String}*/ Host;
+    /**@type {String}*/ AutenticationType;
+    /**@type {String}*/ TENAT;
+    /**@type {String}*/ CLIENT;
+    /**@type {String}*/ OBJECTID;
+    /**@type {String}*/ CLIENT_SECRET;
+    /**@type {String}*/ HostService;
+    /**@type {String}*/ SMTPHOST;
+    /**@type {Boolean}*/ Default;
+    /**@type {Cat_Dependencias} ManyToOne*/ Cat_Dependencias;
+    /**@type {Array<Cat_Dependencias>} OneToMany*/ Cat_Dependencias;
+    /**@type {Array<Tbl_Agenda>} OneToMany*/ Tbl_Agenda;
+    /**@type {Array<Tbl_Calendario>} OneToMany*/ Tbl_Calendario;
+    /**@type {Array<Tbl_Case>} OneToMany*/ Tbl_Case;
+    /**@type {Array<Tbl_Dependencias_Usuarios>} OneToMany*/ Tbl_Dependencias_Usuarios;
+    /**@type {Array<Tbl_Servicios>} OneToMany*/ Tbl_Servicios;
+ }
+ export { Cat_Dependencias }
+

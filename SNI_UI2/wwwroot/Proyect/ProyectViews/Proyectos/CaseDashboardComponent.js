@@ -1,7 +1,7 @@
 
 
 //@ts-check
-import { Tbl_Case } from '../../FrontModel/Tbl_CaseModule.js';
+import { Tbl_Case_ModelComponent } from '../../FrontModel/Tbl_CaseModule.js';
 import { StylesControlsV2 } from '../../../WDevCore/StyleModules/WStyleComponents.js';
 import { ColumChart, RadialChart } from '../../../WDevCore/WComponents/WChartJSComponents.js';
 import { WFilterOptions } from '../../../WDevCore/WComponents/WFilterControls.js';
@@ -11,7 +11,7 @@ import { WTableComponent } from '../../../WDevCore/WComponents/WTableComponent.j
 import { WRender } from '../../../WDevCore/WModules/WComponentsTools.js';
 import { css } from '../../../WDevCore/WModules/WStyledRender.js';
 import {WArrayF} from "../../../WDevCore/WModules/WArrayF.js";
-import {Tbl_Tareas} from "../../FrontModel/Tbl_Tareas.js";
+import {Tbl_Tareas_ModelComponent} from "../../FrontModel/Tbl_Tareas.js";
 
 class CaseDashboardComponent extends HTMLElement {
     /**
@@ -103,8 +103,8 @@ class CaseDashboardComponent extends HTMLElement {
         }))
     }
     dashBoardView = async () => {
-        this.Modelcase = new Tbl_Case({});
-        this.ModelTareas = new Tbl_Tareas();
+        this.Modelcase = new Tbl_Case_ModelComponent({});
+        this.ModelTareas = new Tbl_Tareas_ModelComponent();
         const dasboardContainer = WRender.Create({
             className: "dashBoardView",
             children: []
@@ -120,8 +120,8 @@ class CaseDashboardComponent extends HTMLElement {
             UseEntityMethods: false,
             FilterFunction: async (/** @type {any} */ FilterData) => {
 
-                this.Dataset = await new Tbl_Case({ FilterData: FilterData }).Get();
-                this.TareasDataset = await new Tbl_Tareas({ FilterData: FilterData }).Get();
+                this.Dataset = await new Tbl_Case_ModelComponent({ FilterData: FilterData }).Get();
+                this.TareasDataset = await new Tbl_Tareas_ModelComponent({ FilterData: FilterData }).Get();
                 const { columChart,
                     radialChartDependencias,
                     columChartAperturaCasos,

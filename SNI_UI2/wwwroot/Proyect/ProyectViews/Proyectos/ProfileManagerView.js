@@ -5,9 +5,9 @@ import { ModalMessege, ModalVericateAction } from '../../../WDevCore/WComponents
 import { WModalForm } from '../../../WDevCore/WComponents/WModalForm.js';
 import { WTableComponent } from '../../../WDevCore/WComponents/WTableComponent.js';
 import { ComponentsManager, WRender } from '../../../WDevCore/WModules/WComponentsTools.js';
-import { Cat_Dependencias } from "../../FrontModel/Cat_Dependencias.js";
+import { Cat_Dependencias_ModelComponent } from "../../FrontModel/Cat_Dependencias.js";
 import { Tbl_Profile } from '../../FrontModel/Tbl_Profile.js';
-import { Tbl_Servicios } from '../../FrontModel/Tbl_Servicios.js';
+import { Tbl_Servicios_ModelComponent } from '../../FrontModel/Tbl_Servicios.js';
 import { activityStyle } from '../../style.js';
 
 const OnLoad = async () => {
@@ -113,8 +113,8 @@ class PerfilManagerComponent extends HTMLElement {
                     DNI: { type: "text", hidden: true },
                     Correo_institucional: { type: "text", hidden: true },
                     Estado: { type: "text", hidden: true },
-                    Tbl_Dependencias_Usuarios: { type: 'Wselect', ModelObject: () => new Cat_Dependencias() },
-                    Tbl_Servicios: { type: 'Wselect', ModelObject: () => new Tbl_Servicios(), hidden: true }
+                    Tbl_Dependencias_Usuarios: { type: 'Wselect', ModelObject: () => new Cat_Dependencias_ModelComponent() },
+                    Tbl_Servicios: { type: 'Wselect', ModelObject: () => new Tbl_Servicios_ModelComponent(), hidden: true }
                 }), ObjectOptions: {
                     SaveFunction: async (profile) => {
                         this.shadowRoot?.append(ModalVericateAction(async () => {

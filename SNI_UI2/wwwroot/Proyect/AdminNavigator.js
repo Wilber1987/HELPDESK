@@ -6,10 +6,10 @@ import { WTableComponent } from "../WDevCore/WComponents/WTableComponent.js";
 import { WAjaxTools } from "../WDevCore/WModules/WAjaxTools.js";
 import { ComponentsManager, WRender } from '../WDevCore/WModules/WComponentsTools.js';
 import { WOrtograficValidation } from "../WDevCore/WModules/WOrtograficValidation.js";
-import { Cat_Cargos_Dependencias } from "./FrontModel/Cat_Cargos_Dependencias.js";
-import { Cat_Dependencias } from "./FrontModel/Cat_Dependencias.js";
-import { Cat_Paises } from "./FrontModel/Cat_Paises.js";
-import { Tbl_Servicios } from "./FrontModel/Tbl_Servicios.js";
+import { Cat_Cargos_Dependencias_ModelComponent } from "./FrontModel/Cat_Cargos_Dependencias.js";
+import { Cat_Dependencias_ModelComponent } from "./FrontModel/Cat_Dependencias.js";
+import { Cat_Paises_ModelComponent } from "./FrontModel/Cat_Paises.js";
+import { Tbl_Servicios_ModelComponent } from "./FrontModel/Tbl_Servicios.js";
 window.addEventListener("load", async () => {
     setTimeout(async () => {
         // @ts-ignore
@@ -24,13 +24,13 @@ window.addEventListener("load", async () => {
             Elements: [{
                 name: WOrtograficValidation.es("Mantenimiento de Catalogos"), SubNav: {
                     Elements: [
-                        ElementTab(DOMManager, new Cat_Dependencias()),
-                        ElementTab(DOMManager, new Tbl_Servicios()),
+                        ElementTab(DOMManager, new Cat_Dependencias_ModelComponent()),
+                        ElementTab(DOMManager, new Tbl_Servicios_ModelComponent()),
                         //ElementTab(DOMManager, new Cat_Tipo_Servicio()),
-                        ElementTab(DOMManager, new Cat_Cargos_Dependencias()),
+                        ElementTab(DOMManager, new Cat_Cargos_Dependencias_ModelComponent()),
                         //ElementTab(DOMManager, new Cat_Tipo_Evidencia()),
                         //ElementTab(DOMManager, new Cat_Tipo_Participaciones()),
-                        ElementTab(DOMManager, new Cat_Paises())
+                        ElementTab(DOMManager, new Cat_Paises_ModelComponent())
                     ]
                 }
             }, {

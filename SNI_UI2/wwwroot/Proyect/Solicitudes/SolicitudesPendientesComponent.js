@@ -9,17 +9,17 @@ import { ModalMessege, ModalVericateAction, WForm } from "../../WDevCore/WCompon
 import { WModalForm } from '../../WDevCore/WComponents/WModalForm.js';
 import { WTableComponent } from '../../WDevCore/WComponents/WTableComponent.js';
 import { ComponentsManager, WRender } from '../../WDevCore/WModules/WComponentsTools.js';
-import { Cat_Dependencias } from "../FrontModel/Cat_Dependencias.js";
-import { Tbl_Case, Tbl_VinculateCase } from '../FrontModel/Tbl_CaseModule.js';
-import { Tbl_Comments } from '../FrontModel/Tbl_Comments.js';
-import { Tbl_Servicios } from '../FrontModel/Tbl_Servicios.js';
+import { Cat_Dependencias_ModelComponent } from "../FrontModel/Cat_Dependencias.js";
+import { Tbl_Case_ModelComponent, Tbl_VinculateCase } from '../FrontModel/Tbl_CaseModule.js';
+import { Tbl_Comments_ModelComponent } from '../FrontModel/Tbl_Comments.js';
+import { Tbl_Servicios_ModelComponent } from '../FrontModel/Tbl_Servicios.js';
 import { CaseDetailComponent, caseGeneralData } from '../ProyectViews/Proyectos/CaseDetailComponent.js';
 import { simpleCaseForm } from '../ProyectViews/Proyectos/CaseManagerComponent.js';
 import { activityStyle } from '../style.js';
 class SolicitudesPendientesComponent extends HTMLElement {
     /**
      * 
-     * @param {Array<Tbl_Case>} Dataset 
+     * @param {Array<Tbl_Case_ModelComponent>} Dataset
      */
     constructor(Dataset) {
         super();
@@ -31,13 +31,13 @@ class SolicitudesPendientesComponent extends HTMLElement {
         this.TabManager = new ComponentsManager({ MainContainer: this.TabContainer });
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });
         this.OptionContainer2 = WRender.Create({ className: "OptionContainer2" });
-        this.ModelObject = new Tbl_Case({
+        this.ModelObject = new Tbl_Case_ModelComponent({
             Tbl_Tareas: {
                 type: "text", hidden: true
             }, Estado: {
                 type: "text", hidden: true
             }, Cat_Dependencias: {
-                type: "WSELECT", hiddenFilter: true, ModelObject: () => new Cat_Dependencias()
+                type: "WSELECT", hiddenFilter: true, ModelObject: () => new Cat_Dependencias_ModelComponent()
             }
         });
         this.filterD = [];
@@ -80,7 +80,7 @@ class SolicitudesPendientesComponent extends HTMLElement {
                     MultiSelect: true,
                     UserActions: [{
                         name: "ver detalles", action: async (element) => {
-                            const find = await new Tbl_Case({ Id_Case: element.Id_Case }).Get()
+                            const find = await new Tbl_Case_ModelComponent({ Id_Case: element.Id_Case }).Get()
                             const CaseDetail = new CaseDetailComponent(find[0]);
                             this.TabManager.NavigateFunction("Detail" + element.Id_Case, CaseDetail)
                         }
@@ -119,19 +119,20 @@ class SolicitudesPendientesComponent extends HTMLElement {
             WRender.Create({ className: "nuevoCasoView", children: [form] }));
     }
     update = async (inst = this.filterD) => {
-        const Solicitudes = await new Tbl_Case({ FilterData: inst, OrderData: this.mainTable?.Sorts }).GetSolicitudesPendientesAprobar();
+        const Solicitudes = await new Tbl_Case_ModelComponent({ FilterData: inst, OrderData: this.mainTable?.Sorts }).GetSolicitudesPendientesAprobar();
         this.mainTable?.DrawTable(Solicitudes);
     }
 
     actividadDetail = async (actividad) => {
         const actividadDetailView = WRender.Create({ className: "actividadDetailView", children: [this.actividadElementDetail(actividad)] });
-        const commentsDataset = await new Tbl_Comments({ Id_Case: actividad.Id_Case }).Get();
+        const commentsDataset = await new Tbl_Comments_ModelComponent({ Id_Case: actividad.Id_Case }).Get();
         const commentsContainer = new WCommentsComponent({
             Dataset: commentsDataset,
-            ModelObject: new Tbl_Comments(),
+            ModelObject: new Tbl_Comments_ModelComponent(),
             User: WSecurity.UserData,
             UserIdProp: "Id_User",
             CommentsIdentify: actividad.Id_Case,
+            CommentsIdentifyName: "Id_Case",
             UrlSearch: "../api/ApiEntityHelpdesk/getTbl_Comments",
             UrlAdd: "../api/ApiEntityHelpdesk/saveTbl_Comments"
         });
@@ -179,22 +180,22 @@ class SolicitudesPendientesComponent extends HTMLElement {
     }
     UserActions = [
         {
-            name: "Aprobar", action: async (/**@type {Tbl_Case}*/element) => {
+            name: "Aprobar", action: async (/**@type {Tbl_Case_ModelComponent}*/element) => {
                 // @ts-ignore
                 if (this.mainTable.selectedItems.length <= 0) {
                     this.shadowRoot?.append(ModalMessege("Seleccione solicitudes"));
                     return;
                 }
-                const dependencias = await new Cat_Dependencias().Get();
+                const dependencias = await new Cat_Dependencias_ModelComponent().Get();
                 // @ts-ignore
-                const servicios = await new Tbl_Servicios({ Id_Dependencia: this.mainTable.selectedItems[0]?.Cat_Dependencias?.Id_Dependencia }).Get();
+                const servicios = await new Tbl_Servicios_ModelComponent({ Id_Dependencia: this.mainTable.selectedItems[0]?.Cat_Dependencias?.Id_Dependencia }).Get();
                 const modal = new WModalForm({
                     ObjectModal: simpleCaseForm(element,
                         // @ts-ignore
                         dependencias.filter(d => d.Id_Dependencia == this.mainTable.selectedItems[0]?.Cat_Dependencias?.Id_Dependencia),
                         servicios,
                         async (table_case) => {
-                            const response = await new Tbl_Case({})
+                            const response = await new Tbl_Case_ModelComponent({})
                                 .AprobarCaseList(this.mainTable?.selectedItems ?? [], table_case);
                             if (response.status == 200) {
                                 this.shadowRoot?.append(ModalMessege("Solicitudes aprobadas"));
@@ -208,7 +209,7 @@ class SolicitudesPendientesComponent extends HTMLElement {
                 this.shadowRoot?.append(modal);
             }
         }, {
-            name: "Rechazar", action: async (/**@type {Tbl_Case}*/element) => {
+            name: "Rechazar", action: async (/**@type {Tbl_Case_ModelComponent}*/element) => {
                 // @ts-ignore
                 if (this.mainTable.selectedItems.length <= 0) {
                     this.shadowRoot?.append(ModalMessege("Seleccione solicitudes"));
@@ -219,11 +220,11 @@ class SolicitudesPendientesComponent extends HTMLElement {
                     EditObject: {
                         Id_Case: element.Id_Case,
                     },
-                    ModelObject: new Tbl_Comments(),
+                    ModelObject: new Tbl_Comments_ModelComponent(),
                     ObjectOptions: {
                         SaveFunction: async (comentario) => {
                             this.shadowRoot?.append(ModalVericateAction(async () => {
-                                const response = await new Tbl_Case()
+                                const response = await new Tbl_Case_ModelComponent()
                                     .RechazarCaseList(this.mainTable?.selectedItems ?? [], comentario);
                                 if (response.status == 200) {
                                     this.shadowRoot?.append(ModalMessege("Solicitudes rechazadas"));
@@ -239,16 +240,16 @@ class SolicitudesPendientesComponent extends HTMLElement {
 
             }
         }, {
-            name: "Remitir a otra dependencia", action: async (/**@type {Tbl_Case}*/element) => {
+            name: "Remitir a otra dependencia", action: async (/**@type {Tbl_Case_ModelComponent}*/element) => {
                 // @ts-ignore
                 if (this.mainTable.selectedItems.length <= 0) {
                     this.shadowRoot?.append(ModalMessege("Seleccione solicitudes"));
                     return;
                 }
-                const dependencias = await new Cat_Dependencias().Get();
+                const dependencias = await new Cat_Dependencias_ModelComponent().Get();
                 // @ts-ignore
                 const filterDepend = dependencias.filter(d => d.Id_Dependencia != this.mainTable.selectedItems[0]?.Cat_Dependencias?.Id_Dependencia)
-                const servicios = await new Tbl_Servicios({ Id_Dependencia: filterDepend[0]?.Id_Dependencia }).Get();
+                const servicios = await new Tbl_Servicios_ModelComponent({ Id_Dependencia: filterDepend[0]?.Id_Dependencia }).Get();
                 const modal = new WModalForm({
                     ObjectModal: simpleCaseForm(element,
                         filterDepend,
@@ -257,7 +258,7 @@ class SolicitudesPendientesComponent extends HTMLElement {
                             this.shadowRoot?.append(ModalVericateAction(async () => {
                                 const response =
                                     // @ts-ignore
-                                    await new Tbl_Case().RemitirCasos(this.mainTable.selectedItems,
+                                    await new Tbl_Case_ModelComponent().RemitirCasos(this.mainTable.selectedItems,
                                         table_case.Cat_Dependencias, table_case.Tbl_Comments, table_case);
                                 if (response.status == 200) {
                                     this.shadowRoot?.append(ModalMessege("Solicitud remitida"));

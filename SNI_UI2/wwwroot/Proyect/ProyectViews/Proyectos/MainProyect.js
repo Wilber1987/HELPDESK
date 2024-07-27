@@ -3,8 +3,8 @@ import { WAppNavigator } from '../../../WDevCore/WComponents/WAppNavigator.js';
 import { WFilterOptions } from '../../../WDevCore/WComponents/WFilterControls.js';
 import { ComponentsManager, WRender } from '../../../WDevCore/WModules/WComponentsTools.js';
 import { WCssClass, WStyledRender } from '../../../WDevCore/WModules/WStyledRender.js';
-import { Cat_Dependencias } from "../../FrontModel/Cat_Dependencias.js";
-import { Tbl_Tareas } from "../../FrontModel/Tbl_Tareas.js";
+import { Cat_Dependencias_ModelComponent } from "../../FrontModel/Cat_Dependencias.js";
+import { Tbl_Tareas_ModelComponent } from "../../FrontModel/Tbl_Tareas.js";
 import { CaseManagerComponent } from './CaseManagerComponent.js';
 import { TaskManagers } from './TaskManager.js';
 
@@ -57,17 +57,17 @@ class MainProyect extends HTMLElement {
         this.append(this.OptionContainer, this.TabContainer);
     }
     NavChargeActividades = async () => {
-        const dependencias = await new Cat_Dependencias().GetOwDependencies();
+        const dependencias = await new Cat_Dependencias_ModelComponent().GetOwDependencies();
         //const dataset = await new Tbl_Case().GetOwCase();        
         this.TabManager.NavigateFunction("Tab-OwActividades",
             new CaseManagerComponent( dependencias));
     }
     NavChargeTasks = async () => {
-        const tasks = await new Tbl_Tareas().Get();
+        const tasks = await new Tbl_Tareas_ModelComponent().Get();
         this.TabManager.NavigateFunction("Tab-Tasks-Manager", this.ChargeTasks(tasks));
     }
     NavChargeOWTasks = async () => {
-        const tasks = await new Tbl_Tareas().GetOwParticipations();
+        const tasks = await new Tbl_Tareas_ModelComponent().GetOwParticipations();
         this.TabManager.NavigateFunction("Tab-OWTasks-Manager", this.ChargeTasks(tasks));
     }
     ChargeTasks(tasks) {
@@ -75,7 +75,7 @@ class MainProyect extends HTMLElement {
         const filterOptions = new WFilterOptions({
             Dataset: tasks,
             AutoSetDate: true,
-            ModelObject: new Tbl_Tareas(),
+            ModelObject: new Tbl_Tareas_ModelComponent(),
             //DisplayFilts: [],
             FilterFunction: (DFilt) => {
                 tasksManager.DrawTaskManagers(DFilt);

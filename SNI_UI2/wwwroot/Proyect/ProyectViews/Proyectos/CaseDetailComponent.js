@@ -14,14 +14,14 @@ import { ComponentsManager, WRender } from '../../../WDevCore/WModules/WComponen
 import { ControlBuilder } from '../../../WDevCore/WModules/WControlBuilder.js';
 import { css } from '../../../WDevCore/WModules/WStyledRender.js';
 import { CaseOwModel } from '../../FrontModel/CaseOwModel.js';
-import { Cat_Dependencias } from "../../FrontModel/Cat_Dependencias.js";
+import { Cat_Dependencias_ModelComponent } from "../../FrontModel/Cat_Dependencias.js";
 import { ViewCalendarioByDependencia } from '../../FrontModel/DBOViewModel.js';
-import { Tbl_Case, Tbl_VinculateCase } from '../../FrontModel/Tbl_CaseModule.js';
-import { Tbl_Agenda } from "../../FrontModel/Tbl_Agenda.js";
-import { Tbl_Comments } from '../../FrontModel/Tbl_Comments.js';
+import { Tbl_Case, Tbl_Case_ModelComponent, Tbl_VinculateCase } from '../../FrontModel/Tbl_CaseModule.js';
+import { Tbl_Agenda_ModelComponent } from "../../FrontModel/Tbl_Agenda.js";
+import { Tbl_Comments_ModelComponent } from '../../FrontModel/Tbl_Comments.js';
 import { Tbl_Profile_CasosAsignados, Tbl_Profile_CasosAsignados_ModelComponent } from '../../FrontModel/Tbl_Profile_CasosAsignados.js';
-import { Tbl_Servicios } from '../../FrontModel/Tbl_Servicios.js';
-import { Tbl_Tareas } from "../../FrontModel/Tbl_Tareas.js";
+import { Tbl_Servicios_ModelComponent } from '../../FrontModel/Tbl_Servicios.js';
+import { Tbl_Tareas_ModelComponent } from "../../FrontModel/Tbl_Tareas.js";
 import { activityStyle } from '../../style.js';
 import { simpleCaseForm } from './CaseManagerComponent.js';
 import { TaskManagers } from './TaskManager.js';
@@ -29,7 +29,7 @@ import { TaskManagers } from './TaskManager.js';
 class CaseDetailComponent extends HTMLElement {
     /**
      * 
-     * @param {Tbl_Case} Actividad 
+     * @param {Tbl_Case} Actividad
      */
     constructor(Actividad) {
         super();
@@ -50,33 +50,31 @@ class CaseDetailComponent extends HTMLElement {
     connectedCallback() { }
 
     DrawCaseDetailComponent = async (actividad = (new Tbl_Case())) => {
-        const tareasActividad = await new Tbl_Tareas({ Id_Case: actividad.Id_Case }).Get();
+        const tareasActividad = await new Tbl_Tareas_ModelComponent({ Id_Case: actividad.Id_Case }).Get();
         actividad.Tbl_Tareas = tareasActividad;
         this.ganttChart = new GanttChart({ Dataset: tareasActividad ?? [], EvalValue: "date" });
         this.actividadDetailView = WRender.Create({ className: "actividadDetailView", children: [this.actividadElementDetail(actividad)] });
-        const taskModel = new Tbl_Tareas({
+        const taskModel = new Tbl_Tareas_ModelComponent({
             Id_Case: { type: 'number', hidden: true, value: actividad.Id_Case },
             Tbl_Tarea: {
                 type: 'WSelect', label: "Tarea principal", require: false, hiddenInTable: true,
-                Dataset: tareasActividad, ModelObject: () => new Tbl_Tareas()
+                Dataset: tareasActividad, ModelObject: () => new Tbl_Tareas_ModelComponent()
             },
             Tbl_Calendario: {
                 type: 'CALENDAR', CalendarFunction: async () => {
                     return {
-                        Agenda: await new Tbl_Agenda({ Id_Dependencia: actividad.Cat_Dependencias.Id_Dependencia }).Get(),
+                        Agenda: await new Tbl_Agenda_ModelComponent({ Id_Dependencia: actividad.Cat_Dependencias.Id_Dependencia }).Get(),
                         Calendario: await new ViewCalendarioByDependencia({ Id_Dependencia: actividad.Cat_Dependencias.Id_Dependencia }).Get()
                     }
                 }, require: true
             }
         });
-        const taskContainer = WRender.Create({ className: "" });
-        
+        const taskContainer = WRender.Create({ className: "" });        
         const tabManager = new ComponentsManager({ MainContainer: taskContainer });
-
-        const commentsActividad = await new Tbl_Comments({ Id_Case: actividad.Id_Case }).Get();
+        const commentsActividad = await new Tbl_Comments_ModelComponent({ Id_Case: actividad.Id_Case }).Get();
         const commentsContainer = new WCommentsComponent({
             Dataset: commentsActividad,
-            ModelObject: new Tbl_Comments(),
+            ModelObject: new Tbl_Comments_ModelComponent(),
             User: WSecurity.UserData,
             UserIdProp: "Id_User",
             CommentsIdentify: actividad.Id_Case,
@@ -103,7 +101,8 @@ class CaseDetailComponent extends HTMLElement {
                 name: "Detalles del caso", action: async (ev) => {
                     this.Actividad.Tbl_Profile_CasosAsignados =  await new Tbl_Profile_CasosAsignados({ Id_Case: this.Actividad.Id_Case }).Get();
                     tabManager.NavigateFunction("detalles", new WDetailObject({
-                        ModelObject: new Tbl_Case({
+                        ModelObject: new Tbl_Case_ModelComponent({
+                            // @ts-ignore
                             Tbl_Profile_CasosAsignados: {
                                 type: "MASTERDETAIL",
                                 label: "Participantes",
@@ -128,10 +127,11 @@ class CaseDetailComponent extends HTMLElement {
                 }
             }, {
                 name: "Vinculaciones", action: async (ev) => {
-                    const modelVinculate = new Tbl_Case({ Id_Vinculate: actividad.Id_Vinculate });
+                    // @ts-ignore
+                    const modelVinculate = new Tbl_Case_ModelComponent({ Id_Vinculate: actividad.Id_Vinculate });
                     const vinculateTable = new WTableComponent({
                         Dataset: await modelVinculate.GetVinculateCase(),
-                        ModelObject: new Tbl_Case(),
+                        ModelObject: new Tbl_Case_ModelComponent(),
                         AddItemsFromApi: false,
                         Options: {
                             UserActions: WSecurity.HavePermission(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA) ? [{
@@ -218,7 +218,7 @@ class CaseDetailComponent extends HTMLElement {
     }
     CerrarCaso = async (actividad) => {
         this.shadowRoot?.append(ModalVericateAction(async () => {
-            const response = await new Tbl_Case(actividad).CerrarCaso();
+            const response = await new Tbl_Case_ModelComponent(actividad).CerrarCaso();
             if (response.status == 200) {
                 this.shadowRoot?.append(ModalMessege("Caso cerrado exitosamente"));
                 this.update();
@@ -230,8 +230,8 @@ class CaseDetailComponent extends HTMLElement {
 
     }
     AprobarCaso = async (actividad) => {
-        const dependencias = await new Cat_Dependencias().Get();
-        const servicios = await new Tbl_Servicios({ Id_Dependencia: actividad?.Cat_Dependencias?.Id_Dependencia }).Get();
+        const dependencias = await new Cat_Dependencias_ModelComponent().Get();
+        const servicios = await new Tbl_Servicios_ModelComponent({ Id_Dependencia: actividad?.Cat_Dependencias?.Id_Dependencia }).Get();
         console.log(dependencias.filter(d => d.Id_Dependencia == actividad?.Cat_Dependencias?.Id_Dependencia));
         console.log(actividad);
         const modal = new WModalForm({
@@ -239,7 +239,7 @@ class CaseDetailComponent extends HTMLElement {
                 dependencias.filter(d => d.Id_Dependencia == actividad?.Cat_Dependencias?.Id_Dependencia),
                 servicios,
                 async (table_case) => {
-                    const response = await new Tbl_Case()
+                    const response = await new Tbl_Case_ModelComponent()
                         .AprobarCaseList([actividad], table_case);
                     if (response.status == 200) {
                         this.shadowRoot?.append(ModalMessege("Solicitud aprobada"));
@@ -256,7 +256,7 @@ class CaseDetailComponent extends HTMLElement {
     Reabrir = async (actividad) => {
         this.shadowRoot?.append(ModalVericateAction(async () => {
             actividad.Estado = "Activo"
-            const response = await new Tbl_Case(actividad).Update();
+            const response = await new Tbl_Case_ModelComponent(actividad).Update();
             if (response.status == 200) {
                 this.shadowRoot?.append(ModalMessege("Caso reabierto exitosamente"));
                 this.update();
@@ -267,28 +267,25 @@ class CaseDetailComponent extends HTMLElement {
 
     }
     update = async () => {
-        console.log("update");
-        // const find = actividad.Tbl_Tareas.find(t => t.Id_Tarea == task.Id_Tarea);
-        // for (const prop in task) {
-        //     find[prop] = task[prop]
-        // }
-        const dataTask = await new Tbl_Tareas({ Id_Case: this.Actividad.Id_Case }).Get();
+        const dataTask = await new Tbl_Tareas_ModelComponent({ Id_Case: this.Actividad.Id_Case }).Get();
         //console.log(dataTask);
+        // @ts-ignore
         this.ganttChart.Dataset = dataTask;
         this.Actividad.Tbl_Tareas = dataTask;
-
-
         //this.tasktable.Dataset = dataTask;
+        // @ts-ignore
         this.taskManager.Dataset = dataTask;
-        console.log(dataTask);
-
         this.Actividad.Progreso = this.Actividad.Tbl_Tareas?.filter(tarea => tarea.Estado?.includes("Finalizado")).length;
+        // @ts-ignore
         this.actividadDetailView.querySelector(".actividadDetail").innerHTML = "";
+        // @ts-ignore
         this.actividadDetailView.querySelector(".actividadDetail").append(this.actividadElementDetail(this.Actividad));
-
         //this.tasktable.DrawTable();
+        // @ts-ignore
         this.taskManager.DrawTaskManagers();
+        // @ts-ignore
         this.ganttChart.DrawComponent();
+        // @ts-ignore
         this.ganttChart.Animate();
     }
 

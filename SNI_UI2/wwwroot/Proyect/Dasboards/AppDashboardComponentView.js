@@ -5,9 +5,9 @@ import { WFilterOptions } from "../../WDevCore/WComponents/WFilterControls.js";
 import { WPaginatorViewer } from "../../WDevCore/WComponents/WPaginatorViewer.js";
 import { ComponentsManager, html, WRender } from "../../WDevCore/WModules/WComponentsTools.js";
 import { css } from "../../WDevCore/WModules/WStyledRender.js";
-import { Cat_Dependencias } from "../FrontModel/Cat_Dependencias.js";
-import { Tbl_Case } from "../FrontModel/Tbl_CaseModule.js";
-import { Tbl_Comments } from "../FrontModel/Tbl_Comments.js";
+import { Cat_Dependencias_ModelComponent } from "../FrontModel/Cat_Dependencias.js";
+import { Tbl_Case_ModelComponent } from "../FrontModel/Tbl_CaseModule.js";
+import { Tbl_Comments_ModelComponent } from "../FrontModel/Tbl_Comments.js";
 import { CaseDetailComponent } from "../ProyectViews/Proyectos/CaseDetailComponent.js";
 import { TaskCard } from "../ProyectViews/Proyectos/TaskManager.js";
 import { Dashboard } from "./Dashboard.js";
@@ -136,7 +136,7 @@ class AppDashboardComponentView extends HTMLElement {
     }
 
     /**
-     * @param {Cat_Dependencias} element
+     * @param {Cat_Dependencias_ModelComponent} element
      */
     dependencieCards(element) {
         const card = html`<div class="card card-style">
@@ -294,7 +294,7 @@ class AppDashboardComponentView extends HTMLElement {
         return card;
     }
     /**
-     * @param {import("../FrontModel/Tbl_CaseModule.js").Tbl_Case} element
+     * @param {import("../FrontModel/Tbl_CaseModule.js").Tbl_Case_ModelComponent} element
      */
     caseView(element) {
         return WRender.Create({
@@ -313,7 +313,7 @@ class AppDashboardComponentView extends HTMLElement {
                         { tagName: "p", innerHTML: element.Descripcion },
                         {
                             tagName: "a", innerHTML: "Ver detalles", onclick: async () => {
-                                const find = await new Tbl_Case({ Id_Case: element.Id_Case }).Get()
+                                const find = await new Tbl_Case_ModelComponent({ Id_Case: element.Id_Case }).Get()
                                 const CaseDetail = new CaseDetailComponent(find[0]);
                                 this.Manager.NavigateFunction("Detail" + element.Id_Case, CaseDetail)
                             }
@@ -526,7 +526,7 @@ class AppDashboardComponentView extends HTMLElement {
     }
 
     /**
-     * @param {Tbl_Comments} element
+     * @param {Tbl_Comments_ModelComponent} element
      */
     chatView(element) {
         return WRender.Create({
@@ -539,7 +539,7 @@ class AppDashboardComponentView extends HTMLElement {
                         //const CaseDetail = new TareaDetailView({ Task: find[0] });
                         //this.Manager.NavigateFunction("Detail" + element.Id_Tarea, CaseDetail)
                         // @ts-ignore
-                        const find = await new Tbl_Case({ Id_Case: element.Id_Case }).Get()
+                        const find = await new Tbl_Case_ModelComponent({ Id_Case: element.Id_Case }).Get()
                         const CaseDetail = new CaseDetailComponent(find[0]);
                         this.Manager.NavigateFunction("Detail" + element.Id_Case, CaseDetail)
                     }

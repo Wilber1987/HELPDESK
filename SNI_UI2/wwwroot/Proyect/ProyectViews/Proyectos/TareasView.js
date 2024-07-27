@@ -2,7 +2,7 @@ import { StylesControlsV2, StylesControlsV3, StyleScrolls } from "../../../WDevC
 import { WFilterOptions } from "../../../WDevCore/WComponents/WFilterControls.js";
 import { ComponentsManager, WRender } from "../../../WDevCore/WModules/WComponentsTools.js";
 import { css } from "../../../WDevCore/WModules/WStyledRender.js";
-import { Tbl_Tareas } from "../../FrontModel/Tbl_Tareas.js";
+import { Tbl_Tareas_ModelComponent } from "../../FrontModel/Tbl_Tareas.js";
 import { TaskManagers } from "./TaskManager.js";
 /**
  * @typedef {Object} ComponentConfig
@@ -27,7 +27,7 @@ class TareasComponentView extends HTMLElement {
             this.OptionContainer,
             this.TabContainer
         );
-        this.Model = new Tbl_Tareas({
+        this.Model = new Tbl_Tareas_ModelComponent({
             Get: async () => {
                 return this.Model.GetOwParticipations();
             }
@@ -57,7 +57,7 @@ class TareasComponentView extends HTMLElement {
             AutoFilter: true,
             //DisplayFilts: [],
             FilterFunction: async (DFilt) => {
-                const tasks = await new Tbl_Tareas({FilterData: DFilt}).GetOwParticipations();
+                const tasks = await new Tbl_Tareas_ModelComponent({FilterData: DFilt}).GetOwParticipations();
                 tasksManager.Dataset = tasks;
                 tasksManager.DrawTaskManagers();
             }

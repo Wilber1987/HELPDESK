@@ -5,7 +5,7 @@ import {Cat_Tipo_Participaciones} from "./Cat_Tipo_Participaciones.js";
 
 class Tbl_Profile_CasosAsignados extends EntityClass {
     /**
-    * @param {Partial<Tbl_Profile_CasosAsignados>} param 
+    * @param {Partial<Tbl_Profile_CasosAsignados>} props 
     */
     constructor(props) {
         super(props, 'EntityHelpdesk');
@@ -14,6 +14,8 @@ class Tbl_Profile_CasosAsignados extends EntityClass {
         }
 
     }
+    /**@type {Number} */
+    Id_Case;
     /**@type {Tbl_Profile} */
     Tbl_Profile;
     /**@type {Object} */
@@ -23,7 +25,7 @@ class Tbl_Profile_CasosAsignados extends EntityClass {
 export { Tbl_Profile_CasosAsignados }
 class Tbl_Profile_CasosAsignados_ModelComponent extends EntityClass {
     /**
-    * @param {Partial<Tbl_Profile_CasosAsignados_ModelComponent>} param 
+    * @param {Partial<Tbl_Profile_CasosAsignados_ModelComponent>} [props] 
     */
     constructor(props) {
         super(props, 'EntityHelpdesk');

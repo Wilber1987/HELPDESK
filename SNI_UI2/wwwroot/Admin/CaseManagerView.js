@@ -1,6 +1,6 @@
-import { Cat_Dependencias } from "../Proyect/FrontModel/Cat_Dependencias.js";
-import { Tbl_Case } from "../Proyect/FrontModel/Tbl_CaseModule.js";
-import { Tbl_Tareas } from "../Proyect/FrontModel/Tbl_Tareas.js";
+import { Cat_Dependencias_ModelComponent } from "../Proyect/FrontModel/Cat_Dependencias.js";
+import { Tbl_Case_ModelComponent } from "../Proyect/FrontModel/Tbl_CaseModule.js";
+import { Tbl_Tareas_ModelComponent } from "../Proyect/FrontModel/Tbl_Tareas.js";
 import { CaseDashboardComponent } from "../Proyect/ProyectViews/Proyectos/CaseDashboardComponent.js";
 import { CaseManagerComponent } from "../Proyect/ProyectViews/Proyectos/CaseManagerComponent.js";
 import { TaskManagers } from "../Proyect/ProyectViews/Proyectos/TaskManager.js";
@@ -24,14 +24,14 @@ window.onload = () => {
             id: "Tab-Generales", name: "Administrador de Casos",
             action: async (ev) => {
                 //const dataset = await new Tbl_Case().Get();
-                const dependencias = await new Cat_Dependencias().Get();
+                const dependencias = await new Cat_Dependencias_ModelComponent().Get();
                 DOMManager.NavigateFunction("Tab-Generales",
                     new CaseManagerComponent( dependencias));
             }
         }, {
             id: "Tab-Solicitudes", name: "Administrador de Solicitudes",
             action: async (ev) => {
-                const Solicitudes = await new Tbl_Case().GetSolicitudesPendientesAprobarAdmin();
+                const Solicitudes = await new Tbl_Case_ModelComponent().GetSolicitudesPendientesAprobarAdmin();
                 DOMManager.NavigateFunction("Tab-Solicitudes",
                     new SolicitudesPendientesComponent(Solicitudes));
             }
@@ -49,11 +49,11 @@ window.onload = () => {
     Aside.append(navigator);
 }
 const ChargeTasks = () => {
-    const tasksManager = new TaskManagers([], new Tbl_Tareas(), { ImageUrlPath: "" });
+    const tasksManager = new TaskManagers([], new Tbl_Tareas_ModelComponent(), { ImageUrlPath: "" });
     const filterOptions = new WFilterOptions({
         Display: true,
         AutoSetDate: true,
-        ModelObject: new Tbl_Tareas(),
+        ModelObject: new Tbl_Tareas_ModelComponent(),
         UseEntityMethods: true,
         AutoFilter: true,
         //DisplayFilts: [],

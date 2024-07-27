@@ -1,17 +1,17 @@
 import { Tbl_Profile } from "../../WDevCore/Security/Tbl_Profile.js";
 import { EntityClass } from "../../WDevCore/WModules/EntityClass.js";
-import { Tbl_Servicios } from "./Tbl_Servicios.js";
-import { Tbl_Comments } from "./Tbl_Comments.js";
-import { Tbl_Tareas } from "./Tbl_Tareas.js";
-import { Cat_Cargos_Dependencias } from "./Cat_Cargos_Dependencias.js";
-import { Cat_Dependencias } from "./Cat_Dependencias.js";
+import { Tbl_Servicios_ModelComponent } from "./Tbl_Servicios.js";
+import { Tbl_Comments_ModelComponent } from "./Tbl_Comments.js";
+import { Tbl_Tareas_ModelComponent } from "./Tbl_Tareas.js";
+import { Cat_Cargos_Dependencias_ModelComponent } from "./Cat_Cargos_Dependencias.js";
+import { Cat_Dependencias_ModelComponent } from "./Cat_Dependencias.js";
 import { WAjaxTools } from "../../WDevCore/WModules/WAjaxTools.js";
 import { ModelProperty } from "../../WDevCore/WModules/CommonModel.js";
 
 
-class Tbl_Case extends EntityClass {
+class Tbl_Case_ModelComponent extends EntityClass {
     /**
-    * @param {Partial<Tbl_Case>} [props] 
+    * @param {Partial<Tbl_Case_ModelComponent>} [props]
     */
     constructor(props) {
         super(props, 'EntityHelpdesk');
@@ -29,9 +29,9 @@ class Tbl_Case extends EntityClass {
     /**@type {ModelProperty} */
     firma = { type: 'draw', hidden: true };
     /**@type {ModelProperty} */
-    Cat_Dependencias = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Dependencias() };
+    Cat_Dependencias = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Dependencias_ModelComponent() };
     /**@type {ModelProperty} */
-    Tbl_Servicios = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Tbl_Servicios(), hiddenInTable: true };
+    Tbl_Servicios = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Tbl_Servicios_ModelComponent(), hiddenInTable: true };
     /**@type {ModelProperty} */
     Titulo = { type: 'text' };
     /**@type {ModelProperty} */
@@ -47,57 +47,81 @@ class Tbl_Case extends EntityClass {
     /**@type {ModelProperty} */
     Descripcion = { type: 'richtext', hiddenFilter: true };
     /**@type {ModelProperty} */
-    Tbl_Tareas = { type: 'MasterDetail', ModelObject: () => new Tbl_Tareas() };
+    Tbl_Tareas = { type: 'MasterDetail', ModelObject: () => new Tbl_Tareas_ModelComponent() };
     /**
-     * @returns {Array<Tbl_Case>}
+     * @returns {Array<Tbl_Case_ModelComponent>}
      */
     GetOwCase = async () => {
         return await this.GetData("Proyect/GetOwCase");
     }
     /**
-     * @returns {Array<Tbl_Case>}
+     * @returns {Array<Tbl_Case_ModelComponent>}
      */
     GetOwCloseCase = async () => {
         return await this.GetData("Proyect/GetOwCloseCase");
     }
     /**
-     * @returns {Array<Tbl_Case>}
+     * @returns {Array<Tbl_Case_ModelComponent>}
      */
     GetVinculateCase = async () => {
         return await this.GetData("Proyect/GetVinculateCase");
     }
     /**
-     * @returns {Array<Tbl_Case>}
+     * @returns {Array<Tbl_Case_ModelComponent>}
      */
     GetOwSolicitudesPendientesAprobar = async () => {
         return await this.GetData("Proyect/GetOwSolicitudesPendientesAprobar");
     }
     /**
-     * @returns {Array<Tbl_Case>}
+     * @returns {Array<Tbl_Case_ModelComponent>}
+     */
+    GetOwSolicitudesAprobadas = async () => {
+        return await this.GetData("Proyect/GetOwSolicitudesAprobadas");
+    }
+    /**
+     * @returns {Array<Tbl_Case_ModelComponent>}
+     */
+    GetOwSolicitudesRechazadas = async () => {
+        return await this.GetData("Proyect/GetOwSolicitudesRechazadas");
+    }
+    /**
+     * @returns {Array<Tbl_Case_ModelComponent>}
+     */
+    GetOwSolicitudesFinalizadas = async () => {
+        return await this.GetData("Proyect/GetOwSolicitudesFinalizadas");
+    }
+     /**
+     * @returns {Array<Tbl_Case_ModelComponent>}
+     */
+     GetOwSolicitudesVinculadas = async () => {
+        return await this.GetData("Proyect/GetOwSolicitudesVinculadas");
+    }
+    /**
+     * @returns {Array<Tbl_Case_ModelComponent>}
     */
     GetOwSolicitudesPendientes = async () => {
         return await this.GetData("Proyect/GetOwSolicitudesPendientes");
     }
     /**
-     * @returns {Array<Tbl_Case>}
+     * @returns {Array<Tbl_Case_ModelComponent>}
      */
     GetOwSolicitudesProceso = async () => {
         return await this.GetData("Proyect/GetOwSolicitudesProceso");
     }
     /**
-     * @returns {Array<Tbl_Case>}
+     * @returns {Array<Tbl_Case_ModelComponent>}
      */
     GetOwSolicitudesEspera = async () => {
         return await this.GetData("Proyect/GetOwSolicitudesEspera");
     }
     /**
-     * @returns {Array<Tbl_Case>}
+     * @returns {Array<Tbl_Case_ModelComponent>}
      */
     GetSolicitudesPendientesAprobar = async () => {
         return await this.GetData("Proyect/GetSolicitudesPendientesAprobar",);
     }
     /**
-     * @returns {Array<Tbl_Case>}
+     * @returns {Array<Tbl_Case_ModelComponent>}
      */
     GetSolicitudesPendientesAprobarAdmin = async () => {
         return await this.GetData("Proyect/GetSolicitudesPendientesAprobarAdmin");
@@ -115,8 +139,8 @@ class Tbl_Case extends EntityClass {
         return await this.GetData("Proyect/CerrarCaso");
     }
     /**
-    * @param {Array<Tbl_Case>} element
-    * @param {Tbl_Case} table_case
+    * @param {Array<Tbl_Case_ModelComponent>} element
+    * @param {Tbl_Case_ModelComponent} table_case
     * @returns {Object}
     */
     AprobarCaseList = async (element, table_case) => {
@@ -124,8 +148,8 @@ class Tbl_Case extends EntityClass {
             { Tbl_Cases: element, servicio: table_case.Tbl_Servicios });
     }
     /**
-       * @param {Array<Tbl_Case>} element
-       *  @param {Tbl_Comments} comentario
+       * @param {Array<Tbl_Case_ModelComponent>} element
+       *  @param {Tbl_Comments_ModelComponent} comentario
        * @returns {Object}
        */
     RechazarCaseList = async (element, comentario) => {
@@ -135,10 +159,10 @@ class Tbl_Case extends EntityClass {
         });
     }
     /**
-       * @param {Array<Tbl_Case>} element
-       * @param {Tbl_Comments} dependencia
-       * @param {Tbl_Case} table_case
-       * @param {Array<Tbl_Comments>} comentarios
+       * @param {Array<Tbl_Case_ModelComponent>} element
+       * @param {Tbl_Comments_ModelComponent} dependencia
+       * @param {Tbl_Case_ModelComponent} table_case
+       * @param {Array<Tbl_Comments_ModelComponent>} comentarios
        * @returns {Object}
        */
     RemitirCasos = async (element, dependencia, comentarios, table_case) => {
@@ -150,7 +174,38 @@ class Tbl_Case extends EntityClass {
         });
     }
 }
-export { Tbl_Case }
+export { Tbl_Case_ModelComponent }
+class Tbl_Case extends EntityClass {
+    /** @param {Partial<Tbl_Case>} [props] */
+    constructor(props) {
+        super(props, 'EntityHelpdesk');
+        for (const prop in props) {
+            this[prop] = props[prop];
+        };
+        this.Progreso = undefined;
+    }
+    
+    /**@type {Number}*/ Id_Case;
+    /**@type {Number}*/ Id_Vinculate;
+    /**@type {Number}*/ Id_Dependencia;
+    /**@type {String}*/ Titulo;
+    /**@type {String}*/ Descripcion;
+    /**@type {String}*/ Estado;
+    /**@type {Date}*/ Fecha_Inicio;
+    /**@type {Date}*/ Fecha_Final;
+    /**@type {String}*/ Mail;
+    /**@type {String}*/ Case_Priority;
+    /**@type {String}*/ MimeMessageCaseData;
+    /**@type {Tbl_Profile} ManyToOne*/ Tbl_Profile;
+    /**@type {Cat_Dependencias} ManyToOne*/ Cat_Dependencias;
+    /**@type {Tbl_Servicios} ManyToOne*/ Tbl_Servicios;
+    /**@type {Tbl_VinculateCase} ManyToOne*/ Tbl_VinculateCase;
+    /**@type {Array<Tbl_Comments>} OneToMany*/ Tbl_Comments;
+    /**@type {Array<Tbl_Mails>} OneToMany*/ Tbl_Mails;
+    /**@type {Array<Tbl_Profile_CasosAsignados>} OneToMany*/ Tbl_Profile_CasosAsignados;
+    /**@type {Array<Tbl_Tareas>} OneToMany*/ Tbl_Tareas;
+ }
+ export { Tbl_Case }
 class Tbl_Dependencias_Usuarios extends EntityClass {
     constructor(props) {
         super(props, 'EntityHelpdesk');
@@ -159,7 +214,7 @@ class Tbl_Dependencias_Usuarios extends EntityClass {
         }
     }
     Tbl_Profile = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Tbl_Profile() }
-    Cat_Cargos_Dependencias = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Cargos_Dependencias() }
+    Cat_Cargos_Dependencias = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Cargos_Dependencias_ModelComponent() }
 }
 export { Tbl_Dependencias_Usuarios }
 
@@ -176,7 +231,7 @@ class Tbl_VinculateCase extends EntityClass {
 
 
     Casos_Vinculados = {
-        type: 'MasterDetail', ModelObject: () => new Tbl_Case(),
+        type: 'MasterDetail', ModelObject: () => new Tbl_Case_ModelComponent(),
         require: false
     };
 

@@ -1,6 +1,6 @@
 import {EntityClass} from "../../WDevCore/WModules/EntityClass.js";
 
-class Tbl_Agenda extends EntityClass {
+class Tbl_Agenda_ModelComponent extends EntityClass {
     constructor(props) {
         super(props, 'EntityHelpdesk');
         for (const prop in props) {
@@ -16,4 +16,22 @@ class Tbl_Agenda extends EntityClass {
     Fecha_Caducidad = {type: 'date'};
 }
 
-export {Tbl_Agenda};
+export {Tbl_Agenda_ModelComponent};
+
+class Tbl_Agenda extends EntityClass {
+    /** @param {Partial<Tbl_Agenda>} [props] */
+    constructor(props) {
+        super(props, 'EntityHelpdesk');
+        for (const prop in props) {
+            this[prop] = props[prop];
+        }
+    }
+    /**@type {Number}*/ IdAgenda;
+    /**@type {String}*/ Dia;
+    /**@type {String}*/ Hora_Inicial;
+    /**@type {String}*/ Hora_Final;
+    /**@type {Date}*/ Fecha_Caducidad;
+    /**@type {Tbl_Profile} ManyToOne*/ Tbl_Profile;
+    /**@type {Cat_Dependencias} ManyToOne*/ Cat_Dependencias;
+ }
+ export { Tbl_Agenda }

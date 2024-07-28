@@ -29,9 +29,16 @@ class Tbl_Case_ModelComponent extends EntityClass {
     /**@type {ModelProperty} */
     firma = { type: 'draw', hidden: true };
     /**@type {ModelProperty} */
-    Cat_Dependencias = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Dependencias_ModelComponent() };
+    Cat_Dependencias = {
+        type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Dependencias_ModelComponent(),
+        action: async (caso, form) => {//TODO
+            const servicios = await new Tbl_Servicios_ModelComponent({ Id_Dependencia: caso.Cat_Dependencias?.Id_Dependencia }).Get();
+            form.ModelObject.Tbl_Servicios.Dataset = servicios;
+            form.DrawComponent();
+        }
+    };
     /**@type {ModelProperty} */
-    Tbl_Servicios = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Tbl_Servicios_ModelComponent(), hiddenInTable: true };
+    Tbl_Servicios = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Tbl_Servicios_ModelComponent(), Dataset: [], hiddenInTable: true };
     /**@type {ModelProperty} */
     Titulo = { type: 'text' };
     /**@type {ModelProperty} */
@@ -90,10 +97,10 @@ class Tbl_Case_ModelComponent extends EntityClass {
     GetOwSolicitudesFinalizadas = async () => {
         return await this.GetData("Proyect/GetOwSolicitudesFinalizadas");
     }
-     /**
-     * @returns {Array<Tbl_Case_ModelComponent>}
-     */
-     GetOwSolicitudesVinculadas = async () => {
+    /**
+    * @returns {Array<Tbl_Case_ModelComponent>}
+    */
+    GetOwSolicitudesVinculadas = async () => {
         return await this.GetData("Proyect/GetOwSolicitudesVinculadas");
     }
     /**
@@ -184,7 +191,7 @@ class Tbl_Case extends EntityClass {
         };
         this.Progreso = undefined;
     }
-    
+
     /**@type {Number}*/ Id_Case;
     /**@type {Number}*/ Id_Vinculate;
     /**@type {Number}*/ Id_Dependencia;
@@ -204,8 +211,8 @@ class Tbl_Case extends EntityClass {
     /**@type {Array<Tbl_Mails>} OneToMany*/ Tbl_Mails;
     /**@type {Array<Tbl_Profile_CasosAsignados>} OneToMany*/ Tbl_Profile_CasosAsignados;
     /**@type {Array<Tbl_Tareas>} OneToMany*/ Tbl_Tareas;
- }
- export { Tbl_Case }
+}
+export { Tbl_Case }
 class Tbl_Dependencias_Usuarios extends EntityClass {
     constructor(props) {
         super(props, 'EntityHelpdesk');

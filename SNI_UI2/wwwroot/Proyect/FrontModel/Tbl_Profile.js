@@ -4,7 +4,7 @@ import { WForm } from "../../WDevCore/WComponents/WForm.js";
 // @ts-ignore
 import { ModelProperty } from "../../WDevCore/WModules/CommonModel.js";
 import { EntityClass } from "../../WDevCore/WModules/EntityClass.js";
-import { Cat_Dependencias_ModelComponent } from "./Cat_Dependencias.js";
+import { Cat_Dependencias, Cat_Dependencias_ModelComponent } from "./Cat_Dependencias.js";
 import { WAjaxTools } from "../../WDevCore/WModules/WAjaxTools.js";
 import { Tbl_Servicios_ModelComponent } from "./Tbl_Servicios.js";
 

@@ -16,7 +16,7 @@ import { css } from '../../../WDevCore/WModules/WStyledRender.js';
 import { CaseOwModel } from '../../FrontModel/CaseOwModel.js';
 import { Cat_Dependencias_ModelComponent } from "../../FrontModel/Cat_Dependencias.js";
 import { ViewCalendarioByDependencia } from '../../FrontModel/DBOViewModel.js';
-import { Tbl_Case, Tbl_Case_ModelComponent, Tbl_VinculateCase } from '../../FrontModel/Tbl_CaseModule.js';
+import { Tbl_Case, Tbl_Case_ModelComponent, Tbl_Dependencias_Usuarios, Tbl_VinculateCase } from '../../FrontModel/Tbl_CaseModule.js';
 import { Tbl_Agenda_ModelComponent } from "../../FrontModel/Tbl_Agenda.js";
 import { Tbl_Comments_ModelComponent } from '../../FrontModel/Tbl_Comments.js';
 import { Tbl_Profile_CasosAsignados, Tbl_Profile_CasosAsignados_ModelComponent } from '../../FrontModel/Tbl_Profile_CasosAsignados.js';
@@ -25,6 +25,10 @@ import { Tbl_Tareas_ModelComponent } from "../../FrontModel/Tbl_Tareas.js";
 import { activityStyle } from '../../style.js';
 import { simpleCaseForm } from './CaseManagerComponent.js';
 import { TaskManagers } from './TaskManager.js';
+import { Tbl_Participantes_ModelComponent } from '../../FrontModel/Tbl_Participantes.js';
+import { Tbl_Profile } from '../../FrontModel/Tbl_Profile.js';
+// @ts-ignore
+import { FilterData } from '../../../WDevCore/WModules/CommonModel.js';
 
 class CaseDetailComponent extends HTMLElement {
     /**
@@ -39,7 +43,7 @@ class CaseDetailComponent extends HTMLElement {
         this.TabContainer = WRender.createElement({ type: 'div', props: { class: 'TabContainer', id: "TabContainer" } });
         this.TabManager = new ComponentsManager({ MainContainer: this.TabContainer });
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });
-       
+
         // this.OptionContainer.append(WRender.Create({
         //     tagName: 'a', className: 'Block-Alert', innerText: 'Lista de Casos', href: "/ProyectViews/Proyectos"
         // }))
@@ -54,6 +58,12 @@ class CaseDetailComponent extends HTMLElement {
         actividad.Tbl_Tareas = tareasActividad;
         this.ganttChart = new GanttChart({ Dataset: tareasActividad ?? [], EvalValue: "date" });
         this.actividadDetailView = WRender.Create({ className: "actividadDetailView", children: [this.actividadElementDetail(actividad)] });
+        /**@type {Array<Tbl_Dependencias_Usuarios>} */
+        const perfiles_dependencias =  await new  Tbl_Dependencias_Usuarios({
+            filterData: [
+                new FilterData({ PropName: "Id_Dependencia", Values: [actividad.Id_Dependencia.toString()], FilterType: "=" })
+            ]
+        }).Get();
         const taskModel = new Tbl_Tareas_ModelComponent({
             Id_Case: { type: 'number', hidden: true, value: actividad.Id_Case },
             Tbl_Tarea: {
@@ -67,9 +77,17 @@ class CaseDetailComponent extends HTMLElement {
                         Calendario: await new ViewCalendarioByDependencia({ Id_Dependencia: actividad.Cat_Dependencias.Id_Dependencia }).Get()
                     }
                 }, require: true
+            },
+            Tbl_Participantes: {
+                type: 'MasterDetail',
+                ModelObject: () => new Tbl_Participantes_ModelComponent({
+                    Tbl_Profile: {
+                        type: 'WSelect', hiddenFilter: true, ModelObject: () => new Tbl_Profile(), Dataset: perfiles_dependencias.map(pd => pd.Tbl_Profile)
+                    }
+                })
             }
         });
-        const taskContainer = WRender.Create({ className: "" });        
+        const taskContainer = WRender.Create({ className: "" });
         const tabManager = new ComponentsManager({ MainContainer: taskContainer });
         const commentsActividad = await new Tbl_Comments_ModelComponent({ Id_Case: actividad.Id_Case }).Get();
         const commentsContainer = new WCommentsComponent({
@@ -99,7 +117,7 @@ class CaseDetailComponent extends HTMLElement {
             }, { name: "Vista de progreso", action: async (ev) => { tabManager.NavigateFunction("ganttChart", this.ganttChart) } },
             {
                 name: "Detalles del caso", action: async (ev) => {
-                    this.Actividad.Tbl_Profile_CasosAsignados =  await new Tbl_Profile_CasosAsignados({ Id_Case: this.Actividad.Id_Case }).Get();
+                    this.Actividad.Tbl_Profile_CasosAsignados = await new Tbl_Profile_CasosAsignados({ Id_Case: this.Actividad.Id_Case }).Get();
                     tabManager.NavigateFunction("detalles", new WDetailObject({
                         ModelObject: new Tbl_Case_ModelComponent({
                             // @ts-ignore

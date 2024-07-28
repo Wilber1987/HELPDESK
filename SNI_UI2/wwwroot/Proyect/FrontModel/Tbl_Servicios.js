@@ -1,4 +1,5 @@
 import {EntityClass} from "../../WDevCore/WModules/EntityClass.js";
+import { Cat_Cargos_Dependencias_ModelComponent } from "./Cat_Cargos_Dependencias.js";
 
 class Tbl_Servicios_ModelComponent extends EntityClass {
     constructor(props) {
@@ -14,7 +15,7 @@ class Tbl_Servicios_ModelComponent extends EntityClass {
     //Visibilidad = { type: 'text' };
     Estado = {type: "Select", Dataset: ["Activo", "Inactivo"]};
     //Cat_Tipo_Servicio = { type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Tipo_Servicio() };
-    Cat_Dependencias = {type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Dependencias_ModelComponent()}
+    Cat_Dependencias = {type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Cargos_Dependencias_ModelComponent()}
     //Fecha_Inicio = { type: 'date' };
     //Fecha_Finalizacion = { type: 'date' };
     //Tbl_Case = { type: 'MasterDetail', ModelObject: () => new Tbl_Case() };

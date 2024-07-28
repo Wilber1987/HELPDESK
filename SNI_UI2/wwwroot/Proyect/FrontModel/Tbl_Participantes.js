@@ -8,6 +8,7 @@ class Tbl_Participantes_ModelComponent extends EntityClass {
         for (const prop in props) {
             this[prop] = props[prop];
         }
+        this.Id_Dependencia = undefined;
     }
 
     Tbl_Profile = {type: 'WSelect', hiddenFilter: true, ModelObject: () => new Tbl_Profile()}

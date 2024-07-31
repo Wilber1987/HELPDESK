@@ -40,6 +40,10 @@ const activityStyle = css`
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 280px;
         }
         .actividad label {            
             flex-wrap: wrap;

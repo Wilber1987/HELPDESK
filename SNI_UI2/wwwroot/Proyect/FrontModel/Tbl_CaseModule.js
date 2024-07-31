@@ -31,7 +31,7 @@ class Tbl_Case_ModelComponent extends EntityClass {
     /**@type {ModelProperty} */
     Cat_Dependencias = {
         type: 'WSelect', hiddenFilter: true, ModelObject: () => new Cat_Dependencias_ModelComponent(),
-        action: async (caso, form) => {//TODO
+        action: async (caso, form) => {
             const servicios = await new Tbl_Servicios_ModelComponent({ Id_Dependencia: caso.Cat_Dependencias?.Id_Dependencia }).Get();
             form.ModelObject.Tbl_Servicios.Dataset = servicios;
             form.DrawComponent();

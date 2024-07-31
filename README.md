@@ -58,3 +58,5 @@ delete from helpdesk.Tbl_Participantes
 delete from helpdesk.Tbl_Tareas 
 delete from helpdesk.Tbl_Profile_CasosAsignados  
 delete from helpdesk.Tbl_Case
+
+dotnet publish --configuration Release

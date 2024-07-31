@@ -36,8 +36,6 @@ class SolicitudesPendientesComponent extends HTMLElement {
                 type: "text", hidden: true
             }, Estado: {
                 type: "text", hidden: true
-            }, Cat_Dependencias: {
-                type: "WSELECT", hiddenFilter: true, ModelObject: () => new Cat_Dependencias_ModelComponent()
             }
         });
         this.filterD = [];

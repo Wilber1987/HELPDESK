@@ -7,11 +7,12 @@ import { WDetailObject } from '../../WDevCore/WComponents/WDetailObject.js';
 import { WFilterOptions } from "../../WDevCore/WComponents/WFilterControls.js";
 import { ModalMessege, WForm } from "../../WDevCore/WComponents/WForm.js";
 import { WPaginatorViewer } from '../../WDevCore/WComponents/WPaginatorViewer.js';
-import { ComponentsManager, WRender } from '../../WDevCore/WModules/WComponentsTools.js';
+import { ComponentsManager, html, WRender } from '../../WDevCore/WModules/WComponentsTools.js';
 import { Cat_Dependencias_ModelComponent } from "../FrontModel/Cat_Dependencias.js";
 import { Tbl_Case_ModelComponent } from '../FrontModel/Tbl_CaseModule.js';
 import { Tbl_Comments_ModelComponent } from '../FrontModel/Tbl_Comments.js';
 import { Tbl_Profile_CasosAsignados, Tbl_Profile_CasosAsignados_ModelComponent } from '../FrontModel/Tbl_Profile_CasosAsignados.js';
+import { Tbl_Servicios } from '../FrontModel/Tbl_Servicios.js';
 import { caseGeneralData } from '../ProyectViews/Proyectos/CaseDetailComponent.js';
 import { activityStyle } from '../style.js';
 
@@ -41,10 +42,9 @@ class MainSolicitudesView extends HTMLElement {
                 type: "text", hidden: true
             }, Estado: {
                 type: "text", hidden: true
-            }, Cat_Dependencias: {
-                type: "WSELECT", hiddenFilter: true, ModelObject: () => new Cat_Dependencias_ModelComponent()
             }
         });
+
         this.DrawMainSolicitudesView();
     }
     connectedCallback() { }
@@ -89,7 +89,14 @@ class MainSolicitudesView extends HTMLElement {
             }
         });
         this.TabManager.NavigateFunction("Tab-Actividades-Manager-" + View,
-            WRender.Create({ className: "actividadesView", children: [this.FilterOptions, paginator] }));
+            WRender.Create({
+                className: "actividadesView",
+                children: [
+                    html`<h1>${View}</h1>`,
+                    this.FilterOptions,
+                    paginator
+                ]
+            }));
     }
 
     actividadElement = (actividad) => {
@@ -109,7 +116,7 @@ class MainSolicitudesView extends HTMLElement {
         })
     }
     actividadDetail = async (actividad) => {
-        actividad.Tbl_Profile_CasosAsignados =  await new Tbl_Profile_CasosAsignados({ Id_Case: actividad.Id_Case }).Get();
+        actividad.Tbl_Profile_CasosAsignados = await new Tbl_Profile_CasosAsignados({ Id_Case: actividad.Id_Case }).Get();
         const actividadDetailView = WRender.Create({
             className: "actividadDetailView",
             style: {
@@ -159,9 +166,15 @@ class MainSolicitudesView extends HTMLElement {
             SaveFunction: () => {
                 this.shadowRoot.append(ModalMessege("Aviso", "Caso guardado correctamente", true))
             }
-        })
-        this.TabManager.NavigateFunction("Tab-nuevoCasoView",
-            WRender.Create({ className: "nuevoCasoView", children: [form] }));
+        });       
+        //TODO REVISAR COMO HAYA UNA CARGA REAL DE FORMA SINCRONA
+        setTimeout(async () => {
+            const servicios = await new Tbl_Servicios({ Id_Dependencia: form.ModelObject.Cat_Dependencias.Dataset[0].Id_Dependencia }).Get();
+            form.ModelObject.Tbl_Servicios.Dataset = servicios;
+            form.DrawComponent();
+            await this.TabManager.NavigateFunction("Tab-nuevoCasoView",
+                WRender.Create({ className: "nuevoCasoView", children: [form] }));
+        }, 100);
     }
 
 

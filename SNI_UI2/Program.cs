@@ -12,6 +12,7 @@ SqlADOConexion.IniciarConexion("sa", "zaxscd", ".", "PROYECT_MANAGER_BD");
 //var AGENCY = new Structure_agency {  }.Get<Structure_agency>();
 
 //SqlADOConexion.IniciarConexion( "sa", "Helpdesk2023",".", "HELPDESK");
+//SqlADOConexion.IniciarConexion( "sa_helpdesk01", "Helpdesk2024_07",".", "HELPDESK");
 //AppGeneratorProgram.Main(); //generador de codigo
 var builder = WebApplication.CreateBuilder(args);
 

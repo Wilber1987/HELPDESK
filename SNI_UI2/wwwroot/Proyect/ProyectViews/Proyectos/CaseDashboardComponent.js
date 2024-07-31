@@ -10,8 +10,8 @@ import { PageType, WReportComponent } from '../../../WDevCore/WComponents/WRepor
 import { WTableComponent } from '../../../WDevCore/WComponents/WTableComponent.js';
 import { WRender } from '../../../WDevCore/WModules/WComponentsTools.js';
 import { css } from '../../../WDevCore/WModules/WStyledRender.js';
-import {WArrayF} from "../../../WDevCore/WModules/WArrayF.js";
-import {Tbl_Tareas_ModelComponent} from "../../FrontModel/Tbl_Tareas.js";
+import { WArrayF } from "../../../WDevCore/WModules/WArrayF.js";
+import { Tbl_Tareas_ModelComponent } from "../../FrontModel/Tbl_Tareas.js";
 
 class CaseDashboardComponent extends HTMLElement {
     /**
@@ -24,7 +24,7 @@ class CaseDashboardComponent extends HTMLElement {
         this.attachShadow({ mode: 'open' });
         this.shadowRoot?.append(this.WStyle);
         this.OptionContainer = WRender.Create({ className: "options-container" });
-        this.shadowRoot?.append(this.OptionContainer, StylesControlsV2.cloneNode(true))
+        this.shadowRoot?.append(StylesControlsV2.cloneNode(true))
         this.DrawCaseDashboardComponent();
 
     }
@@ -37,11 +37,6 @@ class CaseDashboardComponent extends HTMLElement {
         /** @type {Array} */ casosProcesados,
         /** @type {Array} */ casosEtiquetadosPorMes) => {
 
-
-        //const title2 = "Estado de los Casos";
-        //const title3 = "Cumplimiento del SLA por mes";
-
-        //const title5 = "Estado de los Casos por dependencia";
         this.OptionContainer.innerHTML = "";
         const TITLE_1 = "Casos por dependencia";
         this.OptionContainer.append(WRender.Create({
@@ -61,33 +56,7 @@ class CaseDashboardComponent extends HTMLElement {
                     WArrayF.GroupArray(casosEtiquetadosPorMes, ["Mes", "Estado"], ["casos"]),
                     TITLE_2
                 )
-        }))
-        /*this.OptionContainer.append(WRender.Create({
-            tagName: 'input', type: 'button',
-            className: 'Btn-Mini', value: title2, onclick: () =>
-                this.drawReport(WArrayF.GroupBy(this.Dataset, "Estado"), title2, new Tbl_Case())
-        }))
-        // this.OptionContainer.append(WRender.Create({
-        //     tagName: 'input', type: 'button',
-        //     className: 'Btn-Mini', value: title3, onclick: () =>
-        //         this.drawReport(casosProcesados, title3, new Tbl_Case({
-        //             Estado: { type: "text" },
-        //             Servicio: { type: "text" },
-        //             Caso: { type: "text" },
-        //             Mes: { type: "text" },
-        //             val: { type: "number" },
-        //         }))
-        // }))
-        //console.log(casosEtiquetadosPorMes);
-        
-        this.OptionContainer.append(WRender.Create({
-            tagName: 'input', type: 'button',
-            className: 'Btn-Mini', value: title5, onclick: () =>
-                this.drawReport(casosMap, title5, new Tbl_Case({
-                    Dependencia: { type: "text" },
-                    val: { type: "number" }
-                }))
-        }))*/
+        }))       
     }
     drawReport = (/** @type {any[]} */ MapData, /**@type {String} */ title, /**@type {Object} */ model) => {
         console.log(this.FilterOptions?.FilterControls);
@@ -137,24 +106,30 @@ class CaseDashboardComponent extends HTMLElement {
                     radialChart);
             }
         });
-
-        //this.TareasDataset = await new Tbl_Tareas().Get();
-        //const { columChart, radialChartDependencias, columChartAperturaCasos, columChartMonth, radialChart } = this.buildCharts();
-        //const tableTareas = await this.taskData();
-
-
-
-        this.shadowRoot?.append(this.FilterOptions, dasboardContainer);
+        this.shadowRoot?.append(WRender.Create({ class: "header-container", children: [this.OptionContainer, this.FilterOptions] }), dasboardContainer);
         await this.FilterOptions.filterFunction();
     }
     WStyle = css`
         .dashBoardView{
             display: grid;
             grid-template-columns: 37% 37% 23%;  
-            grid-gap: 20px          
+            grid-gap: 10px;
+            grid-template-rows: 300px 320px;         
         }
         .dashBoardView #ColumnCasosPorDependencia { 
             grid-column: span 1;
+        }
+        .header-container{
+            display: flex
+        }
+        w-filter-option {
+                display: block;
+            width: -webkit-fill-available;
+        }
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 5px
         }
     `
 

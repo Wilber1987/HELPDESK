@@ -168,7 +168,9 @@ namespace CAPA_NEGOCIO.MAPEO
 		}
 		public bool SolicitarActividades(string identity)
 		{
-			this.Id_Perfil = AuthNetCore.User(identity).UserId;
+			UserModel user = AuthNetCore.User(identity);
+			Tbl_Profile? profile = new Tbl_Profile { IdUser = user.UserId }.Find<Tbl_Profile>();
+			this.Id_Perfil = profile?.Id_Perfil;
 			this.Estado = Case_Estate.Pendiente.ToString();
 			this.Id_Case = (Int32?)SqlADOConexion.SQLM?.InsertObject(this);
 			foreach (Tbl_Tareas obj in this.Tbl_Tareas ?? new List<Tbl_Tareas>())
@@ -191,7 +193,7 @@ namespace CAPA_NEGOCIO.MAPEO
 		{
 			if (AuthNetCore.HavePermission(Permissions.ADMIN_ACCESS.ToString(), identity))
 			{
-				return Where<Tbl_Case>(FilterData.In("Estado", Case_Estate.Activo));
+				return Where<Tbl_Case>(FilterData.In("Estado", Case_Estate.Activo.ToString()));
 			}
 			if (AuthNetCore.HavePermission(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identity))
 			{
@@ -207,6 +209,14 @@ namespace CAPA_NEGOCIO.MAPEO
 				&& c.Estado != Case_Estate.Solicitado.ToString()
 				&& c.Estado != Case_Estate.Finalizado.ToString()).ToList();
 			}
+			if (AuthNetCore.HavePermission(Permissions.ADMINISTRAR_CASOS_PROPIOS.ToString(), identity))
+			{
+				UserModel user = AuthNetCore.User(identity);
+				Tbl_Profile? profile = new Tbl_Profile { IdUser = user.UserId }.Find<Tbl_Profile>();
+				return Where<Tbl_Case>(FilterData.In("Estado", Case_Estate.Activo.ToString()),
+				FilterData.Equal("Id_Perfil", profile?.Id_Perfil));
+			}
+
 			throw new Exception("no tienes permisos para gestionar casos");
 		}
 		public List<Tbl_Case> GetOwParticipantCase(string identity)
@@ -219,6 +229,11 @@ namespace CAPA_NEGOCIO.MAPEO
 			if (AuthNetCore.HavePermission(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), identity))
 			{
 				return getCaseByDependencia(identity, null)
+				.Where(c => c.Estado != Case_Estate.Rechazado.ToString()).ToList();
+			}
+			if (AuthNetCore.HavePermission(Permissions.ADMINISTRAR_CASOS_PROPIOS.ToString(), identity))
+			{
+				return GetOwCase(identity)
 				.Where(c => c.Estado != Case_Estate.Rechazado.ToString()).ToList();
 			}
 			if (AuthNetCore.HavePermission(Permissions.TECNICO_CASOS_DEPENDENCIA.ToString(), identity))
@@ -442,6 +457,22 @@ namespace CAPA_NEGOCIO.MAPEO
 				return Get<Tbl_Case>();
 			}
 			throw new Exception("no tienes permisos para aprobar casos");
+		}
+
+		internal object SaveOwCase(string? identity)
+		{
+			UserModel user = AuthNetCore.User(identity);
+			Tbl_Profile? profile = new Tbl_Profile { IdUser = user.UserId }.Find<Tbl_Profile>();
+			Id_Perfil = profile?.Id_Perfil;
+			Id_Dependencia = profile?.Tbl_Dependencias_Usuarios?.First()?.Id_Dependencia;
+			Estado = Case_Estate.Activo.ToString();
+			Save();
+			return new ResponseService
+			{
+				status = 200,
+				message = "Success"
+
+			};
 		}
 	}
 

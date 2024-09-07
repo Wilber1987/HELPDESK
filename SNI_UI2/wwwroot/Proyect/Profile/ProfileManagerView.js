@@ -1,14 +1,14 @@
 //@ts-check
-import { StylesControlsV2, StylesControlsV3 } from '../../../WDevCore/StyleModules/WStyleComponents.js';
-import { WFilterOptions } from '../../../WDevCore/WComponents/WFilterControls.js';
-import { ModalMessege, ModalVericateAction } from '../../../WDevCore/WComponents/WForm.js';
-import { WModalForm } from '../../../WDevCore/WComponents/WModalForm.js';
-import { WTableComponent } from '../../../WDevCore/WComponents/WTableComponent.js';
-import { ComponentsManager, WRender } from '../../../WDevCore/WModules/WComponentsTools.js';
-import { Cat_Dependencias_ModelComponent } from "../../FrontModel/Cat_Dependencias.js";
-import { Tbl_Profile } from '../../FrontModel/Tbl_Profile.js';
-import { Tbl_Servicios_ModelComponent } from '../../FrontModel/Tbl_Servicios.js';
-import { activityStyle } from '../../style.js';
+import { StylesControlsV2, StylesControlsV3 } from '../../WDevCore/StyleModules/WStyleComponents.js';
+import { WFilterOptions } from '../../WDevCore/WComponents/WFilterControls.js';
+import { ModalMessege, ModalVericateAction } from '../../WDevCore/WComponents/WForm.js';
+import { WModalForm } from '../../WDevCore/WComponents/WModalForm.js';
+import { WTableComponent } from '../../WDevCore/WComponents/WTableComponent.js';
+import { ComponentsManager, WRender } from '../../WDevCore/WModules/WComponentsTools.js';
+import { Cat_Dependencias_ModelComponent } from "../FrontModel/Cat_Dependencias.js";
+import { Tbl_Profile } from '../FrontModel/Tbl_Profile.js';
+import { Tbl_Servicios_ModelComponent } from '../FrontModel/Tbl_Servicios.js';
+import { activityStyle } from '../style.js';
 
 const OnLoad = async () => {
     const Dataset = await new Tbl_Profile().Get();
@@ -25,8 +25,8 @@ class PerfilManagerComponent extends HTMLElement {
         super();
         this.updateDataset(Dataset);
         this.Dataset = Dataset;
-        this.attachShadow({ mode: 'open' });
-        this.shadowRoot?.append(this.WStyle, StylesControlsV2.cloneNode(true), StylesControlsV3.cloneNode(true));
+     
+        this.append(this.WStyle, StylesControlsV2.cloneNode(true), StylesControlsV3.cloneNode(true));
         this.TabContainer = WRender.createElement({ type: 'div', props: { class: 'TabContainer', id: "TabContainer" } });
         this.TabManager = new ComponentsManager({ MainContainer: this.TabContainer });
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });
@@ -56,7 +56,7 @@ class PerfilManagerComponent extends HTMLElement {
             }))
 
         });
-        this.shadowRoot?.append(this.OptionContainer, this.TabContainer);
+        this.append(this.OptionContainer, this.TabContainer);
         this.perfilManagerComponent();
     }
 
@@ -99,7 +99,7 @@ class PerfilManagerComponent extends HTMLElement {
         name: "Asignar a dependencia", action: async () => {
             // @ts-ignore
             if (this.mainTable.selectedItems.length <= 0) {
-                this.shadowRoot?.append(ModalMessege("Seleccione perfiles"));
+                this.append(ModalMessege("Seleccione perfiles"));
                 return;
             }
             //const dependencias = await new Cat_Dependencias().Get();
@@ -117,23 +117,23 @@ class PerfilManagerComponent extends HTMLElement {
                     Tbl_Servicios: { type: 'Wselect', ModelObject: () => new Tbl_Servicios_ModelComponent(), hidden: true }
                 }), ObjectOptions: {
                     SaveFunction: async (profile) => {
-                        this.shadowRoot?.append(ModalVericateAction(async () => {
+                        this.append(ModalVericateAction(async () => {
                             const response =
                                 // @ts-ignore
                                 await new Tbl_Profile().AsignarDependencias(this.mainTable?.selectedItems,
                                     profile.Tbl_Dependencias_Usuarios);
                             if (response.status == 200) {
-                                this.shadowRoot?.append(ModalMessege("Asignación Correcta"));
+                                this.append(ModalMessege("Asignación Correcta"));
                                 this.update();
                             } else {
-                                this.shadowRoot?.append(ModalMessege("Error"));
+                                this.append(ModalMessege("Error"));
                             }
                             modal.close();
                         }, "Esta seguro que desea asignar a esta dependencia"))
                     }
                 }
             });
-            this.shadowRoot?.append(modal);
+            this.append(modal);
         }
     }
     ]

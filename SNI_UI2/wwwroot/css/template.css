@@ -4,7 +4,7 @@ body {
     width: 100%;
 
     position: fixed;
-    background: rgb(250, 250, 250);
+    background: rgb(246, 246, 246);
     width: 100%;
     height: 100%;
     top: 0px;
@@ -15,13 +15,13 @@ body {
     top: 0px;
     left: 0px;
     position: absolute;
-    background: rgb(2, 0, 36);
+    /*background: rgb(2, 0, 36);
     background: linear-gradient(180deg, rgba(2, 0, 36, 1) 0%, rgba(9, 109, 121, 1) 22%, rgba(0, 212, 255, 0) 48%);
     background-attachment: fixed;
     display: block;
     height: 900px;
     z-index: -1;
-    width: 100%;
+    width: 100%;*/
 }
 
 #AdminTemplate {
@@ -147,12 +147,18 @@ body {
 }
 
 #Main {
-    background-color: var(--secundary-color);
+    /* background-color: var(--secundary-color);
     color: var(--font-fourth-color);
     border-radius: 0.3cm;
     min-height: 500px;
-    box-shadow: 0 0 5px 0 #b3b3b3;
+    box-shadow: 0 0 5px 0 #b3b3b3; */
     margin: 0px;
+    padding: 20px;
+}
+.OptionContainer, .TabContainer, .header-container, .content-container {
+    background-color: var(--secundary-color);
+    box-shadow: 0 0 5px 0 #d4d4d4;
+    border-radius: 0.3cm;
     padding: 20px;
 }
 

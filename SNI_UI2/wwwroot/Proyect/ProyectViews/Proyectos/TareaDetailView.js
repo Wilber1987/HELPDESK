@@ -22,13 +22,13 @@ class TareaDetailView extends HTMLElement {
      */
     constructor(Config) {
         super();
-        this.attachShadow({ mode: 'open' });
+        
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });
         this.TabContainer = WRender.Create({ className: "TabContainer", id: 'TabContainer' });
         this.Manager = new ComponentsManager({ MainContainer: this.TabContainer, SPAManage: false });
         this.Task = Config.Task;
         this.Config = Config;
-        this.shadowRoot?.append(
+        this.append(
             StylesControlsV2.cloneNode(true),
             StyleScrolls.cloneNode(true),
             StylesControlsV3.cloneNode(true),
@@ -160,7 +160,7 @@ class TareaDetailView extends HTMLElement {
         this.TaskModel = new Tbl_Tareas_ModelComponent();
         // @ts-ignore
         this.TaskModel.Tbl_Calendario = CalendarModel;
-        this.shadowRoot?.append(new WModalForm({
+        this.append(new WModalForm({
             EditObject: task,
             AutoSave: true,
             title: "Editar",

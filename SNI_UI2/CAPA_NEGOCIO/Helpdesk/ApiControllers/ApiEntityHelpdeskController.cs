@@ -32,7 +32,7 @@ namespace API.Controllers
 		{
 			return inst.Update();
 		}
-		 [HttpPost]
+		[HttpPost]
 		[AuthController]
 		public List<Tbl_Comments_Tasks> getTbl_Comments_Tasks(Tbl_Comments_Tasks Inst)
 		{
@@ -280,7 +280,7 @@ namespace API.Controllers
 		{
 			inst.Estado ??= Case_Estate.Solicitado.ToString();
 			inst.Id_Perfil = AuthNetCore.User(HttpContext.Session.GetString("seassonKey")).UserId;
-			inst.Mail =  AuthNetCore.User(HttpContext.Session.GetString("seassonKey")).mail;
+			inst.Mail = AuthNetCore.User(HttpContext.Session.GetString("seassonKey")).mail;
 			inst.Titulo = inst?.Titulo?.ToUpper();
 			return inst.Save();
 		}
@@ -315,7 +315,7 @@ namespace API.Controllers
 		public List<Tbl_Tareas> getTbl_Tareas(Tbl_Tareas Inst)
 		{
 			return Inst.Get<Tbl_Tareas>();
-		}        
+		}
 		[HttpPost]
 		[AuthController]
 		public object? saveTbl_Tareas(Tbl_Tareas inst)
@@ -354,7 +354,7 @@ namespace API.Controllers
 		{
 			return inst.Get<Tbl_VinculateCase>();
 		}
-		  [HttpPost]
+		[HttpPost]
 		[AuthController]
 		public object? saveTbl_VinculateCase(Tbl_VinculateCase inst)
 		{
@@ -371,6 +371,33 @@ namespace API.Controllers
 		public List<Tbl_Profile_CasosAsignados> getTbl_Profile_CasosAsignados(Tbl_Profile_CasosAsignados inst)
 		{
 			return inst.Get<Tbl_Profile_CasosAsignados>();
+		}
+
+
+		//INVESTIGACIONES
+		[HttpPost]
+		[AuthController]
+		public List<Tbl_Grupo> getTbl_Grupo(Tbl_Grupo Inst)
+		{
+			return Inst.Get<Tbl_Grupo>();
+		}
+		[HttpPost]
+		[AuthController]
+		public List<Tbl_Grupo> findTbl_Grupo(Tbl_Grupo Inst)
+		{
+			return Inst.Get<Tbl_Grupo>();
+		}
+		[HttpPost]
+		[AuthController]
+		public object? saveTbl_Grupo(Tbl_Grupo inst)
+		{
+			return inst.SaveGroup(HttpContext.Session.GetString("seassonKey"));
+		}
+		[HttpPost]
+		[AuthController]
+		public object? updateTbl_Grupo(Tbl_Grupo inst)
+		{
+			return inst.Update();
 		}
 
 	}

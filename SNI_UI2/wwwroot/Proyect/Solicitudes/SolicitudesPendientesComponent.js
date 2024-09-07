@@ -25,8 +25,7 @@ class SolicitudesPendientesComponent extends HTMLElement {
         super();
         this.Dataset = Dataset;
         //this.Dependencias = Dependencias;
-        this.attachShadow({ mode: 'open' });
-        this.shadowRoot?.append(this.WStyle, StylesControlsV2.cloneNode(true), StylesControlsV3.cloneNode(true));
+        this.append(this.WStyle, StylesControlsV2.cloneNode(true), StylesControlsV3.cloneNode(true));
         this.TabContainer = WRender.createElement({ type: 'div', props: { class: 'TabContainer', id: "TabContainer" } });
         this.TabManager = new ComponentsManager({ MainContainer: this.TabContainer });
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });
@@ -64,7 +63,7 @@ class SolicitudesPendientesComponent extends HTMLElement {
             }))
 
         });
-        this.shadowRoot?.append(this.OptionContainer, this.TabContainer);
+        this.append(this.OptionContainer, this.TabContainer);
         this.actividadesManager();
     }
 
@@ -145,7 +144,7 @@ class SolicitudesPendientesComponent extends HTMLElement {
         })
     }
     actividadElement = (actividad) => {
-        this.shadowRoot?.append(priorityStyles.cloneNode(true));
+        this.append(priorityStyles.cloneNode(true));
         return WRender.Create({
             className: "actividad", object: actividad, children: [
                 {
@@ -162,10 +161,10 @@ class SolicitudesPendientesComponent extends HTMLElement {
         })
     }
     Vincular = async (actividad) => {
-        this.shadowRoot?.append(new WModalForm({
+        this.append(new WModalForm({
             title: "Vincular Casos",
             ObjectModal: CaseSearcherToVinculate(actividad, "Vincular", async (caso_vinculado, TableComponent, model) => {
-                this.shadowRoot?.append(ModalVericateAction(async () => {
+                this.append(ModalVericateAction(async () => {
                     const response = await new Tbl_VinculateCase({
                         Casos_Vinculados: [actividad, caso_vinculado]
                     }).VincularCaso();
@@ -181,7 +180,7 @@ class SolicitudesPendientesComponent extends HTMLElement {
             name: "Aprobar", action: async (/**@type {Tbl_Case_ModelComponent}*/element) => {
                 // @ts-ignore
                 if (this.mainTable.selectedItems.length <= 0) {
-                    this.shadowRoot?.append(ModalMessege("Seleccione solicitudes"));
+                    this.append(ModalMessege("Seleccione solicitudes"));
                     return;
                 }
                 const dependencias = await new Cat_Dependencias_ModelComponent().Get();
@@ -196,24 +195,24 @@ class SolicitudesPendientesComponent extends HTMLElement {
                             const response = await new Tbl_Case_ModelComponent({})
                                 .AprobarCaseList(this.mainTable?.selectedItems ?? [], table_case);
                             if (response.status == 200) {
-                                this.shadowRoot?.append(ModalMessege("Solicitudes aprobadas"));
+                                this.append(ModalMessege("Solicitudes aprobadas"));
                                 this.update();
                             } else {
-                                this.shadowRoot?.append(ModalMessege("Error"));
+                                this.append(ModalMessege("Error"));
                             }
                             modal.close();
                         })
                 });
-                this.shadowRoot?.append(modal);
+                this.append(modal);
             }
         }, {
             name: "Rechazar", action: async (/**@type {Tbl_Case_ModelComponent}*/element) => {
                 // @ts-ignore
                 if (this.mainTable.selectedItems.length <= 0) {
-                    this.shadowRoot?.append(ModalMessege("Seleccione solicitudes"));
+                    this.append(ModalMessege("Seleccione solicitudes"));
                     return;
                 }
-                this.shadowRoot?.append(new WModalForm({
+                this.append(new WModalForm({
                     title: "Escriba la razón por la cual se están rechazando estas solicitudes",
                     EditObject: {
                         Id_Case: element.Id_Case,
@@ -221,14 +220,14 @@ class SolicitudesPendientesComponent extends HTMLElement {
                     ModelObject: new Tbl_Comments_ModelComponent(),
                     ObjectOptions: {
                         SaveFunction: async (comentario) => {
-                            this.shadowRoot?.append(ModalVericateAction(async () => {
+                            this.append(ModalVericateAction(async () => {
                                 const response = await new Tbl_Case_ModelComponent()
                                     .RechazarCaseList(this.mainTable?.selectedItems ?? [], comentario);
                                 if (response.status == 200) {
-                                    this.shadowRoot?.append(ModalMessege("Solicitudes rechazadas"));
+                                    this.append(ModalMessege("Solicitudes rechazadas"));
                                     this.update();
                                 } else {
-                                    this.shadowRoot?.append(ModalMessege("Error"));
+                                    this.append(ModalMessege("Error"));
                                 }
                                 //modal.close();
                             }, "Esta seguro que desea rechazar estas solicitudes"));
@@ -241,7 +240,7 @@ class SolicitudesPendientesComponent extends HTMLElement {
             name: "Remitir a otra dependencia", action: async (/**@type {Tbl_Case_ModelComponent}*/element) => {
                 // @ts-ignore
                 if (this.mainTable.selectedItems.length <= 0) {
-                    this.shadowRoot?.append(ModalMessege("Seleccione solicitudes"));
+                    this.append(ModalMessege("Seleccione solicitudes"));
                     return;
                 }
                 const dependencias = await new Cat_Dependencias_ModelComponent().Get();
@@ -253,22 +252,22 @@ class SolicitudesPendientesComponent extends HTMLElement {
                         filterDepend,
                         servicios,
                         async (table_case) => {
-                            this.shadowRoot?.append(ModalVericateAction(async () => {
+                            this.append(ModalVericateAction(async () => {
                                 const response =
                                     // @ts-ignore
                                     await new Tbl_Case_ModelComponent().RemitirCasos(this.mainTable.selectedItems,
                                         table_case.Cat_Dependencias, table_case.Tbl_Comments, table_case);
                                 if (response.status == 200) {
-                                    this.shadowRoot?.append(ModalMessege("Solicitud remitida"));
+                                    this.append(ModalMessege("Solicitud remitida"));
                                     this.update();
                                 } else {
-                                    this.shadowRoot?.append(ModalMessege("Error"));
+                                    this.append(ModalMessege("Error"));
                                 }
                                 modal.close();
                             }, "Esta seguro que desea remitir esta solicitud"))
                         })
                 });
-                this.shadowRoot?.append(modal);
+                this.append(modal);
             }
         }
     ]

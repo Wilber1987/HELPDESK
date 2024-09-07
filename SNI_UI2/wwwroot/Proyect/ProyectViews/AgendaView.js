@@ -8,9 +8,8 @@ import { AgendaModel } from '../FrontModel/AgendaModel.js';
 class AgendaView extends HTMLElement {
     constructor() {
         super();
-        this.attachShadow({ mode: 'open' });
         this.className = "HomeView DivContainer";
-        this.shadowRoot.append(this.WStyle, StylesControlsV2.cloneNode(true));
+        this.append(this.WStyle, StylesControlsV2.cloneNode(true));
         this.TabContainer = WRender.createElement({ type: 'div', props: { class: 'TabContainer', id: "TabContainer" } });
         this.TabManager = new ComponentsManager({ MainContainer: this.TabContainer });
         this.DrawAgendaView();
@@ -31,7 +30,7 @@ class AgendaView extends HTMLElement {
                 };
             })
         });
-        this.shadowRoot.append(this.TabAgenda, this.TabContainer);
+        this.append(this.TabAgenda, this.TabContainer);
     }
     NavAgenda = async (TabId, DataPost, IdDependencia) => {
         const Table = new WTableComponent({

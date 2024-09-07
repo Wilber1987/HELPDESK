@@ -19,13 +19,14 @@ const activityStyle = css`
         }
         .actividad {
             border: 1px solid #d9d6d6;
-            padding: 15px;
+            padding: 20px;
             margin-bottom: 10px;           
             color: #0a2542;
             border-radius: 15px;
             gap: 5px;
             display: flex;
-            flex-direction: column;
+            flex-direction: column;            
+            background-color: #fff;
         }
         .actividad h4 {
             margin: 5px 0px;
@@ -41,9 +42,8 @@ const activityStyle = css`
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 280px;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .actividad label {            
             flex-wrap: wrap;
@@ -54,6 +54,11 @@ const activityStyle = css`
         .actividad .options {
             display: flex;
             justify-content: flex-end;            
+        }
+        .OptionContainer2 {
+            display: flex;
+            gap: 5px;
+            padding: 10px;
         }
         @container details (max-width: 700px) {
             .actividad { 

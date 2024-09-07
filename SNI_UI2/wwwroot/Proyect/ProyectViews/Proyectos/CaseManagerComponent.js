@@ -30,8 +30,8 @@ class CaseManagerComponent extends HTMLElement {
         super();
         this.Dataset = Dataset = [];
         this.Dependencias = Dependencias;
-        this.attachShadow({ mode: 'open' });
-        this.shadowRoot?.append(this.WStyle, StylesControlsV2.cloneNode(true), StylesControlsV3.cloneNode(true));
+
+        this.append(this.WStyle, StylesControlsV2.cloneNode(true), StylesControlsV3.cloneNode(true));
         this.TabContainer = WRender.createElement({ type: 'div', props: { class: 'TabContainer', id: "TabContainer" } });
         this.TabManager = new ComponentsManager({ MainContainer: this.TabContainer });
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });
@@ -45,17 +45,28 @@ class CaseManagerComponent extends HTMLElement {
         if (this.Dependencias.length != 0) {
             this.OptionContainer.append(WRender.Create({
                 tagName: 'input', type: 'button', className: 'Block-Success',
-                value: 'Nuevo Caso', onclick: this.CaseForm
+                value: 'Nuevo Proyecto', onclick: this.CaseForm
             }))
         }
-        this.shadowRoot?.append(this.OptionContainer, this.TabContainer);
+        if (WSecurity.HavePermission(Permissions.ADMINISTRAR_CASOS_PROPIOS)) {
+            this.OptionContainer.append(WRender.Create({
+                tagName: 'input', type: 'button', className: 'Block-Success',
+                value: 'Nuevo Proyecto', onclick: () => {
+                    this.TabManager.NavigateFunction("Tab-CaseFormBasicView", basicCaseForm(new Tbl_Case(), async (/**@type {Tbl_Case} */ entity) => {
+                        const response = await entity.SaveOwCase();
+                        this.append(ModalMessege("Caso guardado correctamente", undefined, true))
+                    }))
+                } 
+            }))
+        }
+        this.append(this.OptionContainer, this.TabContainer);
         //this.dashBoardView();
         this.actividadesManager();
     }
     actividadesManager = async () => {
         // @ts-ignore
-        this.Paginator =  new WPaginatorViewer({ Dataset: [] });
-        this.FilterOptions =  new WFilterOptions({
+        this.Paginator = new WPaginatorViewer({ Dataset: [] });
+        this.FilterOptions = new WFilterOptions({
             Dataset: [],
             UseEntityMethods: false,
             AutoFilter: true,
@@ -75,7 +86,7 @@ class CaseManagerComponent extends HTMLElement {
                 this.Paginator?.Draw(datasetMap);
             }
         });
-        
+
         this.TabManager.NavigateFunction("Tab-Actividades-Manager",
             WRender.Create({
                 className: "actividadesView", children: [this.FilterOptions, this.Paginator]
@@ -83,7 +94,7 @@ class CaseManagerComponent extends HTMLElement {
     }
 
     actividadElement = (actividad) => {
-        this.shadowRoot?.append(priorityStyles.cloneNode(true));
+        this.append(priorityStyles.cloneNode(true));
         return WRender.Create({
             className: "actividad", object: actividad, children: [
                 {
@@ -137,15 +148,15 @@ class CaseManagerComponent extends HTMLElement {
             WRender.Create({
                 className: "CaseFormView", children: [CaseForm(undefined, this.Dependencias, () => {
                     console.log(false);
-                    this.shadowRoot?.append(ModalMessege("Caso guardado correctamente", undefined, true))
+                    this.append(ModalMessege("Caso guardado correctamente", undefined, true))
                 })]
             }));
     }
     Vincular = async (actividad) => {
-        this.shadowRoot?.append(new WModalForm({
+        this.append(new WModalForm({
             title: "Vincular Casos",
             ObjectModal: CaseSearcherToVinculate(actividad, "Vincular", async (caso_vinculado, TableComponent, model) => {
-                this.shadowRoot?.append(ModalVericateAction(async () => {
+                this.append(ModalVericateAction(async () => {
                     const response = await new Tbl_VinculateCase({
                         Casos_Vinculados: [actividad, caso_vinculado]
                     }).VincularCaso();
@@ -188,6 +199,7 @@ const CaseForm = (entity, dependencias, action) => {
         ImageUrlPath: "",
         AutoSave: true,
         ModelObject: new Tbl_Case_ModelComponent({
+            // @ts-ignore
             Tbl_Tareas: {
                 type: 'MasterDetail',
                 ModelObject: () => new Tbl_Tareas_ModelComponent({ Tbl_Calendario: ModelCalendar })
@@ -223,6 +235,7 @@ const simpleCaseForm = (entity, dependencias, servicios, action) => {
         SaveFunction: action,
         ImageUrlPath: "",
         ModelObject: new Tbl_Case_ModelComponent({
+            // @ts-ignore
             Tbl_Tareas: { type: "text", hidden: true },
             Id_Vinculate: { type: "text", hidden: true },
             Titulo: { type: "text", hidden: true },
@@ -245,6 +258,32 @@ const simpleCaseForm = (entity, dependencias, servicios, action) => {
                     form.DrawComponent();
                 }
             },
+        })
+    })
+    return form;
+}
+/**
+ * @param {Tbl_Case} [entity]
+ * @param {Function} [action] 
+ * @returns {WForm}
+ */
+const basicCaseForm = (entity, action) => {
+    const form = new WForm({
+        EditObject: entity,
+        SaveFunction: action,
+        ImageUrlPath: "",
+        AutoSave: false,
+        ModelObject: new Tbl_Case_ModelComponent({
+            //Tbl_Tareas: { type: "text", hidden: true },
+            Id_Vinculate: { type: "text", hidden: true },
+            Titulo: { type: "text" },
+            Tbl_Servicios: undefined,
+            Fecha_Inicio: { type: "DATE" },
+            Estado: { type: "text", hidden: true },
+            Fecha_Final: { type: "text", hidden: true },
+            // @ts-ignore
+            Tbl_Comments: undefined,
+            Cat_Dependencias: undefined,
         })
     })
     return form;

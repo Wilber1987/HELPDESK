@@ -39,6 +39,10 @@ namespace API.Controllers
         {
             return AuthNetCore.HavePermission(permission, identfy);
         }
+        public static bool HavePermission(string? identfy, params Permissions[] permission)
+        {            
+            return AuthNetCore.HavePermission(identfy, permission);
+        }   
 
     }
 }

@@ -20,15 +20,15 @@ class TaskManagers extends HTMLElement {
         this.Dataset = Dataset;
         this.Config = Config;
         this.TaskModel = Model ?? new Tbl_Tareas_ModelComponent();
-        this.attachShadow({ mode: 'open' });
-        this.shadowRoot?.append(this.WStyle,
+        
+        this.append(this.WStyle,
             StyleScrolls.cloneNode(true),
             StylesControlsV2.cloneNode(true),
             StylesControlsV3.cloneNode(true));
         this.TabContainer = WRender.Create({ class: 'TabContainer', id: "TabContainer" });
         this.TabManager = new ComponentsManager({ MainContainer: this.TabContainer });
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });
-        this.shadowRoot?.append(this.TabContainer);
+        this.append(this.TabContainer);
         this.StatePanelContainer = WRender.Create({
             className: "panelContainer",
             style: " grid-template-columns: repeat(" + this.TaskModel.Estado.Dataset.length + ", auto);"
@@ -51,7 +51,7 @@ class TaskManagers extends HTMLElement {
                 className: Dataset.length > 0 ? "panel" : "panel-inact", id: "Panel-" + state,
                 ondrop: (ev) => {
                     var data = ev.dataTransfer.getData("text");
-                    const taskCard = this.shadowRoot?.getElementById(data);
+                    const taskCard = this.querySelector("#"+data);
                     if (ev.target.className.includes("panel")) {
                         ev.target.appendChild(taskCard);
                         // @ts-ignore

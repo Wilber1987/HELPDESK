@@ -102,7 +102,6 @@ class HomeView extends HTMLElement {
                 display: 'flex',
                 "justify-content": "center",
             }), new WCssClass(`.OptionContainer img`, {
-                "box-shadow": "0 0 4px rgb(0,0,0/50%)",
                 height: 100,
                 width: 100,
                 margin: 10

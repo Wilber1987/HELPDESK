@@ -22,12 +22,12 @@ class AppDashboardComponentView extends HTMLElement {
      */
     constructor(props) {
         super();
-        this.attachShadow({ mode: 'open' });
+        
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });
         this.TabContainer = WRender.Create({ className: "TabContainer", id: 'TabContainer' });
         this.Manager = new ComponentsManager({ MainContainer: this.TabContainer, SPAManage: true });
-        this.shadowRoot?.append(this.CustomStyle);
-        this.shadowRoot?.append(
+        this.append(this.CustomStyle);
+        this.append(
             StylesControlsV2.cloneNode(true),
             StyleScrolls.cloneNode(true),
             StylesControlsV3.cloneNode(true),
@@ -637,13 +637,12 @@ class AppDashboardComponentView extends HTMLElement {
     }
     
     CustomStyle = css`
-        .OptionContainer{
+        .OptionContainer {
             display: grid;
-            grid-template-columns: 100px 430px auto;
+            grid-template-columns: 100px 530px auto;
             gap: 20px;
             margin-bottom: 10px;
             padding-bottom: 10px;
-            border-bottom: solid #d5d5d5;
         }
         .dashboard-component{
            display: grid;

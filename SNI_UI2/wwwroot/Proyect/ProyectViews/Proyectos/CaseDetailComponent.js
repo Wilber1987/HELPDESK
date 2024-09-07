@@ -7,7 +7,7 @@ import { WAppNavigator } from '../../../WDevCore/WComponents/WAppNavigator.js';
 import { GanttChart } from '../../../WDevCore/WComponents/WChartJSComponents.js';
 import { WCommentsComponent } from '../../../WDevCore/WComponents/WCommentsComponent.js';
 import { WDetailObject } from '../../../WDevCore/WComponents/WDetailObject.js';
-import { ModalMessege, ModalVericateAction } from "../../../WDevCore/WComponents/WForm.js";
+import { ModalMessege, ModalVericateAction, WForm } from "../../../WDevCore/WComponents/WForm.js";
 import { WModalForm } from '../../../WDevCore/WComponents/WModalForm.js';
 import { WTableComponent } from "../../../WDevCore/WComponents/WTableComponent.js";
 import { ComponentsManager, WRender } from '../../../WDevCore/WModules/WComponentsTools.js';
@@ -59,7 +59,7 @@ class CaseDetailComponent extends HTMLElement {
         this.ganttChart = new GanttChart({ Dataset: tareasActividad ?? [], EvalValue: "date" });
         this.actividadDetailView = WRender.Create({ className: "actividadDetailView", children: [this.actividadElementDetail(actividad)] });
         /**@type {Array<Tbl_Dependencias_Usuarios>} */
-        const perfiles_dependencias =  await new  Tbl_Dependencias_Usuarios({
+        const perfiles_dependencias = await new Tbl_Dependencias_Usuarios({
             filterData: [
                 new FilterData({ PropName: "Id_Dependencia", Values: [actividad.Id_Dependencia.toString()], FilterType: "=" })
             ]
@@ -108,17 +108,24 @@ class CaseDetailComponent extends HTMLElement {
             }
         })
         const taskNav = new WAppNavigator({
-            //NavStyle: "tab",
+            NavStyle: "tab",
             Inicialize: true,
             Elements: [{
                 name: "Vista de panel", action: async (ev) => {
-                    tabManager.NavigateFunction("taskManager", this.taskManager)
+                    //tabManager.NavigateFunction("taskManager", this.taskManager)
+                    return this.taskManager;
                 }
-            }, { name: "Vista de progreso", action: async (ev) => { tabManager.NavigateFunction("ganttChart", this.ganttChart) } },
+            }, {
+                name: "Vista de progreso", action: async (ev) => {
+                    //tabManager.NavigateFunction("ganttChart", this.ganttChart)
+                    return this.ganttChart;
+                }
+            },
             {
                 name: "Detalles del caso", action: async (ev) => {
                     this.Actividad.Tbl_Profile_CasosAsignados = await new Tbl_Profile_CasosAsignados({ Id_Case: this.Actividad.Id_Case }).Get();
-                    tabManager.NavigateFunction("detalles", new WDetailObject({
+                    //tabManager.NavigateFunction("detalles", )
+                    return new WDetailObject({
                         ModelObject: new Tbl_Case_ModelComponent({
                             // @ts-ignore
                             Tbl_Profile_CasosAsignados: {
@@ -128,20 +135,20 @@ class CaseDetailComponent extends HTMLElement {
                             }
                         }),
                         ObjectDetail: this.Actividad
-                    }))
+                    })
                 }
             }, {
                 name: "Nueva Tarea", action: async (ev) => {
-                    this.shadowRoot?.append(new WModalForm({
+                    //this.shadowRoot?.append()
+                    return new WForm({
                         ModelObject: taskModel,
                         AutoSave: true,
-                        title: "Nueva Tarea",
-                        ObjectOptions: {
-                            SaveFunction: (task) => {
-                                this.update();
-                            }
+                        //title: "Nueva Tarea",
+                        SaveFunction: (task) => {
+                            this.update();
                         }
-                    }))
+
+                    })
                 }
             }, {
                 name: "Vinculaciones", action: async (ev) => {
@@ -159,7 +166,8 @@ class CaseDetailComponent extends HTMLElement {
                             }] : undefined
                         }
                     })
-                    tabManager.NavigateFunction("vinculaciones", vinculateTable)
+                    //tabManager.NavigateFunction("vinculaciones", vinculateTable)
+                    return vinculateTable
                 }
             }
             ]
@@ -310,19 +318,27 @@ class CaseDetailComponent extends HTMLElement {
     WStyle = activityStyle.cloneNode(true)
     CustomStyle = css`
         w-coment-component {
-            grid-row: span 3;
+            grid-row: span 2;
+            max-height: 700px;
         }
        .actividadDetailView {
             display: grid;
             grid-template-columns: calc(100% - 620px) 600px;
-            grid-template-rows: 180px 50px auto;
-            gap: 0px 20px;
+            grid-template-rows: auto auto;
+            gap: 20px;
         }
+        w-app-navigator,   w-coment-component  {
+            border: 1px solid #d9d6d6;
+            padding: 20px;
+            border-radius: 15px;           
+            background-color: #fff;
+        }
+
         @media(max-width: 1400px){
             .actividadDetailView {
                 display: grid;
                 grid-template-columns: calc(100% - 20px);
-                grid-template-rows: 180px 50px auto;
+                grid-template-rows: auto  auto;
                 gap: 0px 20px;
             }
             w-coment-component {

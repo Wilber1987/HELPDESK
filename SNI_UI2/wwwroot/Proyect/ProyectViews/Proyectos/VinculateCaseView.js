@@ -17,12 +17,12 @@ class ComponentView extends HTMLElement {
      */
     constructor(props) {
         super();
-        this.attachShadow({ mode: 'open' });     
+        
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });        
         this.TabContainer = WRender.Create({ className: "TabContainer", id: 'TabContainer' });
         this.Manager = new ComponentsManager({ MainContainer: this.TabContainer, SPAManage: false });        
-        this.shadowRoot?.append(this.CustomStyle);        
-        this.shadowRoot?.append(
+        this.append(this.CustomStyle);        
+        this.append(
             StylesControlsV2.cloneNode(true),
             StyleScrolls.cloneNode(true),
             StylesControlsV3.cloneNode(true),
@@ -53,7 +53,7 @@ class ComponentView extends HTMLElement {
             tagName: 'button', className: 'Block-Primary', innerText: 'Datos 2',
             onclick: async () => {
                 //this.Manager.NavigateFunction("formv", new ComponentView({}))
-                this.shadowRoot?.append(new WModalForm({ObjectModal: new ComponentView()}))
+                this.append(new WModalForm({ObjectModal: new ComponentView()}))
             } 
         })) 
     }

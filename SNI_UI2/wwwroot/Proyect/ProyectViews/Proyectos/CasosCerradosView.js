@@ -28,8 +28,7 @@ class CasosCerradosView extends HTMLElement {
         super();
         this.Dataset = Dataset;
         this.Dependencias = Dependencias;
-        this.attachShadow({ mode: 'open' });
-        this.shadowRoot?.append(this.WStyle, StylesControlsV2.cloneNode(true), StylesControlsV3.cloneNode(true));
+        this.append(this.WStyle, StylesControlsV2.cloneNode(true), StylesControlsV3.cloneNode(true));
         this.TabContainer = WRender.createElement({ type: 'div', props: { class: 'TabContainer', id: "TabContainer" } });
         this.TabManager = new ComponentsManager({ MainContainer: this.TabContainer });
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });
@@ -44,9 +43,9 @@ class CasosCerradosView extends HTMLElement {
     }
     connectedCallback() { }
     DrawCaseManagerComponent = async () => {
-        this.shadowRoot.innerHTML= "";
+        this.innerHTML= "";
         //this.OptionContainer.append(WRender.Create({ tagName: 'input', type: 'button', className: 'Block-Basic', value: 'Estadística', onclick: this.dashBoardView }))
-        this.shadowRoot?.append(this.WActivityStyle, this.OptionContainer, this.TabContainer);
+        this.append(this.WActivityStyle, this.OptionContainer, this.TabContainer);
         //this.dashBoardView();
         this.actividadesManager();
     }
@@ -73,7 +72,7 @@ class CasosCerradosView extends HTMLElement {
     }
 
     actividadElement = (actividad) => {
-        this.shadowRoot.append(priorityStyles.cloneNode(true));
+        this.append(priorityStyles.cloneNode(true));
         return WRender.Create({
             className: "actividad", object: actividad, children: [
                 {
@@ -128,14 +127,14 @@ class CasosCerradosView extends HTMLElement {
             actividad.Estado = "Activo"
             const response = await new Tbl_Case_ModelComponent(actividad).Update();
             if (response.status == 200) {
-                this.shadowRoot.append(ModalMessege("Caso reabierto exitosamente")); 
-                this.shadowRoot.removeChild(modal)   
+                this.append(ModalMessege("Caso reabierto exitosamente")); 
+                this.removeChild(modal)   
                 //this.update()           
             } else {
                 this.append(ModalMessege(response.message))
             }
         }, "¿Está seguro que desea reabrir este caso?")
-        this.shadowRoot.append(modal)
+        this.append(modal)
        
     }
     update = async () => {

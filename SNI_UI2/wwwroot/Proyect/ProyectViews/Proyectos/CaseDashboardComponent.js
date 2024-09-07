@@ -21,10 +21,10 @@ class CaseDashboardComponent extends HTMLElement {
         //console.log(Dataset);
         super();
         this.Dataset = [];
-        this.attachShadow({ mode: 'open' });
-        this.shadowRoot?.append(this.WStyle);
+        
+        this.append(this.WStyle);
         this.OptionContainer = WRender.Create({ className: "options-container" });
-        this.shadowRoot?.append(StylesControlsV2.cloneNode(true))
+        this.append(StylesControlsV2.cloneNode(true))
         this.DrawCaseDashboardComponent();
 
     }
@@ -60,7 +60,7 @@ class CaseDashboardComponent extends HTMLElement {
     }
     drawReport = (/** @type {any[]} */ MapData, /**@type {String} */ title, /**@type {Object} */ model) => {
         console.log(this.FilterOptions?.FilterControls);
-        this.shadowRoot?.append(new WModalForm({
+        this.append(new WModalForm({
             ObjectModal: new WReportComponent({
                 Dataset: MapData,
                 Logo: "/Media/img/logo.png",
@@ -75,7 +75,7 @@ class CaseDashboardComponent extends HTMLElement {
         this.Modelcase = new Tbl_Case_ModelComponent({});
         this.ModelTareas = new Tbl_Tareas_ModelComponent();
         const dasboardContainer = WRender.Create({
-            className: "dashBoardView",
+            className: "dashBoardView content-container",
             children: []
         });
         this.FilterOptions = new WFilterOptions({
@@ -106,15 +106,20 @@ class CaseDashboardComponent extends HTMLElement {
                     radialChart);
             }
         });
-        this.shadowRoot?.append(WRender.Create({ class: "header-container", children: [this.OptionContainer, this.FilterOptions] }), dasboardContainer);
+        this.append(WRender.Create({ class: "header-container", children: [this.OptionContainer, this.FilterOptions] }), dasboardContainer);
         await this.FilterOptions.filterFunction();
     }
     WStyle = css`
+        .DivContainer {
+            display: flex;
+            flex-direction: column;
+            gap:20px;
+        }
         .dashBoardView{
             display: grid;
             grid-template-columns: 37% 37% 23%;  
             grid-gap: 10px;
-            grid-template-rows: 300px 320px;         
+            grid-template-rows: 400px 400px;         
         }
         .dashBoardView #ColumnCasosPorDependencia { 
             grid-column: span 1;

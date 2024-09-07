@@ -21,6 +21,7 @@ namespace CAPA_NEGOCIO.MAPEO
 		public string? Apellidos { get; set; }
 		public DateTime? FechaNac { get; set; }
 		public int? IdUser { get; set; }
+		public int? Id_Grupo { get; set; }
 		public string? Sexo { get; set; }
 		public string? Foto { get; set; }
 		public string? DNI { get; set; }
@@ -28,7 +29,8 @@ namespace CAPA_NEGOCIO.MAPEO
 		public int? Id_Pais_Origen { get; set; }
 		public int? Id_Institucion { get; set; }
 		public string? Indice_H { get; set; }
-		public string? Estado { get; set; }
+		public string? Estado { get; set; }		
+		public string? ORCID { get; set; }
 		//[ManyToOne(TableName = "Security_Users", KeyColumn = "Id_User", ForeignKeyColumn = "IdUser")]
 		public Security_Users? Security_Users { get; set; }
 		//[ManyToOne(TableName = "Cat_Paises", KeyColumn = "Id_Pais", ForeignKeyColumn = "Id_Pais_Origen")]
@@ -42,6 +44,9 @@ namespace CAPA_NEGOCIO.MAPEO
 
 		[OneToMany(TableName = "Tbl_Servicios_Profile", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
 		public List<Tbl_Servicios_Profile>? Tbl_Servicios_Profile { get; set; }
+
+		[ManyToOne(TableName = "Tbl_Grupo", KeyColumn = "Id_Grupo", ForeignKeyColumn = "Id_Grupo")]
+		public Tbl_Grupo? Grupo { get; set; }
 		//[OneToMany(TableName = "Tbl_Participantes", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
 
 		public List<Tbl_Servicios?>? Tbl_Servicios { get; set; }
@@ -52,12 +57,15 @@ namespace CAPA_NEGOCIO.MAPEO
 		public List<Tbl_Participantes>? Tbl_Participantes { get; set; }
 		public void SaveDependenciesAndservices()
 		{
-			if (this.Id_Perfil != null && this.Tbl_Dependencias_Usuarios?.Count > 0
-			 && this.Tbl_Servicios_Profile?.Count > 0)
-			{
-				new Tbl_Dependencias_Usuarios { Id_Perfil = this.Id_Perfil }.Delete();
+			if (this.Id_Perfil != null &&  this.Tbl_Servicios_Profile?.Count > 0)
+			{				
 				new Tbl_Servicios_Profile { Id_Perfil = this.Id_Perfil }.Delete();
 			}
+			if (this.Id_Perfil != null && this.Tbl_Dependencias_Usuarios?.Count > 0)
+			{
+				new Tbl_Dependencias_Usuarios { Id_Perfil = this.Id_Perfil }.Delete();
+			}
+
 			this.Tbl_Dependencias_Usuarios?.ForEach(du =>
 			{
 				du.Id_Perfil = this.Id_Perfil;
@@ -74,7 +82,7 @@ namespace CAPA_NEGOCIO.MAPEO
 		{
 			Tbl_Dependencias_Usuarios DU = new Tbl_Dependencias_Usuarios();
 			DU.Id_Perfil = this.Id_Perfil;
-			return DU.Get_WhereIN<Tbl_Dependencias_Usuarios>("Id_Cargo", new string[] { "1", "2" });
+			return DU.Where<Tbl_Dependencias_Usuarios>(FilterData.In("Id_Cargo", "1", "2"));
 		}
 		public Object? TakeProfile()
 		{
@@ -208,11 +216,26 @@ namespace CAPA_NEGOCIO.MAPEO
 					));
 				profiles.AddRange(profilesD);
 			}
+			else
+			{
+				UserModel user = AuthNetCore.User(identity);
+				Tbl_Profile? profile = new Tbl_Profile { IdUser = user.UserId }.Find<Tbl_Profile>();
+				if (profile?.Id_Grupo == null)
+				{
+					profiles.Add(profile);
+				}
+				else
+				{
+					List<Tbl_Profile> profilesD = Where<Tbl_Profile>(FilterData.Equal("Id_Grupo", profile?.Id_Grupo));
+					profiles.AddRange(profilesD);
+				}
+
+			}
 			foreach (var profile in profiles)
 			{
 				foreach (var dep in profile.Tbl_Dependencias_Usuarios ?? new List<Tbl_Dependencias_Usuarios>())
 				{
-					dep.Cat_Dependencias.Password = "PROTECTED";
+					dep.Cat_Dependencias!.Password = "PROTECTED";
 				}
 				profile.Tbl_Servicios = profile.Tbl_Servicios_Profile?.Select(s => s.Tbl_Servicios).ToList();
 				profile.Cat_Dependencias = profile.Tbl_Dependencias_Usuarios?.Select(s => s.Cat_Dependencias).ToList();
@@ -220,4 +243,30 @@ namespace CAPA_NEGOCIO.MAPEO
 			return profiles;
 		}
 	}
+
+    public class Tbl_Grupo: EntityClass
+    {
+		[PrimaryKey(Identity = true)]
+		public int? Id_Grupo { get; set; }
+		public string? Descripcion { get; set; }
+
+        internal object? SaveGroup(string? identity)
+        {
+			if (AuthNetCore.HavePermission(identity, Permissions.ADMIN_ACCESS))
+			{
+				return Save();
+			}
+			UserModel user = AuthNetCore.User(identity);
+			Tbl_Profile? profile = new Tbl_Profile { IdUser = user.UserId }.Find<Tbl_Profile>();
+			if (profile?.Id_Grupo != null)
+			{
+				throw new  Exception("Ya pertenece a un grupo, no puede crear uno");
+			} else {
+				Save();
+				profile!.Id_Grupo = Id_Grupo;
+				profile.Update();
+				return this;
+			}
+        }
+    }
 }

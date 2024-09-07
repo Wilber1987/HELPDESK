@@ -32,8 +32,7 @@ class MainSolicitudesView extends HTMLElement {
         super();
         this.Dataset = Dataset;
         //this.Dependencias = Dependencias;
-        this.attachShadow({ mode: 'open' });
-        this.shadowRoot.append(this.WStyle, StylesControlsV2.cloneNode(true), StylesControlsV3.cloneNode(true));
+        this.append(this.WStyle, StylesControlsV2.cloneNode(true), StylesControlsV3.cloneNode(true));
         this.TabContainer = WRender.createElement({ type: 'div', props: { class: 'TabContainer', id: "TabContainer" } });
         this.TabManager = new ComponentsManager({ MainContainer: this.TabContainer });
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });
@@ -73,7 +72,7 @@ class MainSolicitudesView extends HTMLElement {
         }))
         this.OptionContainer.append(WRender.Create({ tagName: 'input', type: 'button', className: 'Block-Success', value: 'Nuevo Caso', onclick: this.nuevoCaso }))
 
-        this.shadowRoot.append(this.OptionContainer, this.TabContainer);
+        this.append(this.OptionContainer, this.TabContainer);
         //this.dashBoardView();
         this.actividadesManager();
     }
@@ -100,7 +99,7 @@ class MainSolicitudesView extends HTMLElement {
     }
 
     actividadElement = (actividad) => {
-        this.shadowRoot.append(priorityStyles.cloneNode(true));
+        this.append(priorityStyles.cloneNode(true));
         return WRender.Create({
             className: "actividad", object: actividad, children: [
                 { tagName: 'h4', innerText: `#${actividad.Id_Case} - ${actividad.Titulo} (${actividad.Tbl_Servicios?.Descripcion_Servicio ?? ""})` },
@@ -164,7 +163,7 @@ class MainSolicitudesView extends HTMLElement {
             ModelObject: this.ModelObject,
             AutoSave: true,
             SaveFunction: () => {
-                this.shadowRoot.append(ModalMessege("Aviso", "Caso guardado correctamente", true))
+                this.append(ModalMessege("Aviso", "Caso guardado correctamente", true))
             }
         });       
         //TODO REVISAR COMO HAYA UNA CARGA REAL DE FORMA SINCRONA

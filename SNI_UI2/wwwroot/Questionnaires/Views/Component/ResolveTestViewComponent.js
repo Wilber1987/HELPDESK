@@ -25,12 +25,12 @@ class ResolveTestViewComponent extends HTMLElement {
      */
     constructor(props) {
         super();
-        this.attachShadow({ mode: 'open' });
+        
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });
         this.TabContainer = WRender.Create({ className: "TabContainer", id: 'TabContainer' });
         this.Manager = new ComponentsManager({ MainContainer: this.TabContainer, SPAManage: false });
-        this.shadowRoot?.append(this.CustomStyle);
-        this.shadowRoot?.append(
+        this.append(this.CustomStyle);
+        this.append(
             StylesControlsV2.cloneNode(true),
             StyleScrolls.cloneNode(true),
             StylesControlsV3.cloneNode(true),
@@ -77,7 +77,7 @@ class ResolveTestViewComponent extends HTMLElement {
             };
             model[p.Id_pregunta_test] = modelPropierty;
         });
-        this.shadowRoot?.append(new WModalForm({
+        this.append(new WModalForm({
             ModelObject: model, ObjectOptions: {
                 SaveFunction: async (/**@type {Object} */ editinObject) => {
                     /**@type {Array<Resultados_Pregunta_Tests>} */

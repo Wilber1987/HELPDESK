@@ -21,9 +21,9 @@ class MainProyect extends HTMLElement {
         super();
         this.id = "MainProyect";
         this.className = "MainProyect DivContainer";
-        this.TabContainer = WRender.createElement({ type: 'div', props: { class: 'TabContainer', id: "TabContainer" } });
+        this.TabContainer = WRender.createElement({ type: 'div', props: { class: '', id: "TabContainer" } });
         this.TabManager = new ComponentsManager({ MainContainer: this.TabContainer });
-        this.OptionContainer = WRender.Create({ className: "OptionContainer" });
+        this.OptionContainer = WRender.Create({ className: "" });
         this.DrawComponent();
     }
     EditarPerfilNav = () => { }

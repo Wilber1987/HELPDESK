@@ -53,8 +53,7 @@ class Tbl_Case_ModelComponent extends EntityClass {
     Fecha_Final = { type: 'date', hiddenFilter: true, hiddenInTable: true };
     /**@type {ModelProperty} */
     Descripcion = { type: 'richtext', hiddenFilter: true };
-    /**@type {ModelProperty} */
-    Tbl_Tareas = { type: 'MasterDetail', ModelObject: () => new Tbl_Tareas_ModelComponent() };
+    //**@type {ModelProperty} */    Tbl_Tareas = { type: 'MasterDetail', ModelObject: () => new Tbl_Tareas_ModelComponent() };
     /**
      * @returns {Array<Tbl_Case_ModelComponent>}
      */
@@ -125,7 +124,7 @@ class Tbl_Case_ModelComponent extends EntityClass {
      * @returns {Array<Tbl_Case_ModelComponent>}
      */
     GetSolicitudesPendientesAprobar = async () => {
-        return await this.GetData("Proyect/GetSolicitudesPendientesAprobar",);
+        return await this.GetData("Proyect/GetSolicitudesPendientesAprobar");
     }
     /**
      * @returns {Array<Tbl_Case_ModelComponent>}
@@ -183,6 +182,7 @@ class Tbl_Case_ModelComponent extends EntityClass {
 }
 export { Tbl_Case_ModelComponent }
 class Tbl_Case extends EntityClass {
+    
     /** @param {Partial<Tbl_Case>} [props] */
     constructor(props) {
         super(props, 'EntityHelpdesk');
@@ -211,6 +211,9 @@ class Tbl_Case extends EntityClass {
     /**@type {Array<Tbl_Mails>} OneToMany*/ Tbl_Mails;
     /**@type {Array<Tbl_Profile_CasosAsignados>} OneToMany*/ Tbl_Profile_CasosAsignados;
     /**@type {Array<Tbl_Tareas>} OneToMany*/ Tbl_Tareas;
+    async SaveOwCase() {
+        return await this.SaveData("Proyect/SaveOwCase", this);
+    }
 }
 export { Tbl_Case }
 class Tbl_Dependencias_Usuarios extends EntityClass {

@@ -7,6 +7,7 @@ import { EntityClass } from "../../WDevCore/WModules/EntityClass.js";
 import { Cat_Dependencias, Cat_Dependencias_ModelComponent } from "./Cat_Dependencias.js";
 import { WAjaxTools } from "../../WDevCore/WModules/WAjaxTools.js";
 import { Tbl_Servicios_ModelComponent } from "./Tbl_Servicios.js";
+import { Tbl_Grupo_ModelComponent } from "./Tbl_Grupo_ModelComponent.js";
 
 
 //@ts-check
@@ -24,8 +25,13 @@ class Tbl_Profile extends EntityClass {
     /**@type {ModelProperty}*/ Sexo = { type: "Select", Dataset: ["Masculino", "Femenino"] };
     /**@type {ModelProperty}*/ Foto = { type: 'img', require: false };
     /**@type {ModelProperty}*/ DNI = { type: 'text' };
+
     /**@type {ModelProperty}*/ Correo_institucional = { type: 'text', label: "correo", disabled: true, hidden: true };
     /**@type {ModelProperty}*/ Estado = { type: "Select", Dataset: ["ACTIVO", "INACTIVO"] };
+
+    /** campos de investigaciones */
+    /**@type {ModelProperty}*/ Grupo = { type: 'WSELECT', require: false , ModelObject: ()=> new Tbl_Grupo_ModelComponent() };
+    /**@type {ModelProperty}*/ ORCID = { type: 'text', require: false };
     //PROPIEDADES DE HELPDESK
     /**@type {ModelProperty}*/ Cat_Dependencias = {
         type: 'Multiselect', hiddenFilter: true,
@@ -74,4 +80,5 @@ class Tbl_Profile extends EntityClass {
         });
     }
 }
+
 export { Tbl_Profile }

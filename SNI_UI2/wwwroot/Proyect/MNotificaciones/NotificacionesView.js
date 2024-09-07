@@ -7,11 +7,10 @@ import { ComponentsManager, WRender } from '../../WDevCore/WModules/WComponentsT
 import { css } from '../../WDevCore/WModules/WStyledRender.js';
 class NotificacionesView extends HTMLElement {
     constructor() {
-        super();
-        this.attachShadow({ mode: 'open' });
+        super();      
         this.TabContainer = WRender.createElement({ type: 'div', props: { class: 'TabContainer', id: "TabContainer" } });
         this.DOMManager = new ComponentsManager({ MainContainer: this.TabContainer });
-        this.shadowRoot.append(
+        this.append(
             this.Style,
             basicButtons,
             StylesControlsV2.cloneNode(true),

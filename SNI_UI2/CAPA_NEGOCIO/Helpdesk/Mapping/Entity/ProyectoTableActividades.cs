@@ -288,7 +288,7 @@ namespace CAPA_NEGOCIO.MAPEO
 			Tbl_Profile? profile = new Tbl_Profile() { IdUser = AuthNetCore.User(identity).UserId }.Find<Tbl_Profile>();
 			Tbl_Participantes Inst = new Tbl_Participantes() { Id_Perfil = profile?.Id_Perfil };
 			return Where<Tbl_Tareas>(
-				FilterData.In("Id_Tarea", new Tbl_Participantes().Get<Tbl_Participantes>().Select(p => p.Id_Tarea.ToString()).ToArray())
+				FilterData.In("Id_Tarea", Inst.Get<Tbl_Participantes>().Select(p => p.Id_Tarea.ToString()).ToArray())
 			);
 		}
 		public List<Tbl_Tareas> GetOwActiveParticipations(string identity)

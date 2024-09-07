@@ -44,7 +44,7 @@ namespace CAPA_NEGOCIO.MAPEO
 		public DateTime? Token_Expiration_Date { get; set; }
 		[OneToMany(TableName = "Security_Users_Roles", KeyColumn = "Id_User", ForeignKeyColumn = "Id_User")]
 		public List<Security_Users_Roles>? Security_Users_Roles { get; set; }
-		[ManyToOne(TableName = "Tbl_Profile", KeyColumn = "IdUser", ForeignKeyColumn = "Id_User")]
+		//[ManyToOne(TableName = "Tbl_Profile", KeyColumn = "IdUser", ForeignKeyColumn = "Id_User")]
 		public Tbl_Profile? Tbl_Profile { get; set; }
 
 		public Security_Users? GetUserData()
@@ -88,7 +88,7 @@ namespace CAPA_NEGOCIO.MAPEO
 					{
 						throw new Exception("Correo en uso");
 					}
-					Save();
+					var user = Save();                    
 					if (Tbl_Profile != null)
 					{
 						var pic = (ModelFiles)FileService.upload("profiles\\", new ModelFiles
@@ -98,8 +98,8 @@ namespace CAPA_NEGOCIO.MAPEO
 							Name = "profile"
 						}).body;
 						Tbl_Profile.Foto = pic?.Value?.Replace("wwwroot", "");
-						Tbl_Profile.IdUser = Id_User;
-						//Tbl_Profile.Save();
+						Tbl_Profile.IdUser =  ((Security_Users?)user)?.Id_User;
+						Tbl_Profile.Save();
 						Tbl_Profile?.SaveDependenciesAndservices();
 					}
 					else

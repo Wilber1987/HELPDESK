@@ -8,12 +8,12 @@
 
 @* @if (SecurityController.HavePermission(Permissions.GESTION_RECIBOS.ToString(), Identify))
 {
-    <a class="title-collapse" id="GestionRecibosMenu" onclick="changeActive(this)">GESTIÓN DE RECIBOS</a>
-    <div class="collapse">
-        <a class="menu-item" id="Gestion_Recibos" asp-area="" asp-page="/PagesViews/Gestion_Recibos">Nuevo
-            Recibo</a>
-        <a class="menu-item" id="Ver_Recibos" asp-area="" asp-page="/PagesViews/Ver_Recibos">Ver Recibos</a>
-    </div>
+<a class="title-collapse" id="GestionRecibosMenu" onclick="changeActive(this)">GESTIÓN DE RECIBOS</a>
+<div class="collapse">
+<a class="menu-item" id="Gestion_Recibos" asp-area="" asp-page="/PagesViews/Gestion_Recibos">Nuevo
+Recibo</a>
+<a class="menu-item" id="Ver_Recibos" asp-area="" asp-page="/PagesViews/Ver_Recibos">Ver Recibos</a>
+</div>
 } *@
 <h3>TRANSACCIONES</h3>
 <a class="menu-item" id="Home" asp-area="" asp-page="/">HOME</a>
@@ -21,43 +21,43 @@
 
 @if (SecurityController.HavePermission(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), Identify))
 {
-    <a  class="menu-item" id="SolicitudesPendientes" href="~/ProyectViews/SolicitudesPendientes">Solicitudes Pendientes</a>
+    <a class="menu-item" id="SolicitudesPendientes" href="~/ProyectViews/SolicitudesPendientes">Solicitudes Pendientes</a>
+}
+@if (SecurityController.HavePermission(Identify, Permissions.ADMINISTRAR_CASOS_DEPENDENCIA,
+Permissions.TECNICO_CASOS_DEPENDENCIA, Permissions.ADMINISTRAR_CASOS_PROPIOS))
+{
+    <a class="menu-item" id="Proyectos" href="~/ProyectViews/ProyectosProceso">En Proceso</a>
 }
 @if (SecurityController.HavePermission(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), Identify)
 || SecurityController.HavePermission(Permissions.TECNICO_CASOS_DEPENDENCIA.ToString(), Identify))
 {
-    <a  class="menu-item" id="Proyectos" href="~/ProyectViews/ProyectosProceso">En Proceso</a>
-}
-@if (SecurityController.HavePermission(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA.ToString(), Identify)
-|| SecurityController.HavePermission(Permissions.TECNICO_CASOS_DEPENDENCIA.ToString(), Identify))
-{
-    <a  class="menu-item" id="ProyectosCerrados" href="~/ProyectViews/ProyectosCerrados">Finalizados</a>
+    <a class="menu-item" id="ProyectosCerrados" href="~/ProyectViews/ProyectosCerrados">Finalizados</a>
 }
 @if (SecurityController.HavePermission(Permissions.TECNICO_CASOS_DEPENDENCIA.ToString(), Identify))
 {
-    <a  class="menu-item" id="Tareas" href="~/ProyectViews/Tareas">Tareas en Proceso</a>
+    <a class="menu-item" id="Tareas" href="~/ProyectViews/Tareas">Tareas en Proceso</a>
 }
 @if (SecurityController.HavePermission(Permissions.ADMINISTRAR_USUARIOS.ToString(), Identify))
 {
-    <a  class="menu-item" id="PerfilManager" href="~/Security/PerfilManager">Administrador de perfiles</a>
+    <a class="menu-item" id="PerfilManager" href="~/Security/PerfilManager">Administrador de perfiles</a>
 }
 @if (SecurityController.HavePermission(Permissions.GENERADOR_SOLICITUDES.ToString(), Identify))
 {
-    <a  class="menu-item" id="SolicitudesRealizadas" href="~/ProyectViews/SolicitudesRealizadas">Solicitudes Realizadas</a>
+    <a class="menu-item" id="SolicitudesRealizadas" href="~/ProyectViews/SolicitudesRealizadas">Solicitudes Realizadas</a>
 }
 
 @* @if (SecurityController.HavePermission(Permissions.QUESTIONNAIRES_MANAGER.ToString(), Identify))
 {
-<a  class="menu-item" id="SolicitudesRealizadas" href="~/Questionnaires/TestsView">Gestión de tests</a>
+<a class="menu-item" id="SolicitudesRealizadas" href="~/Questionnaires/TestsView">Gestión de tests</a>
 }
 @if (SecurityController.HavePermission(Permissions.QUESTIONNAIRES_USER.ToString(), Identify))
 {
-<a  class="menu-item" id="SolicitudesRealizadas" href="~/Questionnaires/ResolveTestView">Resolver de tests</a>
+<a class="menu-item" id="SolicitudesRealizadas" href="~/Questionnaires/ResolveTestView">Resolver de tests</a>
 } *@
 
 @* TEST MODULE
 @if (SecurityController.HavePermission(Permissions.QUESTIONNAIRES_MANAGER.ToString(), Identify))
 {
-<a  class="menu-item" id="TestsView" href="~/Questionnaires/TestsView">Administrador de Tests</a>
+<a class="menu-item" id="TestsView" href="~/Questionnaires/TestsView">Administrador de Tests</a>
 }*@
-@* <a  class="menu-item" id="VinculateCaseView" href="~/ProyectViews/VinculateCaseView">Casos vinculados</a> *@
+@* <a class="menu-item" id="VinculateCaseView" href="~/ProyectViews/VinculateCaseView">Casos vinculados</a> *@

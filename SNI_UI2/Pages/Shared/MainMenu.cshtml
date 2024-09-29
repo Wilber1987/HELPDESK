@@ -45,15 +45,33 @@ Permissions.TECNICO_CASOS_DEPENDENCIA, Permissions.ADMINISTRAR_CASOS_PROPIOS))
 {
     <a class="menu-item" id="SolicitudesRealizadas" href="~/ProyectViews/SolicitudesRealizadas">Solicitudes Realizadas</a>
 }
+@if (SecurityController.HavePermission(Identify, Permissions.NOTIFICACIONES_READER,
+Permissions.SEND_MESSAGE))
+{
 
-@* @if (SecurityController.HavePermission(Permissions.QUESTIONNAIRES_MANAGER.ToString(), Identify))
+    @if (SecurityController.HavePermission(Identify, Permissions.NOTIFICACIONES_READER))
+    {
+        <a href="~/Mensajes/NotificationesView" id="NotificationesView" class="menu-item">Notificaciones</a>
+    }
+    @if (SecurityController.HavePermission(Identify, Permissions.NOTIFICACIONES_MANAGER))
+    {
+        <a href="~/Mensajes/NotificacionesManager" id="NotificacionesManager" class="menu-item">Administrador de
+            notificaciones</a>
+    }
+    @if (SecurityController.HavePermission(Identify, Permissions.SEND_MESSAGE))
+    {
+        <a href="~/Mensajes/MensajesView" class="menu-item">Mensajes</a>
+    }
+}
+
+@if (SecurityController.HavePermission(Permissions.QUESTIONNAIRES_MANAGER.ToString(), Identify))
 {
 <a class="menu-item" id="SolicitudesRealizadas" href="~/Questionnaires/TestsView">Gestión de tests</a>
 }
 @if (SecurityController.HavePermission(Permissions.QUESTIONNAIRES_USER.ToString(), Identify))
 {
 <a class="menu-item" id="SolicitudesRealizadas" href="~/Questionnaires/ResolveTestView">Resolver de tests</a>
-} *@
+} 
 
 @* TEST MODULE
 @if (SecurityController.HavePermission(Permissions.QUESTIONNAIRES_MANAGER.ToString(), Identify))

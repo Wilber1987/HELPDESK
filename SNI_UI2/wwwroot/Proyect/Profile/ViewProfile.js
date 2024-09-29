@@ -6,7 +6,7 @@ import { ModalVericateAction, WForm } from "../../WDevCore/WComponents/WForm.js"
 import { WModalForm } from "../../WDevCore/WComponents/WModalForm.js";
 import { WTableComponent } from "../../WDevCore/WComponents/WTableComponent.js";
 import { ComponentsManager, html, WRender } from '../../WDevCore/WModules/WComponentsTools.js';
-import { WCssClass, WStyledRender } from '../../WDevCore/WModules/WStyledRender.js';
+import { css, WCssClass, WStyledRender } from '../../WDevCore/WModules/WStyledRender.js';
 
 import { WAjaxTools } from "../../WDevCore/WModules/WAjaxTools.js";
 import { ChangePasswordModel } from "../../WDevCore/Security/SecurityModel.js";
@@ -15,10 +15,10 @@ import { Tbl_Grupo_ModelComponent } from "../FrontModel/Tbl_Grupo_ModelComponent
 
 const OnLoad = async () => {
     // @ts-ignore
-    Aside.append(WRender.Create({ tagName: "h3", innerText: "Administración de perfiles" }));
+    //Main.append(WRender.Create({ tagName: "h3", innerText: "Administración de perfiles" }));
     const AdminPerfil = new PerfilClass();
     // @ts-ignore
-    Aside.append(AdminPerfil.MainNav);
+    Main.append(AdminPerfil.MainNav);
     // @ts-ignore
     Main.appendChild(AdminPerfil);
 
@@ -31,7 +31,7 @@ class PerfilClass extends HTMLElement {
         this.id = "PerfilClass";
         this.className = "PerfilClass DivContainer";
         this.append(this.WStyle, StylesControlsV2.cloneNode(true));
-        this.TabContainer = WRender.createElement({ type: 'div', props: { class: 'TabContainer', id: "TabContainer" } });
+        this.TabContainer = WRender.createElement({ type: 'div', props: { class: 'content-container', id: "TabContainer" } });
         this.TabManager = new ComponentsManager({ MainContainer: this.TabContainer });
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });
         this.TabActividades = this.MainNav;
@@ -44,7 +44,7 @@ class PerfilClass extends HTMLElement {
     }
     MainNav = new WAppNavigator({
         //NavStyle: "tab",
-        Direction: "column",
+        Direction: "row",
         Inicialize: true,
         Elements: [
             {
@@ -157,32 +157,41 @@ class PerfilClass extends HTMLElement {
     DrawComponent = async () => {
         this.append(this.TabContainer);
     }
-    WStyle = new WStyledRender({
-        ClassList: [
-            new WCssClass(`.PerfilClass`, {
-            }), new WCssClass(`.OptionContainer`, {
-                display: 'flex',
-                "justify-content": "center",
-            }), new WCssClass(`.OptionContainer img`, {
-                "box-shadow": "0 0 4px rgb(0,0,0/50%)",
-                height: 100,
-                width: 100,
-                margin: 10
-            }), new WCssClass(`.TabContainer`, {
-                overflow: "hidden",
-                "overflow-y": "auto"
-            }), new WCssClass(`.FormContainer`, {
-                "background-color": '#fff',
-            })
-        ], MediaQuery: [{
-            condicion: '(max-width: 600px)',
-            ClassList: []
-        }]
-    });
-    Icons = {
-        New: "",
-        View: "",
+    WStyle = css`
+        .PerfilClass {}
+        w-app-navigator {
+            display: block;
+            margin-bottom: 20px;
+        }
+
+        .OptionContainer {
+            display: flex;
+            justify-content: center;
+        }
+
+        .OptionContainer img {
+            box-shadow: 0 0 4px rgb(0, 0, 0/50%);
+            height: 100px;
+            width: 100px;
+            margin: 10px;
+        }
+        .GrupoContainer {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .TabContainer {
+            overflow: hidden;
+            overflow-y: auto;
+        }
+
+        .FormContainer {
+            background-color: #fff;
+        }
+
+        @media (max-width: 600px) {}
+        `
     }
-}
 
 customElements.define('w-perfil', PerfilClass);

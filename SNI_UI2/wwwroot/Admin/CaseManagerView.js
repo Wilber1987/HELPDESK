@@ -10,39 +10,35 @@ import { WAppNavigator } from "../WDevCore/WComponents/WAppNavigator.js";
 import { WFilterOptions } from "../WDevCore/WComponents/WFilterControls.js";
 import { ComponentsManager, WRender } from '../WDevCore/WModules/WComponentsTools.js';
 window.onload = () => {
-    console.log("test");
     const navigator = new WAppNavigator({
-        Direction: "column",
         Inicialize: true,
+        NavStyle: "tab",
         Elements: [{
             id: "Tab-dasboard", name: "Dashboard", action: async (ev) => {
                 //const dataset = await new Tbl_Case().GetOwCase();
                 //const dependencias = await new Cat_Dependencias().GetOwDependencies();
-                DOMManager.NavigateFunction("Tab-dasboard", new CaseDashboardComponent());
+                return new CaseDashboardComponent();
             }
         }, {
             id: "Tab-Generales", name: "Administrador de Casos",
             action: async (ev) => {
                 //const dataset = await new Tbl_Case().Get();
                 const dependencias = await new Cat_Dependencias_ModelComponent().Get();
-                DOMManager.NavigateFunction("Tab-Generales",
-                    new CaseManagerComponent( dependencias));
+                return new CaseManagerComponent(dependencias);
             }
         }, {
             id: "Tab-Solicitudes", name: "Administrador de Solicitudes",
             action: async (ev) => {
                 const Solicitudes = await new Tbl_Case_ModelComponent().GetSolicitudesPendientesAprobarAdmin();
-                DOMManager.NavigateFunction("Tab-Solicitudes",
-                    new SolicitudesPendientesComponent(Solicitudes));
+                return new SolicitudesPendientesComponent(Solicitudes);
             }
         }, {
             id: "Tab-Tasks-Manager", name: "Administrador de Tareas", action: async (ev) => {
                 //const tasks = await new Tbl_Tareas().Get();
-                DOMManager.NavigateFunction("Tab-Tasks-Manager", ChargeTasks());
+                return ChargeTasks();
             }
         }]
     })
-    console.log(true);
     const DOMManager = new ComponentsManager({ MainContainer: Main, SPAManage: true, WNavigator: navigator });
     Main.append(WRender.createElement(StylesControlsV2));
     Aside.append(WRender.Create({ tagName: "h3", innerText: "Administración de Casos" }))

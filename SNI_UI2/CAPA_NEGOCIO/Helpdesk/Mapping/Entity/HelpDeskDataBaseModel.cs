@@ -30,24 +30,15 @@ namespace CAPA_NEGOCIO.MAPEO
 		public string? Estado { get; set; }
 		public string? Descripcion { get; set; }
 	}
-	public class Security_Users : EntityClass
-	{
-		[PrimaryKey(Identity = true)]
-		public int? Id_User { get; set; }
-		public string? Nombres { get; set; }
-		public string? Estado { get; set; }
-		public string? Descripcion { get; set; }
-		public string? Password { get; set; }
-		public string? Mail { get; set; }
-		public string? Token { get; set; }
-		public DateTime? Token_Date { get; set; }
-		public DateTime? Token_Expiration_Date { get; set; }
+	public class Security_Users : CAPA_DATOS.Security.Security_Users
+	{		
 		[OneToMany(TableName = "Security_Users_Roles", KeyColumn = "Id_User", ForeignKeyColumn = "Id_User")]
 		public List<Security_Users_Roles>? Security_Users_Roles { get; set; }
 		//[ManyToOne(TableName = "Tbl_Profile", KeyColumn = "IdUser", ForeignKeyColumn = "Id_User")]
-		public Tbl_Profile? Tbl_Profile { get; set; }
+		public new Tbl_Profile? Tbl_Profile { get; set; }
 
-		public Security_Users? GetUserData()
+
+		public new Security_Users? GetUserData()
 		{
 			Security_Users? user = this.Find<Security_Users>();
 			if (user != null && user.Estado == "ACTIVO")
@@ -88,7 +79,7 @@ namespace CAPA_NEGOCIO.MAPEO
 					{
 						throw new Exception("Correo en uso");
 					}
-					var user = Save();                    
+					var user = Save();
 					if (Tbl_Profile != null)
 					{
 						var pic = (ModelFiles)FileService.upload("profiles\\", new ModelFiles
@@ -98,7 +89,7 @@ namespace CAPA_NEGOCIO.MAPEO
 							Name = "profile"
 						}).body;
 						Tbl_Profile.Foto = pic?.Value?.Replace("wwwroot", "");
-						Tbl_Profile.IdUser =  ((Security_Users?)user)?.Id_User;
+						Tbl_Profile.IdUser = ((Security_Users?)user)?.Id_User;
 						Tbl_Profile.Save();
 						Tbl_Profile?.SaveDependenciesAndservices();
 					}
@@ -160,7 +151,7 @@ namespace CAPA_NEGOCIO.MAPEO
 		}
 
 
-		public object GetUsers()
+		public new  object GetUsers()
 		{
 			var Security_Users_List = this.Get<Security_Users>();
 			foreach (Security_Users User in Security_Users_List)
@@ -197,16 +188,21 @@ namespace CAPA_NEGOCIO.MAPEO
 			return null;
 		}
 
-		public object? changePassword(string? identfy)
+		public new object? changePassword(string? identfy)
 		{
 			var security_User = AuthNetCore.User(identfy).UserData;
 			Password = EncrypterServices.Encrypt(Password);
 			Id_User = security_User?.Id_User;
 			return Update();
 		}
+
+		public new Tbl_Profile Get_Profile()
+        {
+            return Tbl_Profile.Get_Profile(Id_User.GetValueOrDefault(), this);
+        }
 	}
 
-	
+
 
 	public class Tbl_Servicios_Profile : EntityClass
 	{
@@ -229,7 +225,7 @@ namespace CAPA_NEGOCIO.MAPEO
 
 		[PrimaryKey(Identity = false)]
 		public int? Id_Case { get; set; }
-		public DateTime? Fecha { get; set; }		
+		public DateTime? Fecha { get; set; }
 		public int? Id_Tipo_Participacion { get; set; }
 
 		[ManyToOne(TableName = "Tbl_Profile", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]

@@ -108,11 +108,49 @@ VALUES(N'GENERADOR_SOLICITUDES', N'Activo', N'PERMITE REALIZAR SOLICITUDES DE CA
 
 INSERT INTO PROYECT_MANAGER_BD.[security].Security_Permissions
 (Descripcion, Estado, Detalles)
+VALUES(N'ADMINISTRAR_CASOS_PROPIOS', N'Activo', N'PUEDE VER LOS CASOS PROPIOS');
+--PERFILES
+INSERT INTO PROYECT_MANAGER_BD.[security].Security_Permissions
+(Descripcion, Estado, Detalles)
 VALUES(N'PERFIL_ACCESS', N'Activo', N'PERMITE ACCEDER AL PERFIL DEL USUARIO');
 
 INSERT INTO PROYECT_MANAGER_BD.[security].Security_Permissions
 (Descripcion, Estado, Detalles)
 VALUES(N'PERFIL_MANAGER', N'Activo', N'PERMITE MANIPULAR PERFILES DE LOS USUARIO');
+
+INSERT INTO PROYECT_MANAGER_BD.[security].Security_Permissions
+(Descripcion, Estado, Detalles)
+VALUES(N'ADMINISTRAR_USUARIOS', N'Activo', N'PERMITE MANIPULAR PERFILES DE TODOS LOS USUARIO');
+
+
+
+-- mensajeria
+INSERT INTO PROYECT_MANAGER_BD.[security].Security_Permissions
+(Descripcion, Estado, Detalles)
+VALUES(N'SEND_MESSAGE', N'Activo', N'PUEDE ENVIAR MENSAJES A LOS USUARIOS');
+
+INSERT INTO PROYECT_MANAGER_BD.[security].Security_Permissions
+(Descripcion, Estado, Detalles)
+VALUES(N'NOTIFICACIONES_READER', N'Activo', N'PUEDE LEER NOTIFICACIONES');
+
+INSERT INTO PROYECT_MANAGER_BD.[security].Security_Permissions
+(Descripcion, Estado, Detalles)
+VALUES(N'NOTIFICACIONES_MANAGER', N'Activo', N'PUEDE CREAR NOTIFICACIONES');
+
+
+-- questionaries
+INSERT INTO PROYECT_MANAGER_BD.[security].Security_Permissions
+(Descripcion, Estado, Detalles)
+VALUES(N'QUESTIONNAIRES_MANAGER', N'Activo', N'PUEDE CREAR QUESTIONARIOS');
+INSERT INTO PROYECT_MANAGER_BD.[security].Security_Permissions
+(Descripcion, Estado, Detalles)
+VALUES(N'QUESTIONNAIRES_GESTOR', N'Activo', N'PUEDE GESTIONAR QUESTIONARIOS');
+INSERT INTO PROYECT_MANAGER_BD.[security].Security_Permissions
+(Descripcion, Estado, Detalles)
+VALUES(N'QUESTIONNAIRES_USER', N'Activo', N'PUEDE RESOLVER QUESTIONARIOS');
+
+
+
 
 
 INSERT INTO PROYECT_MANAGER_BD.[security].Security_Roles

@@ -11,7 +11,7 @@ class ViewProyects extends HTMLElement {
         this.TipoProyecto = TipoProyecto;
         this.ViewProyectsContainer = WRender.createElement({ type: 'div', props: { class: 'ViewProyectsContainer' } });
         //this.ViewProyectsContainer.append(Card);
-        this.TabContainer = WRender.createElement({ type: 'div', props: { id: 'TabContainer', class: 'TabContainer' } });
+        this.TabContainer = WRender.createElement({ type: 'div', props: { id: "content-container", class: "content-container" } });
         this.TipoProyecto.forEach(element => {
             this.ComponentTab.Elements.push({
                 name: element.Descripcion, url: "#", icon: element.icon,

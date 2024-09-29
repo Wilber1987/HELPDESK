@@ -13,7 +13,7 @@ class Transactional_ConfiguracionesView extends HTMLElement {
     Draw = async () => {
         const model = new Transactional_Configuraciones();
         const dataset = await model.Get();
-        this.TabContainer = WRender.createElement({ type: 'div', props: { class: 'TabContainer', id: 'TabContainer' } })
+        this.TabContainer = WRender.createElement({ type: 'div', props: { class: "content-container", id: "content-container" } })
         this.MainComponent = new WTableComponent({
             ModelObject: model, Dataset: dataset, Options: {
                 UrlUpdate: "../api/ApiEntityADMINISTRATIVE_ACCESS/updateTransactional_Configuraciones",

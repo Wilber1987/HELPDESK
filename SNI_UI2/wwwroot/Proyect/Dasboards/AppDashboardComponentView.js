@@ -21,10 +21,11 @@ class AppDashboardComponentView extends HTMLElement {
      * @param {ComponentConfig} props 
      */
     constructor(props) {
-        super();
-        
+        super();        
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });
-        this.TabContainer = WRender.Create({ className: "TabContainer", id: 'TabContainer' });
+        this.ButtonsContainer = WRender.Create({ className: "options-container" });
+        this.OptionContainer.append(this.ButtonsContainer);
+        this.TabContainer = WRender.Create({ className: "TabContainer", id: "content-container" });
         this.Manager = new ComponentsManager({ MainContainer: this.TabContainer, SPAManage: true });
         this.append(this.CustomStyle);
         this.append(
@@ -41,8 +42,8 @@ class AppDashboardComponentView extends HTMLElement {
         this.SetOption();
     }
 
-    async SetOption() {
-        this.OptionContainer.append(WRender.Create({
+    async SetOption() {       
+        this.ButtonsContainer.append(WRender.Create({
             tagName: 'button', className: 'Block-Primary', innerText: 'Home',
             onclick: async () => this.Manager.NavigateFunction("id", await this.MainComponent())
         }))
@@ -67,6 +68,7 @@ class AppDashboardComponentView extends HTMLElement {
                 UseEntityMethods: false,
                 Display: true,
                 AutoSetDate: true,
+                Direction: "row",
                 ModelObject: {
                     FilterData: [],
                     // @ts-ignore
@@ -106,7 +108,7 @@ class AppDashboardComponentView extends HTMLElement {
         const paginator = new WPaginatorViewer({ Dataset: dataCase, maxElementByPage: 1 });
         caseList.append(paginator);
         // @ts-ignore
-        data.caseTickets.forEach(t => t.Dependencia = t.Cat_Dependencias.Descripcion);
+        data.caseTickets.forEach(t => t.Dependencia = t.Cat_Dependencias?.Descripcion ?? "Sin dependencia");
         chartCase.append(new ColumChart({
             Dataset: data.caseTickets,
             AttNameEval: "Estado",
@@ -139,7 +141,7 @@ class AppDashboardComponentView extends HTMLElement {
      * @param {Cat_Dependencias_ModelComponent} element
      */
     dependencieCards(element) {
-        const card = html`<div class="card card-style">
+        const card = html`<div class="card-dependencia card-style">
             <div class="top-section">
                 <div class="bottom-section">
                 <span class="title">${element.Descripcion}</span>
@@ -160,137 +162,7 @@ class AppDashboardComponentView extends HTMLElement {
                 </div>
             </div>
         </div>`;
-        card.append(css`
-            .card, .card-style {
-                border-radius: 20px;
-                background: #1b233d;
-                padding: 5px;
-                overflow: hidden;
-                box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 20px 0px;
-                transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                max-height: 110px;
-                min-width: 290px;
-            }          
-
-            .card .top-section .border {
-                border-bottom-right-radius: 10px;
-                height: 30px;
-                width: 130px;
-                background: white;
-                background: #1b233d;
-                position: relative;
-                transform: skew(-40deg);
-                box-shadow: -10px -10px 0 0 #1b233d;
-            }
-
-            .card .top-section .border::before {
-                content: "";
-                position: absolute;
-                width: 15px;
-                height: 15px;
-                top: 0;
-                right: -15px;
-                background: rgba(255, 255, 255, 0);
-                border-top-left-radius: 10px;
-                box-shadow: -5px -5px 0 2px #1b233d;
-            }
-
-            .card .top-section::before {
-                content: "";
-                position: absolute;
-                top: 30px;
-                left: 0;
-                background: rgba(255, 255, 255, 0);
-                height: 15px;
-                width: 15px;
-                border-top-left-radius: 15px;
-                box-shadow: -5px -5px 0 2px #1b233d;
-            }
-
-            .card .top-section .icons {
-                position: absolute;
-                top: 0;
-                width: 100%;
-                height: 30px;
-                display: flex;
-                justify-content: space-between;
-            }
-
-            .card .top-section .icons .logo {
-                height: 100%;
-                aspect-ratio: 1;
-                padding: 7px 0 7px 15px;
-            }
-
-            .card .top-section .icons .logo .top-section {
-                height: 100%;
-            }
-
-            .card .top-section .icons .social-media {
-                height: 100%;
-                padding: 8px 15px;
-                display: flex;
-                gap: 7px;
-            }
-
-            .card .top-section .icons .social-media .svg {
-                height: 100%;
-                fill: #1b233d;
-            }
-
-            .card .top-section .icons .social-media .svg:hover {
-                fill: white;
-            }
-
-            .card .bottom-section {
-                padding: 10px 5px;
-            }
-
-            .card .bottom-section .title {
-                display: block;
-                font-size: 12px;
-                font-weight: bolder;
-                color: white;
-                letter-spacing: 2px;
-            }
-            .card .bottom-section .subtitle {
-                display: block;
-                font-size: 9px;
-                font-weight: 400;
-                color: white;
-                letter-spacing: 2px;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }           
-
-            .card .bottom-section .row {
-                display: flex;
-                justify-content: space-between;
-                margin-top: 20px;
-            }
-
-            .card .bottom-section .row .item {
-                flex: 30%;
-                text-align: center;
-                padding: 5px;
-                color: rgba(170, 222, 243, 0.721);
-            }
-
-            .card .bottom-section .row .item .big-text {
-                font-size: 12px;
-                display: block;
-            }
-
-            .card .bottom-section .row .item .regular-text {
-                font-size: 9px;
-            }
-
-            .card .bottom-section .row .item:nth-child(2) {
-                border-left: 1px solid rgba(255, 255, 255, 0.126);
-                border-right: 1px solid rgba(255, 255, 255, 0.126);
-            }    
-        `);
+        card.append(css`@import url("/css/cardDependencias.css"); `);
         return card;
     }
     /**
@@ -309,7 +181,7 @@ class AppDashboardComponentView extends HTMLElement {
                     className: "description", children: [
                         { tagName: "h1", innerHTML: `CASO #${element.Id_Case} - ${element.Titulo}` },
                         // @ts-ignore
-                        { tagName: "h2", innerHTML: element.Cat_Dependencias.Descripcion, class: "h2" },
+                        { tagName: "h2", innerHTML: element.Cat_Dependencias?.Descripcion, class: "h2" },
                         { tagName: "p", innerHTML: element.Descripcion },
                         {
                             tagName: "a", innerHTML: "Ver detalles", onclick: async () => {
@@ -692,7 +564,18 @@ class AppDashboardComponentView extends HTMLElement {
             top: 0; /* required */
             z-index: 3;
             background-color: #fff;
-        }        
+        }      
+        @media screen and (max-width: 900px) {
+            .OptionContainer {
+                display: flex;
+                flex-direction: column;
+               
+            }
+            .dashboard-component {
+                grid-template-columns: 100%;
+                grid-template-rows: auto;
+            }
+        }  
     `
 }
 customElements.define('w-app-dasboard', AppDashboardComponentView);

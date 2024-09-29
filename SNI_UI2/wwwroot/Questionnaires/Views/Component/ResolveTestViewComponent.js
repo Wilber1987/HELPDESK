@@ -27,7 +27,7 @@ class ResolveTestViewComponent extends HTMLElement {
         super();
         
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });
-        this.TabContainer = WRender.Create({ className: "TabContainer", id: 'TabContainer' });
+        this.TabContainer = WRender.Create({ className: "content-container", id: "content-container" });
         this.Manager = new ComponentsManager({ MainContainer: this.TabContainer, SPAManage: false });
         this.append(this.CustomStyle);
         this.append(
@@ -202,7 +202,7 @@ class ResolveTestViewComponent extends HTMLElement {
                   .labelheader {
                     margin: 0px 10px;
                     display: block;
-                    font-size: 14px;
+                    font-size: 12px;
                     font-weight: 600;
                     text-transform: capitalize;
                     z-index: 1;
@@ -236,6 +236,12 @@ class ResolveTestViewComponent extends HTMLElement {
                     font-size: 12px;
                     color: #ffffff;
                     background-color: #1389eb;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2; /* Limitar a 2 líneas */
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    max-width: 300px;
                   }
                   
                   .tags {

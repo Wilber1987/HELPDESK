@@ -9,27 +9,17 @@ using CAPA_DATOS.Services;
 
 namespace CAPA_NEGOCIO.MAPEO
 {
-	public class Tbl_Profile : EntityClass
+	public class Tbl_Profile : CAPA_DATOS.Security.Tbl_Profile
 	{
 		public static Tbl_Profile? GetUserProfile(string identity)
 		{
 			return new Tbl_Profile() { IdUser = AuthNetCore.User(identity).UserId }.Find<Tbl_Profile>();
 		}
-		[PrimaryKey(Identity = true)]
-		public int? Id_Perfil { get; set; }
-		public string? Nombres { get; set; }
-		public string? Apellidos { get; set; }
-		public DateTime? FechaNac { get; set; }
-		public int? IdUser { get; set; }
 		public int? Id_Grupo { get; set; }
-		public string? Sexo { get; set; }
-		public string? Foto { get; set; }
-		public string? DNI { get; set; }
-		public string? Correo_institucional { get; set; }
 		public int? Id_Pais_Origen { get; set; }
 		public int? Id_Institucion { get; set; }
 		public string? Indice_H { get; set; }
-		public string? Estado { get; set; }		
+
 		public string? ORCID { get; set; }
 		//[ManyToOne(TableName = "Security_Users", KeyColumn = "Id_User", ForeignKeyColumn = "IdUser")]
 		public Security_Users? Security_Users { get; set; }
@@ -57,8 +47,8 @@ namespace CAPA_NEGOCIO.MAPEO
 		public List<Tbl_Participantes>? Tbl_Participantes { get; set; }
 		public void SaveDependenciesAndservices()
 		{
-			if (this.Id_Perfil != null &&  this.Tbl_Servicios_Profile?.Count > 0)
-			{				
+			if (this.Id_Perfil != null && this.Tbl_Servicios_Profile?.Count > 0)
+			{
 				new Tbl_Servicios_Profile { Id_Perfil = this.Id_Perfil }.Delete();
 			}
 			if (this.Id_Perfil != null && this.Tbl_Dependencias_Usuarios?.Count > 0)
@@ -242,16 +232,27 @@ namespace CAPA_NEGOCIO.MAPEO
 			}
 			return profiles;
 		}
+		public static Tbl_Profile Get_Profile(UserModel User)
+		{
+			return Get_Profile(User.UserId.GetValueOrDefault(), User.UserData);
+		}
+
+		public static Tbl_Profile Get_Profile(int UserId, CAPA_DATOS.Security.Security_Users user)
+		{
+			Tbl_Profile? tbl_Profile = new Tbl_Profile { IdUser = UserId }.SimpleFind<Tbl_Profile>();
+			return tbl_Profile ?? new Tbl_Profile { IdUser = UserId };
+		}
+
 	}
 
-    public class Tbl_Grupo: EntityClass
-    {
+	public class Tbl_Grupo : EntityClass
+	{
 		[PrimaryKey(Identity = true)]
 		public int? Id_Grupo { get; set; }
 		public string? Descripcion { get; set; }
 
-        internal object? SaveGroup(string? identity)
-        {
+		internal object? SaveGroup(string? identity)
+		{
 			if (AuthNetCore.HavePermission(identity, Permissions.ADMIN_ACCESS))
 			{
 				return Save();
@@ -260,13 +261,15 @@ namespace CAPA_NEGOCIO.MAPEO
 			Tbl_Profile? profile = new Tbl_Profile { IdUser = user.UserId }.Find<Tbl_Profile>();
 			if (profile?.Id_Grupo != null)
 			{
-				throw new  Exception("Ya pertenece a un grupo, no puede crear uno");
-			} else {
+				throw new Exception("Ya pertenece a un grupo, no puede crear uno");
+			}
+			else
+			{
 				Save();
 				profile!.Id_Grupo = Id_Grupo;
 				profile.Update();
 				return this;
 			}
-        }
-    }
+		}
+	}
 }

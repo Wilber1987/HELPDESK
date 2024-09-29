@@ -14,9 +14,8 @@ class TareasComponentView extends HTMLElement {
      * @param {ComponentConfig} props 
      */
     constructor(props) {
-        super();
-        
-        this.OptionContainer = WRender.Create({ className: "OptionContainer" });
+        super();        
+        this.OptionContainer = WRender.Create({ className: "" });
         this.TabContainer = WRender.Create({ className: "TabContainer", id: 'TabContainer' });
         this.Manager = new ComponentsManager({ MainContainer: this.TabContainer, SPAManage: false });
         this.append(this.CustomStyle);
@@ -55,7 +54,6 @@ class TareasComponentView extends HTMLElement {
             ModelObject: this.Model,
             UseEntityMethods: false,
             AutoFilter: true,
-            //DisplayFilts: [],
             FilterFunction: async (DFilt) => {
                 const tasks = await new Tbl_Tareas_ModelComponent({FilterData: DFilt}).GetOwParticipations();
                 tasksManager.Dataset = tasks;
@@ -68,6 +66,9 @@ class TareasComponentView extends HTMLElement {
         .component{
            display: block;
         }           
+        .task-container {
+            height: 100%;
+        }
     `
 }
 window.onload = async () => {

@@ -18,11 +18,13 @@
     <link rel="stylesheet" href="~/css/AdminTemplate.css" />
     <script>
         function displayNav() {
-            Aside.className = Aside.className.includes("navActive") ? "" : "navActive";
+            const Aside = document.querySelector(".Aside");
+            Aside.className = Aside.className.includes("navActive") ? "Aside" : "Aside navActive";
         }
     </script>
     <script type="module">
         import { WSecurity } from "/WDevCore/Security/WSecurity.js";
+        import { NotificacionesReader } from "/Gestion_Mensajes/NotificacionesView.js";
         const logout = () => {
             WSecurity.LogOut();
         }
@@ -35,12 +37,13 @@
             })
             //logOut
             btnLogOut.onclick = logout;
+            document.body.append(new NotificacionesReader({ Leidas: false }))
         })
     </script>
 </head>
 
 <body id="AdminTemplate">
-    <aside id="Aside">
+    <aside  class="Aside">
         <nav>
             <img src="~/Media/Image/close.webp" class="navIcon" onclick="displayNav()">
             <div class="logo-container">
@@ -57,16 +60,7 @@
             <label for="" class="title">@pageConfig.TITULO</label>
             <label for="" class="sub-title">@pageConfig.SUB_TITULO</label>
         </div>
-
-        @if (SecurityController.IsAdmin(identify))
-        {
-            <a href="~/Admin/Index">Admin Panel</a>
-        }
-        @if (SecurityController.HavePermission(Permissions.PERFIL_ACCESS.ToString(), identify))
-        {
-            <a class="" href="~/Security/PerfilView">Perfil</a>
-        }
-        <a href="#" id="btnLogOut">Cerrar Sesión</a>
+        <partial name="linksHeader" />
     </header>
     <div class="background"></div>
 

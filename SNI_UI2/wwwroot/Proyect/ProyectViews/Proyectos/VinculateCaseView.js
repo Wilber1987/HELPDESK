@@ -19,7 +19,7 @@ class ComponentView extends HTMLElement {
         super();
         
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });        
-        this.TabContainer = WRender.Create({ className: "TabContainer", id: 'TabContainer' });
+        this.TabContainer = WRender.Create({ className: "TabContainer", id: "content-container" });
         this.Manager = new ComponentsManager({ MainContainer: this.TabContainer, SPAManage: false });        
         this.append(this.CustomStyle);        
         this.append(

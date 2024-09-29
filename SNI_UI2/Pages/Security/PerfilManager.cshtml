@@ -8,7 +8,7 @@
         Response.Redirect("../Security/login");
         return;
     }
-    if (!SecurityController.HavePermission(Permissions.PERFIL_MANAGER.ToString(),
+    if (!SecurityController.HavePermission(Permissions.ADMINISTRAR_USUARIOS.ToString(),
     HttpContext.Session.GetString("seassonKey")))
     {
         Response.Redirect("../Security/permission_error");

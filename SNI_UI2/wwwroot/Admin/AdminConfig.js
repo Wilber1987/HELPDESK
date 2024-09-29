@@ -6,11 +6,11 @@ window.addEventListener("load", async () => {
     Aside.append(WRender.Create({ tagName: "h3", innerText: "Mantenimiento" }));
     Aside.append(new WAppNavigator({
         DarkMode: false,
-        Direction: "column", 
+        NavStyle: "tab",
         Elements: [
             {
                 name: "Config", action: () => {
-                    DOMManager.NavigateFunction("Transactional_Configuraciones", new Transactional_ConfiguracionesView());
+                    return  new Transactional_ConfiguracionesView();
                 }
             }
         ]

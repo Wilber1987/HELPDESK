@@ -20,7 +20,7 @@ class TaskManagers extends HTMLElement {
         this.Dataset = Dataset;
         this.Config = Config;
         this.TaskModel = Model ?? new Tbl_Tareas_ModelComponent();
-        
+
         this.append(this.WStyle,
             StyleScrolls.cloneNode(true),
             StylesControlsV2.cloneNode(true),
@@ -51,7 +51,7 @@ class TaskManagers extends HTMLElement {
                 className: Dataset.length > 0 ? "panel" : "panel-inact", id: "Panel-" + state,
                 ondrop: (ev) => {
                     var data = ev.dataTransfer.getData("text");
-                    const taskCard = this.querySelector("#"+data);
+                    const taskCard = this.querySelector("#" + data);
                     if (ev.target.className.includes("panel")) {
                         ev.target.appendChild(taskCard);
                         // @ts-ignore
@@ -120,136 +120,7 @@ class TaskManagers extends HTMLElement {
             this.Config.action(task);
         }
     }
-    WStyle = css`
-        .dashBoardView{
-            display: grid;
-            grid-template-columns: auto auto ;  
-            grid-gap: 20px          
-        }
-        .OptionContainer {
-            margin: 0 0 20px 0;
-        }
-        .panelContainer {
-            display: grid;
-            overflow-x: auto;
-            overflow-y: hidden;
-            padding: 10px;
-            gap: 10px;
-            width: fit-content;
-            height: 500px;
-            max-width: calc(100% - 50px);
-        } 
-        .panel-options {
-            background-color: #e4e4e4;              
-            border: 1px solid #d6d3d3;
-            border-radius: 0px 10px 10px 0px;
-        }
-        .panel-container {
-            padding: 0px;            
-            border-radius: 0px 10px 10px 0px;
-            background-color: #eee;        
-            border: 1px solid #d6d3d3;
-            height: 500px;
-            display: grid;
-            grid-template-columns: 30px fit-content(360px);
-            
-        }
-        .BtnDinamictT {
-            font-weight: bold;
-            border: none;
-            padding: 0px;
-            margin: 5px;
-            outline: none;
-            text-align: center;
-            display: inline-block;
-            font-size: 10px;
-            cursor: pointer;
-            background-color: #4894aa;
-            color: #fff;
-            border-radius: 0.2cm;
-            width: 25px;
-            height: 25px;
-            background-color: #4894aa;
-            font-family: monospace;
-        }
-        .panel {          
-            padding: 5px;  
-            transition: all 0.4s;            
-        }
-        .panel-inact {          
-            padding: 5px;  
-            overflow: hidden;    
-            width: calc(20px); 
-            font-size: 14px;
-            transition: all 0.4s; 
-        }
-        .task-card {
-            background-color: #fff;
-            height: 130px;
-            border-radius: 10px;
-            padding-bottom: 10px;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            margin-bottom: 15px;        
-            box-shadow: 0 0 5px 0 #adacac;
-            /* container-type: inline-size; */
-        }
-        .task-title{
-            padding: 10px 10px;
-            font-size: 14px;
-            font-weight: bold;
-            background-color: #eee;
-            cursor: pointer;
-        }
-        .card-options {
-            padding: 0px;
-            width:  calc(100% - 20px);
-            height: 25px;
-            justify-content: flex-end;
-            display: flex;
-        }
-        .title-panel {
-            font-size: 14px; 
-            text-transform: uppercase;
-            font-weight: bold;
-            margin-bottom: 10px;
-            display: block;
-            color: #0a1338;
-        }
-        .p-title {
-            height: 100%;
-            padding: 5px 10px;
-            margin: 0px;
-        }
-        .task-detail{
-            padding: 5px 10px; 
-            font-size: 11px
-        }
-        .p-participantes{
-            display: flex;
-            padding: 5px 10px;
-        }
-        .img-participantes {
-            padding: 0;
-            height: 25px;
-            width: 25px;
-            border-radius: 50%;
-            margin-right: 5px;
-            overflow: hidden;
-            box-shadow: 0 0 3px 0 rgba(0,0,0,0.5);
-        }
-        @container (max-width: 200px){
-            .p-participantes {
-                display: none;
-            }
-            .card-options {
-                flex-direction: column;
-                height: auto;
-                justify-content: flex-start;
-            }
-        }
-    `
+    WStyle = css`@import url('/css/site.css');`
 }
 customElements.define('w-main-task', TaskManagers);
 export { TaskManagers };
@@ -345,7 +216,7 @@ const TaskCard = (element, Manager) => {
               .labelheader {
                 margin: 10px 0px;
                 display: block;
-                font-size: 14px;
+                font-size: 12px;
                 font-weight: 600;
                 text-transform: capitalize;
               }
@@ -369,6 +240,12 @@ const TaskCard = (element, Manager) => {
                 font-size: 12px;
                 color: #ffffff;
                 background-color: ${GetTaskColor(element)};
+                display: -webkit-box;
+                -webkit-line-clamp: 2; /* Limitar a 2 líneas */
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 300px;
               }
               
               .tags {

@@ -1,12 +1,14 @@
+using System.Text.Json.Serialization;
 using AppGenerate;
 using BackgroundJob.Cron.Jobs;
 using CAPA_DATOS;
 using CAPA_DATOS.Cron.Jobs;
+using Microsoft.AspNetCore.ResponseCompression;
 using SNI_UI2;
 using SNI_UI2.CAPA_NEGOCIO;
 
 
-SqlADOConexion.IniciarConexion("sa", "zaxscd", ".", "PROYECT_MANAGER_BD");
+SqlADOConexion.IniciarConexion("sa", "zaxscd", "localhost", "PROYECT_MANAGER_BD");
 //PostgresADOConexion.IniciarConexion("postgres", "zaxscd", "localhost", "pst", 5432);
 //var customers = new Customer { MTConnection = PostgresADOConexion.SQLM }.Get<Customer>();
 //var AGENCY = new Structure_agency {  }.Get<Structure_agency>();
@@ -22,8 +24,28 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.AddControllers().AddJsonOptions(JsonOptions =>
-		JsonOptions.JsonSerializerOptions.PropertyNamingPolicy = null);
+#region CONFIGURACIONES PARA API
+builder.Services.AddControllers()
+	.AddJsonOptions(JsonOptions => JsonOptions.JsonSerializerOptions.PropertyNamingPolicy = null)// retorna los nombres reales de las propiedades
+	.AddJsonOptions(options => options.JsonSerializerOptions.WriteIndented = false)// Desactiva la indentación
+	.AddJsonOptions(options =>  options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
+builder.Services.AddResponseCompression(options =>
+{
+	options.EnableForHttps = true; // Activa la compresión también para HTTPS
+	options.Providers.Add<GzipCompressionProvider>(); // Usar Gzip
+	options.Providers.Add<BrotliCompressionProvider>(); // Usar Brotli (más eficiente)
+});
+builder.Services.Configure<GzipCompressionProviderOptions>(options =>
+{
+	options.Level = System.IO.Compression.CompressionLevel.Fastest; // Puedes ajustar la compresión
+});
+builder.Services.Configure<BrotliCompressionProviderOptions>(options =>
+{
+	options.Level = System.IO.Compression.CompressionLevel.Fastest; // Nivel de compresión para Brotli
+});
+#endregion
+
 builder.Services.AddControllersWithViews();
 //builder.Services.AddWebOptimizer();
 builder.Services.AddSession(options =>
@@ -33,8 +55,8 @@ builder.Services.AddSession(options =>
 
 builder.Services.AddCronJob<CreateAutomaticsCaseSchedulerJob>(options =>
 {
-	// Corre cada minuto
-	options.CronExpression = "* * * * *";
+	// Corre 5 cada minuto
+	options.CronExpression = "*/5 * * * *";
 	options.TimeZone = TimeZoneInfo.Local;
 });
 
@@ -67,6 +89,7 @@ app.UseHttpsRedirection();
 //app.UseWebOptimizer();
 app.UseStaticFiles();
 app.UseDefaultFiles();
+app.UseResponseCompression(); // Usa la compresión en la aplicación
 
 app.UseRouting();
 

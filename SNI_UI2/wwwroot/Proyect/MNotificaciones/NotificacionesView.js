@@ -8,7 +8,7 @@ import { css } from '../../WDevCore/WModules/WStyledRender.js';
 class NotificacionesView extends HTMLElement {
     constructor() {
         super();      
-        this.TabContainer = WRender.createElement({ type: 'div', props: { class: 'TabContainer', id: "TabContainer" } });
+        this.TabContainer = WRender.createElement({ type: 'div', props: { class: "content-container", id: "TabContainer" } });
         this.DOMManager = new ComponentsManager({ MainContainer: this.TabContainer });
         this.append(
             this.Style,
@@ -160,7 +160,7 @@ class NotificacionesView extends HTMLElement {
             padding: 10px 0px;
             margin: 0px;
             border-bottom: 1px solid #9999;
-            font-size: 14px;
+            font-size: 12px;
         } 
         .NotificationContainer div{
             display: flex;

@@ -311,7 +311,7 @@ class TareaDetailView extends HTMLElement {
                 padding: 0;
                 margin: 0;
                 text-align: right;
-                font-size: 14px;
+                font-size: 12px;
             }
             h5 {
                margin:0px;

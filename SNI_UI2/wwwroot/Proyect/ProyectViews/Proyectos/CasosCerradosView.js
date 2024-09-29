@@ -29,9 +29,9 @@ class CasosCerradosView extends HTMLElement {
         this.Dataset = Dataset;
         this.Dependencias = Dependencias;
         this.append(this.WStyle, StylesControlsV2.cloneNode(true), StylesControlsV3.cloneNode(true));
-        this.TabContainer = WRender.createElement({ type: 'div', props: { class: 'TabContainer', id: "TabContainer" } });
+        this.TabContainer = WRender.createElement({ type: 'div', props: { class: "content-container", id: "TabContainer" } });
         this.TabManager = new ComponentsManager({ MainContainer: this.TabContainer });
-        this.OptionContainer = WRender.Create({ className: "OptionContainer" });
+        this.OptionContainer = WRender.Create({ className: "" });
         this.ModelObject = new Tbl_Case_ModelComponent({
             Tbl_Tareas: undefined, Estado: undefined, Cat_Dependencias: {
                 type: "WSELECT", hiddenFilter: true, ModelObject: () => new Cat_Dependencias_ModelComponent()

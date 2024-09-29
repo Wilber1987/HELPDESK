@@ -1,4 +1,9 @@
+//@ts-check
 import {EntityClass} from "../../WDevCore/WModules/EntityClass.js";
+import { Tbl_Agenda, Tbl_Agenda_ModelComponent } from "./Tbl_Agenda.js";
+import { Tbl_Calendario } from "./Tbl_Calendario.js";
+import { Tbl_Case, Tbl_Dependencias_Usuarios } from "./Tbl_CaseModule.js";
+import { Tbl_Servicios } from "./Tbl_Servicios.js";
 
 class Cat_Dependencias_ModelComponent extends EntityClass {
     constructor(props) {
@@ -6,7 +11,6 @@ class Cat_Dependencias_ModelComponent extends EntityClass {
         for (const prop in props) {
             this[prop] = props[prop];
         }
-        ;
         this.NCasos = undefined;
         this.NCasosFinalizados = undefined;
     }
@@ -71,7 +75,6 @@ class Cat_Dependencias extends EntityClass {
     /**@type {String}*/ HostService;
     /**@type {String}*/ SMTPHOST;
     /**@type {Boolean}*/ Default;
-    /**@type {Cat_Dependencias} ManyToOne*/ Cat_Dependencias;
     /**@type {Array<Cat_Dependencias>} OneToMany*/ Cat_Dependencias;
     /**@type {Array<Tbl_Agenda>} OneToMany*/ Tbl_Agenda;
     /**@type {Array<Tbl_Calendario>} OneToMany*/ Tbl_Calendario;

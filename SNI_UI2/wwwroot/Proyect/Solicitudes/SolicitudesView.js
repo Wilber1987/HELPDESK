@@ -33,7 +33,7 @@ class MainSolicitudesView extends HTMLElement {
         this.Dataset = Dataset;
         //this.Dependencias = Dependencias;
         this.append(this.WStyle, StylesControlsV2.cloneNode(true), StylesControlsV3.cloneNode(true));
-        this.TabContainer = WRender.createElement({ type: 'div', props: { class: 'TabContainer', id: "TabContainer" } });
+        this.TabContainer = WRender.createElement({ type: 'div', props: { class: "content-container", id: "TabContainer" } });
         this.TabManager = new ComponentsManager({ MainContainer: this.TabContainer });
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });
         this.ModelObject = new Tbl_Case_ModelComponent({
@@ -77,7 +77,11 @@ class MainSolicitudesView extends HTMLElement {
         this.actividadesManager();
     }
     actividadesManager = async (Dataset = this.Dataset, View = "Pendientes") => {
-        const paginator = new WPaginatorViewer({ Dataset: this.mapCaseToPaginatorElement(Dataset), userStyles: [StylesControlsV2] });
+        const paginator = new WPaginatorViewer({
+            Dataset: this.mapCaseToPaginatorElement(Dataset), 
+            userStyles: [StylesControlsV2], 
+            Options: { Search: false }
+        });
         this.FilterOptions = new WFilterOptions({
             Dataset: Dataset,
             AutoSetDate: true,
@@ -165,7 +169,7 @@ class MainSolicitudesView extends HTMLElement {
             SaveFunction: () => {
                 this.append(ModalMessege("Aviso", "Caso guardado correctamente", true))
             }
-        });       
+        });
         //TODO REVISAR COMO HAYA UNA CARGA REAL DE FORMA SINCRONA
         setTimeout(async () => {
             const servicios = await new Tbl_Servicios({ Id_Dependencia: form.ModelObject.Cat_Dependencias.Dataset[0].Id_Dependencia }).Get();

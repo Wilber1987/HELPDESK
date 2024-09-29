@@ -4,6 +4,7 @@ using System.Net;
 using System.Text;
 using AE.Net.Mail;
 using CAPA_DATOS;
+using CAPA_DATOS.BDCore.Abstracts;
 using CAPA_DATOS.Services;
 using CAPA_NEGOCIO.MAPEO;
 
@@ -14,8 +15,10 @@ namespace CAPA_NEGOCIO.Services
 
 		public async Task<bool> chargeAutomaticCase()
 		{
-
-			List<Cat_Dependencias> dependencias = new Cat_Dependencias().Get<Cat_Dependencias>();
+			//WDataMapper? wDataMapper = SqlADOConexion.BuildDataMapper("localhost", "sa", "zaxscd", "PROYECT_MANAGER_BD");
+			var dependenciaE = new Cat_Dependencias();
+			//dependenciaE.SetConnection(wDataMapper);
+			List<Cat_Dependencias> dependencias = dependenciaE.Get<Cat_Dependencias>();
 			foreach (var dependencia in dependencias)
 			{
 				if (dependencia.Host == null && dependencia.Username == null)
@@ -36,7 +39,9 @@ namespace CAPA_NEGOCIO.Services
 						OBJECTID = dependencia.OBJECTID,
 						HostService = Enum.Parse<HostServices>(dependencia?.HostService)
 					});
-					messages.ForEach(async m => await new Tbl_Case().CreateAutomaticCase(m, dependencia));
+					var caseE = new Tbl_Case();
+					//caseE.SetConnection(wDataMapper);
+					messages.ForEach(async m => await caseE.CreateAutomaticCase(m, dependencia));
 				}
 				catch (System.Exception ex)
 				{

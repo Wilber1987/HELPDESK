@@ -40,7 +40,7 @@ class CaseDetailComponent extends HTMLElement {
         this.Actividad = Actividad;
         this.attachShadow({ mode: 'open' });
         this.shadowRoot?.append(this.WStyle, this.CustomStyle, StylesControlsV2.cloneNode(true), StylesControlsV3.cloneNode(true));
-        this.TabContainer = WRender.createElement({ type: 'div', props: { class: 'TabContainer', id: "TabContainer" } });
+        this.TabContainer = WRender.createElement({ type: 'div', props: { class: "content-container", id: "TabContainer" } });
         this.TabManager = new ComponentsManager({ MainContainer: this.TabContainer });
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });
 
@@ -381,7 +381,7 @@ const caseGeneralData = (actividad) => {
                 tagName: 'label', className: "prioridad_" + (actividad.Case_Priority != null ? actividad.Case_Priority : undefined),
                 innerText: "Prioridad: " + (actividad.Case_Priority != null ? actividad.Case_Priority ?? "indefinida" : "indefinida")
             },
-            { tagName: 'label', innerText: "Dependencia: " + (actividad.Cat_Dependencias.Descripcion ?? "") },
+            { tagName: 'label', innerText: "Dependencia: " + (actividad.Cat_Dependencias?.Descripcion ?? "No asignado") },
             { tagName: 'label', innerText: "Fecha inicio: " + (actividad.Fecha_Inicio?.toString().toDateFormatEs() ?? "") },
             { tagName: 'label', innerText: "Fecha de finalización: " + (actividad.Fecha_Final?.toString().toDateFormatEs() ?? "") },
         ]

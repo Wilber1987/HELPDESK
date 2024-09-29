@@ -26,7 +26,7 @@ class TestsViewManager extends HTMLElement {
         this.EntityModel = new Tests();
         /**@type {Array} */
         this.Dataset = await this.EntityModel.Get();
-        this.TabContainer = WRender.Create({ class: 'TabContainer' });
+        this.TabContainer = WRender.Create({ class: "content-container" });
         this.MainComponent = new WTableComponent({
             ModelObject: this.ModelComponent,
             EntityModel: this.EntityModel,

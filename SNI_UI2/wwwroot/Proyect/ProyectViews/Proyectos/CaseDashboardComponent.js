@@ -2,7 +2,7 @@
 
 //@ts-check
 import { Tbl_Case_ModelComponent } from '../../FrontModel/Tbl_CaseModule.js';
-import { StylesControlsV2 } from '../../../WDevCore/StyleModules/WStyleComponents.js';
+import { StylesControlsV2, StylesControlsV3 } from '../../../WDevCore/StyleModules/WStyleComponents.js';
 import { ColumChart, RadialChart } from '../../../WDevCore/WComponents/WChartJSComponents.js';
 import { WFilterOptions } from '../../../WDevCore/WComponents/WFilterControls.js';
 import { WModalForm } from '../../../WDevCore/WComponents/WModalForm.js';
@@ -24,7 +24,7 @@ class CaseDashboardComponent extends HTMLElement {
         
         this.append(this.WStyle);
         this.OptionContainer = WRender.Create({ className: "options-container" });
-        this.append(StylesControlsV2.cloneNode(true))
+        this.append(StylesControlsV2.cloneNode(true), StylesControlsV3.cloneNode(true));
         this.DrawCaseDashboardComponent();
 
     }
@@ -41,17 +41,17 @@ class CaseDashboardComponent extends HTMLElement {
         const TITLE_1 = "Casos por dependencia";
         this.OptionContainer.append(WRender.Create({
             tagName: 'input', type: 'button',
-            className: 'Btn-Mini', value: TITLE_1, onclick: () =>
+            className: 'Block-Primary', value: TITLE_1, onclick: () =>
                 this.drawReport(
                     WArrayF.GroupArray(casosMap, ["Dependencia", "Estado"], ["casos"]),
                     TITLE_1
                 )
         }))
 
-        const TITLE_2 = "Frecuencia de solicitudes por mes";
+        const TITLE_2 = "Frecuencia de solicitudes";
         this.OptionContainer.append(WRender.Create({
             tagName: 'input', type: 'button',
-            className: 'Btn-Mini', value: TITLE_2, onclick: () =>
+            className: 'Block-Primary', value: TITLE_2, onclick: () =>
                 this.drawReport(
                     WArrayF.GroupArray(casosEtiquetadosPorMes, ["Mes", "Estado"], ["casos"]),
                     TITLE_2
@@ -125,7 +125,8 @@ class CaseDashboardComponent extends HTMLElement {
             grid-column: span 1;
         }
         .header-container{
-            display: flex
+            display: flex;
+            gap: 20px;
         }
         w-filter-option {
                 display: block;
@@ -171,14 +172,14 @@ class CaseDashboardComponent extends HTMLElement {
 
     buildCharts() {
         const casosMap = this.Dataset.map(x => {
-            x.Dependencia = x.Cat_Dependencias.Descripcion;
+            x.Dependencia = x.Cat_Dependencias?.Descripcion ?? "No asignado";
             x.casos = 1;
             return x;
         });
         const casosProcesados = this.Dataset.filter(c => !c.Estado.includes("Pendiente") && !c.Estado.includes("Solicitado")
         ).map(c => ({
             Estado: c.Estado,
-            Servicio: c.Tbl_Servicios?.Descripcion_Servicio ?? "",
+            Servicio: c.Tbl_Servicios?.Descripcion_Servicio ??  "No asignado",
             Caso: "Caso",
             Mes: c.Fecha_Inicio.getMonthFormatEs(),
             casos: 1

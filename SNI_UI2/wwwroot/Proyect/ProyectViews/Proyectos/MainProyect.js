@@ -9,9 +9,9 @@ import { CaseManagerComponent } from './CaseManagerComponent.js';
 import { TaskManagers } from './TaskManager.js';
 
 const OnLoad = async () => {
-    Aside.append(WRender.Create({ tagName: "h3", innerText: "Administración de Actividades" }));
+    Main.append(WRender.Create({ tagName: "h3", innerText: "Administración de Actividades" }));
     const AdminPerfil = new MainProyect();
-    Aside.append(AdminPerfil.MainNav);
+    Main.append(AdminPerfil.MainNav);
     Main.appendChild(AdminPerfil);
 }
 window.onload = OnLoad;
@@ -28,10 +28,8 @@ class MainProyect extends HTMLElement {
     }
     EditarPerfilNav = () => { }
     MainNav = new WAppNavigator({
-        //NavStyle: "tab",
-        Direction: "column",
+        NavStyle: "tab",
         Inicialize: true,
-
         Elements: [
             // {
             //     name: "Datos Generales",
@@ -75,6 +73,7 @@ class MainProyect extends HTMLElement {
         const filterOptions = new WFilterOptions({
             Dataset: tasks,
             AutoSetDate: true,
+            Display: true,
             ModelObject: new Tbl_Tareas_ModelComponent(),
             //DisplayFilts: [],
             FilterFunction: (DFilt) => {

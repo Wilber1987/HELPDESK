@@ -21,10 +21,21 @@ namespace CAPA_NEGOCIO.Services
 			List<Cat_Dependencias> dependencias = dependenciaE.Get<Cat_Dependencias>();
 			foreach (var dependencia in dependencias)
 			{
-				if (dependencia.Host == null && dependencia.Username == null)
+				if (dependencia.Host == null || dependencia.Username == null || dependencia.AutenticationType == null)
 				{
 					continue;
 				}
+				else if (dependencia.AutenticationType == AutenticationTypeEnum.AUTH2.ToString()
+				&& (dependencia.TENAT == null || dependencia.CLIENT == null || dependencia.CLIENT_SECRET == null))
+				{
+					continue;
+				}
+				else if (dependencia.AutenticationType == AutenticationTypeEnum.BASIC.ToString()
+				&& dependencia.Password == null)
+				{
+					continue;
+				}
+
 				try
 				{
 					var messages = await new IMAPServices().GetMessages(new MailConfig()

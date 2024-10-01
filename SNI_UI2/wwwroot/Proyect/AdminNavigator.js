@@ -39,6 +39,7 @@ function ElementTab(DOMManager, Model) {
         action: async (ev) => {
             const Table = new WTableComponent({
                 ModelObject: Model,
+                AutoSave: true,
                 Options: {
                     Filter: true,
                     FilterDisplay: true,

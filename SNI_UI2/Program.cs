@@ -8,6 +8,7 @@ using SNI_UI2;
 using SNI_UI2.CAPA_NEGOCIO;
 
 
+//SqlADOConexion.IniciarConexion("sa", "Helpdesk2024%", "localhost", "PROYECT_MANAGER_BD");
 SqlADOConexion.IniciarConexion("sa", "zaxscd", "localhost", "PROYECT_MANAGER_BD");
 //PostgresADOConexion.IniciarConexion("postgres", "zaxscd", "localhost", "pst", 5432);
 //var customers = new Customer { MTConnection = PostgresADOConexion.SQLM }.Get<Customer>();
@@ -50,13 +51,13 @@ builder.Services.AddControllersWithViews();
 //builder.Services.AddWebOptimizer();
 builder.Services.AddSession(options =>
 {
-	options.IdleTimeout = TimeSpan.FromMinutes(600);
+	options.IdleTimeout = TimeSpan.FromMinutes(60);
 });
 
 builder.Services.AddCronJob<CreateAutomaticsCaseSchedulerJob>(options =>
 {
-	// Corre 5 cada minuto
-	options.CronExpression = "*/5 * * * *";
+	// Corre 20 cada minutoS
+	options.CronExpression = "*/20 * * * *";
 	options.TimeZone = TimeZoneInfo.Local;
 });
 

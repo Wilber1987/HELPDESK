@@ -55,7 +55,7 @@ class SolicitudesPendientesComponent extends HTMLElement {
     }
     DrawSolicitudesPendientesComponent = async () => {
         this.OptionContainer.append(WRender.Create({ tagName: 'input', type: 'button', className: 'Block-Alert', value: 'Casos Pendientes de Aprobación', onclick: this.actividadesManager }))
-        this.OptionContainer.append(WRender.Create({ tagName: 'input', type: 'button', className: 'Block-Success', value: 'Nuevo Caso', onclick: this.nuevoCaso }))
+        this.OptionContainer.append(WRender.Create({ tagName: 'input', type: 'button', className: 'Block-Success', value: 'Nuevo Proyecto', onclick: this.nuevoCaso }))
         this.UserActions.forEach(element => {
             this.OptionContainer2.append(WRender.Create({
                 tagName: 'input', type: 'button', className: 'Btn',

@@ -42,7 +42,7 @@ class CaseManagerComponent extends HTMLElement {
         //this.OptionContainer.append(WRender.Create({ tagName: 'input', type: 'button', className: 'Block-Basic', value: 'Estadística', onclick: this.dashBoardView }))
         this.OptionContainer.append(WRender.Create({ tagName: 'input', type: 'button', className: 'Block-Alert', value: 'Lista de Casos', onclick: this.actividadesManager }))
         //this.OptionContainer.append(WRender.Create({ tagName: 'input', type: 'button', className: 'Block-Secundary', value: 'Dependencias', onclick: this.dependenciasViewer }))
-        if (this.Dependencias.length != 0) {
+        if (this.Dependencias.length != 0 && WSecurity.HavePermission(Permissions.ADMINISTRAR_CASOS_DEPENDENCIA)) {
             this.OptionContainer.append(WRender.Create({
                 tagName: 'input', type: 'button', className: 'Block-Success',
                 value: 'Nuevo Proyecto', onclick: this.CaseForm

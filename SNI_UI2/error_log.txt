@@ -381,3 +381,87 @@
    at CAPA_DATOS.GDatosAbstract.CommitTransaction() in c:\Users\wilbe\repos\NETCORE\HELPDESK\CAPA_DATOS\BDCore\Abstracts\GDatosAbstract.cs:line 111
    at CAPA_DATOS.EntityClass.Save() in c:\Users\wilbe\repos\NETCORE\HELPDESK\CAPA_DATOS\EntityStructure\EntityClass.cs:line 204
    at CAPA_DATOS.LoggerServices.AddMessageError(String message, Exception ex) in c:\Users\wilbe\repos\NETCORE\HELPDESK\CAPA_DATOS\LoggerServices.cs:line 78
+[10/4/2024 10:42:08 PM] Failed to log true error to file: String or binary data would be truncated in table 'PROYECT_MANAGER_BD.helpdesk.Tbl_Grupo', column 'Descripcion'. Truncated value: '<h2 style="margin: 0px 0px 10px; padding: 0px; font-weight: 400; font-family: DauphinPlain; font-siz'.
+The statement has been terminated.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, SqlDataReader ds)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   at System.Data.SqlClient.SqlCommand.ExecuteScalar()
+   at CAPA_DATOS.GDatosAbstract.<>c__DisplayClass23_0.<ExcuteSqlQuery>b__0() in c:\Users\wilbe\repos\NETCORE\HELPDESK\CAPA_DATOS\BDCore\Abstracts\GDatosAbstract.cs:line 236
+   at CAPA_DATOS.GDatosAbstract.ExecuteWithRetry(Func`1 operation, Int32 maxRetries) in c:\Users\wilbe\repos\NETCORE\HELPDESK\CAPA_DATOS\BDCore\Abstracts\GDatosAbstract.cs:line 299
+[10/4/2024 10:42:08 PM] Failed to log error to the database: SqlConnection does not support parallel transactions.
+   at System.Data.SqlClient.SqlInternalConnection.BeginSqlTransaction(IsolationLevel iso, String transactionName, Boolean shouldReconnect)
+   at System.Data.SqlClient.SqlConnection.BeginTransaction(IsolationLevel iso, String transactionName)
+   at System.Data.SqlClient.SqlConnection.BeginTransaction(IsolationLevel iso)
+   at System.Data.SqlClient.SqlConnection.BeginDbTransaction(IsolationLevel isolationLevel)
+   at CAPA_DATOS.GDatosAbstract.BeginTransaction() in c:\Users\wilbe\repos\NETCORE\HELPDESK\CAPA_DATOS\BDCore\Abstracts\GDatosAbstract.cs:line 99
+   at CAPA_DATOS.EntityClass.Save() in c:\Users\wilbe\repos\NETCORE\HELPDESK\CAPA_DATOS\EntityStructure\EntityClass.cs:line 200
+   at CAPA_DATOS.LoggerServices.AddMessageError(String message, Exception ex) in c:\Users\wilbe\repos\NETCORE\HELPDESK\CAPA_DATOS\LoggerServices.cs:line 78
+[10/8/2024 10:53:05 AM] Failed to log true error to file: Cannot insert the value NULL into column 'Id_Grupo', table 'PROYECT_MANAGER_BD.helpdesk.Tbl_Grupos_Profile'; column does not allow nulls. INSERT fails.
+The statement has been terminated.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, SqlDataReader ds)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   at System.Data.SqlClient.SqlCommand.ExecuteScalar()
+   at CAPA_DATOS.GDatosAbstract.<>c__DisplayClass23_0.<ExcuteSqlQuery>b__0() in c:\Users\wilbe\repos\NETCORE\HELPDESK\CAPA_DATOS\BDCore\Abstracts\GDatosAbstract.cs:line 236
+   at CAPA_DATOS.GDatosAbstract.ExecuteWithRetry(Func`1 operation, Int32 maxRetries) in c:\Users\wilbe\repos\NETCORE\HELPDESK\CAPA_DATOS\BDCore\Abstracts\GDatosAbstract.cs:line 299
+[10/8/2024 10:53:05 AM] Failed to log error to the database: SqlConnection does not support parallel transactions.
+   at System.Data.SqlClient.SqlInternalConnection.BeginSqlTransaction(IsolationLevel iso, String transactionName, Boolean shouldReconnect)
+   at System.Data.SqlClient.SqlConnection.BeginTransaction(IsolationLevel iso, String transactionName)
+   at System.Data.SqlClient.SqlConnection.BeginTransaction(IsolationLevel iso)
+   at System.Data.SqlClient.SqlConnection.BeginDbTransaction(IsolationLevel isolationLevel)
+   at CAPA_DATOS.GDatosAbstract.BeginTransaction() in c:\Users\wilbe\repos\NETCORE\HELPDESK\CAPA_DATOS\BDCore\Abstracts\GDatosAbstract.cs:line 99
+   at CAPA_DATOS.EntityClass.Save() in c:\Users\wilbe\repos\NETCORE\HELPDESK\CAPA_DATOS\EntityStructure\EntityClass.cs:line 200
+   at CAPA_DATOS.LoggerServices.AddMessageError(String message, Exception ex) in c:\Users\wilbe\repos\NETCORE\HELPDESK\CAPA_DATOS\LoggerServices.cs:line 78
+[10/8/2024 10:54:22 AM] Failed to log true error to file: Cannot insert the value NULL into column 'Id_Grupo', table 'PROYECT_MANAGER_BD.helpdesk.Tbl_Grupos_Profile'; column does not allow nulls. INSERT fails.
+The statement has been terminated.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, SqlDataReader ds)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   at System.Data.SqlClient.SqlCommand.ExecuteScalar()
+   at CAPA_DATOS.GDatosAbstract.<>c__DisplayClass23_0.<ExcuteSqlQuery>b__0() in c:\Users\wilbe\repos\NETCORE\HELPDESK\CAPA_DATOS\BDCore\Abstracts\GDatosAbstract.cs:line 236
+   at CAPA_DATOS.GDatosAbstract.ExecuteWithRetry(Func`1 operation, Int32 maxRetries) in c:\Users\wilbe\repos\NETCORE\HELPDESK\CAPA_DATOS\BDCore\Abstracts\GDatosAbstract.cs:line 299
+[10/8/2024 10:54:22 AM] Failed to log error to the database: SqlConnection does not support parallel transactions.
+   at System.Data.SqlClient.SqlInternalConnection.BeginSqlTransaction(IsolationLevel iso, String transactionName, Boolean shouldReconnect)
+   at System.Data.SqlClient.SqlConnection.BeginTransaction(IsolationLevel iso, String transactionName)
+   at System.Data.SqlClient.SqlConnection.BeginTransaction(IsolationLevel iso)
+   at System.Data.SqlClient.SqlConnection.BeginDbTransaction(IsolationLevel isolationLevel)
+   at CAPA_DATOS.GDatosAbstract.BeginTransaction() in c:\Users\wilbe\repos\NETCORE\HELPDESK\CAPA_DATOS\BDCore\Abstracts\GDatosAbstract.cs:line 99
+   at CAPA_DATOS.EntityClass.Save() in c:\Users\wilbe\repos\NETCORE\HELPDESK\CAPA_DATOS\EntityStructure\EntityClass.cs:line 200
+   at CAPA_DATOS.LoggerServices.AddMessageError(String message, Exception ex) in c:\Users\wilbe\repos\NETCORE\HELPDESK\CAPA_DATOS\LoggerServices.cs:line 78
+[10/8/2024 10:58:41 AM] Failed to log true error to file: Violation of PRIMARY KEY constraint 'PK_Tbl_Grupos_Profile'. Cannot insert duplicate key in object 'helpdesk.Tbl_Grupos_Profile'. The duplicate key value is (6, 3).
+The statement has been terminated.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, SqlDataReader ds)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   at System.Data.SqlClient.SqlCommand.ExecuteScalar()
+   at CAPA_DATOS.GDatosAbstract.<>c__DisplayClass23_0.<ExcuteSqlQuery>b__0() in c:\Users\wilbe\repos\NETCORE\HELPDESK\CAPA_DATOS\BDCore\Abstracts\GDatosAbstract.cs:line 236
+   at CAPA_DATOS.GDatosAbstract.ExecuteWithRetry(Func`1 operation, Int32 maxRetries) in c:\Users\wilbe\repos\NETCORE\HELPDESK\CAPA_DATOS\BDCore\Abstracts\GDatosAbstract.cs:line 299
+[10/8/2024 10:58:41 AM] Failed to log error to the database: SqlConnection does not support parallel transactions.
+   at System.Data.SqlClient.SqlInternalConnection.BeginSqlTransaction(IsolationLevel iso, String transactionName, Boolean shouldReconnect)
+   at System.Data.SqlClient.SqlConnection.BeginTransaction(IsolationLevel iso, String transactionName)
+   at System.Data.SqlClient.SqlConnection.BeginTransaction(IsolationLevel iso)
+   at System.Data.SqlClient.SqlConnection.BeginDbTransaction(IsolationLevel isolationLevel)
+   at CAPA_DATOS.GDatosAbstract.BeginTransaction() in c:\Users\wilbe\repos\NETCORE\HELPDESK\CAPA_DATOS\BDCore\Abstracts\GDatosAbstract.cs:line 99
+   at CAPA_DATOS.EntityClass.Save() in c:\Users\wilbe\repos\NETCORE\HELPDESK\CAPA_DATOS\EntityStructure\EntityClass.cs:line 200
+   at CAPA_DATOS.LoggerServices.AddMessageError(String message, Exception ex) in c:\Users\wilbe\repos\NETCORE\HELPDESK\CAPA_DATOS\LoggerServices.cs:line 78

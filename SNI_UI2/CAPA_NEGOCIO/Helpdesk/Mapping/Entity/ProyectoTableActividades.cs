@@ -124,6 +124,39 @@ namespace CAPA_NEGOCIO.MAPEO
 		{
 			return Get<Tbl_Comments_Tasks>();
 		}
+		public new object? SaveComment(string identity, Boolean withMail = true)
+		{
+			try
+			{
+				BeginGlobalTransaction();
+				UserModel user = AuthNetCore.User(identity);
+				Fecha = DateTime.Now;
+				Id_User = user.UserId;
+				NickName = user.UserData?.Nombres;
+				Mail = user.mail;
+				Tbl_Tareas? Tbl_Tareas = new Tbl_Tareas() { Id_Tarea = Id_Tarea }.Find<Tbl_Tareas>();
+				Tbl_Case? Tbl_Case = new Tbl_Case() { Id_Case = Tbl_Tareas.Id_Case }.Find<Tbl_Case>();
+				foreach (var file in Attach_Files ?? new List<ModelFiles>())
+				{
+					ModelFiles Response = (ModelFiles)FileService.upload("Attach\\", file).body;
+					file.Value = Response.Value;
+					file.Type = Response.Type;
+				}
+				Save();
+				if (withMail)
+				{
+					CreateMailForComment(user, Tbl_Case);
+				}
+				CommitGlobalTransaction();
+				return this;
+			}
+			catch (System.Exception)
+			{
+				RollBackGlobalTransaction();
+				throw;
+			}
+
+		}
 	}
 
 	public enum Case_Estate
@@ -297,7 +330,7 @@ namespace CAPA_NEGOCIO.MAPEO
 			Tbl_Participantes Inst = new Tbl_Participantes { Id_Perfil = profile?.Id_Perfil };
 			return Where<Tbl_Tareas>(
 				FilterData.NotIn("Estado", TareasState.Finalizado.ToString(), TareasState.Inactivo.ToString()),
-				FilterData.In("Id_Tarea", new Tbl_Participantes().Get<Tbl_Participantes>().Select(p => p.Id_Tarea.ToString()).ToArray())
+				FilterData.In("Id_Tarea", Inst.Get<Tbl_Participantes>().Select(p => p.Id_Tarea.ToString()).ToArray())
 			);
 		}
 
@@ -341,6 +374,22 @@ namespace CAPA_NEGOCIO.MAPEO
 				}.Save();
 			});
 		}
+		internal object? SaveTareaWithTransaction(string identity)
+		{
+			try
+			{
+				BeginGlobalTransaction();
+				var response = SaveTarea(identity);
+				CommitGlobalTransaction();
+				return response;
+			}
+			catch (System.Exception)
+			{
+				RollBackGlobalTransaction();
+				throw;
+			}
+		}
+
 
 		internal object? SaveTarea(string identity)
 		{
@@ -362,6 +411,7 @@ namespace CAPA_NEGOCIO.MAPEO
 					Mail = user?.mail
 				};
 				comment.Save();
+				Tbl_Case = new Tbl_Case() { Id_Case = this.Id_Case }.Find<Tbl_Case>();
 				comment.CreateMailForComment(user, Tbl_Case);
 				var response = this.Save();
 				//CommitGlobalTransaction();

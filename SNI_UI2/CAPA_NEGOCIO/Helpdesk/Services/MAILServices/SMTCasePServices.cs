@@ -25,6 +25,10 @@ namespace CAPA_NEGOCIO.Services
 				try
 				{
 					await Task.Delay(100);
+					if(item.Id_Case == null) 
+					{
+						continue;
+					} 
 					var Tcase = new Tbl_Case() { Id_Case = item.Id_Case }.Find<Tbl_Case>();
 					if (Tcase?.Cat_Dependencias?.SMTPHOST == null && Tcase?.Cat_Dependencias?.Username == null)
 					{
@@ -52,15 +56,11 @@ namespace CAPA_NEGOCIO.Services
 					{
 						try
 						{
-							item.BeginGlobalTransaction();
 							item.Estado = MailState.ENVIADO.ToString();
 							item.Update();
-							item.CommitGlobalTransaction();
 						}
 						catch (System.Exception ex)
 						{
-
-							item.RollBackGlobalTransaction();
 							LoggerServices.AddMessageError($"correo enviado, error al actualizar estado del correo {item.Uid}", ex);
 						}
 					}

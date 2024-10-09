@@ -8,6 +8,7 @@ import { TareaDetailView } from './TareaDetailView.js';
 import { Tbl_Tareas_ModelComponent } from "../../FrontModel/Tbl_Tareas.js";
 import { Tbl_Agenda_ModelComponent } from "../../FrontModel/Tbl_Agenda.js";
 import { Tbl_Calendario_ModelComponent } from "../../FrontModel/Tbl_Calendario.js";
+import { WSecurity, Permissions } from "../../../WDevCore/Security/WSecurity.js";
 
 class TaskManagers extends HTMLElement {
     /**
@@ -25,10 +26,10 @@ class TaskManagers extends HTMLElement {
             StyleScrolls.cloneNode(true),
             StylesControlsV2.cloneNode(true),
             StylesControlsV3.cloneNode(true));
-        this.TabContainer = WRender.Create({ class: 'TabContainer', id: "TabContainer" });
-        this.TabManager = new ComponentsManager({ MainContainer: this.TabContainer });
+        this.TaskContainer = WRender.Create({ class: 'TaskContainer', id: "TaskContainer" });
+        this.TabManager = new ComponentsManager({ MainContainer: this.TaskContainer });
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });
-        this.append(this.TabContainer);
+        this.append(this.TaskContainer);
         this.StatePanelContainer = WRender.Create({
             className: "panelContainer",
             style: " grid-template-columns: repeat(" + this.TaskModel.Estado.Dataset.length + ", auto);"
@@ -120,7 +121,159 @@ class TaskManagers extends HTMLElement {
             this.Config.action(task);
         }
     }
-    WStyle = css`@import url('/css/site.css');`
+    WStyle = css`
+        w-main-task {
+            display: flex !important;
+            height: 100% !important;
+            width: 100% !important;
+        }
+        .task-container {
+            height: -webkit-fill-available;
+            box-sizing: border-box;
+            height: calc(100vh - 100px);
+            display: grid;
+            grid-template-rows: auto calc(100% );
+        }
+
+        .TaskContainer {
+            height: -webkit-fill-available;
+            width: 100%;
+        }
+
+        w-main-task {
+            display: block;
+            height: -webkit-fill-available;
+        }
+
+        .dashBoardView {
+            display: grid;
+            grid-template-columns: auto auto;
+            grid-gap: 20px
+        }
+
+        .OptionContainer {
+            margin: 0 0 20px 0;
+        }
+
+        .panelContainer {
+            display: flex;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 10px;
+            gap: 10px;
+            width: fit-content;
+            height: 100%;
+            max-width: calc(100% - 50px);
+        }
+
+
+        .panel-container {
+            padding: 0px;
+            border-radius: 0px 10px 10px 0px;
+            border-left: 1px solid #d6d3d3;
+            display: grid;
+            grid-template-columns: 30px fit-content(360px);
+            width: fit-content;
+            min-width: fit-content;
+        }
+
+        .BtnDinamictT {
+            font-weight: bold;
+            border: none;
+            padding: 0px;
+            margin: 5px;
+            outline: none;
+            text-align: center;
+            display: inline-block;
+            font-size: 10px;
+            cursor: pointer;
+            background-color: #4894aa;
+            color: #fff;
+            border-radius: 0.2cm;
+            width: 25px;
+            height: 25px;
+            background-color: #4894aa;
+            font-family: monospace;
+        }
+
+        .panel {
+            padding: 5px;
+            transition: all 0.4s;
+            overflow-y: auto;
+            padding-bottom: 20px;
+        }
+
+        .panel-inact {
+            padding: 5px;
+            overflow: hidden;
+            width: calc(80px);
+            font-size: 12px;
+            transition: all 0.4s;
+        }
+
+        .task-card {
+            background-color: #fff;
+            height: 130px;
+            border-radius: 10px;
+            padding-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            margin-bottom: 15px;
+            box-shadow: 0 0 5px 0 #adacac;
+            /* container-type: inline-size; */
+        }
+
+        .task-title {
+            padding: 10px 10px;
+            font-size: 12px;
+            font-weight: bold;
+            background-color: #eee;
+            cursor: pointer;
+        }
+
+        .card-options {
+            padding: 0px;
+            width: calc(100% - 20px);
+            height: 25px;
+            justify-content: flex-end;
+            display: flex;
+        }
+
+        .title-panel {
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+            color: #0a1338;
+        }
+
+        .p-title {
+            height: 100%;
+            padding: 5px 10px;
+            margin: 0px;
+        }
+
+        .task-detail {
+            padding: 5px 10px;
+            font-size: 11px
+        }
+
+        .p-participantes {
+            display: flex;
+            padding: 5px 10px;
+        }
+
+        .img-participantes {
+            padding: 0;
+            height: 25px;
+            width: 25px;
+            border-radius: 50%;
+            margin-right: 5px;
+            overflow: hidden;
+            box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.5);
+        }`
 }
 customElements.define('w-main-task', TaskManagers);
 export { TaskManagers };
@@ -133,13 +286,13 @@ export { TaskManagers };
 const TaskCard = (element, Manager) => {
     const toolTip = new WToolTip(WRender.Create({
         className: 'option-btn-container',
-        children: [
+        children: WSecurity.HavePermission(Permissions.GESTOR_TAREAS) ? [
             {
                 tagName: 'input', type: 'button', className: 'option-btn', value: 'editar', onclick: async () => {
                     taskEdit(element)
                 }
             }
-        ]
+        ] : []
     }));
     const card = WRender.Create({
         className: "task", children: [
@@ -176,6 +329,7 @@ const TaskCard = (element, Manager) => {
                             className: "viewer", children: element?.Tbl_Participantes?.map(I =>
                             ({
                                 tagName: 'img', className: "img-participantes",
+                                title: I.Tbl_Profile?.Nombres + " " + I.Tbl_Profile?.Apellidos,
                                 src: "" + I.Tbl_Profile?.Foto
                             })) ?? []// [
                             // WRender.CreateStringNode(`<span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><g stroke-width="0" id="SVGRepo_bgCarrier"></g><g stroke-linejoin="round" stroke-linecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <path stroke-width="2" stroke="#ffffff" d="M17 8C17 10.7614 14.7614 13 12 13C9.23858 13 7 10.7614 7 8C7 5.23858 9.23858 3 12 3C14.7614 3 17 5.23858 17 8Z"></path> <path stroke-linecap="round" stroke-width="2" stroke="#ffffff" d="M3 21C3.95728 17.9237 6.41998 17 12 17C17.58 17 20.0427 17.9237 21 21"></path> </g></svg>`),
@@ -186,11 +340,11 @@ const TaskCard = (element, Manager) => {
                             tagName: "a", innerHTML: "Ver detalles", onclick: async () => {
                                 const find = await new Tbl_Tareas_ModelComponent({ Id_Tarea: element.Id_Tarea }).Get()
                                 const CaseDetail = new TareaDetailView({
-                                    Task: find[0], BackAction: () => {
-                                        Manager.NavigateFunction("main-task")
-                                    }
+                                    Task: find[0],
+                                    // BackAction: () => {  Manager.NavigateFunction("main-task")}
                                 });
-                                Manager.NavigateFunction("Detail" + element.Id_Tarea, CaseDetail)
+                                document.body.appendChild(new WModalForm({ ObjectModal: CaseDetail }));
+                                //Manager.NavigateFunction("Detail" + element.Id_Tarea, CaseDetail)
                             }
                         }
                     ]

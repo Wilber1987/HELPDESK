@@ -4,10 +4,9 @@ import { WForm } from "../../WDevCore/WComponents/WForm.js";
 // @ts-ignore
 import { ModelProperty } from "../../WDevCore/WModules/CommonModel.js";
 import { EntityClass } from "../../WDevCore/WModules/EntityClass.js";
-import { Cat_Dependencias, Cat_Dependencias_ModelComponent } from "./Cat_Dependencias.js";
 import { WAjaxTools } from "../../WDevCore/WModules/WAjaxTools.js";
+import { Cat_Dependencias, Cat_Dependencias_ModelComponent } from "./Cat_Dependencias.js";
 import { Tbl_Servicios_ModelComponent } from "./Tbl_Servicios.js";
-import { Tbl_Grupo_ModelComponent } from "./Tbl_Grupo_ModelComponent.js";
 
 
 //@ts-check
@@ -30,7 +29,7 @@ class Tbl_Profile extends EntityClass {
     /**@type {ModelProperty}*/ Estado = { type: "Select", Dataset: ["ACTIVO", "INACTIVO"] };
 
     /** campos de investigaciones */
-    /**@type {ModelProperty}*/ Grupo = { type: 'WSELECT', require: false , ModelObject: ()=> new Tbl_Grupo_ModelComponent() };
+    //**@type {ModelProperty}*/ Tbl_Grupos_Profiles = { type: 'masterdetail', require: false , ModelObject: ()=> new Tbl_Grupos_Profiles_ModelComponent() };
     /**@type {ModelProperty}*/ ORCID = { type: 'text', require: false };
     //PROPIEDADES DE HELPDESK
     /**@type {ModelProperty}*/ Cat_Dependencias = {
@@ -81,4 +80,4 @@ class Tbl_Profile extends EntityClass {
     }
 }
 
-export { Tbl_Profile }
+export { Tbl_Profile };

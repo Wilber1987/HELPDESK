@@ -47,7 +47,7 @@ h1, h2, h3, h4, h5, h6 {
 .header-item {
     padding: 0px !important;
     height: 60px;
-    width: 50px;
+    min-width: 50px;
     -webkit-box-shadow: none !important;
     box-shadow: none !important;
     fill: #555b6d;
@@ -59,7 +59,13 @@ h1, h2, h3, h4, h5, h6 {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    & span {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        max-width: 100px;
 
+    }
 }
 .header-profile-user {
     height: 35px;
@@ -133,4 +139,20 @@ h1, h2, h3, h4, h5, h6 {
 .detail-menu {
     border-bottom: #0d6ba6 solid 1px;
     margin-bottom: 10px;
+}
+.Aside a.menu-item, .Aside a.active {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
+    & svg {
+        height: 35px;
+        width: 35px;
+        min-width: 35px;
+    }
+}
+.Aside a.active {
+    border-radius: 0px 24px 24px 0px;
+    color: rgb(21, 101, 192);
+    background-color: rgba(33, 150, 243, 0.3) !important;
 }

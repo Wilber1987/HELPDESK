@@ -317,10 +317,10 @@ namespace API.Controllers
 			return Inst.Get<Tbl_Tareas>();
 		}
 		[HttpPost]
-		[AuthController]
+		[AuthController(Permissions.GESTOR_TAREAS)]
 		public object? saveTbl_Tareas(Tbl_Tareas inst)
 		{
-			return inst.SaveTarea(HttpContext.Session.GetString("seassonKey"));
+			return inst.SaveTareaWithTransaction(HttpContext.Session.GetString("seassonKey"));
 		}
 		[HttpPost]
 		[AuthController]
@@ -374,7 +374,7 @@ namespace API.Controllers
 		}
 
 
-		//INVESTIGACIONES
+		#region INVESTIGACIONES y grupos de trabajo
 		[HttpPost]
 		[AuthController]
 		public List<Tbl_Grupo> getTbl_Grupo(Tbl_Grupo Inst)
@@ -397,8 +397,28 @@ namespace API.Controllers
 		[AuthController]
 		public object? updateTbl_Grupo(Tbl_Grupo inst)
 		{
-			return inst.Update();
+			return inst.UpdateGroup(HttpContext.Session.GetString("seassonKey"));
 		}
+		[HttpPost]
+		[AuthController]
+		public object? getTbl_Grupos_Profile(Tbl_Grupos_Profile inst)
+		{
+			return inst.Get<Tbl_Grupos_Profile>();
+		}
+		
+		[HttpPost]
+		[AuthController]
+		public object? saveTbl_Grupos_Profile(Tbl_Grupos_Profile inst)
+		{
+			return inst.SaveGroup(HttpContext.Session.GetString("seassonKey"));
+		}
+		[HttpPost]
+		[AuthController]
+		public object? updateTbl_Grupos_Profile(Tbl_Grupos_Profile inst)
+		{
+			return inst.UpdateGroup(HttpContext.Session.GetString("seassonKey"));
+		}
+		#endregion
 
 	}
 }

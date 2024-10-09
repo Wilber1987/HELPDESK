@@ -21,7 +21,7 @@ import { Tbl_Agenda_ModelComponent } from "../../FrontModel/Tbl_Agenda.js";
 import { Tbl_Comments_ModelComponent } from '../../FrontModel/Tbl_Comments.js';
 import { Tbl_Profile_CasosAsignados, Tbl_Profile_CasosAsignados_ModelComponent } from '../../FrontModel/Tbl_Profile_CasosAsignados.js';
 import { Tbl_Servicios_ModelComponent } from '../../FrontModel/Tbl_Servicios.js';
-import { Tbl_Tareas_ModelComponent } from "../../FrontModel/Tbl_Tareas.js";
+import { Tbl_Tareas, Tbl_Tareas_ModelComponent } from "../../FrontModel/Tbl_Tareas.js";
 import { activityStyle } from '../../style.js';
 import { simpleCaseForm } from './CaseManagerComponent.js';
 import { TaskManagers } from './TaskManager.js';
@@ -61,7 +61,7 @@ class CaseDetailComponent extends HTMLElement {
         /**@type {Array<Tbl_Dependencias_Usuarios>} */
         const perfiles_dependencias = await new Tbl_Dependencias_Usuarios({
             filterData: [
-                new FilterData({ PropName: "Id_Dependencia", Values: [actividad.Id_Dependencia.toString()], FilterType: "=" })
+                new FilterData({ PropName: "Id_Dependencia", Values: [actividad.Id_Dependencia?.toString()], FilterType: "=" })
             ]
         }).Get();
         const taskModel = new Tbl_Tareas_ModelComponent({
@@ -138,13 +138,15 @@ class CaseDetailComponent extends HTMLElement {
                     })
                 }
             }, {
-                name: "Nueva Tarea", action: async (ev) => {
+                name: "Nueva Tarea",  Disabled: WSecurity.HavePermission(Permissions.GESTOR_TAREAS), action: async (ev) => {
                     //this.shadowRoot?.append()
                     return new WForm({
                         ModelObject: taskModel,
-                        AutoSave: true,
+                        AutoSave: true,                       
                         //title: "Nueva Tarea",
-                        SaveFunction: (task) => {
+                        SaveFunction: (task, response,/**@type {WForm} */ form) => {
+                            form.FormObject = new Tbl_Tareas();
+                            form.DrawComponent();
                             this.update();
                         }
 
@@ -324,7 +326,7 @@ class CaseDetailComponent extends HTMLElement {
        .actividadDetailView {
             display: grid;
             grid-template-columns: calc(100% - 620px) 600px;
-            grid-template-rows: auto auto;
+            grid-template-rows: auto 600px;
             gap: 20px;
         }
         w-app-navigator,   w-coment-component  {
@@ -332,6 +334,7 @@ class CaseDetailComponent extends HTMLElement {
             padding: 20px;
             border-radius: 15px;           
             background-color: #fff;
+            height: fit-content;
         }
 
         @media(max-width: 1400px){

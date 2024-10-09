@@ -70,7 +70,7 @@ class MainSolicitudesView extends HTMLElement {
             tagName: 'input', type: 'button', className: 'Block-Alert', value: 'Finalizadas', onclick: async () =>
                 this.actividadesManager(await new Tbl_Case_ModelComponent().GetOwSolicitudesFinalizadas(), "Finalizadas")
         }))
-        this.OptionContainer.append(WRender.Create({ tagName: 'input', type: 'button', className: 'Block-Success', value: 'Nuevo Caso', onclick: this.nuevoCaso }))
+        this.OptionContainer.append(WRender.Create({ tagName: 'input', type: 'button', className: 'Block-Success', value: 'Nuevo Proyecto', onclick: this.nuevoCaso }))
 
         this.append(this.OptionContainer, this.TabContainer);
         //this.dashBoardView();

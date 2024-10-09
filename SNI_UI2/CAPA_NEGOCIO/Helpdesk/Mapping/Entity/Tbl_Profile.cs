@@ -15,7 +15,6 @@ namespace CAPA_NEGOCIO.MAPEO
 		{
 			return new Tbl_Profile() { IdUser = AuthNetCore.User(identity).UserId }.Find<Tbl_Profile>();
 		}
-		public int? Id_Grupo { get; set; }
 		public int? Id_Pais_Origen { get; set; }
 		public int? Id_Institucion { get; set; }
 		public string? Indice_H { get; set; }
@@ -35,11 +34,12 @@ namespace CAPA_NEGOCIO.MAPEO
 		[OneToMany(TableName = "Tbl_Servicios_Profile", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
 		public List<Tbl_Servicios_Profile>? Tbl_Servicios_Profile { get; set; }
 
-		[ManyToOne(TableName = "Tbl_Grupo", KeyColumn = "Id_Grupo", ForeignKeyColumn = "Id_Grupo")]
-		public Tbl_Grupo? Grupo { get; set; }
 		//[OneToMany(TableName = "Tbl_Participantes", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
 
 		public List<Tbl_Servicios?>? Tbl_Servicios { get; set; }
+
+		[OneToMany(TableName = "Tbl_Grupos_Profile", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil")]
+		public List<Tbl_Grupos_Profile>? Tbl_Grupos_Profiles { get; set; }
 
 
 		public List<Cat_Dependencias?>? Cat_Dependencias { get; set; }
@@ -208,19 +208,10 @@ namespace CAPA_NEGOCIO.MAPEO
 			}
 			else
 			{
-				UserModel user = AuthNetCore.User(identity);
-				Tbl_Profile? profile = new Tbl_Profile { IdUser = user.UserId }.Find<Tbl_Profile>();
-				if (profile?.Id_Grupo == null)
-				{
-					profiles.Add(profile);
-				}
-				else
-				{
-					List<Tbl_Profile> profilesD = Where<Tbl_Profile>(FilterData.Equal("Id_Grupo", profile?.Id_Grupo));
-					profiles.AddRange(profilesD);
-				}
-
+				List<Tbl_Profile> profilesD = GetProfilesByGroup(identity);
+				profiles.AddRange(profilesD);
 			}
+
 			foreach (var profile in profiles)
 			{
 				foreach (var dep in profile.Tbl_Dependencias_Usuarios ?? new List<Tbl_Dependencias_Usuarios>())
@@ -232,6 +223,22 @@ namespace CAPA_NEGOCIO.MAPEO
 			}
 			return profiles;
 		}
+
+		public static List<Tbl_Profile> GetProfilesByGroup(string? identity)
+		{
+			UserModel user = AuthNetCore.User(identity);
+			Tbl_Profile? profile = new Tbl_Profile { IdUser = user.UserId }.Find<Tbl_Profile>();
+			var grupos = new Tbl_Grupos_Profile().Where<Tbl_Grupos_Profile>(
+				FilterData.Equal("Id_Perfil", profile?.Id_Perfil),
+				FilterData.Equal("Estado", GroupState.ACTIVO.ToString())
+			);
+			List<Tbl_Profile> profilesD = new Tbl_Grupos_Profile()
+				.Where<Tbl_Grupos_Profile>(FilterData.In("Id_Grupo", grupos.Select(g => g.Id_Grupo).ToArray()))
+				.Select(g => g.Tbl_Profile ?? new Tbl_Profile())
+				.Where(g => g.Id_Perfil != profile?.Id_Perfil).ToList();
+			return profilesD;
+		}
+
 		public static Tbl_Profile Get_Profile(UserModel User)
 		{
 			return Get_Profile(User.UserId.GetValueOrDefault(), User.UserData);
@@ -239,37 +246,10 @@ namespace CAPA_NEGOCIO.MAPEO
 
 		public static Tbl_Profile Get_Profile(int UserId, CAPA_DATOS.Security.Security_Users user)
 		{
-			Tbl_Profile? tbl_Profile = new Tbl_Profile { IdUser = UserId }.SimpleFind<Tbl_Profile>();
+			Tbl_Profile? tbl_Profile = new Tbl_Profile { IdUser = UserId }.Find<Tbl_Profile>();
+			tbl_Profile!.Cat_Dependencias = tbl_Profile.Tbl_Dependencias_Usuarios?.Select(d => d.Cat_Dependencias).ToList();
 			return tbl_Profile ?? new Tbl_Profile { IdUser = UserId };
 		}
 
-	}
-
-	public class Tbl_Grupo : EntityClass
-	{
-		[PrimaryKey(Identity = true)]
-		public int? Id_Grupo { get; set; }
-		public string? Descripcion { get; set; }
-
-		internal object? SaveGroup(string? identity)
-		{
-			if (AuthNetCore.HavePermission(identity, Permissions.ADMIN_ACCESS))
-			{
-				return Save();
-			}
-			UserModel user = AuthNetCore.User(identity);
-			Tbl_Profile? profile = new Tbl_Profile { IdUser = user.UserId }.Find<Tbl_Profile>();
-			if (profile?.Id_Grupo != null)
-			{
-				throw new Exception("Ya pertenece a un grupo, no puede crear uno");
-			}
-			else
-			{
-				Save();
-				profile!.Id_Grupo = Id_Grupo;
-				profile.Update();
-				return this;
-			}
-		}
-	}
+	}	
 }

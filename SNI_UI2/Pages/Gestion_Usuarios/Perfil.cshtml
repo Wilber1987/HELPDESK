@@ -21,7 +21,6 @@
 }
 <link rel="stylesheet" href="~/css/cardDependencias.css">
 <link rel="stylesheet" href="~/css/Perfil.css">
-
 <div class="perfil-container">
     <div class="col-xxl-5">
         <div class="card-profile">
@@ -63,7 +62,7 @@
                     @if (SecurityController.HavePermission(Permissions.PERFIL_ACCESS.ToString(), identify))
                     {
                         <a class="" href="~/Security/PerfilView">Perfil</a>
-                    }                   
+                    }
                 </div>
             }
         </div>
@@ -71,33 +70,42 @@
     </div>
 
     <div class="col-xxl-7">
-        <div class="row">
-            @foreach (var dependencia in perfil.Cat_Dependencias ?? [])
-            {
-                <div class="card-dependencia card-style">
-                    <div class="top-section">
-                        <div class="bottom-section">
-                            <span class="title">@dependencia!.Descripcion</span>
-                            <span class="subtitle">@dependencia!.Username</span>
-                            <div class="row row1">
-                                <div class="item">
-                                    <span class="big-text">@dependencia.Host</span>
-                                    <span class="regular-text">Host</span>
-                                </div>
-                                <div class="item">
-                                    <span class="big-text">0</span>
-                                    <span class="regular-text">Finalizados</span>
-                                </div>
-                                <div class="item">
-                                    <span class="big-text">@dependencia!.Tbl_Dependencias_Usuarios?.Count ?? 0</span>
-                                    <span class="regular-text">Miembros activos</span>
-                                </div>
+        <h3>Dependencias</h3>
+        @foreach (var dependencia in perfil.Cat_Dependencias ?? [])
+        {
+            <div class="card-dependencia card-style">
+                <div class="top-section">
+                    <div class="bottom-section">
+                        <span class="title">@dependencia!.Descripcion</span>
+                        <span class="subtitle">@dependencia!.Username</span>
+                        <div class="row row1">
+                            <div class="item">
+                                <span class="big-text">@dependencia.Host</span>
+                                <span class="regular-text">Host</span>
+                            </div>
+                            <div class="item">
+                                <span class="big-text">0</span>
+                                <span class="regular-text">Finalizados</span>
+                            </div>
+                            <div class="item">
+                                <span class="big-text">@dependencia!.Tbl_Dependencias_Usuarios?.Count ?? 0</span>
+                                <span class="regular-text">Miembros activos</span>
                             </div>
                         </div>
                     </div>
                 </div>
-            }
-        </div>
+            </div>
+        }
+    </div>
+    <div id="groupContainer" class="">
+        <h3>Grupos</h3>
+        @foreach (var grupos_Profile in perfil.Tbl_Grupos_Profiles ?? [])
+        {
+            <div class="card">
+                <p><strong>@grupos_Profile?.Tbl_Grupo?.Nombre</strong>. @Html.Raw(grupos_Profile?.Tbl_Grupo?.Descripcion ?? "") </p>
+                <p class="card-footer">@grupos_Profile?.Tbl_Grupo?.Tbl_Profile?.GetNombreCompleto()</p>
+            </div>
+        }
     </div>
 
 </div>

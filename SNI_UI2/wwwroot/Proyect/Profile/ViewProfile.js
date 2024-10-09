@@ -2,16 +2,18 @@
 import { StylesControlsV2 } from "../../WDevCore/StyleModules/WStyleComponents.js";
 import { WAppNavigator } from '../../WDevCore/WComponents/WAppNavigator.js';
 import { WDetailObject } from '../../WDevCore/WComponents/WDetailObject.js';
-import { ModalVericateAction, WForm } from "../../WDevCore/WComponents/WForm.js";
+import { ModalMessege, WForm } from "../../WDevCore/WComponents/WForm.js";
 import { WModalForm } from "../../WDevCore/WComponents/WModalForm.js";
-import { WTableComponent } from "../../WDevCore/WComponents/WTableComponent.js";
 import { ComponentsManager, html, WRender } from '../../WDevCore/WModules/WComponentsTools.js';
-import { css, WCssClass, WStyledRender } from '../../WDevCore/WModules/WStyledRender.js';
+import { css } from '../../WDevCore/WModules/WStyledRender.js';
 
-import { WAjaxTools } from "../../WDevCore/WModules/WAjaxTools.js";
 import { ChangePasswordModel } from "../../WDevCore/Security/SecurityModel.js";
+import { WAjaxTools } from "../../WDevCore/WModules/WAjaxTools.js";
+import { Tbl_Grupo, Tbl_Grupo_ModelComponent } from "../FrontModel/Tbl_Grupo_ModelComponent.js";
 import { Tbl_Profile } from "../FrontModel/Tbl_Profile.js";
-import { Tbl_Grupo_ModelComponent } from "../FrontModel/Tbl_Grupo_ModelComponent.js";
+// @ts-ignore
+import { FilterData } from "../../WDevCore/WModules/CommonModel.js";
+import { GroupView } from "../ProyectViews/Proyectos/GroupsView.js";
 
 const OnLoad = async () => {
     // @ts-ignore
@@ -27,7 +29,7 @@ window.onload = OnLoad;
 class PerfilClass extends HTMLElement {
     constructor() {
         super();
-        this.Id_Perfil = 1;
+        //this.Id_Perfil = 1;
         this.id = "PerfilClass";
         this.className = "PerfilClass DivContainer";
         this.append(this.WStyle, StylesControlsV2.cloneNode(true));
@@ -50,9 +52,7 @@ class PerfilClass extends HTMLElement {
             {
                 name: "Datos Generales",
                 action: async (ev) => {
-                    this.response = await WAjaxTools.PostRequest("../../api/Profile/TakeProfile",
-                        { Id_Perfil: this.Id_Perfil }
-                    );
+                    this.response = await WAjaxTools.PostRequest("../../api/Profile/TakeProfile");
                     this.TabManager.NavigateFunction("Tab-Generales",
                         new WDetailObject({ ObjectDetail: this.response, ModelObject: new Tbl_Profile(), ImageUrlPath: "" }));
                 }
@@ -64,32 +64,12 @@ class PerfilClass extends HTMLElement {
             }, {
                 name: "Grupo",
                 action: async (ev) => {
-                    if (this.response.Grupo == null) {
-                        const container = html`<div class="GrupoContainer">
-                            <div class="OptionContainer">
-                                <button class="Btn" onclick="${() => this.NavigateToEdit()}">Unirse a un grupo</button>
-                                <button class="Btn" onclick="${() => this.CreateGroup()}">Crear grupo</button>
-                            </div>                        
-                            <div class="content-container">
-                                <h3>No hay grupo disponible</h3>
-                            </div>
-                        </div>`;
-                        this.TabManager.NavigateFunction("Tab-Group", container);
-                    } else {
-                        const container = html`<div class="GrupoContainer">
-                        <div class="OptionContainer">
-                            <button class="Btn" onclick="${() => this.NavigateToEdit()}">Cambiarse de grupo</button>
-                        </div>                        
-                        <div class="content-container">
-                            ${new WDetailObject({ ObjectDetail: this.response.Grupo, ModelObject: new Tbl_Grupo_ModelComponent() })}
-                        </div>
-                    </div>`;
-                        this.TabManager.NavigateFunction("Tab-Group", container);
-                    }
-                    // this.response.Tbl_Dependencias_Usuarios = undefined;
-                    // this.response.Tbl_Participantes = undefined;
-
+                    
                 }
+                // this.response.Tbl_Dependencias_Usuarios = undefined;
+                // this.response.Tbl_Participantes = undefined;
+
+
             }, {
                 name: "Editar Contraseña",
                 action: async (ev) => {
@@ -109,7 +89,12 @@ class PerfilClass extends HTMLElement {
             title: "Nuevo Grupo",
             AutoSave: true,
             ModelObject: new Tbl_Grupo_ModelComponent(),
-            StyleForm: "columnX1"
+            StyleForm: "columnX1",
+            ObjectOptions: {
+                SaveFunction: (ObjectF, response) => {
+                    document.body.appendChild(ModalMessege(response.message, undefined, true));
+                }
+            }
         }));
     }
 
@@ -139,9 +124,7 @@ class PerfilClass extends HTMLElement {
 
 
     async NavigateToEdit() {
-        this.response = await WAjaxTools.PostRequest("../../api/Profile/TakeProfile",
-            { Id_Perfil: this.Id_Perfil }
-        );
+        this.response = await WAjaxTools.PostRequest("../../api/Profile/TakeProfile");
         // this.response.Tbl_Dependencias_Usuarios = undefined;
         // this.response.Tbl_Participantes = undefined;
         this.TabManager.NavigateFunction("Tab-Edit-Generales",
@@ -192,6 +175,6 @@ class PerfilClass extends HTMLElement {
 
         @media (max-width: 600px) {}
         `
-    }
+}
 
 customElements.define('w-perfil', PerfilClass);

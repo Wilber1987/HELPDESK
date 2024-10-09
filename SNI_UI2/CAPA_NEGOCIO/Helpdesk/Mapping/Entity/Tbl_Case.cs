@@ -211,14 +211,29 @@ namespace CAPA_NEGOCIO.MAPEO
 			}
 			if (AuthNetCore.HavePermission(Permissions.ADMINISTRAR_CASOS_PROPIOS.ToString(), identity))
 			{
-				UserModel user = AuthNetCore.User(identity);
-				Tbl_Profile? profile = new Tbl_Profile { IdUser = user.UserId }.Find<Tbl_Profile>();
-				return Where<Tbl_Case>(FilterData.In("Estado", Case_Estate.Activo.ToString()),
-				FilterData.Equal("Id_Perfil", profile?.Id_Perfil));
+				FilterData orFilter = GetCasosPropiosFilter(identity);
+				return Where<Tbl_Case>(FilterData.In("Estado", Case_Estate.Activo.ToString()), orFilter);
 			}
 
 			throw new Exception("no tienes permisos para gestionar casos");
 		}
+
+		private static FilterData GetCasosPropiosFilter(string identity)
+		{
+			UserModel user = AuthNetCore.User(identity);
+			Tbl_Profile? profile = new Tbl_Profile { IdUser = user.UserId }.Find<Tbl_Profile>();
+			FilterData orFilter = FilterData.Or(
+				FilterData.Equal("Id_Perfil", profile?.Id_Perfil)
+			);
+
+			if (profile?.Tbl_Grupos_Profiles?.Count > 0)
+			{
+				int?[] perfilesId = Tbl_Profile.GetProfilesByGroup(identity).Select(p => p.Id_Perfil).ToArray();
+				orFilter.Filters?.Add(FilterData.In("Id_Perfil", perfilesId));
+			}
+			return orFilter;
+		}
+
 		public List<Tbl_Case> GetOwParticipantCase(string identity)
 		{
 			if (AuthNetCore.HavePermission(Permissions.ADMIN_ACCESS.ToString(), identity))
@@ -294,9 +309,13 @@ namespace CAPA_NEGOCIO.MAPEO
 			Tbl_Profile? profile = new Tbl_Profile { IdUser = user.UserId }.Find<Tbl_Profile>();
 			var asignaciones = new Tbl_Profile_CasosAsignados() { Id_Perfil = profile?.Id_Perfil }.Get<Tbl_Profile_CasosAsignados>();
 			Estado = case_Estate?.ToString();
-			return Where<Tbl_Case>(
+			FilterData andFilter = FilterData.And(
 				FilterData.NotIn("Estado", Case_Estate.Vinculado),
 				FilterData.In("Id_Case", asignaciones.Select(p => p.Id_Case.ToString()).ToArray())
+			);
+			FilterData orFilter = GetCasosPropiosFilter(identity);
+			return Where<Tbl_Case>(
+				FilterData.Or(andFilter, orFilter)
 			);
 		}
 		internal object AprobarSolicitud(string identity)
@@ -464,8 +483,13 @@ namespace CAPA_NEGOCIO.MAPEO
 			UserModel user = AuthNetCore.User(identity);
 			Tbl_Profile? profile = new Tbl_Profile { IdUser = user.UserId }.Find<Tbl_Profile>();
 			Id_Perfil = profile?.Id_Perfil;
+			
 			Id_Dependencia = profile?.Tbl_Dependencias_Usuarios?.First()?.Id_Dependencia;
 			Estado = Case_Estate.Activo.ToString();
+			if (Id_Dependencia != null)
+			{
+				Id_Servicio = new Tbl_Servicios { Id_Dependencia = Id_Dependencia}.Find<Tbl_Servicios>()?.Id_Servicio;
+			}			
 			Save();
 			return new ResponseService
 			{

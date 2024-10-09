@@ -75,8 +75,11 @@ public class Cat_Dependencias : EntityClass
 					D.Descripcion,
 					D.Username,
 					D.Tbl_Dependencias_Usuarios,
-					NCasos = new Tbl_Case { Id_Dependencia = D.Id_Dependencia, Estado = Case_Estate.Activo.ToString() }.Get<Tbl_Case>().Count,
-					NCasosFinalizados = new Tbl_Case { Id_Dependencia = D.Id_Dependencia, Estado = Case_Estate.Finalizado.ToString() }.Get<Tbl_Case>().Count
+					NCasos = new Tbl_Case().Count(
+						FilterData.In("Id_Dependencia", D.Id_Dependencia),
+						FilterData.In("Estado", Case_Estate.Activo.ToString())
+					),
+					NCasosFinalizados = new Tbl_Case { Id_Dependencia = D.Id_Dependencia, Estado = Case_Estate.Finalizado.ToString() }.Count()
 				}
 		).ToList();
 	}

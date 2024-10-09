@@ -1,8 +1,9 @@
 //@ts-check
-import { WSecurity } from "../../../WDevCore/Security/WSecurity.js";
+import { WSecurity, Permissions } from "../../../WDevCore/Security/WSecurity.js";
 import { StylesControlsV2, StylesControlsV3, StyleScrolls } from "../../../WDevCore/StyleModules/WStyleComponents.js";
 import { WCommentsComponent } from "../../../WDevCore/WComponents/WCommentsComponent.js";
 import { WModalForm } from "../../../WDevCore/WComponents/WModalForm.js";
+import { DateTime } from "../../../WDevCore/WModules/Types/DateTime.js";
 import { ComponentsManager, html, WRender } from "../../../WDevCore/WModules/WComponentsTools.js";
 import { css } from "../../../WDevCore/WModules/WStyledRender.js";
 import { Tbl_Agenda_ModelComponent } from "../../FrontModel/Tbl_Agenda.js";
@@ -22,7 +23,6 @@ class TareaDetailView extends HTMLElement {
      */
     constructor(Config) {
         super();
-        
         this.OptionContainer = WRender.Create({ className: "OptionContainer" });
         this.TabContainer = WRender.Create({ className: "TabContainer", id: 'TabContainer' });
         this.Manager = new ComponentsManager({ MainContainer: this.TabContainer, SPAManage: false });
@@ -58,81 +58,56 @@ class TareaDetailView extends HTMLElement {
             UserIdProp: "Id_User",
             CommentsIdentify: this.Task?.Id_Tarea,
             CommentsIdentifyName: "Id_Tarea",
+            UseDestinatarios: false,
             UrlSearch: "../api/ApiEntityHelpdesk/getTbl_Comments_Tasks",
             UrlAdd: "../api/ApiEntityHelpdesk/saveTbl_Comments_Tasks"
         });
+        const column = html`<div class="column"></div>`;
 
-        const node = html`<div class="card">
-                <!-- <div class="thumbnail"><img class="left"
-                        src="https://cdn2.hubspot.net/hubfs/322787/Mychefcom/images/BLOG/Header-Blog/photo-culinaire-pexels.jpg" />
-                </div> -->
-                <div class="right">
-                    
-                    <h1>${this.Task?.Titulo}</h1>
-                    <h3> Estado: (${this.Task.Estado})</h3>                    
-                    <div class="authores">
-                        ${this.Task?.Tbl_Participantes?.map(I => `<div class="author"><img src="${I.Tbl_Profile?.Foto}" />
-                                <label>${I.Tbl_Profile?.Nombres} ${I.Tbl_Profile?.Apellidos ?? ""}</label></div>`)?.join("") ?? "Sin Participantes"}
-                    </div>
-                    <div class="separator"></div>
-                    <p>${this.Task?.Descripcion}</p>
-                    <div class="horarios">
-                        <h5>Horario</h5>
-                        ${this.Task?.Tbl_Calendario?.map(H => `<div class="horario">
-                               del ${H.Fecha_Inicio?.// @ts-ignore
-                               toDateFormatEs()} hasta ${H.Fecha_Final?.toDateFormatEs()}
-                            </div>`)?.join("") ?? "-"}
-                    </div>
+        const node = html`<div class="task-contaier">
+            <h2 class="title">${this.Task?.Titulo} (${this.Task.Estado})</h2>
+            <div class="right"> 
+                <p>${this.Task?.Descripcion}</p>                
+                <div class="authores">
+                    ${this.Task?.Tbl_Participantes?.map(I => `<div class="author"><img src="${I.Tbl_Profile?.Foto}" title="${I.Tbl_Profile?.Nombres} ${I.Tbl_Profile?.Apellidos}"/></div>`)?.join("") ?? "Sin Participantes"}
                 </div>
-                <!-- <h5>12</h5>
-                <h6>JANUARY</h6> -->
-                <!-- <ul>
-                    <li><i class="fa fa-eye fa-2x"></i></li>
-                    <li><i class="fa fa-heart-o fa-2x"></i></li>
-                    <li><i class="fa fa-envelope-o fa-2x"></i></li>
-                    <li><i class="fa fa-share-alt fa-2x"></i></li>
-                </ul><div class="fab"><i class="fa fa-arrow-down fa-3x"> </i></div> -->
-                
-            </div>`
-        //"Activo", "Proceso", "Finalizado", "Espera", "Inactivo"
-        node.append(WRender.Create({
-            className: "options", children: [
-                {
-                    tagName: 'input', type: 'button', className: 'Btn-Mini', value: 'Editar', onclick: async () => {
-                        this.taskEdit(this.Task);
-                    }
-                }, {
-                    tagName: 'input', type: 'button', className: 'Btn-Mini', value: 'Activar', onclick: async () => {
-                        this.changeState(this.Task, "Activo")
-                    }
-                }, {
-                    tagName: 'input', type: 'button', className: 'Btn-Mini', value: 'En proceso', onclick: async () => {
-                        this.changeState(this.Task, "Proceso")
-                    }
-                }, {
-                    tagName: 'input', type: 'button', className: 'Btn-Mini', value: 'Finalizar', onclick: async () => {
-                        this.changeState(this.Task, "Finalizado")
-                    }
-                }, {
-                    tagName: 'input', type: 'button', className: 'Btn-Mini', value: 'En espera', onclick: async () => {
-                        this.changeState(this.Task, "Espera")
-                    }
-                }, {
-                    tagName: 'input', type: 'button', className: 'Btn-Mini', value: 'Inactivar', onclick: async () => {
-                        this.changeState(this.Task, "Inactivo")
-                    }
-                }
-            ]
-        }))
+                <div class="horarios">
+                    <h5>Horario</h5>
+                    ${this.BuildDatesDetail()}
+                </div>
+                <hr />
+                ${commentsContainer}
+            </div>               
+            ${column}
+        </div>`
         if (this.Config.BackAction) {
-            node.append(WRender.Create({
-                tagName: 'input', type: 'button', className: 'Btn-Mini-Success btn-return', value: '<', onclick: () => {
+            column.append(WRender.Create({
+                tagName: 'input', type: 'button', className: 'BtnSuccess BtnReturn btn-return', value: '<', onclick: () => {
                     // @ts-ignore
                     this.Config.BackAction();
                 }
             }))
         }
-        return WRender.Create({ className: "container", children: [node, commentsContainer] });
+        //"Activo", "Proceso", "Finalizado", "Espera", "Inactivo"
+        column.append(WRender.Create({
+            className: "options", children: [
+                WSecurity.HavePermission(Permissions.GESTOR_TAREAS) ? {
+                    tagName: 'button', className: 'btn-secondary', innerText: 'Editar', onclick: async () => this.taskEdit(this.Task)
+                } : "", {
+                    tagName: 'button', className: ' btn-success', innerText: 'Activar', onclick: async () => this.changeState(this.Task, "Activo")
+                }, {
+                    tagName: 'button', className: 'Btn-Mini btn-info', innerText: 'En proceso', onclick: async () => this.changeState(this.Task, "Proceso")
+                }, {
+                    tagName: 'button', className: 'Btn-Mini btn-danger', innerText: 'Finalizar', onclick: async () => this.changeState(this.Task, "Finalizado")
+                }, {
+                    tagName: 'button', className: 'Btn', innerText: 'En espera', onclick: async () => this.changeState(this.Task, "Espera")
+                }, {
+                    tagName: 'button', className: 'btn-danger2', innerText: 'Inactivar', onclick: async () => this.changeState(this.Task, "Inactivo")
+                }
+            ]
+        }))
+        
+        return WRender.Create({ className: "container", children: [node] });
     }
 
     /**
@@ -181,35 +156,48 @@ class TareaDetailView extends HTMLElement {
 
     CustomStyle = css`
         @import url('https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css');
-        .component{
-           display: block;
-        }  
-        .btn-return {
-            position: absolute;
-            top: -25px;
-            left: 5px;
-            width: 50px;
-            padding: 5px;
-        }          
+            .component{
+            display: block;
+            }
+            w-coment-component {
+                display: flex;
+                flex-direction: column-reverse
+            }  
+            .btn-return {
+                position: absolute;
+                top: -25px;
+                left: 5px;
+                width: 50px;
+                padding: 5px;
+            }          
             /*Just the background stuff*/
             .container {
                 display: grid;
-                grid-template-columns: calc(100% - 600px) 580px;
+                grid-template-columns: 100%;
                 column-gap: 20px;
             }    
             /*My hum... body.. yeah..*/           
 
             /* The card */
-            .card {
-                position: relative;
+            .task-contaier {
                 min-height: 500px;
                 width: 100%;
-                background-color: #FFF;
-                border: solid 1px #d1cfcf;
                 border-radius: 10px;
-                margin-top: 30px;
-            }
+                grid-template-columns: calc(100% - 220px) 200px;
+                column-gap: 20px;
+                display: grid;
 
+            }
+            .task-contaier h3, .task-contaier h2, .task-contaier h4 {
+                color: #0462bb;
+                margin: 5px 0px;
+            }
+            .task-contaier .title {
+                grid-column: span 2;
+                border-bottom: 1px solid #ccc;
+                padding-bottom: 10px;
+                margin-bottom: 10px; 
+            }
             /* Image on the left side */
             .thumbnail {
                 float: left;
@@ -243,16 +231,6 @@ class TareaDetailView extends HTMLElement {
                 margin-right: 20px;
             }
 
-            h1 {
-                padding-top: 16px;
-                font-size: 1.3rem;
-                color: #b1b1b1;
-            }
-            h3 {                
-                font-size: 1.1rem;
-                color: #575757;
-            }
-
             .authores{
                 display: flex;
                 gap: 10px;
@@ -266,28 +244,16 @@ class TareaDetailView extends HTMLElement {
                 align-items: center;
                 gap: 5px;
                 background-color: #9ECAFF;
-                height: 30px;
-                width: 250px;
+                height: 50px;
                 border-radius: 20px;
                 font-size: 12px;
             }
 
             .author > img {
                 float: left;
-                height: 30px;
-                width: 30px;
+                height: 50px;
+                width: 50px;
                 border-radius: 50%;
-            }
-
-            h2 {
-                padding: 0;
-                margin: 0;
-                text-align: right;
-                font-size: 0.8rem;
-            }
-            .separator {
-                margin-top: 10px;
-                border: 1px solid #C3C3C3;
             }
 
             p {
@@ -321,20 +287,28 @@ class TareaDetailView extends HTMLElement {
             }           
             /* Floating action button */
             .options {
-                position: absolute;
                 display: flex;
                 background-color: #FFF;
-                right: 50px;
-                bottom: -10px;        
                 padding: 10px;       
-                text-align: center;                
-                border: solid 1px #d1cfcf;
-                border-radius: 10px;
-                max-width: 70%;
+                text-align: center;    
                 flex-wrap: wrap;
                 gap: 5px;
+                justify-content: flex-end;
+                & button {
+                    font-size: 12px;
+                    margin: 0;
+                    padding: 8px;
+                    width: 100%;
+                }
             }                  
     `
+
+    BuildDatesDetail() {
+        return this.Task?.Tbl_Calendario?.map(H => `<div class="horario"> Del 
+            ${new DateTime(H.Fecha_Inicio)?.toDateFormatEs()}   hasta el 
+            ${new DateTime(H.Fecha_Final)?.toDateFormatEs()}
+        </div>`)?.join("") ?? "-";
+    }
 }
 customElements.define('w-tarea-detail-component', TareaDetailView);
 export { TareaDetailView };

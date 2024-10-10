@@ -60,3 +60,4 @@ delete from helpdesk.Tbl_Profile_CasosAsignados
 delete from helpdesk.Tbl_Case
 
 dotnet publish --configuration Release
+dotnet publish -c Release -o C:\wwwroot\helpdesk

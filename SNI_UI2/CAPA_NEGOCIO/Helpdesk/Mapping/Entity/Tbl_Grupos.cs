@@ -27,8 +27,8 @@ namespace CAPA_NEGOCIO.MAPEO
 		{
 			var grupo = new Tbl_Grupos_Profile { Id_Grupo = Id_Grupo ?? Tbl_Grupo?.Id_Grupo, Id_Perfil = Id_Perfil ?? Tbl_Profile?.Id_Perfil }.SimpleFind<Tbl_Grupos_Profile>();
 			if (grupo != null)
-			{				
-				return new ResponseService { status = 403, message = "Tu relación con este grupo ya existe : ESTADO - " + grupo?.Estado?.ToString() };	
+			{
+				return new ResponseService { status = 403, message = "Tu relación con este grupo ya existe : ESTADO - " + grupo?.Estado?.ToString() };
 			}
 
 			if (Estado == GroupState.INVITADO.ToString())
@@ -60,7 +60,8 @@ namespace CAPA_NEGOCIO.MAPEO
 			{
 				AprobarSolicitud(this);
 				return new ResponseService { status = 200, message = "Solicitud Aprobada" };
-			}else if (Estado == GroupState.INACTIVO.ToString())
+			}
+			else if (Estado == GroupState.INACTIVO.ToString())
 			{
 				AbandonarGrupo(this);
 				return new ResponseService { status = 200, message = "Salida del grupo exitosa" };
@@ -68,14 +69,14 @@ namespace CAPA_NEGOCIO.MAPEO
 			return new ResponseService { status = 403, message = "Estado invalido" };
 		}
 
-        private void AbandonarGrupo(Tbl_Grupos_Profile Inv)
-        {
-            Inv.Estado = GroupState.INACTIVO.ToString();
+		private void AbandonarGrupo(Tbl_Grupos_Profile Inv)
+		{
+			Inv.Estado = GroupState.INACTIVO.ToString();
 			//Inv.Fecha_Incorporacion = DateTime.Now;
 			Inv.Update();
-        }
+		}
 
-        public ResponseService AprobarSolicitud(Tbl_Grupos_Profile Inv)
+		public ResponseService AprobarSolicitud(Tbl_Grupos_Profile Inv)
 		{
 			Inv.Estado = GroupState.ACTIVO.ToString();
 			Inv.Fecha_Incorporacion = DateTime.Now;
@@ -139,7 +140,7 @@ namespace CAPA_NEGOCIO.MAPEO
 		public string? Estado { get; set; }
 		public string? Descripcion { get; set; }
 		public string? Color { get; set; }
-		
+
 		[ManyToOne(TableName = "Tbl_Profile", KeyColumn = "Id_Perfil", ForeignKeyColumn = "Id_Perfil_Crea")]
 		public Tbl_Profile? Tbl_Profile { get; set; }
 		[ManyToOne(TableName = "Cat_Tipo_Grupo", KeyColumn = "Id_Tipo_Grupo", ForeignKeyColumn = "Id_Tipo_Grupo")]
@@ -169,14 +170,19 @@ namespace CAPA_NEGOCIO.MAPEO
 		{
 			UserModel user = AuthNetCore.User(identity);
 			Tbl_Profile? profile = new Tbl_Profile { IdUser = user.UserId }.Find<Tbl_Profile>();
-			var grupo = Find<Tbl_Grupo>();
+			var grupo = new Tbl_Grupo { Id_Grupo = Id_Grupo, Id_Perfil_Crea = profile?.Id_Perfil }.Find<Tbl_Grupo>();
 			if (grupo != null && grupo.Id_Perfil_Crea == profile?.Id_Perfil)
 			{
 				if (Estado == GroupState.INACTIVO.ToString())
 				{
 					//TODO: CAMBIAR ESTADO A INACTIVO DE LOS MIEMBROS
 				}
-				grupo.Update();
+				Update();
+				return new ResponseService
+				{
+					status = 200,
+					message = "Grupo actualizado correctamente"
+				};
 			}
 			return new ResponseService
 			{

@@ -9,7 +9,7 @@ import { css } from '../../WDevCore/WModules/WStyledRender.js';
 
 import { ChangePasswordModel } from "../../WDevCore/Security/SecurityModel.js";
 import { WAjaxTools } from "../../WDevCore/WModules/WAjaxTools.js";
-import { Tbl_Grupo, Tbl_Grupo_ModelComponent } from "../FrontModel/Tbl_Grupo_ModelComponent.js";
+import { GroupState, Tbl_Grupo, Tbl_Grupo_ModelComponent } from "../FrontModel/Tbl_Grupo_ModelComponent.js";
 import { Tbl_Profile } from "../FrontModel/Tbl_Profile.js";
 // @ts-ignore
 import { FilterData } from "../../WDevCore/WModules/CommonModel.js";
@@ -64,7 +64,30 @@ class PerfilClass extends HTMLElement {
             }, {
                 name: "Grupo",
                 action: async (ev) => {
-                    
+                    let misGrupos = []
+                    if (this.response.Tbl_Grupos_Profiles?.length > 0) {
+                        misGrupos = await new Tbl_Grupo({
+                            FilterData:  [new FilterData({
+                                PropName: "Id_Grupo",
+                                Values: this.response.Tbl_Grupos_Profiles?.filter(p => p.Estado == GroupState.ACTIVO).map(p => p.Id_Grupo.toString()),
+                                FilterType: "in",
+                            })]
+                        }).Get();
+                    } 
+                    const Grupos = await new Tbl_Grupo({
+                        FilterData: [new FilterData({
+                            PropName: "Id_Grupo",
+                            Values: this.response.Tbl_Grupos_Profiles?.map(p => p.Id_Grupo.toString()),
+                            FilterType: "not in",
+                        })]
+                    }).Get();
+                    const container = html`<div class="GrupoContainer">
+                        <div class="OptionContainer">                          
+                            <button class="Btn" onclick="${() => this.CreateGroup()}">Crear grupo</button>                            
+                        </div>                         
+                        ${new GroupView({ MisGrupos: misGrupos, Grupos: Grupos , Profile : this.response})}
+                    </div>`;
+                    this.TabManager.NavigateFunction("Tab-Group", container);
                 }
                 // this.response.Tbl_Dependencias_Usuarios = undefined;
                 // this.response.Tbl_Participantes = undefined;

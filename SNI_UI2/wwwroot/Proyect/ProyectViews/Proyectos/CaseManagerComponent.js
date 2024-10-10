@@ -51,7 +51,7 @@ class CaseManagerComponent extends HTMLElement {
         if (WSecurity.HavePermission(Permissions.ADMINISTRAR_CASOS_PROPIOS)) {
             this.OptionContainer.append(WRender.Create({
                 tagName: 'input', type: 'button', className: 'Block-Success',
-                value: 'Nuevo Proyecto', onclick: () => {
+                value: 'Nuevo Proyecto Propio', onclick: () => {
                     this.TabManager.NavigateFunction("Tab-CaseFormBasicView", basicCaseForm(new Tbl_Case(), async (/**@type {Tbl_Case} */ entity) => {
                         const response = await entity.SaveOwCase();
                         this.append(ModalMessege("Caso guardado correctamente", undefined, true))

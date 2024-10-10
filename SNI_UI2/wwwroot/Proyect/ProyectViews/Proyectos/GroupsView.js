@@ -92,7 +92,7 @@ class GroupView extends HTMLElement {
                             }
                         },
                         group.Id_Perfil_Crea == this.Config.Profile.Id_Perfil ? {
-                            tagName: 'input', type: 'button', className: 'Btn', value: 'Abandonar grupo', onclick: async () => {
+                            tagName: 'input', type: 'button', className: 'Btn', value: 'Dar de baja', onclick: async () => {
                                 document.body.appendChild(ModalVericateAction(async () => {
                                     const response = await new Tbl_Grupo({
                                         Id_Grupo: group.Id_Grupo,
@@ -100,6 +100,11 @@ class GroupView extends HTMLElement {
                                     }).Update();
                                     document.body.appendChild(ModalMessege(response.message, undefined, true));
                                 }, "¿Dar de baja este grupo? todos los miembros de este grupo perderan acceso a los proyectos creados por otros miembros y los otros miembros del grupo no podran acceder a los proyectos creados por usted."));
+                            }
+                        } : "",,
+                        group.Id_Perfil_Crea == this.Config.Profile.Id_Perfil ? {
+                            tagName: 'input', type: 'button', className: 'Btn', value: 'Editar', onclick: async () => {
+                                this.EditarGrupo(group);
                             }
                         } : ""
                     ]
@@ -279,6 +284,20 @@ class GroupView extends HTMLElement {
                 }
             }
         ];
+    }
+    EditarGrupo(group) {
+        this.shadowRoot?.append(new WModalForm({
+            title: "Editar Grupo",
+            AutoSave: true,
+            ModelObject: new Tbl_Grupo_ModelComponent(),
+            StyleForm: "columnX1",
+            EditObject: group, 
+            ObjectOptions: {
+                SaveFunction: (ObjectF, response) => {
+                    document.body.appendChild(ModalMessege(response.message, undefined, true));
+                }
+            }
+        }));
     }
 }
 customElements.define('w-group_view', GroupView);

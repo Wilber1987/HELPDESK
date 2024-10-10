@@ -29,6 +29,8 @@ import { Tbl_Participantes_ModelComponent } from '../../FrontModel/Tbl_Participa
 import { Tbl_Profile } from '../../FrontModel/Tbl_Profile.js';
 // @ts-ignore
 import { FilterData } from '../../../WDevCore/WModules/CommonModel.js';
+import { Tbl_Grupo } from '../../FrontModel/Tbl_Grupo_ModelComponent.js';
+import { WAjaxTools } from '../../../WDevCore/WModules/WAjaxTools.js';
 
 class CaseDetailComponent extends HTMLElement {
     /**
@@ -59,11 +61,8 @@ class CaseDetailComponent extends HTMLElement {
         this.ganttChart = new GanttChart({ Dataset: tareasActividad ?? [], EvalValue: "date" });
         this.actividadDetailView = WRender.Create({ className: "actividadDetailView", children: [this.actividadElementDetail(actividad)] });
         /**@type {Array<Tbl_Dependencias_Usuarios>} */
-        const perfiles_dependencias = await new Tbl_Dependencias_Usuarios({
-            filterData: [
-                new FilterData({ PropName: "Id_Dependencia", Values: [actividad.Id_Dependencia?.toString()], FilterType: "=" })
-            ]
-        }).Get();
+        const perfiles = await GetOwProfilesDependeciasGroup(actividad);
+
         const taskModel = new Tbl_Tareas_ModelComponent({
             Id_Case: { type: 'number', hidden: true, value: actividad.Id_Case },
             Tbl_Tarea: {
@@ -82,7 +81,7 @@ class CaseDetailComponent extends HTMLElement {
                 type: 'MasterDetail',
                 ModelObject: () => new Tbl_Participantes_ModelComponent({
                     Tbl_Profile: {
-                        type: 'WSelect', hiddenFilter: true, ModelObject: () => new Tbl_Profile(), Dataset: perfiles_dependencias.map(pd => pd.Tbl_Profile)
+                        type: 'WSelect', hiddenFilter: true, ModelObject: () => new Tbl_Profile(), Dataset: perfiles
                     }
                 })
             }
@@ -138,11 +137,11 @@ class CaseDetailComponent extends HTMLElement {
                     })
                 }
             }, {
-                name: "Nueva Tarea",  Disabled: WSecurity.HavePermission(Permissions.GESTOR_TAREAS), action: async (ev) => {
+                name: "Nueva Tarea", Disabled: WSecurity.HavePermission(Permissions.GESTOR_TAREAS), action: async (ev) => {
                     //this.shadowRoot?.append()
                     return new WForm({
                         ModelObject: taskModel,
-                        AutoSave: true,                       
+                        AutoSave: true,
                         //title: "Nueva Tarea",
                         SaveFunction: (task, response,/**@type {WForm} */ form) => {
                             form.FormObject = new Tbl_Tareas();
@@ -334,7 +333,6 @@ class CaseDetailComponent extends HTMLElement {
             padding: 20px;
             border-radius: 15px;           
             background-color: #fff;
-            height: fit-content;
         }
 
         @media(max-width: 1400px){
@@ -392,3 +390,39 @@ const caseGeneralData = (actividad) => {
 }
 
 export { caseGeneralData };
+/**
+ * @param {Tbl_Case} actividad
+ */
+async function GetOwProfilesDependeciasGroup(actividad) {
+    const perfiles_dependencias = await new Tbl_Dependencias_Usuarios({
+        filterData: [
+            new FilterData({ PropName: "Id_Dependencia", Values: [actividad.Id_Dependencia?.toString()], FilterType: "=" })
+        ]
+    }).Get();
+
+    const response = await WAjaxTools.PostRequest("../../api/Profile/TakeProfile");
+    let misGrupos = [];
+    if (response.Tbl_Grupos_Profiles?.length > 0) {
+        misGrupos = await new Tbl_Grupo({
+            FilterData: [new FilterData({
+                PropName: "Id_Grupo",
+                Values: response.Tbl_Grupos_Profiles?.map(p => p.Id_Grupo.toString()),
+                FilterType: "in",
+            })]
+        }).Get();
+    }
+    const perfiles = [];
+    perfiles_dependencias.forEach(p => {
+        perfiles.push(p.Tbl_Profile);
+    });
+
+    misGrupos.flatMap(p => p.Tbl_Grupos_Profiles).forEach(p => {
+
+        if (perfiles.find(pp => pp.Id_Perfil == p.Id_Perfil) != null) {
+            return;
+        }
+        perfiles.push(p.Tbl_Profile);
+    });
+    return perfiles;
+}
+

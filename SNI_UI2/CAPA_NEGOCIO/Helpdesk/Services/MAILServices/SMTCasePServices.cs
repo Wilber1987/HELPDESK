@@ -25,12 +25,27 @@ namespace CAPA_NEGOCIO.Services
 				try
 				{
 					await Task.Delay(100);
-					if(item.Id_Case == null) 
+					if (item.Id_Case == null)
 					{
 						continue;
-					} 
+					}
 					var Tcase = new Tbl_Case() { Id_Case = item.Id_Case }.Find<Tbl_Case>();
 					if (Tcase?.Cat_Dependencias?.SMTPHOST == null && Tcase?.Cat_Dependencias?.Username == null)
+					{
+						continue;
+					}
+					var dependencia = Tcase?.Cat_Dependencias;
+					if (dependencia.Host == null || dependencia.Username == null || dependencia.AutenticationType == null)
+					{
+						continue;
+					}
+					else if (dependencia.AutenticationType == AutenticationTypeEnum.AUTH2.ToString()
+					&& (dependencia.TENAT == null || dependencia.CLIENT == null || dependencia.CLIENT_SECRET == null))
+					{
+						continue;
+					}
+					else if (dependencia.AutenticationType == AutenticationTypeEnum.BASIC.ToString()
+					&& dependencia.Password == null)
 					{
 						continue;
 					}

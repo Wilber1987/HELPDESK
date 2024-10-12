@@ -23,9 +23,6 @@ public class Cat_Dependencias : EntityClass
 	public string? OBJECTID { get; set; }
 	public string? CLIENT_SECRET { get; set; }
 	public string? SMTPHOST { get; set; }
-	
-	
-
 
 
 	[ManyToOne(TableName = "Cat_Dependencias", KeyColumn = "Id_Dependencia", ForeignKeyColumn = "Id_Dependencia_Padre")]

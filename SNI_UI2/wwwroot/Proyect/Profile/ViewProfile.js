@@ -64,8 +64,9 @@ class PerfilClass extends HTMLElement {
             }, {
                 name: "Grupo",
                 action: async (ev) => {
-                    let misGrupos = []
-                    if (this.response.Tbl_Grupos_Profiles?.length > 0) {
+                    let misGrupos = []                    
+                    if (this.response.Tbl_Grupos_Profiles?.length > 0 
+                        && this.response.Tbl_Grupos_Profiles?.filter(p => p.Estado == GroupState.ACTIVO).length > 0) {
                         misGrupos = await new Tbl_Grupo({
                             FilterData:  [new FilterData({
                                 PropName: "Id_Grupo",
